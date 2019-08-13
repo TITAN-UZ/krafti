@@ -1,0 +1,46 @@
+footer.footer {
+  z-index: 2;
+
+  .container {
+    background-color: $lightestGray;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    padding: 20px 26px;
+    max-width: 100%;
+
+    .footer__menu {
+      margin: 120px auto;
+      max-width: 1440px;
+
+      nav {
+        width: 250px;
+
+        a.active {
+          color: #e62121;
+        }
+      }
+    }
+
+    .footer__pay {
+      margin-bottom: 40px;
+
+      .pay__list {
+        margin-right: 10px;
+        margin-left: -20px;
+      }
+
+      .pay__text {
+        color: #6d6d6d;
+        font-weight: 300;
+        font-size: 14px;
+        line-height: 17px;
+
+      }
+    }
+
+    .footer__copyright {
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+}

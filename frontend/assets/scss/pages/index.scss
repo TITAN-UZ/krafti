@@ -1,0 +1,109 @@
+section.about__info {
+  margin-bottom: 60px;
+
+  .about__text {
+    font-weight: 200;
+    font-size: 18px;
+    line-height: 21px;
+  }
+}
+
+section.subscription {
+  .container {
+    max-width: 100%;
+  }
+
+  //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
+  .subscription__wrapper {
+    background: url(~assets/images/general/subscription.png) no-repeat;
+    background-size: cover;
+    padding-top: 37px;
+    padding-bottom: 120px;
+    margin-bottom: -20px;
+
+    .subscription__info {
+      color: $white;
+
+      &--headtitle {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 17px;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+
+      &--title {
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 38px;
+        margin-bottom: 20px;
+      }
+
+      &--text {
+        font-weight: 200;
+        font-size: 16px;
+        line-height: 20px;
+        max-width: 370px;
+      }
+    }
+
+    form.subscription__form {
+
+      label {
+        position: relative;
+
+        //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
+        &::before {
+          position: absolute;
+          display: block;
+          content: '';
+          width: 31px;
+          height: 25px;
+          right: 25px;
+          top: 17px;
+          background: url(~assets/images/general/ic_send.svg) no-repeat;
+          background-size: 100% 100%;
+        }
+      }
+
+      input[type="email"] {
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.6);
+        border: 0;
+        color: $gray;
+        padding: 15px 30px 16px;
+
+        &::placeholder {
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .m-width-80 {
+    max-width: 80%;
+  }
+
+  section.about__info .about__text {
+    margin-bottom: 60px;
+  }
+
+  .custom-dots {
+    margin-top: 10px;
+  }
+
+  section.subscription {
+    .subscription__wrapper {
+      padding-top: 20px;
+
+      .subscription__info {
+        &--text {
+          max-width: 100%;
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+}

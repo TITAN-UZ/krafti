@@ -1,0 +1,42 @@
+.nav-tabs {
+  .nav-item {
+    padding: 0;
+  }
+
+  .nav-link {
+    color: #495057;
+    background-color: transparent;
+    border-color: transparent;
+    font-size: 18px;
+    line-height: 21px;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    padding-left: 0;
+    margin-right: 60px;
+    position: relative;
+
+    &:hover {
+      border-color: transparent;
+    }
+
+    &.active {
+      border-color: transparent;
+      background-color: transparent;
+      font-weight: 500;
+
+      &::before {
+        display: inline-block;
+        content: "";
+        border-bottom: 3px solid $lightPink;
+        width: 36px;
+        position: absolute;
+        top: 37px;
+      }
+    }
+  }
+}
+
+.tab-content {
+  padding-top: 40px;
+}

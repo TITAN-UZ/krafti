@@ -1,0 +1,100 @@
+.viewCourseVideo {
+  background: linear-gradient(150.34deg, #EAEAEA 1.18%, #FFB6B6 101.5%);
+  border-radius: 30px;
+  margin-bottom: 30px;
+
+  .swiper-pagination-bullet {
+    background: #ffffff !important;
+
+    &-active {
+
+      background: transparent !important;
+
+      //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
+      &::before {
+        background: url(~assets/images/general/dots-active-white.png) !important;
+        top: -3px;
+      }
+    }
+  }
+
+  &.swiper-container {
+    margin: 0 auto;
+    max-width: 460px;
+  }
+
+  .course__slider {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 460px;
+    padding: 20px 0;
+
+    .slider__item {
+      .continue {
+        color: $pink;
+        display: block;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 17px;
+        margin-bottom: 20px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      &--video {
+        margin-bottom: 30px;
+
+        .video {
+          position: relative;
+          display: block;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          cursor: pointer;
+
+          //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
+          &::before {
+            position: absolute;
+            display: block;
+            content: '';
+            width: 59px;
+            height: 59px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: url(~assets/images/general/ic_consideration.svg) no-repeat;
+            background-size: 100% 100%;
+          }
+
+          img.video__thumb {
+            border-radius: 20px;
+          }
+        }
+      }
+
+      &--info {
+        .title {
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 21px;
+          margin-bottom: 15px;
+        }
+
+        .description {
+          font-weight: 200;
+          font-size: 16px;
+          line-height: 19px;
+          margin-bottom: 50px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .viewCourseVideo {
+    .course__slider {
+      max-width: 300px;
+    }
+  }
+}

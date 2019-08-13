@@ -1,0 +1,35 @@
+section.contacts__content {
+  .contacts__links-block {
+    .contacts__list {
+      margin-bottom: 70px;
+
+      li.contact__item {
+        .contact__link {
+          color: $lightGreen;
+          font-size: 18px;
+          line-height: 39px;
+        }
+      }
+    }
+  }
+
+  .contacts__text {
+    font-weight: 200;
+    font-style: normal;
+    font-size: 16px;
+    line-height: 19px;
+    margin-bottom: 90px;
+  }
+
+  .contact__img {
+    margin-top: -100px;
+  }
+
+  form {
+    .form-footer {
+      .button {
+        margin-right: 7px;
+      }
+    }
+  }
+}

@@ -1,0 +1,97 @@
+.tabContainer {
+  .worksList--title {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    margin-bottom: 20px;
+  }
+
+  .worksList {
+    padding-bottom: 40px;
+
+    .m-width-80 {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.work__item {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  img {
+    transition: all 0.6s;
+    border-radius: 30px;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .work__item--img {
+    position: relative;
+    display: block;
+    border-radius: 30px;
+
+    &::before {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 30px;
+      position: absolute;
+      content: '';
+      display: block;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      transition: all 0.6s;
+    }
+
+    &:hover::before {
+      opacity: 0.8;
+      background: transparent;
+    }
+
+    .ic__consider {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      cursor: pointer;
+      z-index: 1;
+
+      //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
+      &::before {
+        position: absolute;
+        display: block;
+        content: '';
+        width: 59px;
+        height: 59px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: url(~assets/images/general/ic_consideration.svg) no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+  }
+
+}
+
+@media (max-width: 768px) {
+  .tabContainer .worksList {
+    padding-bottom: 20px;
+  }
+
+  .work__item {
+    .work__item--img {
+      .ic__consider {
+        &::before {
+          width: 45px;
+          height: 45px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,185 @@
+header.header, aside.menu {
+  .login-link {
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      .title, .avatar {
+        color: $pink;
+        border-color: $pink;
+      }
+    }
+  }
+
+  .logout-link {
+    color: $lightPink !important;
+    font-size: 90%;
+
+    &:hover {
+      color: $pink !important;
+    }
+  }
+
+  .avatar {
+    border-radius: 50%;
+    height: 50px !important;
+    width: 50px !important;
+  }
+
+  svg.avatar {
+    color: $pink;
+  }
+}
+
+
+header.header {
+  .container {
+    max-width: 100%;
+  }
+
+  .label {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 10px;
+    z-index: 1;
+  }
+
+  .header__wrap {
+    height: 100px;
+  }
+
+  .menu-list {
+    .nav-item {
+      &:not(last-child) {
+        margin-right: 15px;
+      }
+
+      .nav-link {
+        color: $gray;
+        font-size: 14px;
+        font-weight: 500;
+        //line-height: 55px;
+        text-transform: uppercase;
+
+        &.active {
+          color: #e62121;
+        }
+      }
+    }
+  }
+
+  .menu-open {
+    position: absolute;
+    right: 0;
+    .label {
+      top: 0;
+      right: 0;
+    }
+  }
+
+  .login {
+    display: flex;
+    align-items: center;
+
+    .avatar {
+      margin-left: 10px;
+    }
+
+    .title {
+      color: $gray;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+
+    a.logout {
+      color: $pink;
+    }
+  }
+}
+
+aside.menu {
+  background-color: #fff;
+  position: fixed;
+  height: 100vh;
+  left: 100%;
+  opacity: 1;
+  width: 100vw;
+  padding: 20px;
+  transition: .3s;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+
+  .menu-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  &.active {
+    left: 0;
+    overflow: auto;
+  }
+
+  .menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .login {
+      display: flex;
+      align-items: center;
+
+      .title {
+        color: $gray;
+        text-transform: uppercase;
+      }
+    }
+
+    .avatar {
+      margin-right: 10px;
+    }
+
+    .menu-close {
+      color: $lightPink;
+    }
+  }
+
+  .menu-navs {
+    text-align: right;
+
+    .menu-list {
+      .menu-item {
+        .menu-link {
+          color: $gray;
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 55px;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .menu-footer {
+    text-align: right;
+    padding-bottom: 30px;
+
+    .ic__instagram {
+      svg {
+        height: 36px;
+        width: 36px;
+      }
+    }
+
+    .copyright {
+      color: $lightGray;
+      font-size: 12px;
+    }
+  }
+}

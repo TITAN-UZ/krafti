@@ -1,0 +1,32 @@
+<?php
+
+use App\Model\UserRole;
+use Phinx\Seed\AbstractSeed;
+
+class UserRoles extends AbstractSeed
+{
+    public function run()
+    {
+        $roles = [
+            'Администратор' => [
+                'scope' => ['profile', 'admin', 'courses', 'lessons', 'videos', 'user-roles', 'users'],
+            ],
+            'Автор' => [
+                'scope' => ['profile', 'admin', 'courses', 'lessons', 'videos'],
+            ],
+            'Пользователь' => [
+                'scope' => ['profile'],
+            ],
+        ];
+
+        foreach ($roles as $group => $data) {
+            if (!$record = UserRole::query()->where('title', '=', $group)->first()) {
+                $record = new UserRole(['title' => $group]);
+            }
+            if (!empty($data)) {
+                $record->fill($data);
+            }
+            $record->save();
+        }
+    }
+}

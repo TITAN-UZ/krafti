@@ -1,0 +1,41 @@
+.review__item {
+  margin-bottom: 60px;
+
+  &--photo {
+    margin-bottom: 20px;
+
+    img {
+      width: 180px;
+      height: 180px;
+    }
+  }
+
+  &--name {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+  }
+
+  &--position {
+    color: $lightPink;
+    font-size: 16px;
+    line-height: 19px;
+    margin-bottom: 24px;
+  }
+
+  &--text {
+    color: $lightGray;
+    font-style: italic;
+    font-weight: 200;
+    font-size: 20px;
+    line-height: 28px;
+    max-width: 275px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .review__item {
+    margin-bottom: 40px;
+  }
+}

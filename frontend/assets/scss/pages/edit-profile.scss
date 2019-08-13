@@ -1,0 +1,61 @@
+.edit-profile__form {
+  margin: 0 auto;
+  max-width: 460px;
+
+  /*.avatar__box {
+    position: relative;
+    cursor: pointer;
+  }*/
+
+  img.avatar {
+    width: 144px;
+    height: 144px;
+    margin: 0 auto;
+    display: block;
+    border: 1px solid $lightestGray;
+    border-radius: 50%;
+  }
+
+  label[for="photo"] {
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 19px;
+    height: auto !important;
+    text-align: center;
+  }
+
+  label.custom-control-label {
+    height: 10px !important;
+  }
+
+  /*
+  input[type="file"] {
+    display: none;
+  }
+  */
+
+  .form-group-wrap {
+    .add__baby {
+      position: relative;
+      background: transparent;
+      border: 0;
+      margin-left: -25px;
+      margin-top: -20px;
+      margin-bottom: -20px;
+
+      &:focus {
+        outline: 0;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .add__baby--text {
+      color: $lightGray;
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+}

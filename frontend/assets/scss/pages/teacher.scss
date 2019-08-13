@@ -1,0 +1,143 @@
+.teacher__content {
+  .teacher__detail--wrap {
+    max-width: 620px;
+    margin: 0 auto;
+
+    .teacher__info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      &--photo {
+        margin-bottom: 24px;
+        max-width: 220px;
+        position: relative;
+
+        .teacher-photo {
+          background: #FFD7AB;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.102764);
+          height: auto;
+        }
+
+        .label__shape::before {
+          top: 0;
+          right: 20px;
+        }
+      }
+
+      &--name {
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 29px;
+      }
+
+      &--position {
+        color: $lightPink;
+        font-size: 16px;
+        line-height: 19px;
+        margin-bottom: 60px;
+      }
+    }
+
+    .teacher__text {
+      font-weight: 200;
+      font-size: 16px;
+      line-height: 19px;
+      max-width: 620px;
+      margin-bottom: 60px;
+    }
+
+    .teacher__gallery {
+      margin-bottom: 60px;
+
+      .left__block {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        flex-basis: 70%;
+      }
+
+      .right__block {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        flex-basis: 30%;
+
+        .mb-15 {
+          margin-bottom: 0.15rem;
+        }
+      }
+    }
+  }
+}
+
+section.teachers {
+  margin: 0 auto;
+  max-width: 940px;
+}
+
+.teacher__item {
+  border-bottom: 1px solid #F4F4F4;
+  padding: 15px 0;
+
+  .wrap {
+    position: relative;
+
+    .teacher__item--photo {
+      img {
+        max-width: 64px;
+        height: auto;
+      }
+    }
+
+    .label__shape {
+      position: absolute;
+
+      &::before {
+        right: 0;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  a {
+    color: $gray;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    .teacher__item--title {
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 21px;
+      margin-bottom: 4px;
+    }
+  }
+
+  &--position {
+    color: $lightPink;
+    font-size: 14px;
+    line-height: 17px;
+    margin-bottom: 15px;
+  }
+
+  &--info {
+    color: #383838;
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom: 15px;
+  }
+
+  &--more {
+    a.more_link {
+      color: $lightGray;
+      font-size: 14px;
+      line-height: 17px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

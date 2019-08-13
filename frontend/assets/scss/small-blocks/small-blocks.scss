@@ -1,0 +1,152 @@
+.mini-banner {
+  display: flex;
+  background-color: $white;
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.10383);
+  border-radius: 15px;
+  padding: 24px 35px;
+  margin: -30px auto 40px;
+  max-width: 940px;
+  position: relative;
+
+  .learner-avatar {
+    margin-right: 15px;
+    position: relative;
+    cursor: pointer;
+    img {
+      max-width: 88px;
+      max-height: 88px;
+      border-radius: 50%;
+      border: 1px solid $lightestGray;
+    }
+  }
+
+  .learner-info {
+    width: 100%;
+    .top {
+      font-size: 18px;
+      line-height: 21px;
+      .name {
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+    }
+    .footer {
+      .coins {
+        background: #4a6cc3;
+        border-radius: 12.5px;
+        color: $white;
+        font-size: 12px;
+        padding: 3px 10px ;
+      }
+      a, .svg-inline--fa {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}
+
+.kraftistoreList {
+  .item {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.102764);
+
+    .item__body {
+      padding: 12px 14px;
+
+      .title {
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 21px;
+      }
+    }
+
+    .item__bottom {
+      justify-content: flex-start;
+      align-items: center;
+
+      .price {
+        font-weight: 900;
+        font-size: 16px;
+        line-height: 19px;
+      }
+    }
+  }
+}
+
+// Modal forms
+
+.modal-dialog {
+  margin: 1.75rem auto;
+
+  .modal-content {
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.10383);
+    border-radius: 28.3099px;
+    border: 0;
+  }
+
+  .modal-header {
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    //padding-top: 0;
+    padding-bottom: 0;
+    .close {
+      padding: 0;
+      margin: 0 0 0 auto;
+      height: auto;
+    }
+    h5, .close {
+      font-size: 1.4rem;
+    }
+  }
+
+  .modal-footer {
+    border-top: 0;
+  }
+
+  &.modal-video {
+    .modal-header {
+      z-index: 10;
+      .close {
+          margin-left: auto;
+          color: $white;
+      }
+    }
+    .modal-body {
+      padding: 0 !important;
+
+      .wrapper__bg {
+        border-radius: 28.3099px;
+      }
+    }
+    @include media-breakpoint-up(xs) {
+      .modal-body {
+        margin-top: -23px;
+      }
+    }
+    @include media-breakpoint-up(md) {
+      .modal-body {
+        margin-top: -83px;
+      }
+    }
+  }
+}
+
+.modal-header {
+  border-bottom: 0;
+
+  .close {
+    background: transparent;
+    border: 0;
+    color: $lightPink;
+    position: relative;
+    right: 0;
+
+    &:hover {
+      color: $pink;
+    }
+    &:focus {
+      outline: 0;
+    }
+  }
+}
