@@ -28,6 +28,7 @@
 
 <script>
     export default {
+        name: 'upload-cover',
         data() {
             return {}
         },
@@ -35,7 +36,7 @@
             value: {
                 type: Object,
                 required: false,
-                default: [],
+                default: {},
             },
             label: {
                 type: String,
@@ -64,9 +65,6 @@
             removeFile(e, file) {
                 this.myValue = null;
             },
-        },
-        mounted() {
-            console.log(this.label)
         }
     }
 </script>

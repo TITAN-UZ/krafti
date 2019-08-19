@@ -59,13 +59,13 @@ a.button {
 
       &::before {
         position: absolute;
-        content: '|';
+        content: 'b';
         display: block;
-        top: 2px;
         left: 10px;
-        color: #4BBFDC;
+        border-left: 3px solid #4BBFDC;
         font-weight: 200;
-        font-size: 35px;
+        font-size: 20px;
+        text-indent: -99999999px;
       }
 
       &--title {
@@ -177,7 +177,9 @@ section.science__content {
       position: relative;
       display: block;
       cursor: pointer;
-
+      &:hover {
+        opacity: 0.8;
+      }
       //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
       &::before {
         position: absolute;
@@ -194,10 +196,6 @@ section.science__content {
 
       .bonus__lesson--thumb {
         border-radius: 20px;
-
-        &:hover {
-          opacity: 0.8;
-        }
       }
     }
   }
@@ -246,8 +244,9 @@ section.lesson__content--bottom {
       position: relative;
       display: block;
       cursor: pointer;
-
-      //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
+      &:hover {
+        opacity: 0.8;
+      }
       &::before {
         position: absolute;
         display: block;
@@ -263,12 +262,8 @@ section.lesson__content--bottom {
       }
 
       .media--thumb {
-        border-radius: 20px;
+        border-radius: 10px;
         transition: opacity 0.3s;
-
-        &:hover {
-          opacity: 0.8;
-        }
       }
     }
 

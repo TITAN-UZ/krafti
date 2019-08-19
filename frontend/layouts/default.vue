@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <page-header ref="header"/>
-        <nuxt/>
-        <page-footer ref="footer"/>
-    </div>
+  <div>
+    <page-header ref="header"/>
+    <nuxt/>
+    <page-footer ref="footer"/>
+  </div>
 </template>
 
 <script>
@@ -18,6 +18,6 @@
         },
         created() {
             //console.log(this.$router.options.routes)
-        }
+        },
     }
 </script>

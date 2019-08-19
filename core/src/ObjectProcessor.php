@@ -109,9 +109,10 @@ class ObjectProcessor extends Processor
         /** @var Model $class */
         $class = new $this->class();
         /** @var Builder $c */
-        $c = $this->class::query();
+        $c = $class->query();
 
         if ($id = $this->getProperty($this->primaryKey)) {
+            $c = $this->beforeGet($c);
             if ($record = $c->find($id)) {
                 $data = $this->prepareRow($record);
 
@@ -147,6 +148,19 @@ class ObjectProcessor extends Processor
             'total' => $total,
             'rows' => $rows,
         ]);
+    }
+
+
+    /**
+     * Add conditions before get an object by id
+     *
+     * @param Builder $c
+     *
+     * @return mixed
+     */
+    protected function beforeGet($c)
+    {
+        return $c;
     }
 
 

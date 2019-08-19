@@ -15,7 +15,7 @@ class UserRoles extends AbstractSeed
                 'scope' => ['profile', 'admin', 'courses', 'lessons', 'videos'],
             ],
             'Пользователь' => [
-                'scope' => ['profile'],
+                'scope' => ['profile', 'lessons/get'],
             ],
         ];
 

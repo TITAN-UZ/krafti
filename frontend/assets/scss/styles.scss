@@ -17,7 +17,7 @@
 @import "~bootstrap/scss/tables";
 @import "~bootstrap/scss/badge";
 @import "~bootstrap/scss/pagination";
-//@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/dropdown";
 @import "~bootstrap/scss/nav";
 @import "~bootstrap/scss/alert";
 @import "~bootstrap/scss/media";
@@ -536,6 +536,19 @@ section {
   }
 }
 
+.filepond--drop-label {
+  cursor: pointer;
+  label {
+    cursor: pointer !important;
+  }
+}
+
+.dropdown-toggle.dropdown-toggle-no-caret {
+  &::after {
+    display: none;
+  }
+}
+
 // For dev-server
 .nuxt__build_indicator {
   position: fixed !important;
@@ -544,3 +557,5 @@ section {
   display: flex;
   justify-content: center;
 }
+
+

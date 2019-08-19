@@ -5,6 +5,7 @@ namespace App;
 use App\Model\User;
 use App\Service\Logger;
 use Firebase\JWT\JWT;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Symfony\Component\Dotenv\Dotenv;
@@ -33,6 +34,12 @@ class Container extends \Slim\Container
     public $user = null;
     /** @var array $user_scopes */
     public $user_scopes = [];
+
+    public const course_cost = [
+        3 => 2990,
+        6 => 3990,
+        12 => 5990,
+    ];
 
 
     /**
@@ -103,11 +110,19 @@ class Container extends \Slim\Container
         $this['jwt'] = function () {
             $container = $this;
 
-            return new \Tuupola\Middleware\JwtAuthentication([
-                'path' => ['/api'],
-                'ignore' => [
-                    '/api/security/',
-                    '/api/web/'
+            $jwt = new \Tuupola\Middleware\JwtAuthentication([
+                'rules' => [
+                    new \Tuupola\Middleware\JwtAuthentication\RequestMethodRule([
+                        'ignore' => ['OPTIONS']
+                    ]),
+                    new Service\Jwt([
+                        'path' => '/api',
+                        'force' => ['/api/web/course/lessons'],
+                        'ignore' => [
+                            '/api/security/',
+                            '/api/web/'
+                        ],
+                    ])
                 ],
                 'secure' => false, // Dev
                 //'logger' => $this->logger,
@@ -115,7 +130,7 @@ class Container extends \Slim\Container
                 'error' => function () use ($container) {
                     return (new Processor($container))->failure('Требуется авторизация', 401);
                 },
-                'before' => function (Request $request) use ($container) {
+                /*'before' => function (Request $request) use ($container) {
                     $container->user = User::query()->where([
                         'id' => $request->getAttribute('token')['id'],
                         'active' => true,
@@ -128,8 +143,10 @@ class Container extends \Slim\Container
                     return !$container->user
                         ? (new Processor($container))->failure('Требуется авторизация', 401)
                         : $response;
-                },
+                },*/
             ]);
+
+            return $jwt;
         };
 
         $this['vimeo'] = function () {

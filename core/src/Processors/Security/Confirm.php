@@ -9,10 +9,10 @@ class Confirm extends \App\Processor
 
     public function get()
     {
-        $user_id = (int)$this->getProperty('user_id');
-
-        $encrypted = $this->getProperty('secret');
         $type = $this->getProperty('type');
+        $user_id = (int)$this->getProperty('user_id');
+        $encrypted = $this->getProperty('secret');
+
         /** @var User $user */
         if ($encrypted && $user = User::query()->find($user_id)) {
             if ($type == 'reset') {
@@ -20,10 +20,10 @@ class Confirm extends \App\Processor
                 $decrypted = openssl_decrypt(base64_decode($encrypted), 'AES-256-CBC', $secret);
                 if ($user->resetPassword($decrypted)) {
                     return $this->success([
-                        'token' => $this->container->makeToken($user->id)
+                        'token' => $this->container->makeToken($user->id),
                     ]);
                 }
-            } elseif ($type == 'email') {
+            } elseif ($type == 'confirm') {
                 $secret = getenv('EMAIL_SECRET');
                 $decrypted = openssl_decrypt(base64_decode($encrypted), 'AES-256-CBC', $secret);
                 if ($decrypted == $user->email) {
@@ -33,10 +33,9 @@ class Confirm extends \App\Processor
                     return $this->success();
                 }
             }
-
         }
 
-        return $this->failure('Не могу сбросить пароль');
+        return $this->failure();
     }
 
 }

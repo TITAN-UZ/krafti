@@ -23,6 +23,7 @@
     import bg from '../../assets/images/general/headline_favorites.jpg'
 
     export default {
+        auth: true,
         data() {
             return {
                 style_bg: {'background-image': 'url(' + bg + ')'},

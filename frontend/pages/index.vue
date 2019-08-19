@@ -131,6 +131,7 @@
               </div>
             </div>
           </div>
+          <!--TODO Начисление Крафтиков за подписку-->
           <div class="col-lg-6 col-12 d-flex align-items-end">
             <form class="subscription__form" action="" @submit.prevent="onSubscribe">
               <label for="email">
@@ -152,6 +153,7 @@
     import bg from '../assets/images/general/headline_main.png'
 
     export default {
+        auth: false,
         data() {
             return {
                 loading: false,

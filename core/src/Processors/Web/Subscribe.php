@@ -14,9 +14,8 @@ class Subscribe extends \App\Processor
             return $this->failure('Вы должны указать email');
         }
 
-        if (!Subscriber::query()->where(['email' => $email])->count()) {
+        if (!Subscriber::query()->find($email)) {
             $subscriber = new Subscriber(['email' => $email]);
-
             $subscriber->save();
         }
 

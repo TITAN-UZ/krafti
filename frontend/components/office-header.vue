@@ -45,8 +45,6 @@
 <script>
     import {faCog, faHeart, faStar} from '@fortawesome/pro-solid-svg-icons'
     import bg from '../assets/images/general/headline_photo.png';
-    import uploadPhoto from './upload-photo'
-    import uploadBg from './upload-bg'
 
     export default {
         name: 'office-header',
@@ -59,10 +57,6 @@
             user() {
                 return this.$auth.user;
             },
-        },
-        components: {
-            'upload-photo': uploadPhoto,
-            'upload-bg': uploadBg,
         },
         created() {
             this.$fa.add(faCog, faHeart, faStar);

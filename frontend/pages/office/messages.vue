@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Генерация и вывод уведомлений об окончании оплаты курса и днях рождения-->
     <div class="container__940">
         <div class="row messages__wrap">
             <div class="col-lg-7 col-12">

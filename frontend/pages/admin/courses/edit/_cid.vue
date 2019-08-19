@@ -41,28 +41,19 @@
           <b-form-group
             label-cols-lg="3"
             label-align-lg="right"
-            label="Бонусное видео"
-            label-for="input-bonus"
-            description="Необязательное бонусное видео курса">
-            <pick-video v-model="record.bonus_id"/>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-lg="3"
-            label-align-lg="right"
             label="Описание курса:"
             label-for="input-description">
             <b-form-textarea id="input-description" no-resize rows="3" v-model="record.description"/>
           </b-form-group>
 
-          <b-form-group
+          <!--<b-form-group
             label-cols-lg="3"
             label-align-lg="right"
             label="Стоимость курса:"
             label-for="input-price"
             description="Укажите цену в рублях">
             <b-form-input id="input-price" type="number" placeholder="2990" v-model="record.price" v-mask="'###?#?#'"/>
-          </b-form-group>
+          </b-form-group>-->
 
           <b-form-group
             label-cols-lg="3"
@@ -100,13 +91,21 @@
           </b-row>
         </b-form>
       </b-tab>
-      <b-tab title="Уроки" >
+      <b-tab title="Уроки" active>
         <table-filter :filters="filters" :table="$options.name">
           <template slot="actions">
             <router-link class="btn btn-secondary" :to="$route.params.cid + '/create'">
               <fa icon="plus"/>
               Добавить
             </router-link>
+
+              <b-form-select v-model="filters.section" style="width:120px;" class="ml-auto" v-if="filters.section !== undefined">
+                <option :value="null">Все этапы</option>
+                <option :value="1">Этап 1</option>
+                <option :value="2">Этап 2</option>
+                <option :value="3">Этап 3</option>
+                <option :value="0">Бонус</option>
+              </b-form-select>
           </template>
         </table-filter>
 
@@ -123,20 +122,34 @@
                  no-local-sorting
                  empty-text="Подходящих результатов не найдено"
                  empty-filtered-text="Подходящих результатов не найдено">
-          <template slot="title" slot-scope="row">
-            <strong>{{row.value}}</strong>
+          <template slot="section" slot-scope="row">
+            <div v-if="row.value == 0">
+              Бонус
+            </div>
+            <div v-else>
+              Этап: <strong>{{row.value}}</strong>
+            </div>
           </template>
           <template slot="video" slot-scope="row">
             <a :href="row.value['1920x1080']" target="_blank" v-if="row.value['100x75'] && row.value['1920x1080']">
               <img :src="row.value['100x75']" class="mr-2"/>
             </a>
           </template>
+          <template slot="title" slot-scope="row">
+            {{row.item.rank + 1}}. <strong>{{row.value}}</strong>
+          </template>
           <template slot="actions" slot-scope="row">
             <router-link class="btn btn-sm" :to="$route.params.cid + '/edit/' + row.item.id">
               <fa icon="edit"/>
             </router-link>
-            <a href="#" class="btn btn-sm text-danger" @click.prevent="onDelete(row.item)">
+            <a class="btn btn-sm text-danger" @click.prevent="onDelete(row.item)">
               <fa icon="times"/>
+            </a>
+            <a class="btn btn-sm" @click.prevent="moveUp(row.item.id)" v-if="row.item.rank > 0 && filters.section">
+              <fa :icon="['fas', 'arrow-up']"/>
+            </a>
+            <a class="btn btn-sm" @click.prevent="moveDown(row.item.id)" v-if="row.item.rank < (totalRows - 1)  && filters.section">
+              <fa :icon="['fas', 'arrow-down']"/>
             </a>
           </template>
         </b-table>
@@ -149,37 +162,36 @@
 </template>
 
 <script>
-    import UploadCover from '../../../../components/upload-cover'
+    import {faArrowDown, faArrowUp} from '@fortawesome/pro-solid-svg-icons'
 
     export default {
         name: 'admin-lessons',
         validate({params}) {
             return /^\d+$/.test(params.cid)
         },
-        components: {
-            'upload-cover': UploadCover,
-        },
         data() {
             return {
                 loading: false,
+                sections: [0, 0, 0],
                 items: (ctx) => {
+                    this.sections = [0, 0, 0];
                     return this.loadTable(ctx, this, 'admin/lessons');
                 },
                 fields: [
-                    //{key: 'rank', label: 'Порядок', sortable: true},
-                    {key: 'id', label: 'Id', sortable: true},
+                    {key: 'section', label: 'Этап', sortable: false},
                     {key: 'video', label: 'Превью', sortable: false},
                     {key: 'title', label: 'Название', sortable: false},
                     {key: 'actions', label: 'Действия'},
                 ],
                 cover: {},
                 page: 1,
-                limit: 5,
+                limit: 10,
                 totalRows: 0,
                 sort: 'rank',
                 dir: 'asc',
                 filters: {
                     query: '',
+                    section: null,
                     course_id: this.$route.params.cid,
                 }
             }
@@ -208,6 +220,18 @@
             rowClass(item) {
                 return item && !item.active ? 'text-muted' : '';
             },
+            moveUp(id) {
+                this.$axios.post('admin/lessons', {action: 'move_up', id: id})
+                    .then(() => {
+                        this.refresh();
+                    })
+            },
+            moveDown(id) {
+                this.$axios.post('admin/lessons', {action: 'move_down', id: id})
+                    .then(() => {
+                        this.refresh();
+                    })
+            },
             onDelete(item) {
                 this.$message.confirm('Вы уверены, что хотите удалить эту запись?', () => {
                     this.$axios.delete('admin/lessons', {params: {id: item.id}})
@@ -227,6 +251,8 @@
                 })
         },
         created() {
+            this.$fa.add(faArrowUp, faArrowDown);
+
             this.$root.$on('app::' + this.$options.name + '::update', () => {
                 this.refresh();
             });

@@ -41,28 +41,19 @@
         <b-form-group
           label-cols-lg="3"
           label-align-lg="right"
-          label="Бонусное видео"
-          label-for="input-bonus"
-          description="Необязательное бонусное видео курса">
-          <pick-video v-model="record.bonus_id"/>
-        </b-form-group>
-
-        <b-form-group
-          label-cols-lg="3"
-          label-align-lg="right"
           label="Описание курса:"
           label-for="input-description">
           <b-form-textarea id="input-description" no-resize rows="3" v-model="record.description"/>
         </b-form-group>
 
-        <b-form-group
+        <!--<b-form-group
           label-cols-lg="3"
           label-align-lg="right"
           label="Стоимость курса:"
           label-for="input-price"
           description="Укажите цену в рублях">
           <b-form-input id="input-price" type="number" placeholder="2990" v-model="record.price" v-mask="'###?#?#'"/>
-        </b-form-group>
+        </b-form-group>-->
 
         <b-form-group
           label-cols-lg="3"
@@ -104,8 +95,6 @@
 </template>
 
 <script>
-  import UploadCover from '../../../components/upload-cover'
-
     export default {
         data() {
             return {
@@ -123,9 +112,6 @@
                     active: false,
                 },
             }
-        },
-        components: {
-            'upload-cover': UploadCover,
         },
         methods: {
             onHidden() {

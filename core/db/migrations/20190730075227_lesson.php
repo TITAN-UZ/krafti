@@ -22,12 +22,12 @@ class Lesson extends Migration
 
             $table->json('products')->nullable();
 
-            $table->integer('views')->nullable();
-            $table->integer('likes')->nullable();
-
+            $table->integer('views_count')->unsigned()->default(0);
+            $table->integer('likes_count')->unsigned()->default(0);
+            $table->integer('dislikes_count')->unsigned()->default(0);
             $table->smallInteger('rank')->default(0)->index();
-            $table->smallInteger('section')->default(0)->index();
-            $table->boolean('active')->default(0);
+            $table->smallInteger('section')->index();
+            $table->boolean('active')->default(0)->index();
             $table->timestamps();
 
             $table->foreign('course_id')

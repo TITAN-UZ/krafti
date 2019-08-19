@@ -4,8 +4,8 @@ $white: #fff;
 $gray: #3C3C3C;
 $lightestGray: #F6F6F6;
 $lightGray: #C3C3C3;
-$lightPink: #FFB6B6;
-$pink: #FF7474;
+$lightPink: #ffb6b6;
+$pink: #ff7474;
 $lightGreen: #84E3C9;
 
 $primary: #be5f5f;
@@ -17,7 +17,7 @@ $base-font-size: 16px;
 //Input
 $input-padding-x: 1.2rem;
 $input-padding-y: 1rem;
-$input-color: #757474;
+$input-color: #000;
 $input-border-color: #DEDEDE;
 $input-border-radius: 10px;
 
@@ -35,6 +35,8 @@ $modal-xl: 1140px;
 $modal-lg: 800px;
 $modal-md: 500px;
 $modal-sm: 300px;
+
+$btn-focus-box-shadow: none;
 
 // Fonts
 $default-font: 'sfprodisplay', sans-serif;

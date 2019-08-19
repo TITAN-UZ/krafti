@@ -28,24 +28,13 @@
     import {faCameraAlt} from '@fortawesome/pro-light-svg-icons'
 
     export default {
+        name: 'upload-bg',
         data() {
             return {
                 bg: bg,
                 faCameraAlt: icon(faCameraAlt, {transform: {size: 36}}).html[0],
             }
         },
-        /*props: {
-            showLabel: {
-                type: Boolean,
-                required: false,
-                default: true,
-            },
-            size: {
-                type: Number,
-                required: false,
-                default: '150',
-            }
-        },*/
         methods: {
             handleUpload(fieldName, file, metadata, load, error, progress, abort) {
                 const formData = new FormData();

@@ -4,7 +4,7 @@
       ref="autosuggest"
       :suggestions="suggestions"
       :getSuggestionValue="getSuggestionValue"
-      :inputProps="{class: 'form-control'}"
+      :inputProps="{class: 'form-control', required: required}"
       @input="load"
       @selected="onSelected">
       <template slot-scope="{suggestion}">
@@ -25,6 +25,11 @@
                 type: Number,
                 required: false,
                 default: 0,
+            },
+            required: {
+                type: Boolean,
+                required: false,
+                default: false,
             }
         },
         data() {

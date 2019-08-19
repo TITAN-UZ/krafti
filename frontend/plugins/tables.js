@@ -3,12 +3,10 @@ import Vue from 'vue'
 import DatePicker from 'vue2-datepicker'
 import TableFilter from '../components/table-filter'
 import TableFooter from '../components/table-footer'
-import VueTags from '@voerro/vue-tagsinput'
 
 Vue.component('date-picker', DatePicker);
 Vue.component('table-filter', TableFilter);
 Vue.component('table-footer', TableFooter);
-Vue.component('tags', VueTags);
 
 export default ({app}, inject) => {
     Vue.prototype.loadTable = (ctx, $component, action) => {

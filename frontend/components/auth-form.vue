@@ -1,100 +1,107 @@
 <template>
-    <div class="auth-form">
-        <div v-if="mode == 'login'">
-            <h5 class="title text-center mb-5">Вход</h5>
-            <form action="" method="post" @submit.prevent="onLogin">
+  <div class="auth-form">
+    <div v-if="mode == 'login' && forms.includes('login')">
+      <slot name="login-title">
+        <h5 class="title text-center mb-5">Вход</h5>
+      </slot>
+      <form action="" method="post" @submit.prevent="onLogin">
+        <b-form-group class="mb-3">
+          <b-input v-model="login.email" type="email" placeholder="Адрес эл. почты" trim required autofocus/>
+        </b-form-group>
 
-                <b-form-group class="mb-3">
-                    <b-input v-model="login.email" type="email" placeholder="Адрес эл. почты" trim required autofocus/>
-                </b-form-group>
+        <b-form-group class="mb-3">
+          <b-input v-model="login.password" type="password" placeholder="Пароль" trim required/>
+        </b-form-group>
 
-                <b-form-group class="mb-3">
-                    <b-input v-model="login.password" type="password" placeholder="Пароль" trim required/>
-                </b-form-group>
-
-                <div class="alert alert-danger" v-if="error.login != ''">
-                    {{error.login}}
-                </div>
-
-                <div class="mt-5 mb-5 d-flex justify-content-center">
-                    <button class="button mr-2" type="submit" :disabled="checkLogin()">Отправить</button>
-                </div>
-
-                <div class="form-footer d-flex align-items-center justify-content-center flex-column">
-                    <div class="login__note">Если у вас нет аккаунта, то</div>
-                    <a class="link__registration" @click.prevent="mode = 'register'" aria-label="Registration">
-                        зарегистрируйтесь
-                    </a>
-                    <div class="login__note mt-2">А если не помните свой пароль,</div>
-                    <a class="link__registration" @click.prevent="mode = 'reset'" aria-label="Reset">
-                        его можно сбросить
-                    </a>
-                </div>
-            </form>
+        <div class="alert alert-danger" v-if="error.login != ''">
+          {{error.login}}
         </div>
-        <div v-else-if="mode == 'register'">
-            <h5 class="title text-center mb-5">Регистрация</h5>
-            <form action="" method="post" @submit.prevent="onRegister" :disabled="loading">
 
-                <b-form-group class="mb-2">
-                    <b-input v-model="register.fullname" placeholder="Имя Фамилия" trim required autofocus/>
-                </b-form-group>
-
-                <b-form-group class="mb-2">
-                    <b-input v-model="register.email" placeholder="Адрес эл. почты" trim required/>
-                </b-form-group>
-
-                <b-form-group class="mb-2">
-                    <b-input v-model="register.password" type="password" placeholder="Пароль" trim required/>
-                </b-form-group>
-
-                <b-form-group class="mb-2">
-                    <b-input v-model="register.instagram" placeholder="@instagram" trim/>
-                </b-form-group>
-
-                <div class="alert alert-danger" v-if="error.register != ''">
-                    {{error.register}}
-                </div>
-
-                <div class="mt-5 mb-5 d-flex justify-content-center">
-                    <button class="button mr-2" type="submit" aria-label="submit" :disabled="checkRegister()">
-                        Отправить
-                    </button>
-                </div>
-                <div class="form-footer d-flex align-items-center justify-content-center flex-column">
-                    <div class="login__note">У вас уже есть логин? Тогда можно</div>
-                    <a class="link__registration" @click.prevent="mode = 'login'" aria-label="Login">
-                        войти на сайт
-                    </a>
-                </div>
-            </form>
+        <div class="mt-5 mb-5 d-flex justify-content-center">
+          <button class="button mr-2" type="submit" :disabled="checkLogin()">
+            <slot name="login-button">Отправить</slot>
+          </button>
         </div>
-        <div v-else>
-            <h5 class="title text-center mb-5">Сброс пароля</h5>
-            <form action="" method="post" @submit.prevent="onReset" :disabled="loading">
 
-                <b-form-group class="mb-3">
-                    <b-input v-model="reset.email" type="email" placeholder="Адрес эл. почты" trim required autofocus/>
-                </b-form-group>
-
-                <div class="alert alert-danger" v-if="error.reset != ''">
-                    {{error.reset}}
-                </div>
-
-                <div class="mt-5 mb-5 d-flex justify-content-center ">
-                    <button class="button mr-2" type="submit" aria-label="submit" :disabled="checkReset()">
-                        Отправить
-                    </button>
-                </div>
-                <div class="form-footer d-flex align-items-center justify-content-center flex-column">
-                    <div class="login__note">Вспомнили пароль? Тогда</div>
-                    <a class="link__registration" @click.prevent="mode = 'login'" aria-label="Login">
-                        авторизуйтесь
-                    </a>
-                </div>
-            </form>
+        <div class="form-footer d-flex align-items-center justify-content-center flex-column">
+          <div class="login__note">Если у вас нет аккаунта, то</div>
+          <a class="link__registration" @click.prevent="mode = 'register'" aria-label="Registration">
+            зарегистрируйтесь
+          </a>
+          <div v-if="forms.includes('reset')" class="text-center">
+            <div class="login__note mt-2">А если не помните свой пароль,</div>
+            <a class="link__registration" @click.prevent="mode = 'reset'" aria-label="Reset">
+              его можно сбросить
+            </a>
+          </div>
         </div>
+      </form>
     </div>
+    <div v-else-if="mode == 'register' && forms.includes('register')">
+      <slot name="register-title">
+        <h5 class="title text-center mb-5">Регистрация</h5>
+      </slot>
+      <form action="" method="post" @submit.prevent="onRegister" :disabled="loading">
+        <b-form-group class="mb-2">
+          <b-input v-model="register.fullname" placeholder="Имя Фамилия" trim required autofocus/>
+        </b-form-group>
+
+        <b-form-group class="mb-2">
+          <b-input v-model="register.email" placeholder="Адрес эл. почты" trim required/>
+        </b-form-group>
+
+        <b-form-group class="mb-2">
+          <b-input v-model="register.password" type="password" placeholder="Пароль" trim required/>
+        </b-form-group>
+
+        <b-form-group class="mb-2">
+          <b-input v-model="register.instagram" placeholder="@instagram" trim/>
+        </b-form-group>
+
+        <div class="alert alert-danger" v-if="error.register != ''">
+          {{error.register}}
+        </div>
+
+        <div class="mt-5 mb-5 d-flex justify-content-center">
+          <button class="button mr-2" type="submit" aria-label="submit" :disabled="checkRegister()">
+            <slot name="register-button">Отправить</slot>
+          </button>
+        </div>
+        <div class="form-footer d-flex align-items-center justify-content-center flex-column">
+          <div class="login__note">У вас уже есть логин? Тогда можно</div>
+          <a class="link__registration" @click.prevent="mode = 'login'" aria-label="Login">
+            войти на сайт
+          </a>
+        </div>
+      </form>
+    </div>
+    <div v-else-if="forms.includes('reset')">
+      <slot name="reset-title">
+        <h5 class="title text-center mb-5">Сброс пароля</h5>
+      </slot>
+      <form action="" method="post" @submit.prevent="onReset" :disabled="loading">
+        <b-form-group class="mb-3">
+          <b-input v-model="reset.email" type="email" placeholder="Адрес эл. почты" trim required autofocus/>
+        </b-form-group>
+
+        <div class="alert alert-danger" v-if="error.reset != ''">
+          {{error.reset}}
+        </div>
+
+        <div class="mt-5 mb-5 d-flex justify-content-center ">
+          <button class="button mr-2" type="submit" aria-label="submit" :disabled="checkReset()">
+            <slot name="reset-button">Отправить</slot>
+          </button>
+        </div>
+        <div class="form-footer d-flex align-items-center justify-content-center flex-column">
+          <div class="login__note">Вспомнили пароль? Тогда</div>
+          <a class="link__registration" @click.prevent="mode = 'login'" aria-label="Login">
+            авторизуйтесь
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -128,6 +135,13 @@
                 type: String,
                 required: false,
                 default: 'login',
+            },
+            forms: {
+                type: Array,
+                required: false,
+                default: () => {
+                    return ['login', 'register', 'reset'];
+                }
             },
         },
         computed: {

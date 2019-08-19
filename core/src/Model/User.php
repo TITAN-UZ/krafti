@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $role_id
  * @property array $children
  * @property int $coins
+ * @property string $company
+ * @property string $description
  * @property string $logged_at
  * @property string $reset_at
  * @property string $created_at
@@ -31,11 +33,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read File $photo
  * @property-read File $background
  * @property-read UserFavorite[] $favorites
+ * @property-read UserLike[] $likes
+ * @property-read Order[] $orders
  */
 class User extends Model
 {
     public $timestamps = true;
     protected $fillable = ['email', 'password', 'fullname', 'dob', 'phone', 'instagram', 'active', 'photo_id',
+        'company', 'description',
         'background_id', 'role_id', 'children', 'coins', 'logged_at', 'reset_at',
     ];
     protected $casts = [
@@ -126,8 +131,27 @@ class User extends Model
     /**
      * @return HasMany
      */
-    public function favorites() {
+    public function favorites()
+    {
         return $this->hasMany('App\Model\UserFavorite');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function likes()
+    {
+        return $this->hasMany('App\Model\UserLike');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Model\Order');
     }
 
 

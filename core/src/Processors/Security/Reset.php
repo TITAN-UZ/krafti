@@ -50,7 +50,7 @@ class Reset extends \App\Processor
         $mail = $this->container->mail;
         try {
             $data = $user->toArray();
-            $data['link'] = "{$url}service/confirm/reset.{$user->id}.{$secret}";
+            $data['link'] = "{$url}service/email/reset?user_id={$user->id}&secret={$secret}";
 
             $subject = 'Сброс пароля на Krafti.ru';
             $body = $this->container->view->fetch(

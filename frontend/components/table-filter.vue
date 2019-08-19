@@ -81,9 +81,7 @@
 </template>
 
 <script>
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {faTimes, faCalendarAlt, faBackspace, faPlus, faFilter} from '@fortawesome/pro-regular-svg-icons'
-    library.add(faTimes, faCalendarAlt, faBackspace, faPlus, faFilter);
+    import {faBackspace, faCalendarAlt, faFilter, faPlus, faTimes} from '@fortawesome/pro-regular-svg-icons'
 
     export default {
         name: 'table-filter',
@@ -146,7 +144,7 @@
         computed: {
             moreFilters() {
                 let keys = Object.keys(this.filters).filter(item => {
-                    return !['query', 'course_id'].includes(item);
+                    return !['query', 'course_id', 'section'].includes(item);
                 });
 
                 return keys.length > 0;
@@ -185,6 +183,8 @@
             }
         },
         created() {
+            this.$fa.add(faTimes, faCalendarAlt, faBackspace, faPlus, faFilter);
+
             for (let i in this.filters) {
                 if (!this.filters.hasOwnProperty(i)) {
                     continue;

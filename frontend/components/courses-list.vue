@@ -13,7 +13,7 @@
 
             <b-spinner small type="grow" v-if="loading == course.id"/>
             <fa :icon="['fal', 'heart']" @click.prevent="addFavorite(course.id)" v-else-if="$auth.user && !$auth.user.favorites.includes(course.id)"/>
-            <fa :icon="['fas', 'heart']" @click.prevent="deleteFavorite(course.id)" v-else/>
+            <fa :icon="['fas', 'heart']" @click.prevent="deleteFavorite(course.id)" v-else-if="$auth.user"/>
           </div>
         </div>
       </nuxt-link>

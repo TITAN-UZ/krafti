@@ -11,15 +11,23 @@ import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginFileEncode from 'filepond-plugin-image-transform';
+import UploadBg from '../components/upload-bg'
+import UploadPhoto from '../components/upload-photo'
+import UploadCover from '../components/upload-cover'
+import UploadFile from '../components/upload-file'
 
 const FilePond = vueFilePond(
-    FilePondPluginFileEncode,
-    FilePondPluginFileValidateType,
-    FilePondPluginImageExifOrientation,
-    FilePondPluginImagePreview,
-    FilePondPluginImageCrop,
-    FilePondPluginImageResize,
-    FilePondPluginImageTransform
+  FilePondPluginFileEncode,
+  FilePondPluginFileValidateType,
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginImageCrop,
+  FilePondPluginImageResize,
+  FilePondPluginImageTransform
 );
-
 Vue.component('file-pond', FilePond);
+
+Vue.component('upload-bg', UploadBg);
+Vue.component('upload-photo', UploadPhoto);
+Vue.component('upload-cover', UploadCover);
+Vue.component('upload-file', UploadFile);

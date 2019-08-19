@@ -8,29 +8,62 @@
           <div class="row course__content--header">
             <div class="col-lg-7 col-12">
               <div class="course-video">
-                  <a class="video-link"
-                     :style="{'background-image': (record.cover ? 'url(' + record.cover + ')' : false)}"></a>
+                <a class="video-link"
+                   :style="{'background-image': (record.cover ? 'url(' + record.cover + ')' : false)}"></a>
               </div>
             </div>
             <div class="col-lg-5 col-12">
               <div class="course__info d-flex flex-column">
                 <div
                   class="course__info--top d-flex justify-content-lg-end justify-content-between align-items-center mb-2">
-                  <!--
-                  <a class="ic__heart&#45;&#45;gray mr-4" href="" aria-label="Favorites"></a>
-                  <a class="ic__share" href="" aria-label="Share"></a>
-                  -->
+                  <button class="btn btn-default">
+                    <b-spinner type="grow" class="text-primary" v-if="loading == ('favorite:' + record.id)"/>
+                    <a @click.prevent="addFavorite(record.id)"
+                       v-else-if="$auth.user && !$auth.user.favorites.includes(record.id)">
+                      <fa :icon="['fal', 'heart']" size="2x"/>
+                    </a>
+                    <a @click.prevent="deleteFavorite(record.id)" v-else-if="$auth.user">
+                      <fa :icon="['fas', 'heart']" size="2x"/>
+                    </a>
+                  </button>
 
-                  <b-spinner type="grow" class="text-primary" v-if="loading == ('favorite:' + record.id)"/>
-                  <a @click.prevent="addFavorite(record.id)" v-else-if="$auth.user && !$auth.user.favorites.includes(record.id)">
-                    <fa :icon="['fal', 'heart']" size="2x"/>
-                  </a>
-                  <a @click.prevent="deleteFavorite(record.id)" v-else>
-                    <fa :icon="['fas', 'heart']" size="2x"/>
-                  </a>
-                  <a class="ml-md-4">
-                    <fa :icon="['fas', 'share']" size="2x"/>
-                  </a>
+                  <no-ssr>
+                    <b-dropdown variant="default" no-caret right class="ml-md-2">
+                      <template slot="button-content">
+                        <a>
+                          <fa :icon="['fad', 'share']" size="2x"/>
+                        </a>
+                      </template>
+                      <social-sharing :url="'https://krafti.ru/courses/' + $route.params.cid" inline-template>
+                        <div>
+                          <b-dropdown-item>
+                            <network network="facebook">
+                              <fa :icon="['fab', 'facebook']" class="mr-2" style="color:#3b5998"/>
+                              Facebook
+                            </network>
+                          </b-dropdown-item>
+                          <b-dropdown-item>
+                            <network network="vk">
+                              <fa :icon="['fab', 'vk']" class="mr-2" style="color:#4c75a3"/>
+                              Вконтакте
+                            </network>
+                          </b-dropdown-item>
+                          <b-dropdown-item>
+                            <network network="pinterest">
+                              <fa :icon="['fab', 'pinterest']" class="mr-2" style="color:#bd081c"/>
+                              Pinterest
+                            </network>
+                          </b-dropdown-item>
+                          <b-dropdown-item>
+                            <network network="twitter">
+                              <fa :icon="['fab', 'twitter']" class="mr-2" style="color:#55acee"/>
+                              Twitter
+                            </network>
+                          </b-dropdown-item>
+                        </div>
+                      </social-sharing>
+                    </b-dropdown>
+                  </no-ssr>
                 </div>
                 <div class="course__info--pretop d-flex justify-content-center align-items-center">
                   <span class="count__lessons">{{record.lessons_count}} видео {{record.lessons_count | noun('урок|урока|уроков')}}</span>
@@ -40,25 +73,29 @@
                   <div class="course__tagline">{{record.tagline}}</div>
                 </div>
                 <div class="course__info--footer">
-                  <div class="row course__dopinfo mb-2 d-flex justify-content-around">
+                  <div class="row course__dopinfo mb-2 d-flex align-items-center justify-content-around">
                     <div class="col nowrap">
-                      <span class="ic__eyes mr-2"></span>
+                      <fa :icon="['fad', 'eye']"/>
                       <span class="text">{{record.views_count}}</span>
                     </div>
                     <div class="col nowrap">
-                      <span class="ic__user mr-2"></span>
+                      <fa :icon="['fad', 'user']"/>
                       <span class="text">{{record.age}} лет</span>
                     </div>
                     <div class="col nowrap">
-                      <span class="ic__like mr-2"></span>
-                      <span class="text">{{record.likes_count}}</span>
+                      <fa :icon="['fad', 'thumbs-up']"/>
+                      <span class="text">{{record.likes_sum}}</span>
                     </div>
                   </div>
                   <div class="row buy__wrap">
-                    <form class="buy" action="">
-                      <button class="btn__buy">Купить за<span class="price">{{record.price}} р</span></button>
-                      <!-- button.btn__play Воспроизвести все-->
-                    </form>
+                    <nuxt-link class="btn btn-default btn__play" v-if="record.bought === true && lessons['1']"
+                               :to="$route.params.cid + '/lesson/' + lessons['1'][0].id">
+                      Начать просмотр
+                    </nuxt-link>
+                    <nuxt-link :to="$route.params.cid + '/buy'" class="btn btn-default btn__buy"
+                               v-else-if="record.bought === false">
+                      Купить от <span class="price">2 990 р</span>
+                    </nuxt-link>
                   </div>
                 </div>
               </div>
@@ -70,15 +107,17 @@
               <div class="row mob_container">
                 <div class="col-12 tab__wrap--scroll">
                   <b-tabs v-model="tab">
-                    <b-tab title="Описание" active>
+                    <b-tab title="Описание">
                       <div class="text">{{record.description}}</div>
                     </b-tab>
-                    <b-tab title="Отзывы">
+                    <!--TODO Непонятно, как делать отзывы к курсу-->
+                    <b-tab title="Отзывы" v-if="reviews.length">
                       <div class="row reviews__wrap">
                         <div class="col-lg-7 col-12 review__item--list">
                           <div class="media review__item">
-                            <div class="wrap mr-3"><img class="review__item--photo rounded-circle"
-                                                        src="~assets/images/content/teacher.png" alt="..."></div>
+                            <div class="wrap mr-3">
+                              <img class="review__item--photo rounded-circle" src="~assets/images/content/teacher.png" alt="...">
+                            </div>
                             <div class="media-body"><a href="">
                               <h4 class="review__item--title mt-0">Анна Сотнич</h4></a>
                               <h5 class="review__item--position">Head bartender в BB Group</h5>
@@ -109,53 +148,23 @@
                                                                             alt=""></div>
                       </div>
                     </b-tab>
-                    <b-tab title="Преподаватели">
+                    <b-tab title="Преподаватели" v-if="authors.length">
                       <div class="row mob_container item__wrap d-flex tab__wrap--scroll">
-                        <div class="col-12 col-md-6 col-lg-4 m-width-80">
+
+                        <div class="col-12 col-md-6 col-lg-4 m-width-80" v-for="item in authors">
                           <div class="teacher__item d-flex flex-column justify-content-center align-items-center">
-                            <div class="teacher__item--photo"><img class="rounded-circle"
-                                                                   src="~assets/images/content/review/man.png" alt="">
+                            <div class="teacher__item--photo">
+                              <img class="rounded-circle" :src="item.photo" alt="" v-if="item.photo">
                             </div>
-                            <h2 class="teacher__item--name">Виктор Сухоруков</h2>
-                            <div class="teacher__item--position">SaveSpace Inc.</div>
-                            <div class="teacher__item--text">These cases are perfectly simple and easy to distinguish.
-                              In a free hour, when our power of choice is untrammelled and when nothing prevents our
-                              being able to do what we like best, every pleasure is to be welcomed and every pain
-                              avoided.
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-12 col-md-6 col-lg-4 m-width-80">
-                          <div class="teacher__item d-flex flex-column justify-content-center align-items-center">
-                            <div class="teacher__item--photo"><img class="rounded-circle"
-                                                                   src="~assets/images/content/review/woman2.png"
-                                                                   alt=""></div>
-                            <h2 class="teacher__item--name">Виктор Сухоруков</h2>
-                            <div class="teacher__item--position">SaveSpace Inc.</div>
-                            <div class="teacher__item--text">These cases are perfectly simple and easy to distinguish.
-                              In a free hour, when our power of choice is untrammelled and when nothing prevents our
-                              being able to do what we like best, every pleasure is to be welcomed and every pain
-                              avoided.
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-12 col-md-6 col-lg-4 m-width-80">
-                          <div class="teacher__item d-flex flex-column justify-content-center align-items-center">
-                            <div class="teacher__item--photo"><img class="rounded-circle"
-                                                                   src="~assets/images/content/review/man2.png" alt="">
-                            </div>
-                            <h2 class="teacher__item--name">Виктор Сухоруков</h2>
-                            <div class="teacher__item--position">SaveSpace Inc.</div>
-                            <div class="teacher__item--text">These cases are perfectly simple and easy to distinguish.
-                              In a free hour, when our power of choice is untrammelled and when nothing prevents our
-                              being able to do what we like best, every pleasure is to be welcomed and every pain
-                              avoided.
-                            </div>
+                            <h2 class="teacher__item--name">{{item.fullname}}</h2>
+                            <div class="teacher__item--position">{{item.company}}</div>
+                            <div class="teacher__item--text">{{item.description}}</div>
                           </div>
                         </div>
                       </div>
                     </b-tab>
-                    <b-tab title="Уроки">
+                    <b-tab title="Уроки" v-if="Object.keys(lessons).length" active>
+                      <!--TODO Сделать отображение прогресса на палитре-->
                       <div class="row palitra">
                         <div
                           class="col-lg-8 col-12 palitra__info d-flex justify-content-center align-items-center flex-column">
@@ -171,129 +180,88 @@
                           <img class="img-responsive" src="~assets/images/general/bg_palitra.png" alt="">
                         </div>
                       </div>
+
                       <div class="steps__wrap">
                         <div class="row">
                           <div class="col-12 tab__wrap--scroll">
                             <b-tabs>
-                              <b-tab title="1 этап" active>
+                              <b-tab v-for="(items, section) in lessons" :key="section" :title="section + ' этап'"
+                                     v-if="section > 0">
                                 <div class="step__wrap">
-                                  <div class="row">
-                                    <div class="col-12">
-                                      <div class="step__description">On the other hand, we denounce with righteous
-                                        indignation and dislike men who are so beguiled and demoralized by the charms of
-                                        pleasure of the moment, so blinded by desire, that they cannot foresee the pain
-                                        and trouble that are bound to ensue; and equal blame belongs to those who fail
-                                        in their.
-                                      </div>
-                                    </div>
-                                  </div>
                                   <div class="row lessons__list">
                                     <div
-                                      class="col-lg-4 col-12 col-md-6 lesson__item viewed d-flex justify-content-lg-center justify-content-between align-content-center flex-lg-column">
+                                      class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column"
+                                      v-for="item in items">
                                       <div class="lesson__item--video">
-                                        <nuxt-link class="video" to="/courses/1/video/1" aria-label="video"
-                                                   data-toggle="modal" data-target="#videoModal">
+                                        <nuxt-link class="video"
+                                                   :to="$route.params.cid + '/lesson/' + item.id"
+                                                   aria-label="video">
                                           <img class="img-responsive lesson__video--thumb"
-                                               src="~assets/images/content/courses/lesson-1.png" alt="">
+                                               :src="item.preview['295x166']" alt="" v-if="item.preview['295x166']">
                                         </nuxt-link>
                                       </div>
                                       <div class="lesson__item--info d-flex align-items-center justify-content-center">
-                                        On the other hand, we denounce with righteous indignation and dislike men who
-                                        are so beguiled and demoralized
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column">
-                                      <div class="lesson__item--video">
-                                        <nuxt-link class="video" to="/courses/1/video/2" aria-label="video"
-                                                   data-toggle="modal" data-target="#videoModal">
-                                          <img class="img-responsive lesson__video--thumb"
-                                               src="~assets/images/content/courses/lesson-2.png" alt="">
-                                        </nuxt-link>
-                                      </div>
-                                      <div class="lesson__item--info d-flex align-items-center justify-content-center">
-                                        On the other hand, we denounce with righteous indignation and dislike men who
-                                        are so beguiled and demoralized
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column">
-                                      <div class="lesson__item--video">
-                                        <nuxt-link class="video" to="/courses/1/video/3" aria-label="video"
-                                                   data-toggle="modal" data-target="#videoModal">
-                                          <img class="img-responsive lesson__video--thumb"
-                                               src="~assets/images/content/courses/lesson-3.png" alt="">
-                                        </nuxt-link>
-                                      </div>
-                                      <div class="lesson__item--info d-flex align-items-center justify-content-center">
-                                        On the other hand, we denounce with righteous indignation and dislike men who
-                                        are so beguiled and demoralized
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column">
-                                      <div class="lesson__item--video">
-                                        <nuxt-link class="video" to="/courses/1/video/4" aria-label="video"
-                                                   data-toggle="modal" data-target="#videoModal">
-                                          <img class="img-responsive lesson__video--thumb"
-                                               src="~assets/images/content/courses/lesson-4.png" alt="">
-                                        </nuxt-link>
-                                      </div>
-                                      <div class="lesson__item--info d-flex align-items-center justify-content-center">
-                                        On the other hand, we denounce with righteous indignation and dislike men who
-                                        are so beguiled and demoralized
+                                        {{item.description}}
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                                <div class="home__work d-flex justify-content-center align-items-center flex-column">
-                                  <div class="home__work--img"><img class="img-responsive"
-                                                                    src="~assets/images/general/work_thumb.png" alt="">
+
+                                  <div class="home__work d-flex justify-content-center align-items-center flex-column">
+                                    <div class="home__work--img">
+                                      <img class="img-responsive" src="~assets/images/general/work_thumb.png" alt="">
+                                    </div>
+                                    <div class="home__work--title">Домашнее задание</div>
+                                    <div class="home__work--count">+150 крафтиков</div>
+                                    <div class="home__work--text">On the other hand, we denounce with righteous
+                                      indignation and dislike men who are so beguiled and demoralized by the charms of
+                                      pleasure of the moment, so blinded by desire.
+                                    </div>
+                                    <form class="homeWork" action="">
+                                      <label for="photo">
+                                        <input type="file" name="photo">
+                                      </label>
+                                      <input id="photo" type="submit" value="" style="display: none;">
+                                    </form>
                                   </div>
-                                  <div class="home__work--title">Домашнее задание</div>
-                                  <div class="home__work--count">+150 крафтиков</div>
-                                  <div class="home__work--text">On the other hand, we denounce with righteous
-                                    indignation and dislike men who are so beguiled and demoralized by the charms of
-                                    pleasure of the moment, so blinded by desire.
-                                  </div>
-                                  <form class="homeWork" action="">
-                                    <label for="photo">
-                                      <input type="file" name="photo">
-                                    </label>
-                                    <input id="photo" type="submit" value="" style="display: none;">
-                                  </form>
                                 </div>
                               </b-tab>
-                              <b-tab title="2 этап" disabled>...</b-tab>
-                              <b-tab title="3 этап" disabled>...</b-tab>
                             </b-tabs>
                           </div>
                         </div>
                       </div>
-                      <div class="bonus__lesson">
+
+                      <div class="bonus__lesson" v-if="lessons['0'] && lessons['0'][0]">
                         <div class="bonus__lesson--wrap d-flex justify-content-center align-items-center flex-column">
-                          <div class="bonus__lesson--thumb"><span class="ic__star-gold"></span></div>
-                          <div class="bonus__lesson--title"><span class="ic__locked--gray mr-2"> </span>Бонусный урок
+                          <div class="bonus__lesson--thumb">
+                            <span class="ic__star-gold"></span>
                           </div>
-                          <div class="bonus__lesson--text text-center">On the other hand, we denounce with righteous
-                            indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of
-                            the moment, so blinded by desire.
+                          <div class="bonus__lesson--title">
+                            <span class="ic__locked--gray mr-2"> </span>Бонусный урок
+
                           </div>
-                          <div class="bonus__lesson--video"><a class="video" href="" aria-label="video"
-                                                               data-toggle="modal" data-target="#videoModal"><img
-                            class="img-responsive bonus__lesson--thumb"
-                            src="~assets/images/content/courses/lesson-2.png" alt=""></a></div>
-                          <div class="bonus__btn">
+                          <div class="bonus__lesson--text text-center">
+                            <p><strong>{{lessons['0'][0].title}}</strong></p>
+                            <!--{{lessons['0'][0].description}}-->
+                          </div>
+                          <div class="bonus__lesson--video">
+                            <nuxt-link class="video" href="" aria-label="video"
+                                       :to="'/courses/' + $route.params.cid + '/lesson/' + lessons['0'][0].id">
+                              <img class="img-responsive bonus__lesson--thumb" :src="lessons['0'][0].preview['295x166']"
+                                   v-if="lessons['0'][0].preview['295x166']" alt="">
+                            </nuxt-link>
+                          </div>
+                          <!--<div class="bonus__btn">
                             <button class="btn__buy justify-content-center align-items-center"><span
                               class="ic__star mr-2"></span>Купить за 450 крафтиков
                             </button>
-                          </div>
+                          </div>-->
                         </div>
                       </div>
                     </b-tab>
                   </b-tabs>
                 </div>
-                <div class="col-12 tab__wrap--scroll mt-5" v-if="tab != 3">
+                <div class="col-12 tab__wrap--scroll mt-5">
+
                   <!--<div class="course__content&#45;&#45;options tab__wrap&#45;&#45;scroll">
                     <div class="row no-gutters item__wrap d-flex justify-content-between">
                       <div class="col item__option d-flex align-items-center justify-content-center">
@@ -306,78 +274,9 @@
                           <div class="text">Встроенные Субтитры</div>
                         </div>
                       </div>
-                      <div class="col item__option d-flex align-items-center justify-content-center">
-                        <div class="item__option&#45;&#45;icon"><img class="img-responsive"
-                                                             src="~assets/images/general/options/option-2.png" alt="">
-                        </div>
-                        <div class="item__option&#45;&#45;description">
-                          <div class="icon"><img class="img-responsive"
-                                                 src="~assets/images/general/options/option-2.png" alt=""></div>
-                          <div class="text">Встроенные Субтитры</div>
-                        </div>
-                      </div>
-                      <div class="col item__option d-flex align-items-center justify-content-center">
-                        <div class="item__option&#45;&#45;icon"><img class="img-responsive"
-                                                             src="~assets/images/general/options/option-3.png" alt="">
-                        </div>
-                        <div class="item__option&#45;&#45;description">
-                          <div class="icon"><img class="img-responsive"
-                                                 src="~assets/images/general/options/option-3.png" alt=""></div>
-                          <div class="text">Встроенные Субтитры</div>
-                        </div>
-                      </div>
-                      <div class="col item__option d-flex align-items-center justify-content-center">
-                        <div class="item__option&#45;&#45;icon"><img class="img-responsive"
-                                                             src="~assets/images/general/options/option-4.png" alt="">
-                        </div>
-                        <div class="item__option&#45;&#45;description">
-                          <div class="icon"><img class="img-responsive"
-                                                 src="~assets/images/general/options/option-4.png" alt=""></div>
-                          <div class="text">Встроенные Субтитры</div>
-                        </div>
-                      </div>
-                      <div class="col item__option d-flex align-items-center justify-content-center">
-                        <div class="item__option&#45;&#45;icon"><img class="img-responsive"
-                                                             src="~assets/images/general/options/option-5.png" alt="">
-                        </div>
-                        <div class="item__option&#45;&#45;description">
-                          <div class="icon"><img class="img-responsive"
-                                                 src="~assets/images/general/options/option-5.png" alt=""></div>
-                          <div class="text">Встроенные Субтитры</div>
-                        </div>
-                      </div>
-                      <div class="col item__option d-flex align-items-center justify-content-center">
-                        <div class="item__option&#45;&#45;icon"><img class="img-responsive"
-                                                             src="~assets/images/general/options/option-6.png" alt="">
-                        </div>
-                        <div class="item__option&#45;&#45;description">
-                          <div class="icon"><img class="img-responsive"
-                                                 src="~assets/images/general/options/option-6.png" alt=""></div>
-                          <div class="text">Встроенные Субтитры</div>
-                        </div>
-                      </div>
-                      <div class="col item__option d-flex align-items-center justify-content-center">
-                        <div class="item__option&#45;&#45;icon"><img class="img-responsive"
-                                                             src="~assets/images/general/options/option-7.png" alt="">
-                        </div>
-                        <div class="item__option&#45;&#45;description">
-                          <div class="icon"><img class="img-responsive"
-                                                 src="~assets/images/general/options/option-7.png" alt=""></div>
-                          <div class="text">Встроенные Субтитры</div>
-                        </div>
-                      </div>
-                      <div class="col item__option d-flex align-items-center justify-content-center">
-                        <div class="item__option&#45;&#45;icon"><img class="img-responsive"
-                                                             src="~assets/images/general/options/option-8.png" alt="">
-                        </div>
-                        <div class="item__option&#45;&#45;description">
-                          <div class="icon"><img class="img-responsive"
-                                                 src="~assets/images/general/options/option-8.png" alt=""></div>
-                          <div class="text">Встроенные Субтитры</div>
-                        </div>
-                      </div>
                     </div>
                   </div>-->
+
                   <div class="course__content--process">
                     <div class="row">
                       <div class="col-12">
@@ -435,11 +334,16 @@
 
 <script>
     import CoursesList from '../../../components/courses-list'
-    import {faHeart as faHeartSolid, faShare} from '@fortawesome/pro-solid-svg-icons'
+    import {faHeart as faHeartSolid} from '@fortawesome/pro-solid-svg-icons'
     import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
+    import {faFacebook, faPinterest, faVk, faTwitter} from '@fortawesome/free-brands-svg-icons'
+    import {faUser, faThumbsUp, faEye, faShare} from '@fortawesome/pro-duotone-svg-icons'
+
+    import SocialSharing from 'vue-social-sharing'
     import bg from '../../../assets/images/general/headline_course.png';
 
     export default {
+        auth: false,
         data() {
             return {
                 loading: false,
@@ -449,24 +353,45 @@
         },
         components: {
             'courses-list': CoursesList,
+            'social-sharing': SocialSharing,
         },
         scrollToTop: false,
-        asyncData({app, params}) {
-            let data = {
-                record: {},
-                similar: [],
-            };
-            return app.$axios.get('web/courses', {params: {id: params.cid}})
-                .then(res => {
-                    data.record = res.data;
+        async asyncData({app, params, error}) {
+            let data = {};
+            try {
+                const res = await app.$axios.get('web/courses', {params: {id: params.cid}});
+                data.record = res.data
+            } catch (e) {
+                return error({statusCode: 404, message: 'Страница не найдена'})
+            }
 
-                    return app.$axios.get('web/courses', {params: {exclude: params.cid, category: res.data.category}})
-                        .then(res => {
-                            data.similar = res.data.rows;
+            const [similar, authors, lessons/*, bonus, reviews*/] = await Promise.all([
+                app.$axios.get('web/course/similar', {params: {course_id: params.cid}}),
+                app.$axios.get('web/course/authors', {params: {course_id: params.cid}}),
+                data.record.bought
+                    ? app.$axios.get('web/course/lessons', {params: {course_id: params.cid}})
+                    : null,
+                //app.$axios.get('web/course/bonus', {params: {course_id: params.cid}}),
+                //app.$axios.get('web/course/reviews', {params: {course_id: params.cid, limit: 0}}),
+            ]);
+            data.similar = similar.data.rows;
+            data.authors = authors.data.rows;
+            if (lessons) {
+                let tmp = {};
+                lessons.data.rows.forEach(v => {
+                    if (tmp[String(v.section)] === undefined) {
+                        tmp[String(v.section)] = [];
+                    }
+                    tmp[String(v.section)].push(v);
+                });
+                data.lessons = tmp;
+            } else {
+                data.lessons = {};
+            }
+            //data.bonus = bonus.data;
+            data.reviews = [];
 
-                            return data;
-                        });
-                })
+            return data;
         },
         methods: {
             addFavorite(id) {
@@ -491,17 +416,64 @@
                         this.loading = false;
                     })
             },
+            loadLessons() {
+                this.$axios.get('web/courses', {params: {id: this.$route.params.cid}})
+                    .then(res => {
+                        this.record = res.data;
+
+                        if (res.data.bought) {
+                            this.$axios.get('web/course/lessons', {params: {course_id: this.$route.params.cid}})
+                                .then(res => {
+                                    let lessons = {};
+                                    res.data.rows.forEach(v => {
+                                        if (lessons[String(v.section)] === undefined) {
+                                            lessons[String(v.section)] = [];
+                                        }
+                                        lessons[String(v.section)].push(v);
+                                    });
+                                    this.lessons = lessons;
+                                })
+                                .catch(() => {
+                                })
+                        }
+                    })
+                    .catch(() => {
+                    })
+            },
         },
         head() {
             return {
                 title: 'Крафти / Курсы / ' + this.record.title,
+                meta: [
+                    {property: 'og:description', content: this.record.description},
+                    {property: 'og:image', content: this.record.cover},
+                ],
             }
         },
         mounted() {
-            document.getElementsByTagName('header')[0].classList.add('header_img')
+            document.getElementsByTagName('header')[0].classList.add('header_img');
+            // Scroll to top fix
+            window.scrollTo(0,0);
         },
         created() {
-            this.$fa.add(faHeartSolid, faHeartLight, faShare)
+            this.$fa.add(faHeartSolid, faHeartLight, faShare);
+            this.$fa.add(faFacebook, faPinterest, faVk, faTwitter);
+            this.$fa.add(faUser, faThumbsUp, faEye);
+
+            this.$root.$on('app::auth-form::login', this.loadLessons);
+            this.$root.$on('app::auth-form::logout', () => {
+                this.record.bought = false;
+                this.lessons = {};
+                this.tab = 0;
+            });
+            this.$root.$on('app::course' + this.record.id + '::likes', res => {
+                this.record.likes_sum = res.likes_sum
+            });
+        },
+        beforeDestroy: function () {
+            this.$root.$off('app::auth-form::login');
+            this.$root.$off('app::auth-form::logout');
+            this.$root.$off('app::course' + this.record.id + '::likes');
         }
     }
 </script>

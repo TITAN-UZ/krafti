@@ -79,6 +79,12 @@ section.teachers {
   border-bottom: 1px solid #F4F4F4;
   padding: 15px 0;
 
+  .teacher__item--photo {
+    img {
+      box-shadow: $box-shadow;
+    }
+  }
+
   .wrap {
     position: relative;
 

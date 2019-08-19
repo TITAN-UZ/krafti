@@ -2,12 +2,13 @@
 
 namespace App\Processors\Admin;
 
+use App\Model\Traits\UserValidate;
 use App\Model\User;
 use Illuminate\Database\Eloquent\Builder;
 
 class Users extends \App\ObjectProcessor
 {
-
+    use UserValidate;
     protected $class = '\App\Model\User';
     protected $scope = 'users';
 
@@ -73,23 +74,30 @@ class Users extends \App\ObjectProcessor
 
 
     /**
+     * @return \Slim\Http\Response
+     */
+    public function patch()
+    {
+        if (!$this->getProperty('password')) {
+            $this->unsetProperty('password');
+        }
+
+        return parent::patch();
+    }
+
+
+    /**
      * @param User $record
      *
      * @return bool|string
      */
     protected function beforeSave($record)
     {
-        if (!preg_match('#@#', $record->email)) {
-            return 'Вы должны указать email';
-        }
-        if (!$this->getProperty('fullname')) {
-            return 'Вы должны указать имя пользователя';
-        }
         if (!$this->getProperty('role_id')) {
             $record->role_id = 3;
         }
 
-        return true;
+        return $this->validate($record);
     }
 
 }

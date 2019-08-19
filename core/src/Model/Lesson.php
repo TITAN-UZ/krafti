@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\hasMany;
 
 
 /**
@@ -16,8 +17,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $file_id
  * @property int $author_id
  * @property array $products
- * @property int $views
- * @property int $likes
+ * @property int $views_count
+ * @property int $likes_count
+ * @property int $dislikes_count
  * @property int $rank
  * @property int $section
  * @property bool $active
@@ -29,11 +31,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Video $bonus
  * @property-read File $file
  * @property-read User $author
+ * @property-read UserLike[] $likes
  */
 class Lesson extends Model
 {
-    protected $fillable = ['title', 'description', 'products', 'active', 'course_id', 'video_id', 'bonus_id', 'file_id',
-        'author_id', 'rank', 'section'];
+    protected $fillable = ['title', 'description', 'products', 'course_id', 'video_id', 'bonus_id', 'file_id', 'author_id',
+        'rank', 'section', 'active'];
     protected $casts = [
         'products' => 'array',
         'active' => 'boolean',
@@ -82,6 +85,61 @@ class Lesson extends Model
     public function author()
     {
         return $this->belongsTo('App\Model\User');
+    }
+
+
+    /**
+     * @return hasMany
+     */
+    public function likes()
+    {
+        return $this->hasMany('App\Model\UserLike');
+    }
+
+
+    /**
+     * @param array $options
+     *
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        if (!$this->id || $this->isDirty('section')) {
+            $this->rank = $this->course->lessons()
+                ->where(['section' => $this->section])
+                ->count();
+        }
+
+        $likes = ($this->isDirty('likes_count') || $this->isDirty('dislikes_count')) && $this->course;
+        $lessons = $this->isDirty('active') && $this->course;
+        $save = parent::save($options);
+
+        if ($likes) {
+            $this->course->likes_sum = $this->course->lessons()->where(['active' => true])->sum('likes_count') -
+                $this->course->lessons()->where(['active' => true])->sum('dislikes_count');
+            $this->course->save();
+        }
+        if ($lessons) {
+            $this->course->lessons_count = $this->course->lessons()->where(['active' => true])->count();
+            $this->course->save();
+        }
+
+        return $save;
+    }
+
+
+    public function delete()
+    {
+        $delete = parent::delete();
+
+        if ($this->course) {
+            $this->course->lessons_count = $this->course->lessons()->where(['active' => true])->count();
+            $this->course->likes_sum = $this->course->lessons()->where(['active' => true])->sum('likes_count') -
+                $this->course->lessons()->where(['active' => true])->sum('dislikes_count');
+            $this->course->save();
+        }
+
+        return $delete;
     }
 
 }

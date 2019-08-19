@@ -3,6 +3,8 @@
     <b-modal id="myNestedModal" title="Новый урок" @hidden="onHidden" hide-footer visible static size="lg">
       <b-form @submit.prevent="onSubmit">
         <b-form-group
+          label-cols-lg="3"
+          label-align-lg="right"
           label="Укажите название:"
           label-for="input-title"
           description="Название должно быть уникальным">
@@ -10,19 +12,40 @@
         </b-form-group>
 
         <b-form-group
+          label-cols-lg="3"
+          label-align-lg="right"
           label="Описание курса:"
           label-for="input-description">
           <b-form-textarea id="input-description" no-resize rows="3" v-model="record.description"/>
         </b-form-group>
 
         <b-form-group
-          label="Видеоурок"
-          label-for="input-video"
-          description="Выберите основное видео курса">
-          <pick-video v-model="record.video_id"/>
+          label-cols-lg="3"
+          label-align-lg="right"
+          label="Этап"
+          label-for="input-section"
+          description="Номер этапа занятий">
+          <b-form-select v-model="record.section" required>
+            <option :value="null" disabled selected>Выберите из списка</option>
+            <option :value="1">Этап 1</option>
+            <option :value="2">Этап 2</option>
+            <option :value="3">Этап 3</option>
+            <option :value="0">Бонус</option>
+          </b-form-select>
         </b-form-group>
 
         <b-form-group
+          label-cols-lg="3"
+          label-align-lg="right"
+          label="Видеоурок"
+          label-for="input-video"
+          description="Выберите основное видео курса">
+          <pick-video v-model="record.video_id" :required="true"/>
+        </b-form-group>
+
+        <b-form-group
+          label-cols-lg="3"
+          label-align-lg="right"
           label="Бонусное видео"
           label-for="input-bonus"
           description="Необязательное бонусное видео курса">
@@ -30,13 +53,33 @@
         </b-form-group>
 
         <b-form-group
+          label-cols-lg="3"
+          label-align-lg="right"
+          label="Что понадобится:"
+          label-for="input-scope"
+          description="Набор товаров в произвольной форме, через запятую">
+          <tags v-model="record.products"/>
+        </b-form-group>
+
+        <b-form-group
+          label-cols-lg="3"
+          label-align-lg="right"
           label="Автор урока"
           label-for="input-author"
-          description="Выберите кого-то из группы авторов">
+          description="Выберите кого-то из авторов или администраторов">
           <pick-author v-model="record.author_id"/>
         </b-form-group>
 
-        <b-form-checkbox v-model="record.active">Опубликован</b-form-checkbox>
+        <b-form-group
+          label-cols-lg="3"
+          label-align-lg="right"
+          label="Материалы урока"
+          label-for="input-author"
+          description="Загрузите *.zip или *.pdf файл">
+          <upload-file v-model="file"/>
+        </b-form-group>
+
+        <b-form-checkbox class="offset-lg-3" v-model="record.active">Опубликован</b-form-checkbox>
 
         <b-row no-gutters class="mt-4 justify-content-between">
           <b-button variant="secondary" @click="$root.$emit('bv::hide::modal', 'myNestedModal')"
@@ -54,8 +97,6 @@
 </template>
 
 <script>
-    import PickAuthor from '../../../../../components/pick-author'
-
     export default {
         data() {
             return {
@@ -66,15 +107,12 @@
                     products: [],
                     video_id: null,
                     bonus_id: null,
-                    file_id: null,
+                    file: {},
                     author_id: null,
                     active: false,
                     course_id: this.$route.params.cid,
                 }
             }
-        },
-        components: {
-            'pick-author': PickAuthor,
         },
         methods: {
             onHidden() {
@@ -82,10 +120,17 @@
             },
             onSubmit() {
                 this.loading = true;
-                this.$axios.put('admin/lessons', this.record)
+                let record = JSON.parse(JSON.stringify(this.record));
+                record.products = record.products.map(v => {
+                    return v.value
+                });
+                if (this.file) {
+                    record.file = this.file;
+                }
+                this.$axios.put('admin/lessons', record)
                     .then(res => {
                         this.loading = false;
-                        this.$root.$emit('app::lessons::update', res.data);
+                        this.$root.$emit('app::admin-lessons::update', res.data);
                         this.$router.replace({name: 'admin-courses-edit-cid', params: this.$route.params});
                     })
                     .catch(() => {
@@ -93,8 +138,5 @@
                     });
             },
         },
-        created() {
-            //console.log(this.$route)
-        }
     }
 </script>

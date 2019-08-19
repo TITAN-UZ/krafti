@@ -34,7 +34,8 @@
     import office_header from '../components/office-header'
 
     export default {
-        middleware: 'token',
+        //middleware: 'token',
+        auth: true,
         components: {
             'office-header': office_header,
         },

@@ -7,7 +7,15 @@ export default {
       {name: 'viewport', content: 'width=device-width, initial-scale=1'},
       {name: 'msapplication-TileColor', content: '#ffffff'},
       {name: 'theme-color', content: '#ffffff'},
-      {name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'}
+      {name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'},
+      {name: 'title', content: 'Крафти'},
+      {name: 'apple-mobile-web-app-title', content: 'Крафти'},
+      {name: 'description', content: ''},
+      {property: 'og:title', content: 'Крафти'},
+      {property: 'og:site_name', content: 'Krafti.ru'},
+      {property: 'og:description', content: ''},
+      //{property: 'og:url', content: ''},
+      {property: 'og:image', content: '/favicons/android-chrome-512x512.png'},
     ],
     link: [
       {rel: 'icon', type: 'image/x-icon', href: '/favicons/favicon.ico'},
@@ -28,13 +36,14 @@ export default {
     '~/plugins/settings.js',
     '~/plugins/axios.js',
     '~/plugins/fontawesome.js',
-    '~/plugins/components.js',
+    '~/plugins/filters.js',
     {src: '~/plugins/autosuggest.js', ssr: false},
     {src: '~/plugins/mixins.js', ssr: false},
     {src: '~/plugins/alertify.js', ssr: false},
     {src: '~/plugins/tables.js', ssr: false},
     {src: '~/plugins/mask.js', ssr: false},
     {src: '~/plugins/filepond.js', ssr: false},
+    {src: '~/plugins/tags.js', ssr: false},
   ],
   modules: [
     'bootstrap-vue/nuxt',
@@ -63,6 +72,7 @@ export default {
   },
   auth: {
     redirect: {
+      home: '/',
       login: '/service/auth',
       logout: '/',
     },
@@ -82,7 +92,7 @@ export default {
   router: {
     linkActiveClass: 'active',
     middleware: [
-      //'auth',
+      'auth'
     ],
     extendRoutes(routes, resolve) {
       for (let i in routes) {

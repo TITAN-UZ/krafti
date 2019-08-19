@@ -3,6 +3,8 @@
 namespace App\Processors\Web;
 
 use App\Model\Course;
+use App\Model\Order;
+use Illuminate\Database\Eloquent\Builder;
 
 class Courses extends \App\GetProcessor
 {
@@ -10,6 +12,11 @@ class Courses extends \App\GetProcessor
     protected $class = '\App\Model\Course';
 
 
+    /**
+     * @param Builder $c
+     *
+     * @return Builder
+     */
     protected function beforeCount($c)
     {
         $c->where(['active' => true]);
@@ -19,7 +26,7 @@ class Courses extends \App\GetProcessor
         }
 
         if ($category = trim($this->getProperty('category'))) {
-            //$c->where(['category' => $category]);
+            //$c->where(['category' => $category]); // Dev
         }
 
         return $c;
@@ -43,18 +50,23 @@ class Courses extends \App\GetProcessor
             'age' => $object->age,
             'views_count' => $object->views_count,
             'reviews_count' => $object->reviews_count,
-            'likes_count' => $object->likes_count,
+            'likes_sum' => $object->likes_sum,
             'lessons_count' => $object->lessons_count,
             'cover' => $object->cover
                 ? $object->cover->getUrl()
-                : '',
+                : null,
             'video' => $object->video
                 ? $object->video->preview
-                : '',
-            'bonus' => $object->bonus
+                : null,
+            /*'bonus' => $object->bonus
                 ? $object->bonus->preview
-                : '',
+                : null,*/
+            'bought' => false,
         ];
+
+        if ($this->container->user) {
+            $array['bought'] = $object->wasBought($this->container->user->id);
+        }
 
         return $array;
     }

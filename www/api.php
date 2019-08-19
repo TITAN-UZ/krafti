@@ -7,7 +7,7 @@ $app = new \Slim\App($container);
 $app->add($container->jwt);
 
 $app->any('/api[/{name:.+}]', function ($request, $response, $args) use ($container) {
-    return (new \App\Controllers\Api($container))->process($args);
+    return (new \App\Controllers\Api($container))->process($request, $response, $args);
 });
 
 try {

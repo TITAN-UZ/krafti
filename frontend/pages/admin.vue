@@ -20,7 +20,8 @@
 
 <script>
     export default {
-        middleware: 'token',
+        //middleware: 'token',
+        auth: true,
     }
 </script>
 

@@ -24,10 +24,13 @@ header.header, aside.menu {
     border-radius: 50%;
     height: 50px !important;
     width: 50px !important;
+    box-shadow: $box-shadow;
   }
 
   svg.avatar {
-    color: $pink;
+    color: #fff;
+    --fa-primary-color: #ebebeb;
+    --fa-secondary-color: white;
   }
 }
 

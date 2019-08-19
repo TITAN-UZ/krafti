@@ -109,12 +109,12 @@
     import bg from '../../assets/images/general/headline_teachers.jpg';
 
     export default {
+        auth: false,
         data() {
             return {
                 style_bg: {'background-image': 'url(' + bg + ')'},
             }
         },
-        auth: false,
         head () {
             return {
                 title: 'Крафти / Наша команда',

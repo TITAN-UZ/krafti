@@ -1,5 +1,5 @@
 export default function ({app, route}) {
-    if (!app.$auth.$state.loggedIn) {
+    if (!app.$auth.loggedIn) {
         app.$notify.error({message: 'Требуется авторизация'});
         app.$auth.redirect('login')
     } else {

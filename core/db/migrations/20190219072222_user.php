@@ -17,6 +17,8 @@ class User extends Migration
             $table->date('dob')->nullable();
             $table->string('phone', 14)->nullable();
             $table->string('instagram', 100)->nullable();
+            $table->string('company')->nullable();
+            $table->text('description')->nullable();
             $table->boolean('active')->default(true)->index();
             $table->boolean('confirmed')->default(false)->index();
             $table->integer('photo_id')->unsigned()->nullable();

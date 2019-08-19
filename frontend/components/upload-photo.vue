@@ -27,6 +27,7 @@
     import {faCameraAlt} from '@fortawesome/pro-light-svg-icons'
 
     export default {
+        name: 'upload-photo',
         data() {
             return {
                 faCameraAlt: icon(faCameraAlt, {transform: {size: this.size / 3}}).html[0],

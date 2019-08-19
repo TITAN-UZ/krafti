@@ -1,6 +1,6 @@
 <?php
 
-use \App\Service\Migration;
+use App\Service\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class UserFavorite extends Migration
@@ -10,7 +10,9 @@ class UserFavorite extends Migration
         $this->schema->create('user_favorites', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('course_id')->unsigned();
+            $table->timestamps();
 
+            $table->primary(['course_id', 'user_id']);
             $table->foreign('user_id')
                 ->references('id')->on('users')
                 ->onUpdate('restrict')
@@ -26,6 +28,10 @@ class UserFavorite extends Migration
 
     public function down()
     {
+        $this->schema->table('user_favorites', function (Blueprint $table) {
+            $table->dropForeign('user_favorites_course_id_foreign');
+            $table->dropForeign('user_favorites_user_id_foreign');
+        });
         $this->schema->drop('user_favorites');
     }
 }

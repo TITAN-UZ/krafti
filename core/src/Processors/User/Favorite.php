@@ -4,10 +4,12 @@ namespace App\Processors\User;
 
 use App\Model\Course;
 use App\Model\UserFavorite;
-use App\ObjectProcessor;
 
 class Favorite extends \App\Processor
 {
+
+    protected $scope = 'profile';
+
 
     public function get()
     {

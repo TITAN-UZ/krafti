@@ -2,24 +2,24 @@
 
 namespace App\Model;
 
-use App\Model\Traits\CompositeKey;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $user_id
  * @property int $course_id
+ * @property string $created_at
+ * @property string $updated_at
  *
  * @property-read User $user
  * @property-read Course $course
  */
 class UserFavorite extends Model
 {
-    use CompositeKey;
+    use Traits\CompositeKey;
 
-    public $timestamps = false;
-    protected $fillable = ['user_id', 'course_id'];
     protected $primaryKey = ['user_id', 'course_id'];
+    protected $fillable = ['user_id', 'course_id'];
 
 
     /**
