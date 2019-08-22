@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="wrapper__bg js-bg-selection" :style="style_bg"></div>
+    <header-bg image="favorites"/>
     <div class="wrapper__content">
       <section class="favorite">
         <div class="container">
@@ -20,17 +20,13 @@
 
 <script>
     import CoursesList from '../../components/courses-list'
-    import bg from '../../assets/images/general/headline_favorites.jpg'
+    import HeaderBg from '../../components/header-bg'
 
     export default {
         auth: true,
-        data() {
-            return {
-                style_bg: {'background-image': 'url(' + bg + ')'},
-            }
-        },
         components: {
             'courses-list': CoursesList,
+            'header-bg': HeaderBg,
         },
         asyncData({app}) {
             return app.$axios.get('user/favorite', {params: {limit: 0}})
@@ -43,8 +39,5 @@
                 title: 'Крафти / Личный кабинет / Избранное',
             }
         },
-        mounted() {
-            document.getElementsByTagName('header')[0].classList.add('header_img');
-        }
     }
 </script>

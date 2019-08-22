@@ -20,7 +20,7 @@
                             <nav>
                                 <ul class="list">
                                     <b-nav-item v-for="i in $settings.menu.footer.left"
-                                                v-if="!i.auth/* || isAuthenticated*/"
+                                                v-if="!i.auth || $auth.loggedIn"
                                                 :to="i.to" :key="i.to">{{i.title}}
                                     </b-nav-item>
                                 </ul>
@@ -28,7 +28,7 @@
                             <nav>
                                 <ul class="list">
                                     <b-nav-item v-for="i in $settings.menu.footer.center"
-                                                v-if="!i.auth/* || isAuthenticated*/"
+                                                v-if="!i.auth || $auth.loggedIn"
                                                 :to="i.to" :key="i.to">{{i.title}}
                                     </b-nav-item>
                                 </ul>
@@ -56,10 +56,9 @@
                                 <li class="ic_applepay"></li>
                             </ul>
                             <div class="pay__text">
-                                Сайт в полной мере отвечает стандартам безопасности платёжных систем Visa и<br>
-                                MasterCard. Безопасность платежей с помощью банковских карт обеспечивается
-                                технологиями защищенного соединения HTTPS и двухфакторной аутентификации
-                                пользователя 3D Secure.
+                              <p>ИП Матюшкин А.А<br>ИНН 542512143999 / ОГРН 318547600033813</p>
+                              <p>630047, г.Новосибирск, ул. Кузьмы Минина 9/1, кв 163.<br>Контактное лицо: Матюшкин Антон, тел. +7-913-790-10-90</p>
+                              <p></p>
                             </div>
                         </div>
                     </div>

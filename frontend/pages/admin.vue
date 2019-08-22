@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <no-ssr>
+        <client-only>
             <div class="wrapper__content">
                 <div class="container" id="admin">
                     <ul class="nav nav-tabs justify-content-center justify-content-md-start">
@@ -14,7 +14,7 @@
                     </div>
                 </div>
             </div>
-        </no-ssr>
+        </client-only>
     </div>
 </template>
 

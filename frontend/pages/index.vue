@@ -2,8 +2,10 @@
   <div>
     <div class="wrapper">
       <div class="wrapper__bg bg_600" :style="style_bg">
-        <!--<a class="ic__play" href=""></a>-->
+        <a class="ic__play" @click.prevent="$refs.mainVideo.show()"></a>
       </div>
+      <vimeo :video="355023151" ref="mainVideo"/>
+
       <div class="wrapper__content">
         <section class="about__info">
           <div class="container">
@@ -16,12 +18,12 @@
                 </div>
                 <div class="row">
                   <div class="col-12 col-lg-5">
-                    <div class="about__text">These cases are perfectly simple and easy to distinguish. In a free hour,
-                      when our power of choice is untrammelled and when nothing prevents our being able to do what we
-                      like best, every pleasure is to be welcomed and every pain avoided. These cases are perfectly
-                      simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when
-                      nothing prevents our being able to do what we like best, every pleasure is to be welcomed and
-                      every pain avoided.
+                    <div class="about__text">
+                      <p>Творчество всей семьёй? Конечно! Мы в KRAFTI, онлайн-мастерской для детей и взрослых, подготовили поэтапное руководство.</p>
+                      <p>Наша команда разработала авторские курсы с обучением в режиме реального времени.</p>
+                      <p>Их не придётся ставить на паузу — мы позаботились, чтобы всё было пошагово и легко.
+                        Наши уроки помогут создавать произведения искусства независимо от возраста и умений.</p>
+                      <p>Практические навыки и вдохновение — всё здесь!</p>
                     </div>
                   </div>
                   <div class="col-12 col-lg-7 swiper-container">
@@ -74,7 +76,7 @@
                 <div class="row">
                   <div class="col-12 d-flex justify-content-between align-items-center">
                     <h2 class="section__title">Отзывы</h2>
-                    <!--<b-link to="/reviews" class="link__more">См. все</b-link>-->
+                    <b-link :to="{name: 'reviews'}" class="link__more">См. все</b-link>
                   </div>
                 </div>
                 <div class="row mob_container item__wrap d-flex">

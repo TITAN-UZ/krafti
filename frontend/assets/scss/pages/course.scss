@@ -643,23 +643,12 @@
               &:hover {
                 opacity: 0.8;
               }
-
-              &::before {
-                position: absolute;
-                display: block;
-                content: '';
-                width: 45px;
-                height: 45px;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: url(~assets/images/general/ic_play_btn.svg) no-repeat;
-                background-size: 100% 100%;
-                z-index: 1;
-              }
-              img {
-                border-radius: 20px;
-                transition: opacity 0.3s;
+              a {
+                img {
+                  border-radius: 20px;
+                  transition: opacity 0.3s;
+                }
+                @include play-button;
               }
             }
 
@@ -783,26 +772,10 @@
       position: relative;
       display: block;
       cursor: pointer;
-
-      //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
-      &::before {
-        position: absolute;
-        display: block;
-        content: '';
-        width: 45px;
-        height: 45px;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: url(~assets/images/general/ic_play_btn.svg) no-repeat;
-        background-size: 100% 100%;
-        z-index: 1;
-      }
-
+      @include play-button;
       .bonus__lesson--thumb {
         border-radius: 20px;
         transition: opacity 0.3s;
-
         &:hover {
           opacity: 0.8;
         }

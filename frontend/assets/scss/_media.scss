@@ -66,11 +66,12 @@
       margin: 0;
       max-width: 100%;
       position: relative;
-      top: -60px;
+      //top: -60px;
       left: 0;
-
-      &.mt-60 {
-        top: -120px;
+    }
+    &.course {
+      .wrapper__bg {
+        top: -90px;
       }
     }
 
@@ -180,10 +181,6 @@
       .contacts__list {
         margin-bottom: 30px;
       }
-    }
-
-    .contacts__text {
-      margin-bottom: 40px;
     }
 
     form {

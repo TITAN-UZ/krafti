@@ -116,4 +116,62 @@ class Course extends Model
         return $order && $order->paid_till > date('Y-m-d H:i:s');
     }
 
+
+    /**
+     * @param bool $save
+     *
+     * @return int
+     */
+    public function updateViewsCount($save = true)
+    {
+        $sum = $this->lessons()->where(['active' => true])->sum('views_count');
+        if ($this->views_count != $sum) {
+            $this->views_count = $sum;
+            if ($save) {
+                $this->save();
+            }
+        }
+
+        return $sum;
+    }
+
+
+    /**
+     * @param bool $save
+     *
+     * @return int
+     */
+    public function updateLikesCount($save = true)
+    {
+        $sum = $this->lessons()->where(['active' => true])->sum('likes_count') -
+            $this->lessons()->where(['active' => true])->sum('dislikes_count');
+        if ($this->likes_sum != $sum) {
+            $this->likes_sum = $sum;
+            if ($save) {
+                $this->save();
+            }
+        }
+
+        return $sum;
+    }
+
+
+    /**
+     * @param bool $save
+     *
+     * @return int
+     */
+    public function updateLessonsCount($save = true)
+    {
+        $count = $this->lessons()->where(['active' => true])->count();
+        if ($this->lessons_count != $count) {
+            $this->lessons_count = $count;
+            if ($save) {
+                $this->save();
+            }
+        }
+
+        return $count;
+    }
+
 }

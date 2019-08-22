@@ -6,6 +6,7 @@
 @import "~bootstrap/scss/utilities/sizing";
 @import "~bootstrap/scss/utilities/borders";
 @import "~bootstrap/scss/utilities/text";
+@import "~bootstrap/scss/utilities/embed";
 
 @import "~bootstrap/scss/reboot";
 @import "~bootstrap/scss/bootstrap-grid";
@@ -32,6 +33,7 @@
 //@import "~bootstrap-vue/src/utilities";
 //@import "~bootstrap-vue/src/components/toast/index.scss";
 
+@import "mixins";
 @import "utils/mixins";
 @import "utils/fonts";
 @import "modules/buttons";

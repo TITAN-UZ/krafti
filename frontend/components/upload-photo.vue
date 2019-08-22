@@ -4,7 +4,7 @@
                accepted-file-types="image/jpeg, image/png"
                :allow-multiple="false"
                :className="'upload-avatar size-' + size"
-               :labelIdle="showLabel ? faCameraAlt : ' '"
+               :labelIdle="showLabel || !$auth.user.photo ? faCameraAlt : ' '"
                :imagePreviewHeight="size"
                :imageResizeTargetWidth="600"
                :imageResizeTargetHeight="600"

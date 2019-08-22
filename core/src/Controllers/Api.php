@@ -79,7 +79,7 @@ class Api
             try {
                 return JWT::decode($token, getenv('JWT_SECRET'), ["HS256", "HS512", "HS384"]);
             } catch (Exception $e) {
-                echo $e->getMessage();die;
+                return null;
             }
         }
 

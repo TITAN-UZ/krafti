@@ -24,8 +24,8 @@ class Payment extends \App\Processor
         }
 
         $period = (int)$this->getProperty('period');
-        if (!in_array($period, array_keys($this->container::course_cost))) {
-            return $this->failure('Указан неизвестный период покупки');
+        if (empty($course->price[$period])) {
+            return $this->failure('Не указана стоимость курса');
         }
 
         $key = [
@@ -46,7 +46,7 @@ class Payment extends \App\Processor
         $order->period = $period;
         $order->paid_at = null;
         $order->paid_till = null;
-        $order->cost = $this->container::course_cost[$period];
+        $order->cost = $course->price[$period];
         $order->save();
 
         $link = '';

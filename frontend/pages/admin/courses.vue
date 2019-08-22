@@ -60,7 +60,7 @@
                     {key: 'id', label: 'Id', sortable: true},
                     {key: 'cover', label: 'Обложка', sortable: false},
                     {key: 'title', label: 'Название', sortable: false},
-                    {key: 'price', label: 'Цена', sortable: true},
+                    {key: 'lessons_count', label: 'Уроки', sortable: true},
                     {key: 'age', label: 'Возраст', sortable: true},
                     {key: 'category', label: 'Категория', sortable: true},
                     {key: 'actions', label: 'Действия'},
@@ -78,9 +78,6 @@
         methods: {
             refresh() {
                 this.$root.$emit('bv::refresh::table', this.$options.name)
-            },
-            renderScope(value) {
-                return value.join(', ');
             },
             onDelete(item) {
                 this.$message.confirm('Вы уверены, что хотите удалить эту запись?', () => {

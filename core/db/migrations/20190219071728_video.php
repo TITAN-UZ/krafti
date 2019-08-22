@@ -17,7 +17,8 @@ class Video extends Migration
             $table->smallInteger('width')->unsigned()->default(0);
             $table->smallInteger('height')->unsigned()->default(0);
             $table->smallInteger('duration')->unsigned()->default(0);
-
+            $table->integer('views_count')->unsigned()->default(0);
+            //$table->json('privacy')->unsigned()->default(0);
             $table->timestamps();
         });
     }

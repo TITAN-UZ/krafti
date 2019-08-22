@@ -11,7 +11,7 @@
           </div>
           <div class="row edit-profile__form">
             <div class="col-12">
-              <no-ssr>
+              <client-only>
                 <form class="edit-profile" @submit.prevent="onSubmit">
                   <div class="form-body">
                     <div class="form-group mb-3">
@@ -112,7 +112,7 @@
                     </div>
                   </div>
                 </form>
-              </no-ssr>
+              </client-only>
             </div>
           </div>
         </div>

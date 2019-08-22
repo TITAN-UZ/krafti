@@ -37,6 +37,7 @@ export default {
     '~/plugins/axios.js',
     '~/plugins/fontawesome.js',
     '~/plugins/filters.js',
+    '~/plugins/vimeo.js',
     {src: '~/plugins/autosuggest.js', ssr: false},
     {src: '~/plugins/mixins.js', ssr: false},
     {src: '~/plugins/alertify.js', ssr: false},
@@ -44,6 +45,7 @@ export default {
     {src: '~/plugins/mask.js', ssr: false},
     {src: '~/plugins/filepond.js', ssr: false},
     {src: '~/plugins/tags.js', ssr: false},
+    {src: '~/plugins/metrika.js', ssr: false},
   ],
   modules: [
     'bootstrap-vue/nuxt',
@@ -113,6 +115,27 @@ export default {
   },
   build: {
     extend(config, ctx) {
+      // here I tell webpack not to include jpgs and pngs
+      // as base64 as an inline image
+
+      config.module.rules.find(
+        rule => rule.use && rule.use[0].loader === 'url-loader'
+      ).exclude = /background\/.*?\.(jpe?g|png)$/i;
+
+      // now i configure the responsive-loader
+      config.module.rules.push({
+        test: /background\/.*?\.(jpe?g|png)$/i,
+        loader: 'responsive-loader',
+        options: {
+          // min: 720,
+          // max: 3000,
+          // step: 10,
+          sizes: [2560, 1440, 960],
+          placeholder: false,
+          quality: 85,
+          adapter: require('responsive-loader/sharp')
+        }
+      })
     }
   },
   server: {

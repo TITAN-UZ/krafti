@@ -48,7 +48,7 @@
 
     <template slot="modal-header">
       <button class="close" type="button" aria-label="Close" @click="hideModal">
-        <fa :icon="['fal', 'times']" size="3x"/>
+        <fa :icon="['fal', 'times']" size="2x"/>
       </button>
     </template>
   </b-modal>

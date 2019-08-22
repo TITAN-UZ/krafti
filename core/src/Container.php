@@ -35,12 +35,6 @@ class Container extends \Slim\Container
     /** @var array $user_scopes */
     public $user_scopes = [];
 
-    public const course_cost = [
-        3 => 2990,
-        6 => 3990,
-        12 => 5990,
-    ];
-
 
     /**
      * Container constructor.
@@ -130,7 +124,7 @@ class Container extends \Slim\Container
                 'error' => function () use ($container) {
                     return (new Processor($container))->failure('Требуется авторизация', 401);
                 },
-                /*'before' => function (Request $request) use ($container) {
+                'before' => function (Request $request) use ($container) {
                     $container->user = User::query()->where([
                         'id' => $request->getAttribute('token')['id'],
                         'active' => true,
@@ -143,7 +137,7 @@ class Container extends \Slim\Container
                     return !$container->user
                         ? (new Processor($container))->failure('Требуется авторизация', 401)
                         : $response;
-                },*/
+                },
             ]);
 
             return $jwt;

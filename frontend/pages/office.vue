@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <no-ssr>
+        <client-only>
             <office-header/>
             <div class="wrapper__content">
                 <section class="container__940 tabs">
@@ -26,7 +26,7 @@
                     </div>
                 </section>
             </div>
-        </no-ssr>
+        </client-only>
     </div>
 </template>
 

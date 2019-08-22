@@ -17,6 +17,7 @@
       max-height: 88px;
       border-radius: 50%;
       border: 1px solid $lightestGray;
+      box-shadow: $box-shadow;
     }
   }
 
@@ -107,9 +108,11 @@
   &.modal-video {
     .modal-header {
       z-index: 10;
+      position: absolute;
+      width: 100%;
       .close {
-          margin-left: auto;
-          color: $white;
+        margin-left: auto;
+        color: #fff;
       }
     }
     .modal-body {
@@ -117,16 +120,6 @@
 
       .wrapper__bg {
         border-radius: 28.3099px;
-      }
-    }
-    @include media-breakpoint-up(xs) {
-      .modal-body {
-        margin-top: -23px;
-      }
-    }
-    @include media-breakpoint-up(md) {
-      .modal-body {
-        margin-top: -83px;
       }
     }
   }

@@ -4,10 +4,19 @@
     <b-modal hide-footer visible size="xl" @hidden="onHidden" ref="modalVideo" dialog-class="modal-video">
       <div class="wrapper">
         <!--TODO Воспроизведение видео-->
-        <div class="wrapper__bg bg_600 js-bg-selection" :style="style_bg">
-          <a class="ic__play--white" href="" aria-label="video"></a>
+        <!--<div class="wrapper__bg bg_600 js-bg-selection" :style="style_bg">
+          <a class="ic__play&#45;&#45;white" href="" aria-label="video"></a>
+        </div>-->
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe id="lesson-vimeo-iframe"
+                  v-if="record.video && record.video.vimeo"
+                  class="embed-responsive-item"
+                  :src="'https://player.vimeo.com/video/' + record.video.vimeo"
+                  frameborder="0"
+                  allowfullscreen
+                  allow="autoplay; fullscreen"></iframe>
         </div>
-        <div class="wrapper__content">
+        <div class="wrapper__content pt-3 pt-md-5">
           <div class="lesson__info container__940">
             <div class="container">
               <div class="row">
@@ -33,7 +42,9 @@
                   <div class="lesson__info--note">По окончании урока, вы можете поделиться с нами своим результатом.
                     Достаточно сделать фото и отправить его нам. Лучшие работы будут опубликованы на главной странице.
                   </div>
-                  <div class="lesson__info--share"><a class="button" href="">Поделиться работой</a></div>
+                  <div class="lesson__info--share">
+                    <button class="button">Поделиться работой</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -101,10 +112,21 @@
                       {{record.bonus.description}}
                     </div>
                     <div class="science__content--video d-flex justify-content-center">
-                      <a class="video" href="" aria-label="video">
-                        <img class="img-responsive bonus__lesson--thumb" :src="record.bonus.preview['640x360']" alt="">
-                      </a>
+                      <div class="embed-responsive embed-responsive-16by9">
+                        <iframe id="bonus-vimeo-iframe"
+                                v-if="record.bonus && record.bonus.vimeo"
+                                class="embed-responsive-item"
+                                :src="'https://player.vimeo.com/video/' + record.bonus.vimeo"
+                                frameborder="0"
+                                allowfullscreen
+                                allow="autoplay; fullscreen"></iframe>
+                      </div>
+
+                      <!--<a class="video" @click.prevent="$refs.mainVideo.show()">
+                        <img class="img-responsive bonus__lesson&#45;&#45;thumb" :src="record.bonus.preview['640x360']" alt="">
+                      </a>-->
                     </div>
+                    <!--<vimeo :video="record.bonus.vimeo" ref="mainVideo"/>-->
                   </div>
                 </div>
               </div>
@@ -206,7 +228,7 @@
       </div>
       <template slot="modal-header">
         <button class="close" type="button" aria-label="Close" @click="hideModal">
-          <fa :icon="['fal', 'times']" size="3x"/>
+          <fa :icon="['fal', 'times']" size="2x"/>
         </button>
       </template>
     </b-modal>
@@ -277,3 +299,13 @@
         },
     }
 </script>
+
+<style lang="scss">
+  #lesson-vimeo-iframe {
+    border-top-left-radius: 28.3099px;
+    border-top-right-radius: 28.3099px;
+  }
+  #bonus-vimeo-iframe {
+    border-radius: 15px;
+  }
+</style>

@@ -82,7 +82,7 @@
             </div>
           </div>
 
-          <div class="menu-open d-md-none" @click="showMenu()">
+          <div class="menu-open d-lg-none" @click="showMenu()">
             <fa :icon="['fal', 'stream']" size="3x"/>
             <span class="label" v-if="user && user.unread > 0">{{user.unread}}</span>
           </div>

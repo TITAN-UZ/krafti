@@ -84,20 +84,18 @@ class Courses extends \App\ObjectProcessor
             'description' => $object->description,
             //'cover_id' => $object->cover_id,
             'video_id' => $object->video_id,
-            'bonus_id' => $object->bonus_id,
+            'lessons_count' => $object->lessons_count,
             'category' => $object->category,
             'price' => $object->price,
             'age' => $object->age,
             'active' => $object->active,
+            'properties' => $object->properties,
             'cover' => $object->cover
                 ? $object->cover->getUrl()
-                : '',
+                : null,
             'video' => $object->video
                 ? $object->video->preview
-                : '',
-            'bonus' => $object->bonus
-                ? $object->bonus->preview
-                : '',
+                : null,
         ];
 
         return $array;

@@ -1,14 +1,14 @@
 <template>
-  <div class="wrapper">
-    <div class="wrapper__bg mt-6" :style="style_bg"></div>
+  <div class="wrapper course">
+    <header-bg image="course"/>
     <div class="wrapper__content">
       <section class="course__content">
-
+        <vimeo :video="355023151" ref="mainVideo"/>
         <div class="container">
           <div class="row course__content--header">
             <div class="col-lg-7 col-12">
               <div class="course-video">
-                <a class="video-link"
+                <a class="video-link" @click.prevent="$refs.mainVideo.show()"
                    :style="{'background-image': (record.cover ? 'url(' + record.cover + ')' : false)}"></a>
               </div>
             </div>
@@ -27,7 +27,7 @@
                     </a>
                   </button>
 
-                  <no-ssr>
+                  <client-only>
                     <b-dropdown variant="default" no-caret right class="ml-md-2">
                       <template slot="button-content">
                         <a>
@@ -63,7 +63,7 @@
                         </div>
                       </social-sharing>
                     </b-dropdown>
-                  </no-ssr>
+                  </client-only>
                 </div>
                 <div class="course__info--pretop d-flex justify-content-center align-items-center">
                   <span class="count__lessons">{{record.lessons_count}} видео {{record.lessons_count | noun('урок|урока|уроков')}}</span>
@@ -88,13 +88,13 @@
                     </div>
                   </div>
                   <div class="row buy__wrap">
-                    <nuxt-link class="btn btn-default btn__play" v-if="record.bought === true && lessons['1']"
-                               :to="$route.params.cid + '/lesson/' + lessons['1'][0].id">
-                      Начать просмотр
-                    </nuxt-link>
-                    <nuxt-link :to="$route.params.cid + '/buy'" class="btn btn-default btn__buy"
-                               v-else-if="record.bought === false">
-                      Купить от <span class="price">2 990 р</span>
+                    <button class="btn btn-default btn__play" v-if="!lessons">Готовится к публикации</button>
+                    <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons['1'][0].id}}"
+                               v-else-if="record.bought === true && lessons['1'].length"
+                               class="btn btn-default btn__play">Начать просмотр</nuxt-link>
+                    <nuxt-link :to="{name: 'courses-cid-index-buy', params: $route.params}"
+                               v-else-if="record.bought === false"
+                               class="btn btn-default btn__buy">Купить от <span class="price">{{record.price['3']}} р</span>
                     </nuxt-link>
                   </div>
                 </div>
@@ -143,9 +143,9 @@
                           </div>
                           <button class="button btn-more ml-5 mt-4">Показать все отзывы</button>
                         </div>
-                        <div class="col-5 d-none d-md-none d-lg-block"><img class="img-responsive contact__img"
-                                                                            src="~assets/images/general/tab-reviews.png"
-                                                                            alt=""></div>
+                        <div class="col-5 d-none d-md-none d-lg-block">
+                          <img class="img-responsive contact__img" src="~assets/images/general/tab-reviews.png" alt="">
+                        </div>
                       </div>
                     </b-tab>
                     <b-tab title="Преподаватели" v-if="authors.length">
@@ -193,11 +193,8 @@
                                       class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column"
                                       v-for="item in items">
                                       <div class="lesson__item--video">
-                                        <nuxt-link class="video"
-                                                   :to="$route.params.cid + '/lesson/' + item.id"
-                                                   aria-label="video">
-                                          <img class="img-responsive lesson__video--thumb"
-                                               :src="item.preview['295x166']" alt="" v-if="item.preview['295x166']">
+                                        <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: item.id}}" class="video" >
+                                          <img class="img-responsive lesson__video--thumb" :src="item.preview['295x166']" alt="" v-if="item.preview['295x166']">
                                         </nuxt-link>
                                       </div>
                                       <div class="lesson__item--info d-flex align-items-center justify-content-center">
@@ -244,8 +241,8 @@
                             <!--{{lessons['0'][0].description}}-->
                           </div>
                           <div class="bonus__lesson--video">
-                            <nuxt-link class="video" href="" aria-label="video"
-                                       :to="'/courses/' + $route.params.cid + '/lesson/' + lessons['0'][0].id">
+                            <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons['0'][0].id}}"
+                                       class="video">
                               <img class="img-responsive bonus__lesson--thumb" :src="lessons['0'][0].preview['295x166']"
                                    v-if="lessons['0'][0].preview['295x166']" alt="">
                             </nuxt-link>
@@ -334,6 +331,7 @@
 
 <script>
     import CoursesList from '../../../components/courses-list'
+    import HeaderBg from '../../../components/header-bg'
     import {faHeart as faHeartSolid} from '@fortawesome/pro-solid-svg-icons'
     import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
     import {faFacebook, faPinterest, faVk, faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -353,6 +351,7 @@
         },
         components: {
             'courses-list': CoursesList,
+            'header-bg': HeaderBg,
             'social-sharing': SocialSharing,
         },
         scrollToTop: false,

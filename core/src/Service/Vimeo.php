@@ -67,6 +67,7 @@ class Vimeo
             $total = $res['body']['total'];
 
             foreach ($res['body']['data'] as $video) {
+
                 if (!preg_match('#http.*?(\d+)($|/)#', $video['link'], $matches)) {
                     $this->container->logger->error('Could not get Vimeo id: ' . $video['link']);
                     continue;
@@ -77,6 +78,7 @@ class Vimeo
                     $size = implode('x', [$picture['width'], $picture['height']]);
                     $preview[$size] = $picture['link'];
                 }
+                //$video['privacy']
 
                 $data[] = [
                     'title' => $video['name'],
@@ -86,6 +88,7 @@ class Vimeo
                     'preview' => $preview,
                     'width' => $video['width'],
                     'height' => $video['height'],
+                    'views_count' => @$video['stats']['plays'],
                 ];
             }
 

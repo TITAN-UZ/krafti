@@ -26,7 +26,7 @@ class Courses extends \App\GetProcessor
         }
 
         if ($category = trim($this->getProperty('category'))) {
-            //$c->where(['category' => $category]); // Dev
+            $c->where(['category' => $category]);
         }
 
         return $c;

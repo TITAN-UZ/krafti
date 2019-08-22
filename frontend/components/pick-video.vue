@@ -21,16 +21,12 @@
     export default {
         name: 'pick-video',
         props: {
+            required: Boolean,
             value: {
                 type: Number,
                 required: false,
                 default: 0,
             },
-            required: {
-                type: Boolean,
-                required: false,
-                default: false,
-            }
         },
         data() {
             return {
@@ -50,10 +46,15 @@
                     })
             },
             onSelected: function (selected) {
-                this.$emit('input', selected.item.id);
-                this.img = selected.item.preview && selected.item.preview['295x166']
-                    ? selected.item.preview['295x166']
-                    : '';
+                if (selected && selected.item) {
+                    this.$emit('input', selected.item.id);
+                    this.img = selected.item.preview && selected.item.preview['295x166']
+                        ? selected.item.preview['295x166']
+                        : '';
+                } else {
+                    this.$emit('input', null);
+                    this.img = '';
+                }
             },
             getSuggestionValue(suggestion) {
                 return suggestion.item.title;

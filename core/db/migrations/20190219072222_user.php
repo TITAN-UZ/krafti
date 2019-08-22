@@ -24,7 +24,7 @@ class User extends Migration
             $table->integer('photo_id')->unsigned()->nullable();
             $table->integer('background_id')->unsigned()->nullable();
             $table->integer('role_id')->unsigned()->nullable();
-            $table->integer('coins')->unsigned()->nullable()->default(0);
+            $table->integer('coins')->unsigned()->default(0);
             $table->json('children')->nullable();
             $table->timestamp('logged_at')->nullable();
             $table->timestamp('reset_at')->nullable();

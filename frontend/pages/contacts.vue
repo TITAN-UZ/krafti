@@ -13,24 +13,28 @@
               <div class="row contacts__info">
                 <div class="col-lg-6 col-12">
                   <div class="contacts__links-block">
+                    <div class="contacts__text mb-2">
+                      <p>Хотите поделиться впечатлениями, задать вопросы или предложить тему для творчества?</p>
+                      <p>Свяжитесь с нами любым удобным способом:</p>
+                    </div>
                     <ul class="contacts__list">
                       <li class="contact__item" v-for="i in $settings.menu.footer.right" :key="i.to">
                         <a :href="i.to" class="contact__link" target="_blank">{{i.title}}</a>
                       </li>
                     </ul>
                   </div>
-                  <div class="contacts__text">
-                    По всем имеющимся у вас вопросам, вы можете обратиться непосредственно к специалистом нашей службы
-                    технической поддержки.
-                    Для этого заполните форму ниже и в скором времени мы свяжемся с вами.
-                  </div>
                 </div>
                 <div class="col-6 d-none d-md-none d-lg-block">
                   <img class="img-responsive contact__img" src="~assets/images/general/bg_contact.png" alt="">
                 </div>
               </div>
-              <div class="row contacts__form">
+              <div class="row contacts__form mt-5">
                 <div class="col-12">
+                  <div class="contacts__text mb-2">
+                    <p>По всем имеющимся у вас вопросам, вы можете обратиться непосредственно к специалистом нашей службы
+                      технической поддержки.</p>
+                    <p>Для этого заполните форму ниже и в скором времени мы свяжемся с вами.</p>
+                  </div>
                   <div class="form-row form-body align-items-center">
                     <div class="col-lg-6 col-12">
                       <b-form-group :disabled="loading">

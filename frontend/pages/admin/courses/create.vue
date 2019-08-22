@@ -23,7 +23,7 @@
         <b-form-group
           label-cols-lg="3"
           label-align-lg="right"
-          label="Превью"
+          label="Обложка"
           label-for="input-cover"
           description="Загрузите файл с обложкой">
           <upload-cover v-model="record.cover"/>
@@ -32,7 +32,7 @@
         <b-form-group
           label-cols-lg="3"
           label-align-lg="right"
-          label="Превью"
+          label="Видео превью"
           label-for="input-video"
           description="Выберите видео с рекламой курса">
           <pick-video v-model="record.video_id"/>
@@ -46,14 +46,26 @@
           <b-form-textarea id="input-description" no-resize rows="3" v-model="record.description"/>
         </b-form-group>
 
-        <!--<b-form-group
+        <b-form-group
           label-cols-lg="3"
           label-align-lg="right"
           label="Стоимость курса:"
-          label-for="input-price"
-          description="Укажите цену в рублях">
-          <b-form-input id="input-price" type="number" placeholder="2990" v-model="record.price" v-mask="'###?#?#'"/>
-        </b-form-group>-->
+          label-for="input-price">
+          <div class="d-flex flex-wrap flex-md-nowrap justify-content-md-between">
+            <b-form-group description="Цена за 3 месяца" class="flex-grow-1 flex-md-grow-0">
+              <b-form-input id="input-price-3" type="number" placeholder="2990" v-model="record.price['3']"
+                            required v-mask="'###?#?#'"/>
+            </b-form-group>
+            <b-form-group description="Цена за 6 месяцев" class="flex-grow-1 flex-md-grow-0">
+              <b-form-input id="input-price-6" type="number" placeholder="3990" v-model="record.price['6']"
+                            required v-mask="'###?#?#'"/>
+            </b-form-group>
+            <b-form-group description="Цена за 1 год" class="flex-grow-1 flex-md-grow-0">
+              <b-form-input id="input-price-12" type="number" placeholder="5990" v-model="record.price['12']"
+                            required v-mask="'###?#?#'"/>
+            </b-form-group>
+          </div>
+        </b-form-group>
 
         <b-form-group
           label-cols-lg="3"
@@ -75,7 +87,7 @@
           label="Возраст:"
           label-for="input-age"
           description="Укажите возраст от и до, через дефис">
-          <b-form-input id="input-age" placeholder="4-8" v-model="record.age" v-mask="'#-#?#'" required/>
+          <b-form-input id="input-age" placeholder="4-8" v-model="record.age" required/>
         </b-form-group>
 
         <b-form-checkbox class="offset-lg-3" v-model="record.active">Опубликован</b-form-checkbox>
@@ -104,7 +116,9 @@
                     tagline: '',
                     description: '',
                     category: '',
-                    price: '',
+                    price: {'3': '', '6': '', '12': ''},
+                    price6: '',
+                    price12: '',
                     age: '',
                     cover: {},
                     video_id: null,

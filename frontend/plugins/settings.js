@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 let settings = {
-  copyright: 'Крафти © 2019. Все права защищены',
+  copyright: 'Крафти © 2019. Продажа творческих, спортивных онлайн курсов для детей и взрослых. Все права защищены.',
   links: {
     instagram: 'https://www.instagram.com/krafti.ru/',
     //whatsapp: 'https://whatsapp.com',
@@ -39,10 +39,6 @@ let settings = {
       }],
     footer: {
       left: [{
-        to: '/',
-        title: 'Главная',
-        auth: false,
-      }, {
         to: '/courses',
         title: 'Курсы',
         auth: false,
@@ -50,12 +46,12 @@ let settings = {
         to: '/office/store',
         title: 'Личный кабинет',
         auth: true,
-      }],
-      center: [{
+      }, {
         to: '/teachers',
         title: 'Преподаватели',
         auth: false,
-      }, {
+      }],
+      center: [{
         to: '/reviews',
         title: 'Отзывы',
         auth: false,

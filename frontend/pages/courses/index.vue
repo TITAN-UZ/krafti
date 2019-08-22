@@ -1,16 +1,12 @@
 <template>
   <div class="wrapper">
-    <div class="wrapper__bg" :style="style_bg"></div>
+    <header-bg image="courses"/>
     <div class="wrapper__content">
       <section class="courses-list">
         <div class="container">
           <div class="row">
             <div class="col-md-8 offset-md-2">
-              <div class="row">
-                <div class="col-12">
-                  <h2 class="section__title">Курсы</h2>
-                </div>
-              </div>
+              <h2 class="section__title">Курсы</h2>
               <div class="row mob_container">
                 <div class="col-12 tab__wrap--scroll">
                   <b-tabs>
@@ -30,17 +26,16 @@
 
 <script>
     import CoursesList from '../../components/courses-list'
-    import bg from '../../assets/images/general/headline_favorites.jpg'
+    import HeaderBg from '../../components/header-bg'
 
     export default {
         auth: false,
         data() {
-            return {
-                style_bg: {'background-image': 'url(' + bg + ')'},
-            }
+            return {}
         },
         components: {
             'courses-list': CoursesList,
+            'header-bg': HeaderBg,
         },
         scrollToTop: false,
         asyncData({app}) {

@@ -112,16 +112,14 @@ class Lesson extends Model
 
         $likes = ($this->isDirty('likes_count') || $this->isDirty('dislikes_count')) && $this->course;
         $lessons = $this->isDirty('active') && $this->course;
+
         $save = parent::save($options);
 
         if ($likes) {
-            $this->course->likes_sum = $this->course->lessons()->where(['active' => true])->sum('likes_count') -
-                $this->course->lessons()->where(['active' => true])->sum('dislikes_count');
-            $this->course->save();
+            $this->course->updateLikesCount();
         }
         if ($lessons) {
-            $this->course->lessons_count = $this->course->lessons()->where(['active' => true])->count();
-            $this->course->save();
+            $this->course->updateLessonsCount();
         }
 
         return $save;
@@ -140,6 +138,28 @@ class Lesson extends Model
         }
 
         return $delete;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function updateViewsCount() {
+        $count = 0;
+        if ($this->video) {
+            $count += $this->video->views_count;
+        }
+        if ($this->bonus) {
+            $count += $this->bonus->views_count;
+        }
+        if ($this->views_count != $count) {
+            $this->views_count = $count;
+            $this->save();
+
+            $this->course->updateViewsCount();
+        }
+
+        return $count;
     }
 
 }

@@ -35,10 +35,16 @@ class Lessons extends \App\Processor
                 'description' => $lesson->description,
                 'products' => $lesson->products,
                 'video' => $lesson->video
-                    ? $lesson->video->preview
+                    ? [
+                        'vimeo' => $lesson->video->remote_key,
+                        'title' => $lesson->bonus->title,
+                        'description' => $lesson->bonus->description,
+                        'preview' => $lesson->video->preview,
+                    ]
                     : null,
                 'bonus' => $lesson->bonus
                     ? [
+                        'vimeo' => $lesson->video->remote_key,
                         'title' => $lesson->bonus->title,
                         'description' => $lesson->bonus->description,
                         'preview' => $lesson->bonus->preview,
