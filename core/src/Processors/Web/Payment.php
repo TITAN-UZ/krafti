@@ -22,7 +22,17 @@ class Payment extends \App\Processor
                     $order->paid_till = date('Y-m-d H:i:s', strtotime("+$order->period month"));
                     $order->save();
 
+                    if ($order->discount) {
+                        $user = $order->user;
+                        $user->referrer->makeTransaction(getenv('COINS_PROMO'), 'purchase', [
+                            'referral_id' => $user->id,
+                            'course_id' => $order->id,
+                        ]);
+                    }
+
                     return $this->success('Ok!');
+                } else {
+                    $this->container->logger->error('Wrong Signature', ['data' => $this->getProperties()]);
                 }
             }
         }
@@ -31,8 +41,9 @@ class Payment extends \App\Processor
     }
 
 
-    protected function sendEmail(array $data) {
+    /*protected function sendEmail(array $data)
+    {
 
-    }
+    }*/
 
 }

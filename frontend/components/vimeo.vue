@@ -14,8 +14,6 @@
         <iframe id="vimeo-iframe"
                 class="embed-responsive-item"
                 :src="'https://player.vimeo.com/video/' + video"
-                frameborder="0"
-                allowfullscreen
                 allow="autoplay; fullscreen"></iframe>
       </div>
       <template slot="modal-header">

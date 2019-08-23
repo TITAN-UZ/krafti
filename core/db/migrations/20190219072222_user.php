@@ -24,7 +24,9 @@ class User extends Migration
             $table->integer('photo_id')->unsigned()->nullable();
             $table->integer('background_id')->unsigned()->nullable();
             $table->integer('role_id')->unsigned()->nullable();
-            $table->integer('coins')->unsigned()->default(0);
+            $table->integer('referrer_id')->unsigned()->nullable();
+            $table->integer('account')->unsigned()->default(0);
+            $table->string('promo', 100)->nullable()->unique();
             $table->json('children')->nullable();
             $table->timestamp('logged_at')->nullable();
             $table->timestamp('reset_at')->nullable();
@@ -42,6 +44,10 @@ class User extends Migration
                 ->references('id')->on('user_roles')
                 ->onUpdate('restrict')
                 ->onDelete('set null');
+            $table->foreign('referrer_id')
+                ->references('id')->on('users')
+                ->onUpdate('restrict')
+                ->onDelete('set null');
         });
     }
 
@@ -52,6 +58,7 @@ class User extends Migration
             $table->dropForeign('users_role_id_foreign');
             $table->dropForeign('users_photo_id_foreign');
             $table->dropForeign('users_background_id_foreign');
+            $table->dropForeign('users_referrer_id_foreign');
         });
         $this->schema->drop('users');
     }

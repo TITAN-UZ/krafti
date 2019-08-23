@@ -64,6 +64,7 @@ class Users extends \App\ObjectProcessor
         $array['photo'] = $object->photo
             ? $object->photo->getUrl()
             : null;
+        //$array['referrals'] = $object->referrals()->count();
 
         /*$array['background'] = $object->background
             ? $object->background->getUrl()

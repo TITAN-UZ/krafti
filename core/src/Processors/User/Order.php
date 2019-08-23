@@ -8,6 +8,11 @@ class Order extends \App\GetProcessor
 {
     protected $class = 'App\Model\Order';
 
+    /*public function get()
+    {
+        return $this->failure($this->container->user->id);
+    }*/
+
 
     /**
      * @param Builder $c

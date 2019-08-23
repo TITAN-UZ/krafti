@@ -20,8 +20,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $photo_id
  * @property int $background_id
  * @property int $role_id
+ * @property int $referrer_id
  * @property array $children
- * @property int $coins
+ * @property int $account
+ * @property string $promo
  * @property string $company
  * @property string $description
  * @property string $logged_at
@@ -30,18 +32,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $updated_at
  *
  * @property-read UserRole $role
+ * @property-read User $referrer
  * @property-read File $photo
  * @property-read File $background
  * @property-read UserFavorite[] $favorites
  * @property-read UserLike[] $likes
  * @property-read Order[] $orders
+ * @property-read User[] $referrals
+ * @property-read UserTransaction[] $transactions
  */
 class User extends Model
 {
     public $timestamps = true;
     protected $fillable = ['email', 'password', 'fullname', 'dob', 'phone', 'instagram', 'active', 'photo_id',
         'company', 'description',
-        'background_id', 'role_id', 'children', 'coins', 'logged_at', 'reset_at',
+        'background_id', 'role_id', 'referrer_id', 'children', 'account', 'logged_at', 'reset_at',
     ];
     protected $casts = [
         'active' => 'boolean',
@@ -113,6 +118,15 @@ class User extends Model
     /**
      * @return BelongsTo
      */
+    public function referrer()
+    {
+        return $this->belongsTo('App\Model\User');
+    }
+
+
+    /**
+     * @return BelongsTo
+     */
     public function photo()
     {
         return $this->belongsTo('App\Model\File');
@@ -156,6 +170,45 @@ class User extends Model
 
 
     /**
+     * @return HasMany
+     */
+    public function referrals()
+    {
+        return $this->hasMany('App\Model\User', 'referrer_id');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany('App\Model\UserTransaction');
+    }
+
+
+    /**
+     * @param array $options
+     *
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        if (!$this->promo) {
+            while (true) {
+                $promo = $this->randomPassword();
+                if (!User::query()->where(['promo' => $promo])->count()) {
+                    $this->promo = $promo;
+                    break;
+                }
+            }
+        }
+
+        return parent::save($options);
+    }
+
+
+    /**
      * @return bool|null
      * @throws \Exception
      */
@@ -169,5 +222,62 @@ class User extends Model
         }
 
         return parent::delete();
+    }
+
+
+    /**
+     * @param int $length
+     *
+     * @return string
+     */
+    protected function randomPassword($length = 8)
+    {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = [];
+        $alphaLength = strlen($alphabet) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+
+        return implode($pass);
+    }
+
+
+    /**
+     * @param bool $save
+     *
+     * @return bool
+     */
+    public function updateAccount($save = true)
+    {
+        $sum = $this->transactions()->sum('amount');
+        if ($this->account != $sum) {
+            $this->account = $sum;
+            if ($save) {
+                $this->save();
+            }
+        }
+
+        return $sum;
+    }
+
+
+    /**
+     * @param int $amount
+     * @param string $action
+     * @param array $data
+     */
+    public function makeTransaction($amount, $action, array $data = [])
+    {
+        $transaction = new UserTransaction([
+            'user_id' => $this->id,
+            'amount' => $amount,
+            'action' => $action,
+        ]);
+        $transaction->fill($data);
+        $transaction->save();
+
+        $this->updateAccount();
     }
 }

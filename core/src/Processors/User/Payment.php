@@ -27,6 +27,8 @@ class Payment extends \App\Processor
         if (empty($course->price[$period])) {
             return $this->failure('Не указана стоимость курса');
         }
+        $cost = $course->price[$period];
+        $discount = $course->getDiscount($this->container->user->id);
 
         $key = [
             'course_id' => $course->id,
@@ -46,7 +48,8 @@ class Payment extends \App\Processor
         $order->period = $period;
         $order->paid_at = null;
         $order->paid_till = null;
-        $order->cost = $course->price[$period];
+        $order->cost = $cost - $discount;
+        $order->discount = $discount;
         $order->save();
 
         $link = '';

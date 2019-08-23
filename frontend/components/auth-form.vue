@@ -54,6 +54,10 @@
           <b-input v-model="register.password" type="password" placeholder="Пароль" trim required/>
         </b-form-group>
 
+        <b-form-group class="mb-2" description="Вы получите скидку на первую покупку, а ваш друг - крафтики">
+          <b-input v-model="register.promo" placeholder="Промокод" trim/>
+        </b-form-group>
+
         <b-form-group class="mb-2">
           <b-input v-model="register.instagram" placeholder="@instagram" trim/>
         </b-form-group>
@@ -118,6 +122,9 @@
                     fullname: '',
                     instagram: '',
                     password: '',
+                    promo: process.client && localStorage.promo !== undefined
+                        ? localStorage.promo
+                        : '',
                 },
                 reset: {
                     email: '',
@@ -203,6 +210,7 @@
                         this.loading = false;
                         this.login.email = this.register.email;
                         this.login.password = this.register.password;
+                        localStorage.removeItem('promo');
                         this.onLogin();
                     })
                     .catch((res) => {
@@ -228,7 +236,10 @@
             },
         },
         created() {
-            //this.$root.$on('app::auth-form::clear', this.clearForms);
+            if (this.register.promo != '' && this.mode == 'login') {
+                this.mode = 'register'
+
+            }
         }
     }
 </script>

@@ -110,10 +110,37 @@ class Course extends Model
      */
     public function wasBought($user_id)
     {
-        /** @var Order $order */
-        $order = $this->orders()->where(['user_id' => $user_id, 'status' => 2])->first();
+        /** @var User $user */
+        if ($user = User::query()->find($user_id)) {
+            if ($user->role_id > 2) {
+                return true;
+            }
+            /** @var Order $order */
+            $order = $this->orders()->where(['user_id' => $user_id, 'status' => 2])->first();
 
-        return $order && $order->paid_till > date('Y-m-d H:i:s');
+            return $order && $order->paid_till > date('Y-m-d H:i:s');
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param $user_id
+     *
+     * @return bool
+     */
+    public function getDiscount($user_id)
+    {
+        $discount = 0;
+        /** @var User $user */
+        if ($user = User::query()->find($user_id)) {
+            if ($user->referrer_id && !$this->orders()->where(['user_id' => $user_id, 'status' => 2])->count()) {
+                $discount = getenv('COURSE_DISCOUNT');
+            }
+        }
+
+        return $discount;
     }
 
 

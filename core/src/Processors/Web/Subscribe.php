@@ -15,8 +15,17 @@ class Subscribe extends \App\Processor
         }
 
         if (!Subscriber::query()->find($email)) {
-            $subscriber = new Subscriber(['email' => $email]);
+            $subscriber = new Subscriber([
+                'email' => $email,
+                'user_id' => $this->container->user
+                    ? $this->container->user->id
+                    : null,
+            ]);
             $subscriber->save();
+
+            if ($this->container->user) {
+                $this->container->user->makeTransaction(getenv('COINS_SUBSCRIBE'), 'subscribe');
+            }
         }
 
         return $this->success();
