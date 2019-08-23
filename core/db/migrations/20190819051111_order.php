@@ -13,6 +13,7 @@ class Order extends Migration
             $table->integer('course_id')->unsigned()->nullable();
             $table->string('service');
             $table->integer('cost')->unsigned();
+            $table->integer('discount')->unsigned()->nullable()->default(0);
             $table->smallInteger('status')->unsigned();
             $table->smallInteger('period')->unsigned();
             $table->dateTime('paid_at')->nullable();

@@ -29,6 +29,15 @@ class Register extends \App\Processor
             'role_id' => 3, // Regular user
         ]);
 
+        if ($promo = trim($this->getProperty('promo'))) {
+            /** @var User $referrer */
+            if (!$referrer = User::query()->where(['promo' => $promo, 'active' => true])->first()) {
+                return $this->failure('Указан недействительный промокод');
+            } else {
+                $user->referrer_id = $referrer->id;
+            }
+        }
+
         $validate = $this->validate($user);
         if ($validate !== true) {
             return $this->failure($validate);

@@ -29,7 +29,7 @@
                 <div class="footer d-flex align-items-center">
                     <fa icon="star" style="color:goldenrod"/>
                     <!--<span class="ic__star-gold"></span>-->
-                    <span class="coins ml-2">{{user.coins}} крафтиков</span>
+                    <span class="account ml-2">{{user.account}} крафтиков</span>
                     <nuxt-link :to="$settings.links.profile" class="ml-auto">
                         <fa icon="cog"/>
                     </nuxt-link>

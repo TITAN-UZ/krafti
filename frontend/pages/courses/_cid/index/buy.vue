@@ -7,20 +7,25 @@
         :size="payment.period == 3 ? 'lg' : ''"
         :variant="payment.period == 3 ? 'success' : 'outline-secondary'"
         :disabled="loading"
-        @click="payment.period = 3"> 3 месяца<br>за 2 990 р
+        @click="payment.period = 3"> 3 месяца<br>за {{record.price['3'] - record.discount | number}} р
       </b-button>
       <b-button
         :size="payment.period == 6 ? 'lg' : ''"
         :variant="payment.period == 6 ? 'success' : 'outline-secondary'"
         :disabled="loading"
-        @click="payment.period = 6"> 6 месяцев<br>за 3 990 р
+        @click="payment.period = 6"> 6 месяцев<br>за {{record.price['6'] - record.discount | number}} р
       </b-button>
       <b-button
         :size="payment.period == 12 ? 'lg' : ''"
         :variant="payment.period == 12 ? 'success' : 'outline-secondary'"
         :disabled="loading"
-        @click="payment.period = 12"> 1 год<br>за 5 990 р
+        @click="payment.period = 12"> 1 год<br>за {{record.price['12'] - record.discount | number}} р
       </b-button>
+
+      <div class="alert alert-info mt-5" v-if="record.discount">
+        Благодаря тому, что вы зарегистрировались по кромокоду,
+        у вас есть скидка <strong>{{record.discount | number}} р.</strong> на первую покупку.
+      </div>
 
       <div v-if="$auth.loggedIn" class="mt-5">
         <button class="button" type="submit" aria-label="submit">
@@ -97,6 +102,12 @@
                         this.hideModal();
                     })
             }
+        },
+        asyncData({app, params}) {
+            return app.$axios.get('web/courses', {params: {id: params.cid}})
+                .then(res => {
+                    return {record: res.data}
+                })
         },
         created() {
             this.$fa.add(faTimes);

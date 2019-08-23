@@ -1,9 +1,7 @@
 <template>
   <div>
-    <!--<b-modal hide-footer visible no-close-on-backdrop no-close-on-esc size="xl" @hidden="onHidden" ref="modalVideo">-->
     <b-modal hide-footer visible size="xl" @hidden="onHidden" ref="modalVideo" dialog-class="modal-video">
       <div class="wrapper">
-        <!--TODO Воспроизведение видео-->
         <!--<div class="wrapper__bg bg_600 js-bg-selection" :style="style_bg">
           <a class="ic__play&#45;&#45;white" href="" aria-label="video"></a>
         </div>-->
@@ -12,8 +10,6 @@
                   v-if="record.video && record.video.vimeo"
                   class="embed-responsive-item"
                   :src="'https://player.vimeo.com/video/' + record.video.vimeo"
-                  frameborder="0"
-                  allowfullscreen
                   allow="autoplay; fullscreen"></iframe>
         </div>
         <div class="wrapper__content pt-3 pt-md-5">
@@ -117,8 +113,6 @@
                                 v-if="record.bonus && record.bonus.vimeo"
                                 class="embed-responsive-item"
                                 :src="'https://player.vimeo.com/video/' + record.bonus.vimeo"
-                                frameborder="0"
-                                allowfullscreen
                                 allow="autoplay; fullscreen"></iframe>
                       </div>
 
@@ -236,7 +230,7 @@
 </template>
 
 <script>
-    import bg from '../../../../../assets/images/general/headline_video.png'
+    //import bg from '../../../../../assets/images/general/headline_video.png'
     import {faTimes} from '@fortawesome/pro-light-svg-icons'
     import {faThumbsUp, faThumbsDown} from '@fortawesome/pro-duotone-svg-icons'
 
@@ -248,7 +242,7 @@
         data() {
             return {
                 loading: false,
-                style_bg: {'background-image': 'url(' + bg + ')'},
+                //style_bg: {'background-image': 'url(' + bg + ')'},
             }
         },
         scrollToTop: false,

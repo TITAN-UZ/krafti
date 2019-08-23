@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $course_id
  * @property string $service
  * @property int $cost
+ * @property int $discount
  * @property int $status
  * @property int $period
  * @property string $paid_at
@@ -24,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Order extends Model
 {
     protected $fillable = [
-        'user_id', 'course_id', 'service', 'cost', 'status', 'period', 'paid_at', 'paid_till',
+        'user_id', 'course_id', 'service', 'cost', 'discount', 'status', 'period', 'paid_at', 'paid_till',
     ];
 
 

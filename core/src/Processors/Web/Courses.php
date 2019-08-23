@@ -58,14 +58,15 @@ class Courses extends \App\GetProcessor
             'video' => $object->video
                 ? $object->video->preview
                 : null,
-            /*'bonus' => $object->bonus
-                ? $object->bonus->preview
-                : null,*/
             'bought' => false,
+            'discount' => 0,
         ];
 
         if ($this->container->user) {
             $array['bought'] = $object->wasBought($this->container->user->id);
+            if (!$array['bought']) {
+                $array['discount'] = $object->getDiscount($this->container->user->id);
+            }
         }
 
         return $array;

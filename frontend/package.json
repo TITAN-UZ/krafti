@@ -48,6 +48,7 @@
     "swiper": "^4.5.0",
     "v-mask": "^2.0.2",
     "vue-autosuggest": "^2.0.2",
+    "vue-clipboard2": "^0.3.0",
     "vue-filepond": "^5.1.2",
     "vue-social-sharing": "^2.4.6",
     "vue-tel-input": "^2.5.0",

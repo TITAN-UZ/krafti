@@ -23,10 +23,6 @@ class Profile extends \App\Processor
         foreach ($user->favorites()->get() as $obj) {
             $favorites[] = $obj->course_id;
         }
-        /** @var UserLike $obj */
-        foreach ($user->likes()->get() as $obj) {
-            $likes[] = $obj->course_id;
-        }
 
         $data = [
             'email' => $user->email,
@@ -34,7 +30,7 @@ class Profile extends \App\Processor
             'company' => $user->company,
             'description' => $user->description,
             'fullname' => $user->fullname,
-            'coins' => $user->coins,
+            'account' => $user->account,
             'dob' => $user->dob,
             'phone' => '+' . $user->phone,
             'scope' => $user->role->scope,
@@ -45,7 +41,7 @@ class Profile extends \App\Processor
                 ? $user->background->getUrl()
                 : null,
             'favorites' => $favorites ?: [],
-            'likes' => $likes ?: [],
+            'promo' => $user->promo,
         ];
 
         $data['unread'] = 0;

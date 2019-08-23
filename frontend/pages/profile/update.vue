@@ -73,6 +73,18 @@
                       <b-textarea v-model="form.description" rows="5" trim no-resize/>
                     </b-form-group>
 
+                    <b-form-group class="mb-3" label="Ваш промокод" label-for="form-promo"
+                                  description="Если ваш друг использует этот код при регистрации, он получит скидку на первую покупку, а вы - крафтики!">
+                      <b-input-group>
+                        <b-form-input :value="$auth.user.promo" readonly style="background: transparent"/>
+                        <b-input-group-append>
+                          <b-button variant="outline-primary" @click="copyLink">
+                            <fa :icon="['fad', 'copy']"/>
+                          </b-button>
+                        </b-input-group-append>
+                      </b-input-group>
+                    </b-form-group>
+
                     <!--
                     <div class="form-group mb-3">
                         <div class="form-group-title mb-1">Имя ребенка</div>
@@ -123,6 +135,13 @@
 
 
 <script>
+    import Vue from 'vue'
+    import VueClipboard from 'vue-clipboard2'
+    import {faCopy} from '@fortawesome/pro-duotone-svg-icons'
+
+    VueClipboard.config.autoSetContainer = true; // add this line
+    Vue.use(VueClipboard);
+
     export default {
         auth: true,
         data() {
@@ -148,6 +167,13 @@
                     description: this.$auth.user.description,
                 },
                 formatDate,
+            }
+        },
+        computed: {
+            promo: {
+                get() {
+                    return 'https://krafti.ru/p/' + this.$auth.user.promo;
+                }
             }
         },
         asyncData({app, params}) {
@@ -178,11 +204,20 @@
                     .catch(() => {
                     })
             },
+            copyLink() {
+                this.$copyText(this.promo)
+                    .then(() => {
+                        this.$notify.success({message: 'Ссылка успешно скопирована в буфер обмена!'})
+                    })
+            },
         },
         head() {
             return {
                 title: 'Крафти / Личный кабинет / Профиль',
             }
+        },
+        created() {
+            this.$fa.add(faCopy)
         },
         mounted() {
             document.getElementsByTagName('header')[0].classList.remove('header_img');

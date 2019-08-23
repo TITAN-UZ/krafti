@@ -94,7 +94,8 @@
                                class="btn btn-default btn__play">Начать просмотр</nuxt-link>
                     <nuxt-link :to="{name: 'courses-cid-index-buy', params: $route.params}"
                                v-else-if="record.bought === false"
-                               class="btn btn-default btn__buy">Купить от <span class="price">{{record.price['3']}} р</span>
+                               class="btn btn-default btn__buy">
+                      Купить от <span class="price">{{record.price['3'] - record.discount | number}} р</span>
                     </nuxt-link>
                   </div>
                 </div>
