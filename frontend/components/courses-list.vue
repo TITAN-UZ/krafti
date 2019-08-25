@@ -40,7 +40,7 @@
         methods: {
             addFavorite(id) {
                 this.loading = id;
-                this.$axios.put('user/favorite', {course_id: id})
+                this.$axios.put('user/favorites', {course_id: id})
                     .then(res => {
                         this.loading = false;
                         this.$auth.setUser(res.data.user);
@@ -51,7 +51,7 @@
             },
             deleteFavorite(id) {
                 this.loading = id;
-                this.$axios.delete('user/favorite', {params: {course_id: id}})
+                this.$axios.delete('user/favorites', {params: {course_id: id}})
                     .then(res => {
                         this.loading = false;
                         this.$auth.setUser(res.data.user);

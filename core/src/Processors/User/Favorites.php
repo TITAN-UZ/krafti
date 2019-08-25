@@ -5,7 +5,7 @@ namespace App\Processors\User;
 use App\Model\Course;
 use App\Model\UserFavorite;
 
-class Favorite extends \App\Processor
+class Favorites extends \App\Processor
 {
 
     protected $scope = 'profile';

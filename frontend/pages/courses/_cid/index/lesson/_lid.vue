@@ -38,9 +38,16 @@
                   <div class="lesson__info--note">По окончании урока, вы можете поделиться с нами своим результатом.
                     Достаточно сделать фото и отправить его нам. Лучшие работы будут опубликованы на главной странице.
                   </div>
-                  <div class="lesson__info--share">
+
+                  <upload-homework
+                    :lesson_id="record.id"
+                    :course_id="course.id"
+                    :section="0"
+                    :image="record.homework.file"
+                    :size="150"/>
+                  <!--<div class="lesson__info&#45;&#45;share">
                     <button class="button">Поделиться работой</button>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>
@@ -260,7 +267,7 @@
                     .then(res => {
                         this.record.likes_count = res.data.likes_count;
                         this.record.dislikes_count = res.data.dislikes_count;
-                        this.$root.$emit('app::course' + this.$route.params.cid + '::likes', res.data);
+                        this.$root.$emit('app::course' + this.$route.params.cid + '::likes', res.data.likes_sum);
                     })
                     .catch(() => {
                     })
@@ -285,6 +292,14 @@
         },
         created() {
             this.$fa.add(faTimes, faThumbsUp, faThumbsDown);
+            this.$root.$emit('app::course' + this.$route.params.cid + '::progress', this.record.progress);
+
+            this.$root.$on('app::lesson' + this.record.id + '::homework', res => {
+                this.record.homework = res
+            })
+        },
+        beforeDestroy() {
+            this.$root.$off('app::lesson' + this.record.id + '::homework')
         },
         head() {
             return {

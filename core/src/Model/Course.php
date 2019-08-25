@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Lesson $bonus
  * @property-read Lesson[] $lessons
  * @property-read Order[] $orders
+ * @property-read UserProgress[] $progresses
  */
 class Course extends Model
 {
@@ -86,6 +87,15 @@ class Course extends Model
     public function orders()
     {
         return $this->hasMany('App\Model\Order');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function progresses()
+    {
+        return $this->hasMany('App\Model\UserProgress');
     }
 
 

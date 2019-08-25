@@ -15,6 +15,7 @@ import UploadBg from '../components/upload-bg'
 import UploadPhoto from '../components/upload-photo'
 import UploadCover from '../components/upload-cover'
 import UploadFile from '../components/upload-file'
+import UploadHomework from '../components/upload-homework'
 
 const FilePond = vueFilePond(
   FilePondPluginFileEncode,
@@ -31,3 +32,4 @@ Vue.component('upload-bg', UploadBg);
 Vue.component('upload-photo', UploadPhoto);
 Vue.component('upload-cover', UploadCover);
 Vue.component('upload-file', UploadFile);
+Vue.component('upload-homework', UploadHomework);

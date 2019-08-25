@@ -47,6 +47,7 @@
     "sharp": "^0.23.0",
     "swiper": "^4.5.0",
     "v-mask": "^2.0.2",
+    "vue-analytics": "^5.17.2",
     "vue-autosuggest": "^2.0.2",
     "vue-clipboard2": "^0.3.0",
     "vue-filepond": "^5.1.2",

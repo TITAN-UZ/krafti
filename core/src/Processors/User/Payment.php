@@ -19,7 +19,22 @@ class Payment extends \App\Processor
         }
 
         $service = $this->getProperty('service');
-        if (!in_array($service, ['robokassa', 'paypal'])) {
+        if ($service == 'account') {
+            $price = getenv('COINS_BUY_BONUS');
+
+            if (!$course->bonus) {
+                return $this->failure('У этого курса нет бонусного урока');
+            } elseif ($this->container->user->account < $price) {
+                return $this->failure('Не хватает крафтиков для покупки');
+            }
+
+            $this->container->user->makeTransaction($price * -1, 'bonus', ['course_id' => $course->id]);
+            $this->container->user->makeProgress($course, null, true);
+
+            return $this->success([
+                'lesson_id' => $course->bonus->id,
+            ]);
+        } elseif (!in_array($service, ['robokassa', 'paypal'])) {
             return $this->failure('Указан неизвестный способ оплаты');
         }
 

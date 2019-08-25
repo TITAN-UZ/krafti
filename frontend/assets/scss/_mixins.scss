@@ -1,4 +1,4 @@
-@mixin play-button() {
+@mixin thumb-icon($icon) {
   &::before {
     position: absolute;
     display: block;
@@ -8,8 +8,16 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: url(~assets/images/general/ic_play_btn.svg) no-repeat;
+    background: url($icon) no-repeat;
     background-size: 100% 100%;
     z-index: 1;
   }
+}
+
+@mixin play-button() {
+  @include thumb-icon('~assets/images/general/ic_play_btn.svg')
+}
+
+@mixin lock-button() {
+  @include thumb-icon('~assets/images/general/ic_locked.svg')
 }

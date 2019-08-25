@@ -3,8 +3,10 @@
 namespace App\Processors\Web\Course;
 
 use App\Model\Course;
+use App\Model\Homework;
 use App\Model\Lesson;
 use App\Model\UserLike;
+use App\Model\UserProgress;
 
 class Lessons extends \App\Processor
 {
@@ -24,6 +26,17 @@ class Lessons extends \App\Processor
             /** @var Lesson $lesson */
             if (!$lesson = Lesson::query()->find($id)) {
                 return $this->failure('Не могу загрузить урок');
+            }
+
+            /** @var UserProgress $progress */
+            $progress = $this->container->user->getProgress($course);
+            if ($progress->section == $lesson->section && $lesson->rank > $progress->rank) {
+                $progress = $this->container->user->makeProgress($course, $lesson->section, $lesson->rank);
+            }
+
+            // Bonus
+            if (!$lesson->section && $progress->section) {
+                return $this->failure('Вы еще не открыли бонусный урок!');
             }
 
             /** @var UserLike $like */
@@ -68,8 +81,13 @@ class Lessons extends \App\Processor
                 'like' => $like
                     ? $like->value
                     : null,
+                'progress' => [
+                    'section' => $progress->section,
+                    'rank' => $progress->rank,
+                ],
                 'next' => [],
                 'comments' => [],
+                'homework' => [],
             ];
 
             $next_lessons = $course->lessons()
@@ -84,6 +102,16 @@ class Lessons extends \App\Processor
                     'description' => $next->description,
                     'preview' => $next->video
                         ? $next->video->preview
+                        : null,
+                ];
+            }
+
+            /** @var Homework $homework */
+            if ($homework = $lesson->homeworks()->where(['user_id' => $this->container->user->id])->first()) {
+                $data['homework'] = [
+                    'id' => $homework->id,
+                    'file' => $homework->file
+                        ? $homework->file->getUrl()
                         : null,
                 ];
             }

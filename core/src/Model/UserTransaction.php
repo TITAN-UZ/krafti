@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property int $referral_id
  * @property int $course_id
- * @property int $lesson_id
  * @property int $amount
  * @property int $account
  * @property string $action
@@ -24,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class UserTransaction extends Model
 {
-    protected $fillable = ['lesson_id', 'user_id', 'referral_id', 'course_id', 'lesson_id', 'amount', 'account', 'action'];
+    protected $fillable = ['lesson_id', 'user_id', 'referral_id', 'course_id', 'amount', 'account', 'action'];
 
 
     /**

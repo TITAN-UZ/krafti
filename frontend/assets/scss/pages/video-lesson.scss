@@ -177,10 +177,10 @@ section.science__content {
       position: relative;
       display: block;
       cursor: pointer;
-      &:hover {
+      /*&:hover {
         opacity: 0.8;
-      }
-      @include play-button;
+      }*/
+      //@include play-button;
 
       .bonus__lesson--thumb {
         border-radius: 20px;

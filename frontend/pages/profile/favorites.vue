@@ -29,7 +29,7 @@
             'header-bg': HeaderBg,
         },
         asyncData({app}) {
-            return app.$axios.get('user/favorite', {params: {limit: 0}})
+            return app.$axios.get('user/favorites', {params: {limit: 0}})
                 .then(res => {
                     return {courses: res.data.rows}
                 })
