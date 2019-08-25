@@ -270,14 +270,97 @@ class User extends Model
      */
     public function makeTransaction($amount, $action, array $data = [])
     {
+        if ($action == 'bonus') {
+            if ($this->transactions()->where(['course_id' => @$data['course_id'], 'action' => $action])->count()) {
+                return;
+            }
+        }
+
         $transaction = new UserTransaction([
             'user_id' => $this->id,
             'amount' => $amount,
             'action' => $action,
         ]);
+
         $transaction->fill($data);
         $transaction->save();
 
         $this->updateAccount();
+    }
+
+
+    /**
+     * @param Course $course
+     *
+     * @return UserProgress
+     */
+    public function getProgress($course) {
+        $key = [
+            'user_id' => $this->id,
+            'course_id' => $course->id,
+        ];
+
+        if (!$progress = UserProgress::query()->where($key)->first()) {
+            $progress = $this->makeProgress($course, 1);
+        }
+
+        return $progress;
+    }
+
+
+    /**
+     * @param Course $course
+     * @param int $section
+     * @param int $rank
+     *
+     * @return UserProgress
+     */
+    public function makeProgress($course, $section, $rank = 0)
+    {
+        $key = [
+            'user_id' => $this->id,
+            'course_id' => $course->id,
+        ];
+
+        if (!$progress = UserProgress::query()->where($key)->first()) {
+            $progress = new UserProgress($key);
+            $progress->section = 1;
+        }
+
+        $progress->section = $section;
+        $progress->rank = $rank;
+        $progress->save();
+
+        return $progress;
+
+        /*if ($bonus) {
+            $progress->section = 0;
+            $progress->rank = 0;
+        } elseif ($lesson && $progress->section) {
+            $next = $course->lessons()
+                ->where('section', '=', $section)
+                ->where('rank', '>', $rank)
+                ->orderBy('rank', 'asc')
+                ->first();
+            if ($next) {
+                $progress->rank = $next->rank;
+            } else {
+                $next = $course->lessons()
+                    ->where('section', '>', $lesson->section)
+                    ->where('rank', '=', 0)
+                    ->orderBy('section', 'asc')
+                    ->first();
+                if ($next) {
+                    $progress->section = $next->section;
+                    $progress->rank = 0;
+                } else {
+                    $progress->section = 0;
+                    $progress->rank = 0;
+                }
+            }
+        }
+        $progress->save();
+
+        return $progress;*/
     }
 }

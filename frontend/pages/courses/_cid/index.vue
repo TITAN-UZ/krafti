@@ -88,14 +88,19 @@
                     </div>
                   </div>
                   <div class="row buy__wrap">
-                    <button class="btn btn-default btn__play" v-if="!lessons">Готовится к публикации</button>
-                    <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons['1'][0].id}}"
-                               v-else-if="record.bought === true && lessons['1'].length"
-                               class="btn btn-default btn__play">Начать просмотр</nuxt-link>
-                    <nuxt-link :to="{name: 'courses-cid-index-buy', params: $route.params}"
-                               v-else-if="record.bought === false"
-                               class="btn btn-default btn__buy">
-                      Купить от <span class="price">{{record.price['3'] - record.discount | number}} р</span>
+                    <button class="btn btn-default btn__play" v-if="!Object.keys(lessons).length">Готовится к публикации</button>
+                    <nuxt-link
+                      class="btn btn-default btn__play"
+                      v-else-if="record.bought === true && lessons[record.progress.section][record.progress.rank]"
+                      :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons[record.progress.section][record.progress.rank].id}}">
+                      <span v-if="record.progress.section > 1 || record.progress.rank > 0">Продолжить просмотр</span>
+                      <span v-else>Начать просмотр</span>
+                    </nuxt-link>
+                    <nuxt-link
+                      class="btn btn-default btn__buy"
+                      v-else-if="record.bought === false"
+                      :to="{name: 'courses-cid-index-buy', params: $route.params}">
+                      Купить от <span class="price ml-2">{{record.price['3'] - record.discount | number}} р</span>
                     </nuxt-link>
                   </div>
                 </div>
@@ -165,7 +170,6 @@
                       </div>
                     </b-tab>
                     <b-tab title="Уроки" v-if="Object.keys(lessons).length" active>
-                      <!--TODO Сделать отображение прогресса на палитре-->
                       <div class="row palitra">
                         <div
                           class="col-lg-8 col-12 palitra__info d-flex justify-content-center align-items-center flex-column">
@@ -176,18 +180,23 @@
                             получаете крафтики.
                           </div>
                         </div>
-                        <div
-                          class="col-lg-4 col-12 col-md-6 palitra__img d-flex align-content-center justify-content-center">
-                          <img class="img-responsive" src="~assets/images/general/bg_palitra.png" alt="">
+                        <div class="col-lg-4 col-12 col-md-6 palitra__img d-flex align-content-center justify-content-center">
+                          <img class="img-responsive" src="~assets/images/palette/palette-1.svg" v-if="record.progress.section == 1"/>
+                          <img class="img-responsive" src="~assets/images/palette/palette-3.svg" v-if="record.progress.section == 2"/>
+                          <img class="img-responsive" src="~assets/images/palette/palette-6.svg" v-if="record.progress.section == 3"/>
+                          <img class="img-responsive" src="~assets/images/palette/palette-7.svg" v-if="record.progress.section == 0"/>
                         </div>
                       </div>
 
                       <div class="steps__wrap">
                         <div class="row">
                           <div class="col-12 tab__wrap--scroll">
-                            <b-tabs>
-                              <b-tab v-for="(items, section) in lessons" :key="section" :title="section + ' этап'"
-                                     v-if="section > 0">
+                            <b-tabs ref="mainTabs" v-model="lesson_tab">
+                              <b-tab v-for="(items, section) in lessons"
+                                     v-if="section > 0"
+                                     :key="section"
+                                     :title="section + ' этап'"
+                                     :disabled="(record.progress.section > 0 && section > record.progress.section)">
                                 <div class="step__wrap">
                                   <div class="row lessons__list">
                                     <div
@@ -208,18 +217,17 @@
                                     <div class="home__work--img">
                                       <img class="img-responsive" src="~assets/images/general/work_thumb.png" alt="">
                                     </div>
-                                    <div class="home__work--title">Домашнее задание</div>
+                                    <div class="home__work--title">Домашнее задание этапа {{section}}</div>
                                     <div class="home__work--count">+150 крафтиков</div>
-                                    <div class="home__work--text">On the other hand, we denounce with righteous
-                                      indignation and dislike men who are so beguiled and demoralized by the charms of
-                                      pleasure of the moment, so blinded by desire.
+                                    <div class="home__work--text">Отправьте нам фотографию того, что у вас получилось
                                     </div>
-                                    <form class="homeWork" action="">
-                                      <label for="photo">
-                                        <input type="file" name="photo">
-                                      </label>
-                                      <input id="photo" type="submit" value="" style="display: none;">
-                                    </form>
+                                    <client-only>
+                                      <upload-homework
+                                        :course_id="record.id"
+                                        :section="Number(section)"
+                                        :image="homeworks[section] ? homeworks[section].file : ''"
+                                        :size="500"/>
+                                    </client-only>
                                   </div>
                                 </div>
                               </b-tab>
@@ -234,27 +242,29 @@
                             <span class="ic__star-gold"></span>
                           </div>
                           <div class="bonus__lesson--title">
-                            <span class="ic__locked--gray mr-2"> </span>Бонусный урок
-
+                            <span :class="{'mr-2': true, 'ic__locked--gray': record.progress.section != 0}"> </span>Бонусный урок
                           </div>
                           <div class="bonus__lesson--text text-center">
                             <p><strong>{{lessons['0'][0].title}}</strong></p>
-                            <!--{{lessons['0'][0].description}}-->
+                            {{lessons['0'][0].description}}
                           </div>
                           <div class="bonus__lesson--video">
+                            <div class="disabled" v-if="record.progress.section != 0">
+                              <img class="img-responsive bonus__lesson--thumb" :src="lessons['0'][0].preview['295x166']"/>
+                            </div>
                             <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons['0'][0].id}}"
-                                       class="video">
-                              <img class="img-responsive bonus__lesson--thumb" :src="lessons['0'][0].preview['295x166']"
-                                   v-if="lessons['0'][0].preview['295x166']" alt="">
+                                       v-else class="video">
+                              <img class="img-responsive bonus__lesson--thumb" :src="lessons['0'][0].preview['295x166']"/>
                             </nuxt-link>
                           </div>
-                          <!--<div class="bonus__btn">
-                            <button class="btn__buy justify-content-center align-items-center"><span
-                              class="ic__star mr-2"></span>Купить за 450 крафтиков
-                            </button>
-                          </div>-->
+                          <div class="bonus__btn" v-if="record.progress.section != 0">
+                            <nuxt-link class="btn btn-default btn__buy" :to="{name: 'courses-cid-index-buy-bonus', cid: record.id}">
+                              <span class="ic__star mr-2"></span>Купить за 450 крафтиков
+                            </nuxt-link>
+                          </div>
                         </div>
                       </div>
+
                     </b-tab>
                   </b-tabs>
                 </div>
@@ -305,8 +315,8 @@
                           <div class="process__item color-2 d-flex justify-content-end align-items-end">
                             <div class="process__item--number">3</div>
                             <div class="process__item--body">
-                              <div class="title">Получаете обратную связь</div>
-                              <div class="text">Преподаватель разбирает ошибки, если они есть и двигаетесь дальше</div>
+                              <div class="title">Открываете следующий этап</div>
+                              <div class="text">После отправки всех трёх домашних заданий, вы получите бонусный урок</div>
                             </div>
                           </div>
                         </div>
@@ -347,7 +357,9 @@
             return {
                 loading: false,
                 tab: 0,
+                lesson_tab: 0,
                 style_bg: {'background-image': 'url(' + bg + ')'},
+                homeworks: {},
             }
         },
         components: {
@@ -365,13 +377,15 @@
                 return error({statusCode: 404, message: 'Страница не найдена'})
             }
 
-            const [similar, authors, lessons/*, bonus, reviews*/] = await Promise.all([
+            const [similar, authors, lessons, homeworks/*, reviews*/] = await Promise.all([
                 app.$axios.get('web/course/similar', {params: {course_id: params.cid}}),
                 app.$axios.get('web/course/authors', {params: {course_id: params.cid}}),
                 data.record.bought
                     ? app.$axios.get('web/course/lessons', {params: {course_id: params.cid}})
                     : null,
-                //app.$axios.get('web/course/bonus', {params: {course_id: params.cid}}),
+                data.record.bought
+                    ? app.$axios.get('user/homeworks', {params: {course_id: params.cid}})
+                    : null,
                 //app.$axios.get('web/course/reviews', {params: {course_id: params.cid, limit: 0}}),
             ]);
             data.similar = similar.data.rows;
@@ -388,7 +402,12 @@
             } else {
                 data.lessons = {};
             }
-            //data.bonus = bonus.data;
+            if (homeworks) {
+                data.homeworks = {};
+                homeworks.data.rows.forEach(v => {
+                    data.homeworks[String(v.section)] = v;
+                });
+            }
             data.reviews = [];
 
             return data;
@@ -396,7 +415,7 @@
         methods: {
             addFavorite(id) {
                 this.loading = 'favorite:' + id;
-                this.$axios.put('user/favorite', {course_id: id})
+                this.$axios.put('user/favorites', {course_id: id})
                     .then(res => {
                         this.loading = false;
                         this.$auth.setUser(res.data.user);
@@ -407,7 +426,7 @@
             },
             deleteFavorite(id) {
                 this.loading = 'favorite:' + id;
-                this.$axios.delete('user/favorite', {params: {course_id: id}})
+                this.$axios.delete('user/favorites', {params: {course_id: id}})
                     .then(res => {
                         this.loading = false;
                         this.$auth.setUser(res.data.user);
@@ -416,29 +435,31 @@
                         this.loading = false;
                     })
             },
-            loadLessons() {
-                this.$axios.get('web/courses', {params: {id: this.$route.params.cid}})
-                    .then(res => {
-                        this.record = res.data;
+            async loadLessons() {
+                const res = await this.$axios.get('web/courses', {params: {id: this.record.id}});
 
-                        if (res.data.bought) {
-                            this.$axios.get('web/course/lessons', {params: {course_id: this.$route.params.cid}})
-                                .then(res => {
-                                    let lessons = {};
-                                    res.data.rows.forEach(v => {
-                                        if (lessons[String(v.section)] === undefined) {
-                                            lessons[String(v.section)] = [];
-                                        }
-                                        lessons[String(v.section)].push(v);
-                                    });
-                                    this.lessons = lessons;
-                                })
-                                .catch(() => {
-                                })
-                        }
-                    })
-                    .catch(() => {
-                    })
+                if (res.data.bought) {
+                    const [lessons, homeworks] = await Promise.all([
+                        this.$axios.get('web/course/lessons', {params: {course_id: res.data.id}}),
+                        this.$axios.get('user/homeworks', {params: {course_id: res.data.id}}),
+                    ]);
+                    if (lessons) {
+                        this.lessons = {};
+                        lessons.data.rows.forEach(v => {
+                            if (this.lessons[String(v.section)] === undefined) {
+                                this.lessons[String(v.section)] = [];
+                            }
+                            this.lessons[String(v.section)].push(v);
+                        });
+                    }
+                    if (homeworks) {
+                        homeworks.data.rows.forEach(v => {
+                            this.homeworks[String(v.section)] = v;
+                        });
+                    }
+                }
+
+                this.record = res.data
             },
         },
         head() {
@@ -460,20 +481,33 @@
             this.$fa.add(faFacebook, faPinterest, faVk, faTwitter);
             this.$fa.add(faUser, faThumbsUp, faEye);
 
+            this.lesson_tab = this.record.progress.section > 0
+                ? this.record.progress.section - 1
+                : 0;
+
             this.$root.$on('app::auth-form::login', this.loadLessons);
             this.$root.$on('app::auth-form::logout', () => {
                 this.record.bought = false;
                 this.lessons = {};
+                this.homeworks = {};
                 this.tab = 0;
             });
             this.$root.$on('app::course' + this.record.id + '::likes', res => {
-                this.record.likes_sum = res.likes_sum
+                this.record.likes_sum = res
+            });
+            this.$root.$on('app::course' + this.record.id + '::progress', res => {
+                this.record.progress = res
+            });
+            this.$root.$on('app::course' + this.record.id + '::homeworks', res => {
+                this.homeworks = res
             });
         },
         beforeDestroy: function () {
             this.$root.$off('app::auth-form::login');
             this.$root.$off('app::auth-form::logout');
             this.$root.$off('app::course' + this.record.id + '::likes');
+            this.$root.$off('app::course' + this.record.id + '::progress');
+            this.$root.$off('app::course' + this.record.id + '::homeworks');
         }
     }
 </script>

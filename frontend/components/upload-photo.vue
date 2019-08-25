@@ -42,8 +42,8 @@
             size: {
                 type: Number,
                 required: false,
-                default: '150',
-            }
+                default: 150,
+            },
         },
         methods: {
             handleUpload(fieldName, file, metadata, load, error, progress, abort) {

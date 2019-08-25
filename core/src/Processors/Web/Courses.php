@@ -4,6 +4,7 @@ namespace App\Processors\Web;
 
 use App\Model\Course;
 use App\Model\Order;
+use App\Model\UserProgress;
 use Illuminate\Database\Eloquent\Builder;
 
 class Courses extends \App\GetProcessor
@@ -60,12 +61,23 @@ class Courses extends \App\GetProcessor
                 : null,
             'bought' => false,
             'discount' => 0,
+            'progress' => [
+                'section' => 1,
+                'rank' => 0,
+            ],
         ];
 
         if ($this->container->user) {
             $array['bought'] = $object->wasBought($this->container->user->id);
             if (!$array['bought']) {
                 $array['discount'] = $object->getDiscount($this->container->user->id);
+            }
+            /** @var UserProgress $progress */
+            if ($progress = $object->progresses()->where(['user_id' => $this->container->user->id])->first()) {
+                $array['progress'] = [
+                    'section' => $progress->section,
+                    'rank' => $progress->rank,
+                ];
             }
         }
 

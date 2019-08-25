@@ -23,7 +23,8 @@ class Authors extends \App\Processor
         foreach ($course->lessons()->where(['active' => true])->get() as $lesson) {
             /** @var User $author */
             if ($author = $lesson->author) {
-                $authors[] = [
+                $authors[$author->id] = [
+                    'id' => $author->id,
                     'fullname' => $author->fullname,
                     'company' => $author->company,
                     'description' => $author->description,
@@ -35,7 +36,7 @@ class Authors extends \App\Processor
         }
 
         return $this->success([
-            'rows' => $authors,
+            'rows' => array_values($authors),
             'total' => count($authors),
         ]);
     }

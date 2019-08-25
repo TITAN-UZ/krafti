@@ -23,6 +23,10 @@ class UserTransaction extends Migration
                 ->references('id')->on('users')
                 ->onUpdate('restrict')
                 ->onDelete('cascade');
+            $table->foreign('course_id')
+                ->references('id')->on('courses')
+                ->onUpdate('restrict')
+                ->onDelete('set null');
             $table->foreign('referral_id')
                 ->references('id')->on('users')
                 ->onUpdate('restrict')
@@ -39,6 +43,7 @@ class UserTransaction extends Migration
     {
         $this->schema->table('user_transactions', function (Blueprint $table) {
             $table->dropForeign('user_transactions_user_id_foreign');
+            $table->dropForeign('user_transactions_course_id_foreign');
             $table->dropForeign('user_transactions_referral_id_foreign');
             $table->dropForeign('user_transactions_lesson_id_foreign');
         });

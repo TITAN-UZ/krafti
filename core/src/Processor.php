@@ -33,9 +33,11 @@ class Processor
         if (!$this->checkScope()) {
             return $this->failure('У вас нет разрешения ' . $this->scope . '/' . strtolower($this->container->request->getMethod()));
         }
-        $this->properties = $this->container->request->isGet()
-            ? $this->container->request->getQueryParams()
-            : $this->container->request->getParams();
+        $this->setProperties(
+            $this->container->request->isGet()
+                ? $this->container->request->getQueryParams()
+                : $this->container->request->getParams()
+        );
 
         $method = strtolower($this->container->request->getMethod());
 
@@ -84,9 +86,9 @@ class Processor
      */
     protected function getProperty($key, $default = null)
     {
-        return $this->container->request->isGet()
-            ? $this->container->request->getQueryParam($key, $default)
-            : $this->container->request->getParam($key, $default);
+        return isset($this->properties[$key])
+            ? $this->properties[$key]
+            : $default;
     }
 
 

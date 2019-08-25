@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property-read File $file
  * @property-read User $author
  * @property-read UserLike[] $likes
+ * @property-read Homework[] $homeworks
  */
 class Lesson extends Model
 {
@@ -98,6 +99,15 @@ class Lesson extends Model
 
 
     /**
+     * @return hasMany
+     */
+    public function homeworks()
+    {
+        return $this->hasMany('App\Model\Homework');
+    }
+
+
+    /**
      * @param array $options
      *
      * @return bool
@@ -144,7 +154,8 @@ class Lesson extends Model
     /**
      * @return int
      */
-    public function updateViewsCount() {
+    public function updateViewsCount()
+    {
         $count = 0;
         if ($this->video) {
             $count += $this->video->views_count;

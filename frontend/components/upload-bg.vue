@@ -1,25 +1,26 @@
 <template>
-    <div class="wrapper__bg-shadow" :style="{'background-image': 'url(' + ($auth.user.background || bg) + ')'}">
-        <file-pond ref="filepond"
-                   accepted-file-types="image/jpeg, image/png"
-                   className="upload-bg"
-                   :allow-multiple="false"
-                   :labelIdle="faCameraAlt"
-                   :imagePreviewMinHeight="500"
-                   :imagePreviewMaxHeight="500"
-                   :imagePreviewHeight="500"
-                   :imageResizeTargetWidth="3000"
-                   :imageResizeTargetHeight="1000"
-                   :imageResizeUpscale="false"
-                   :server="{process: handleUpload}"
-                   :instantUpload="true"
-                   :allowDrop="true"
-                   labelFileLoading="Подготовка"
-                   labelFileProcessing="Загрузка"
-                   labelTapToCancel="Отмена"
-                   labelFileWaitingForSize="Ожидание размера"
-                   stylePanelLayout="integrated"/>
-    </div>
+  <div class="wrapper__bg-shadow" :style="{'background-image': 'url(' + ($auth.user.background || bg) + ')'}">
+    <file-pond
+      ref="filepond"
+      accepted-file-types="image/jpeg, image/png"
+      className="upload-bg"
+      :allow-multiple="false"
+      :labelIdle="faCameraAlt"
+      :imagePreviewMinHeight="500"
+      :imagePreviewMaxHeight="500"
+      :imagePreviewHeight="500"
+      :imageResizeTargetWidth="3000"
+      :imageResizeTargetHeight="1000"
+      :imageResizeUpscale="false"
+      :server="{process: handleUpload}"
+      :instantUpload="true"
+      :allowDrop="true"
+      labelFileLoading="Подготовка"
+      labelFileProcessing="Загрузка"
+      labelTapToCancel="Отмена"
+      labelFileWaitingForSize="Ожидание размера"
+      stylePanelLayout="integrated"/>
+  </div>
 </template>
 
 <script>
@@ -70,34 +71,37 @@
 </script>
 
 <style lang="scss">
-    .upload-bg {
-        .filepond--drop-label {
-            > label {
-                position: absolute;
-                right: 10px;
-                bottom: 10px;
-                color: #fff;
-                opacity: .5;
-            }
-        }
-        &:hover {
-            .filepond--drop-label > label {
-                opacity: 1;
-            }
-        }
-        .filepond--image-clip {
-            //width: 100% !important;
-        }
-        /*.filepond--file-info, .filepond--file-status {
-            display: none;
-        }*/
+  .upload-bg {
+    .filepond--drop-label {
+      > label {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        color: #fff;
+        opacity: .5;
+      }
     }
 
-    @media (max-width: 1024px) {
-        .upload-bg {
-            .filepond--drop-label > label {
-                bottom: 40px;
-            }
-        }
+    &:hover {
+      .filepond--drop-label > label {
+        opacity: 1;
+      }
     }
+
+    .filepond--image-clip {
+      //width: 100% !important;
+    }
+
+    /*.filepond--file-info, .filepond--file-status {
+        display: none;
+    }*/
+  }
+
+  @media (max-width: 1024px) {
+    .upload-bg {
+      .filepond--drop-label > label {
+        bottom: 40px;
+      }
+    }
+  }
 </style>

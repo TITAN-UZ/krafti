@@ -197,52 +197,6 @@
             }
           }
         }
-
-        .buy__wrap {
-          .btn__buy {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #9BB5F3;
-            border-radius: 10px;
-            border: 0;
-            color: $white;
-            height: 60px;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 19px;
-            text-align: center;
-            width: 100%;
-
-            &:hover {
-              background: rgb(101, 143, 240);
-            }
-
-            span.price {
-              margin-left: 5px;
-            }
-          }
-
-          .btn__play {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: $lightGreen;
-            border-radius: 10px;
-            border: 0;
-            color: $white;
-            height: 60px;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 19px;
-            text-align: center;
-            width: 100%;
-
-            &:hover {
-              background: #2fd8aa;
-            }
-          }
-        }
       }
     }
   }
@@ -771,41 +725,61 @@
       margin-bottom: 20px;
       position: relative;
       display: block;
-      cursor: pointer;
-      @include play-button;
+      .disabled {
+        @include lock-button;
+      }
       .bonus__lesson--thumb {
         border-radius: 20px;
+        //opacity: .5;
+      }
+      a {
+        cursor: pointer;
+        @include play-button;
         transition: opacity 0.3s;
         &:hover {
           opacity: 0.8;
         }
       }
     }
+  }
 
-    .bonus__btn {
-      button.btn__buy {
-        background: #9BB5F3;
-        border-radius: 10px;
-        border: 0;
-        color: $white;
-        height: 60px;
-        font-weight: 500;
-        font-size: 16px;
-        text-align: center;
-        padding-left: 40px;
-        padding-right: 40px;
-        width: 100%;
+  .btn__buy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #9BB5F3;
+    border-radius: 10px;
+    border: 0;
+    color: $white;
+    height: 60px;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+    padding-left: 40px;
+    padding-right: 40px;
+    width: 100%;
 
-        span {
-          display: inline-block;
-          position: relative;
-          top: 5px;
-        }
+    &:hover {
+      background: rgb(101, 143, 240);
+    }
+  }
+  .btn__play {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $lightGreen;
+    border-radius: 10px;
+    border: 0;
+    color: $white;
+    height: 60px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    width: 100%;
 
-        &:hover {
-          background: rgb(101, 143, 240);
-        }
-      }
+    &:hover {
+      background: #2fd8aa;
     }
   }
 }
