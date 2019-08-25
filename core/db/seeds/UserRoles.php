@@ -9,10 +9,10 @@ class UserRoles extends AbstractSeed
     {
         $roles = [
             'Администратор' => [
-                'scope' => ['profile', 'admin', 'courses', 'lessons', 'videos', 'user-roles', 'users'],
+                'scope' => ['profile', 'admin', 'courses', 'lessons', 'videos', 'user-roles', 'users', 'comments'],
             ],
             'Автор' => [
-                'scope' => ['profile', 'admin', 'courses', 'lessons', 'videos'],
+                'scope' => ['profile', 'admin', 'courses', 'lessons', 'videos', 'comments'],
             ],
             'Пользователь' => [
                 'scope' => ['profile', 'lessons/get'],

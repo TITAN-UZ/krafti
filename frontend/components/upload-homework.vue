@@ -70,9 +70,9 @@
                 metadata.type = 'photo';
                 formData.append('file', file, file.name);
                 formData.append('metadata', JSON.stringify(metadata));
-                formData.append('course_id', String(this.course_id));
-                formData.append('lesson_id', String(this.lesson_id));
-                formData.append('section', String(this.section));
+                formData.append('course_id', this.course_id);
+                formData.append('lesson_id', this.lesson_id);
+                formData.append('section', this.section);
 
                 this.$axios({
                     method: 'POST',
@@ -92,7 +92,7 @@
                     } else {
                         let homeworks = {};
                         res.data.homeworks.forEach(v => {
-                            homeworks[String(v.section)] = v;
+                            homeworks[v.section] = v;
                         });
                         this.$root.$emit('app::course' + this.course_id + '::progress', res.data.progress);
                         this.$root.$emit('app::course' + this.course_id + '::homeworks', homeworks);

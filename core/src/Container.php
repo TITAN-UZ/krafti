@@ -111,7 +111,7 @@ class Container extends \Slim\Container
                     ]),
                     new Service\Jwt([
                         'path' => '/api',
-                        'force' => ['/api/web/course/lessons'],
+                        'force' => ['/api/web/course/lessons', '/api/web/course/comments'],
                         'ignore' => [
                             '/api/security/',
                             '/api/web/'

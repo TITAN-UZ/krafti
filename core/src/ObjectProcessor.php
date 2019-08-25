@@ -169,7 +169,7 @@ class ObjectProcessor extends Processor
      *
      * @param Builder $c
      *
-     * @return mixed
+     * @return Builder
      */
     protected function beforeCount($c)
     {
@@ -182,7 +182,7 @@ class ObjectProcessor extends Processor
      *
      * @param Builder $c
      *
-     * @return mixed
+     * @return Builder
      */
     protected function afterCount($c)
     {

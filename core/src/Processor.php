@@ -30,17 +30,18 @@ class Processor
      */
     public function process()
     {
-        if (!$this->checkScope()) {
-            return $this->failure('У вас нет разрешения ' . $this->scope . '/' . strtolower($this->container->request->getMethod()));
-        }
         $this->setProperties(
             $this->container->request->isGet()
                 ? $this->container->request->getQueryParams()
                 : $this->container->request->getParams()
         );
 
-        $method = strtolower($this->container->request->getMethod());
+        $check = $this->checkPermissions();
+        if ($check !== true) {
+            return $this->failure($check);
+        }
 
+        $method = strtolower($this->container->request->getMethod());
         if (!method_exists($this, $method)) {
             return $this->failure('Указан несуществующий метод процессора', 404);
         }
@@ -56,9 +57,9 @@ class Processor
 
 
     /**
-     * @return bool
+     * @return string|bool
      */
-    protected function checkScope()
+    protected function checkPermissions()
     {
         if ($this->container->request->isOptions() || empty($this->scope)) {
             return true;
@@ -74,7 +75,7 @@ class Processor
             return true;
         }
 
-        return false;
+        return 'У вас нет разрешения ' . $this->scope . '/' . strtolower($this->container->request->getMethod());
     }
 
 

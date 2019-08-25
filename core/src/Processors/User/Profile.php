@@ -25,6 +25,7 @@ class Profile extends \App\Processor
         }
 
         $data = [
+            'id' => $user->id,
             'email' => $user->email,
             'instagram' => $user->instagram,
             'company' => $user->company,

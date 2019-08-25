@@ -26,6 +26,7 @@
     import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
 
     export default {
+        name: 'courses-list',
         data() {
             return {
                 loading: false,

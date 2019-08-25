@@ -32,7 +32,7 @@ class Users extends \App\ObjectProcessor
         } elseif ($role = $this->getProperty('role')) {
             if ($role == 'author') {
                 $c->where(function (Builder $c) use ($query) {
-                    $c->where('role_id', '<=', 3);
+                    $c->where('role_id', '<', 3);
                     $c->where('id', '>', 1);
                 });
             }

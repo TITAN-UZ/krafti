@@ -204,7 +204,7 @@
                     this.$axios.get(action, {params: params}).then(res => {
                         let rows = {};
                         res.data.rows.forEach(v => {
-                            rows[String(v.id)] = v;
+                            rows[v.id] = v;
                         });
                         this[storage] = rows;
                     });

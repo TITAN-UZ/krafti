@@ -88,7 +88,7 @@
                     </div>
                   </div>
                   <div class="row buy__wrap">
-                    <button class="btn btn-default btn__play" v-if="!Object.keys(lessons).length">Готовится к публикации</button>
+                    <button class="btn btn-default btn__play" v-if="!record.lessons_count">Готовится к публикации</button>
                     <nuxt-link
                       class="btn btn-default btn__play"
                       v-else-if="record.bought === true && lessons[record.progress.section][record.progress.rank]"
@@ -100,14 +100,13 @@
                       class="btn btn-default btn__buy"
                       v-else-if="record.bought === false"
                       :to="{name: 'courses-cid-index-buy', params: $route.params}">
-                      Купить от <span class="price ml-2">{{record.price['3'] - record.discount | number}} р</span>
+                      Купить от <span class="price ml-2">{{record.price[3] - record.discount | number}} р</span>
                     </nuxt-link>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="row course__content--tabs">
             <div class="col-12">
               <div class="row mob_container">
@@ -116,35 +115,35 @@
                     <b-tab title="Описание">
                       <div class="text">{{record.description}}</div>
                     </b-tab>
-                    <!--TODO Непонятно, как делать отзывы к курсу-->
                     <b-tab title="Отзывы" v-if="reviews.length">
-                      <div class="row reviews__wrap">
-                        <div class="col-lg-7 col-12 review__item--list">
+                      <reviews-list :reviews="reviews" row-class="row reviews__wrap"/>
+                      <!--<div class="row reviews__wrap">
+                        <div class="col-lg-7 col-12 review__item&#45;&#45;list">
                           <div class="media review__item">
                             <div class="wrap mr-3">
-                              <img class="review__item--photo rounded-circle" src="~assets/images/content/teacher.png" alt="...">
+                              <img class="review__item&#45;&#45;photo rounded-circle" src="~assets/images/content/teacher.png" alt="...">
                             </div>
                             <div class="media-body"><a href="">
-                              <h4 class="review__item--title mt-0">Анна Сотнич</h4></a>
-                              <h5 class="review__item--position">Head bartender в BB Group</h5>
-                              <div class="review__item--info">On the other hand, we denounce with righteous indignation
+                              <h4 class="review__item&#45;&#45;title mt-0">Анна Сотнич</h4></a>
+                              <h5 class="review__item&#45;&#45;position">Head bartender в BB Group</h5>
+                              <div class="review__item&#45;&#45;info">On the other hand, we denounce with righteous indignation
                                 and dislike men who are so beguiled and demoralized by the charms of pleasure of the
                                 moment, so ...
                               </div>
-                              <div class="review__item--more"><a class="more_link" href="#">Показать целиком</a></div>
+                              <div class="review__item&#45;&#45;more"><a class="more_link" href="#">Показать целиком</a></div>
                             </div>
                           </div>
                           <div class="media review__item">
-                            <div class="wrap mr-3"><img class="review__item--photo rounded-circle"
+                            <div class="wrap mr-3"><img class="review__item&#45;&#45;photo rounded-circle"
                                                         src="~assets/images/content/teacher.png" alt="..."></div>
                             <div class="media-body"><a href="">
-                              <h4 class="review__item--title mt-0">Валентина Емельяненоко</h4></a>
-                              <h5 class="review__item--position">Housewife</h5>
-                              <div class="review__item--info">On the other hand, we denounce with righteous indignation
+                              <h4 class="review__item&#45;&#45;title mt-0">Валентина Емельяненоко</h4></a>
+                              <h5 class="review__item&#45;&#45;position">Housewife</h5>
+                              <div class="review__item&#45;&#45;info">On the other hand, we denounce with righteous indignation
                                 and dislike men who are so beguiled and demoralized by the charms of pleasure of the
                                 moment, so ...
                               </div>
-                              <div class="review__item--more"><a class="more_link" href="#">Показать целиком</a></div>
+                              <div class="review__item&#45;&#45;more"><a class="more_link" href="#">Показать целиком</a></div>
                             </div>
                           </div>
                           <button class="button btn-more ml-5 mt-4">Показать все отзывы</button>
@@ -152,7 +151,7 @@
                         <div class="col-5 d-none d-md-none d-lg-block">
                           <img class="img-responsive contact__img" src="~assets/images/general/tab-reviews.png" alt="">
                         </div>
-                      </div>
+                      </div>-->
                     </b-tab>
                     <b-tab title="Преподаватели" v-if="authors.length">
                       <div class="row mob_container item__wrap d-flex tab__wrap--scroll">
@@ -236,7 +235,7 @@
                         </div>
                       </div>
 
-                      <div class="bonus__lesson" v-if="lessons['0'] && lessons['0'][0]">
+                      <div class="bonus__lesson" v-if="lessons[0] && lessons[0][0]">
                         <div class="bonus__lesson--wrap d-flex justify-content-center align-items-center flex-column">
                           <div class="bonus__lesson--thumb">
                             <span class="ic__star-gold"></span>
@@ -245,16 +244,16 @@
                             <span :class="{'mr-2': true, 'ic__locked--gray': record.progress.section != 0}"> </span>Бонусный урок
                           </div>
                           <div class="bonus__lesson--text text-center">
-                            <p><strong>{{lessons['0'][0].title}}</strong></p>
-                            {{lessons['0'][0].description}}
+                            <p><strong>{{lessons[0][0].title}}</strong></p>
+                            {{lessons[0][0].description}}
                           </div>
                           <div class="bonus__lesson--video">
                             <div class="disabled" v-if="record.progress.section != 0">
-                              <img class="img-responsive bonus__lesson--thumb" :src="lessons['0'][0].preview['295x166']"/>
+                              <img class="img-responsive bonus__lesson--thumb" :src="lessons[0][0].preview['295x166']"/>
                             </div>
-                            <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons['0'][0].id}}"
+                            <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons[0][0].id}}"
                                        v-else class="video">
-                              <img class="img-responsive bonus__lesson--thumb" :src="lessons['0'][0].preview['295x166']"/>
+                              <img class="img-responsive bonus__lesson--thumb" :src="lessons[0][0].preview['295x166']"/>
                             </nuxt-link>
                           </div>
                           <div class="bonus__btn" v-if="record.progress.section != 0">
@@ -342,6 +341,7 @@
 
 <script>
     import CoursesList from '../../../components/courses-list'
+    import ReviewsList from '../../../components/reviews-list'
     import HeaderBg from '../../../components/header-bg'
     import {faHeart as faHeartSolid} from '@fortawesome/pro-solid-svg-icons'
     import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
@@ -362,11 +362,7 @@
                 homeworks: {},
             }
         },
-        components: {
-            'courses-list': CoursesList,
-            'header-bg': HeaderBg,
-            'social-sharing': SocialSharing,
-        },
+        components: {CoursesList, ReviewsList, HeaderBg, 'social-sharing': SocialSharing},
         scrollToTop: false,
         async asyncData({app, params, error}) {
             let data = {};
@@ -377,9 +373,10 @@
                 return error({statusCode: 404, message: 'Страница не найдена'})
             }
 
-            const [similar, authors, lessons, homeworks/*, reviews*/] = await Promise.all([
-                app.$axios.get('web/course/similar', {params: {course_id: params.cid}}),
-                app.$axios.get('web/course/authors', {params: {course_id: params.cid}}),
+            const [similar, authors, reviews, lessons, homeworks/*, reviews*/] = await Promise.all([
+                app.$axios.get('web/course/similar', {params: {course_id: params.cid, limit: 2}}),
+                app.$axios.get('web/course/authors', {params: {course_id: params.cid, limit: 10}}),
+                app.$axios.get('web/course/reviews', {params: {course_id: params.cid, limit: 10}}),
                 data.record.bought
                     ? app.$axios.get('web/course/lessons', {params: {course_id: params.cid}})
                     : null,
@@ -390,25 +387,22 @@
             ]);
             data.similar = similar.data.rows;
             data.authors = authors.data.rows;
+            data.reviews = reviews.data.rows;
+            data.lessons = {};
             if (lessons) {
-                let tmp = {};
                 lessons.data.rows.forEach(v => {
-                    if (tmp[String(v.section)] === undefined) {
-                        tmp[String(v.section)] = [];
+                    if (data.lessons[v.section] === undefined) {
+                        data.lessons[v.section] = [];
                     }
-                    tmp[String(v.section)].push(v);
+                    data.lessons[v.section].push(v);
                 });
-                data.lessons = tmp;
-            } else {
-                data.lessons = {};
             }
+            data.homeworks = {};
             if (homeworks) {
-                data.homeworks = {};
                 homeworks.data.rows.forEach(v => {
-                    data.homeworks[String(v.section)] = v;
+                    data.homeworks[v.section] = v;
                 });
             }
-            data.reviews = [];
 
             return data;
         },
@@ -446,15 +440,15 @@
                     if (lessons) {
                         this.lessons = {};
                         lessons.data.rows.forEach(v => {
-                            if (this.lessons[String(v.section)] === undefined) {
-                                this.lessons[String(v.section)] = [];
+                            if (this.lessons[v.section] === undefined) {
+                                this.lessons[v.section] = [];
                             }
-                            this.lessons[String(v.section)].push(v);
+                            this.lessons[v.section].push(v);
                         });
                     }
                     if (homeworks) {
                         homeworks.data.rows.forEach(v => {
-                            this.homeworks[String(v.section)] = v;
+                            this.homeworks[v.section] = v;
                         });
                     }
                 }

@@ -76,44 +76,10 @@
                 <div class="row">
                   <div class="col-12 d-flex justify-content-between align-items-center">
                     <h2 class="section__title">Отзывы</h2>
-                    <b-link :to="{name: 'reviews'}" class="link__more">См. все</b-link>
+                    <b-link :to="{name: 'reviews'}" class="link__more" v-if="reviews_total > 3">См. все</b-link>
                   </div>
                 </div>
-                <div class="row mob_container item__wrap d-flex">
-                  <div class="col-12 col-lg-4 m-width-80">
-                    <div class="review__item d-flex flex-column justify-content-center align-items-center">
-                      <div class="review__item--photo"><img class="rounded-circle"
-                                                            src="~assets/images/content/review/man.png" alt=""></div>
-                      <h2 class="review__item--name">Виктор Сухоруков</h2>
-                      <div class="review__item--position">SaveSpace Inc.</div>
-                      <div class="review__item--text">“Chamer is the most valuable business resource we have ever
-                        purchased. I would be lost without chamer.”
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 m-width-80">
-                    <div class="review__item d-flex flex-column justify-content-center align-items-center">
-                      <div class="review__item--photo"><img class="rounded-circle"
-                                                            src="~assets/images/content/review/woman2.png" alt=""></div>
-                      <h2 class="review__item--name">Виктор Сухоруков</h2>
-                      <div class="review__item--position">SaveSpace Inc.</div>
-                      <div class="review__item--text">“Chamer is the most valuable business resource we have ever
-                        purchased. I would be lost without chamer.”
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-lg-4 m-width-80">
-                    <div class="review__item d-flex flex-column justify-content-center align-items-center">
-                      <div class="review__item--photo"><img class="rounded-circle"
-                                                            src="~assets/images/content/review/man2.png" alt=""></div>
-                      <h2 class="review__item--name">Виктор Сухоруков</h2>
-                      <div class="review__item--position">SaveSpace Inc.</div>
-                      <div class="review__item--text">“Chamer is the most valuable business resource we have ever
-                        purchased. I would be lost without chamer.”
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <reviews-list :reviews="reviews" row-class="row mob_container item__wrap d-flex"/>
               </div>
             </div>
           </div>
@@ -150,6 +116,7 @@
 
 <script>
     import CoursesList from '../components/courses-list'
+    import ReviewsList from '../components/reviews-list'
     import Swiper from 'swiper'
     import bg from '../assets/images/general/headline_main.png'
 
@@ -162,29 +129,19 @@
                 style_bg: {'background-image': 'url(' + bg + ')'},
             }
         },
-        components: {
-            'courses-list': CoursesList,
-        },
-        asyncData({app}) {
-            let data = {
-                courses: [],
-                courses_total: 0,
-                authors: [],
-                authors_total: 0,
+        components: {CoursesList, ReviewsList},
+        async asyncData({app}) {
+            const [courses, reviews] = await Promise.all([
+                app.$axios.get('web/courses', {params: {limit: 2}}),
+                app.$axios.get('web/reviews', {params: {limit: 3}})
+            ]);
+
+            return {
+                courses: courses.data.rows,
+                courses_total: courses.data.total,
+                reviews: reviews.data.rows,
+                reviews_total: reviews.data.total,
             };
-            return app.$axios.get('web/courses', {params: {limit: 2}})
-                .then(res => {
-                    data.courses = res.data.rows;
-                    data.courses_total = res.data.total;
-
-                    /*app.$axios.get('authors', {params: {role_id: 2, limit: 3}})
-                        .then(res => {
-                            data.authors = res.data.rows;
-                            data.authors_total = res.data.total;
-                        });*/
-
-                    return data;
-                })
         },
         mounted() {
             document.getElementsByTagName('header')[0].classList.add('header_img');

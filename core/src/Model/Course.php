@@ -122,7 +122,7 @@ class Course extends Model
     {
         /** @var User $user */
         if ($user = User::query()->find($user_id)) {
-            if ($user->role_id > 2) {
+            if ($user->role_id < 3) {
                 return true;
             }
             /** @var Order $order */

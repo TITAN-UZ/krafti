@@ -223,7 +223,7 @@
         position: relative;
 
         .review__item--photo {
-          img {
+          img, svg {
             max-width: 64px;
             height: auto;
           }

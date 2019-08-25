@@ -43,6 +43,10 @@ export default ({app}, inject) => {
         return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').format('DD.MM.YY HH:mm');
     });
 
+    Vue.filter('dateago', (value) => {
+        return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').fromNow();
+    });
+
     Vue.filter('phone', (value) => {
         return value.replace(/^(\d{3})(\d{3})(\d{4})$/g, '$1 $2 $3')
     });

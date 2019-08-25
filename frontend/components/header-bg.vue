@@ -11,6 +11,7 @@
 
 <script>
     export default {
+        name: 'header-bg',
         data() {
             return {
                 bg: null

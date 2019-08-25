@@ -20,6 +20,10 @@ let settings = {
         to: '/courses',
         title: 'Курсы',
         scope: false,
+      },{
+        to: '/reviews',
+        title: 'Отзывы',
+        scope: false,
       }, {
         to: '/office',
         title: 'Личный кабинет',

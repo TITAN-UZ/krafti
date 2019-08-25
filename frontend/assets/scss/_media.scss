@@ -46,7 +46,8 @@
     }
 
     &.header_img {
-      margin-bottom: -40px;
+      //margin-bottom: -40px;
+      margin-bottom: -100px;
       .header__wrap {
         background: transparent;
         z-index: 2;
@@ -61,7 +62,7 @@
     margin-bottom: 0;
 
     .wrapper__bg {
-      background-size: auto;
+      //background-size: auto;
       background-position: center;
       margin: 0;
       max-width: 100%;

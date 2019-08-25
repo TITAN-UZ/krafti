@@ -122,98 +122,30 @@
                                 :src="'https://player.vimeo.com/video/' + record.bonus.vimeo"
                                 allow="autoplay; fullscreen"></iframe>
                       </div>
-
-                      <!--<a class="video" @click.prevent="$refs.mainVideo.show()">
-                        <img class="img-responsive bonus__lesson&#45;&#45;thumb" :src="record.bonus.preview['640x360']" alt="">
-                      </a>-->
                     </div>
-                    <!--<vimeo :video="record.bonus.vimeo" ref="mainVideo"/>-->
                   </div>
                 </div>
               </div>
             </div>
           </section>
-          <!--TODO Сделать комментирирование урока-->
           <section class="lesson__content--bottom container__940 mt-5">
             <div class="container">
               <div class="row">
                 <div class="col-lg-7 col-12">
-                  <div class="s-title">Комментарии</div>
-                  <div class="comments__content">
-                    <div class="media message__item d-flex align-items-center justify-content-center">
-                      <div class="wrap mr-2"><img class="message__item--photo rounded-circle"
-                                                  src="~assets/images/content/teacher.png" alt="..."></div>
-                      <div class="media-body d-flex align-items-center justify-content-between">
-                        <div class="message__item--info">Оставьте комментарий</div>
-                        <button class="btn__answer"><img src="~assets/images/general/ic_send.svg" alt=""></button>
-                      </div>
-                    </div>
-                    <div class="media message__item">
-                      <div class="wrap mr-2"><img class="message__item--photo rounded-circle"
-                                                  src="~assets/images/content/teacher.png" alt="..."></div>
-                      <div class="media-body">
-                        <div class="media-body-top d-flex align-items-center justify-content-between">
-                          <h4 class="message__item--title mt-0">Анна Сотнич</h4><span
-                          class="days_ago">1 день назад</span>
-                        </div>
-                        <div class="media-body-bottom d-flex align-items-center justify-content-between">
-                          <div class="message__item--info">On the other hand, we denounce with righteous indignation and
-                            dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, and
-                            dislike men who are so beguiled and demoralized by the charms of pleasure of the momentso
-                            ...
-                          </div>
-                        </div>
-                        <button class="btn__answer">Ответить</button>
-                      </div>
-                    </div>
-                    <div class="media message__item">
-                      <div class="wrap mr-2"><img class="message__item--photo rounded-circle"
-                                                  src="~assets/images/content/teacher.png" alt="..."></div>
-                      <div class="media-body">
-                        <div class="media-body-top d-flex align-items-center justify-content-between">
-                          <h4 class="message__item--title mt-0">Анна Сотнич </h4><span
-                          class="days_ago">1 день назад</span>
-                        </div>
-                        <div class="media-body-bottom d-flex align-items-center justify-content-between">
-                          <div class="message__item--info">On the other hand, we denounce with righteous indignation and
-                            dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, and
-                            dislike men who are so beguiled and demoralized by the charms of pleasure of the momentso
-                            ...
-                          </div>
-                        </div>
-                        <button class="btn__answer">Ответить</button>
-                      </div>
-                    </div>
-                    <div class="media message__item">
-                      <div class="wrap mr-2"><img class="message__item--photo rounded-circle"
-                                                  src="~assets/images/content/teacher.png" alt="..."></div>
-                      <div class="media-body">
-                        <div class="media-body-top d-flex align-items-center justify-content-between">
-                          <h4 class="message__item--title mt-0">Анна Сотнич</h4><span
-                          class="days_ago">1 день назад</span>
-                        </div>
-                        <div class="media-body-bottom d-flex align-items-center justify-content-between">
-                          <div class="message__item--info">On the other hand, we denounce with righteous indignation and
-                            dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, and
-                            dislike men who are so beguiled and demoralized by the charms of pleasure of the momentso
-                            ...
-                          </div>
-                        </div>
-                        <button class="btn__answer">Ответить</button>
-                      </div>
-                    </div>
-                    <button class="button btn-more">Показать еще +7</button>
-                  </div>
+                  <client-only>
+                    <comments :course_id="course.id" :lesson_id="record.id"/>
+                  </client-only>
                 </div>
-
                 <div class="col-lg-5 col-12">
                   <div class="s-title" v-if="record.next.length">Следующие уроки</div>
                   <div class="nextlessons__content">
                     <div class="media mb-2" v-for="item in record.next">
                       <div class="media--video mr-2">
-                        <a class="video" href="" aria-label="video">
+                        <nuxt-link class="video"
+                          :to="{name: 'courses-cid-index-lesson-lid', params: {cid: course.id, lid: item.id}}"
+                          @click.native="scrollToTop">
                           <img class="media--thumb img-responsive" :src="item.preview['100x75']" alt="" v-if="item.preview['100x75']">
-                        </a>
+                        </nuxt-link>
                       </div>
                       <div class="media-body">
                         <div><strong>{{item.title}}</strong></div>
@@ -240,6 +172,7 @@
     //import bg from '../../../../../assets/images/general/headline_video.png'
     import {faTimes} from '@fortawesome/pro-light-svg-icons'
     import {faThumbsUp, faThumbsDown} from '@fortawesome/pro-duotone-svg-icons'
+    import Comments from '../../../../../components/comments'
 
     export default {
         auth: true,
@@ -252,6 +185,7 @@
                 //style_bg: {'background-image': 'url(' + bg + ')'},
             }
         },
+        components: {Comments},
         scrollToTop: false,
         methods: {
             hideModal() {
@@ -275,6 +209,17 @@
                         this.loading = false
                     })
             },
+            scrollToTop() {
+                const el = document.getElementsByClassName('modal')[0];
+                const scrollToTop = () => {
+                    const c = el.scrollTop;
+                    if (c > 0) {
+                        window.requestAnimationFrame(scrollToTop);
+                        el.scrollTo(0, c - c / 2);
+                    }
+                };
+                scrollToTop();
+            }
         },
         async asyncData({app, params, error}) {
             try {

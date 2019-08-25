@@ -113,7 +113,7 @@
 
             this.$axios.get('admin/user-roles', {params: {limit: 0}}).then(res => {
                 res.data.rows.forEach(v => {
-                    this.roles[String(v.id)] = v;
+                    this.roles[v.id] = v;
                 });
             });
         },
