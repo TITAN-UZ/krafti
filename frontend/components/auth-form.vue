@@ -208,7 +208,6 @@
                 this.loading = true;
                 this.$auth.loginWith('local', {data: this.login}).then(() => {
                     this.loading = false;
-                    this.$root.$emit('app::auth-form::login');
                     this.$notify.success({message: 'Добро пожаловать!'});
                     //this.clearForms();
                 }).catch((res) => {
@@ -240,8 +239,7 @@
                         this.mode = 'login';
                         this.loading = false;
                         this.$notify.success({message: 'Для подтверждения сброса пароля вам нужно пройти по ссылке из нашего письма'});
-                        this.$root.$emit('app::auth-form::reset');
-                        //this.clearForms();
+                        this.reset.email = '';
                     })
                     .catch((res) => {
                         this.loading = false;
@@ -265,7 +263,6 @@
                         win.close();
                         if (data.token) {
                             this.$auth.setUserToken(data.token);
-                            this.$root.$emit('app::auth-form::login');
                             this.$notify.success({message: 'Добро пожаловать!'});
                             localStorage.removeItem('promo');
                         } else if (data.error) {

@@ -103,6 +103,18 @@
         components: {
             'auth-form': AuthForm,
         },
+        computed: {
+            loggedIn() {
+                return this.$auth.loggedIn;
+            }
+        },
+        watch: {
+            loggedIn(newValue) {
+                if (newValue === true) {
+                    this.onSubmit()
+                }
+            }
+        },
         methods: {
             hideModal() {
                 if (this.$refs['modalWindow']) {
@@ -116,8 +128,10 @@
                 this.loading = true;
                 this.$axios.post('user/payment', this.payment)
                     .then(res => {
-                        if (res.data && res.data.redirect) {
+                        if (res.data.redirect) {
                             document.location.replace(res.data.redirect)
+                        } else {
+                            this.$notify.info({message: res.data})
                         }
                     })
                     .catch(() => {
@@ -136,11 +150,7 @@
         },
         created() {
             this.$fa.add(faTimes);
-            this.$root.$on('app::auth-form::login', this.onSubmit);
         },
-        beforeDestroy() {
-            this.$root.$off('app::auth-form::login');
-        }
     }
 </script>
 

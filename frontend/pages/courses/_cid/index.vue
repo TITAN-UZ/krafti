@@ -362,6 +362,23 @@
                 homeworks: {},
             }
         },
+        computed: {
+            loggedIn() {
+                return this.$auth.loggedIn;
+            }
+        },
+        watch: {
+            loggedIn(newValue) {
+                if (newValue === true) {
+                    this.loadLessons()
+                } else {
+                    this.record.bought = false;
+                    this.lessons = {};
+                    this.homeworks = {};
+                    this.tab = 0;
+                }
+            }
+        },
         components: {CoursesList, ReviewsList, HeaderBg, 'social-sharing': SocialSharing},
         scrollToTop: false,
         async asyncData({app, params, error, env}) {
@@ -481,13 +498,6 @@
                 ? this.record.progress.section - 1
                 : 0;
 
-            this.$root.$on('app::auth-form::login', this.loadLessons);
-            this.$root.$on('app::auth-form::logout', () => {
-                this.record.bought = false;
-                this.lessons = {};
-                this.homeworks = {};
-                this.tab = 0;
-            });
             this.$root.$on('app::course' + this.record.id + '::likes', res => {
                 this.record.likes_sum = res
             });
@@ -499,8 +509,6 @@
             });
         },
         beforeDestroy: function () {
-            this.$root.$off('app::auth-form::login');
-            this.$root.$off('app::auth-form::logout');
             this.$root.$off('app::course' + this.record.id + '::likes');
             this.$root.$off('app::course' + this.record.id + '::progress');
             this.$root.$off('app::course' + this.record.id + '::homeworks');

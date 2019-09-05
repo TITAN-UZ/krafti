@@ -39,6 +39,11 @@ class Payment extends \App\Processor
             return $this->failure('Указан неизвестный способ оплаты');
         }
 
+        /** @var Order $order */
+        if ($course->wasBought($this->container->user->id)) {
+            return $this->success('Вы уже оплатили этот курс!');
+        }
+
         $period = (int)$this->getProperty('period');
         if (empty($course->price[$period])) {
             return $this->failure('Не указана стоимость курса');
@@ -50,13 +55,7 @@ class Payment extends \App\Processor
             'course_id' => $course->id,
             'user_id' => $this->container->user->id,
         ];
-        /** @var Order $order */
-        $order = Order::query()->where($key)->first();
-        if ($order) {
-            if ($order->status == 2 && $order->paid_till > date('Y-m-d H:i:s')) {
-                return $this->failure('Вы уже оплатили этот курс!');
-            }
-        } else {
+        if (!$order = Order::query()->where($key)->first()) {
             $order = new Order($key);
         }
         $order->service = $service;

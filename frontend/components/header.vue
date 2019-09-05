@@ -6,7 +6,7 @@
         <div class="menu-header">
           <div class="login" v-if="$auth.loggedIn">
             <b-link :to="$settings.links.profile" @click="hideMenu()">
-              <img v-if="this.user && this.user.photo" :src="this.user.photo" class="avatar"/>
+              <img v-if="user && user.photo" :src="user.photo" class="avatar"/>
               <fa v-else :icon="['fad', 'user-circle']" class="avatar"/>
             </b-link>
             <div>
@@ -67,8 +67,8 @@
               <div class="title text-right">{{user.fullname}}</div>
               <a @click.prevent="onLogout" class="logout-link text-right">Выход</a>
             </div>
-            <b-link :to="{'name': user.unread > 0 ? 'office-messages' : 'office'}">
-              <img v-if="this.user && this.user.photo" :src="this.user.photo" class="avatar"/>
+            <b-link :to="{'name': user && user.unread > 0 ? 'office-messages' : 'office'}">
+              <img v-if="user && user.photo" :src="user.photo" class="avatar"/>
               <fa v-else :icon="['fad', 'user-circle']" class="avatar"/>
               <span class="label" v-if="user.unread > 0">{{user.unread}}</span>
             </b-link>
@@ -111,7 +111,7 @@
         data() {
             return {
                 sidebar: false,
-                auth_mode: 'login'
+                auth_mode: 'login',
             }
         },
         components: {
@@ -119,8 +119,19 @@
         },
         computed: {
             user() {
-                return this.$auth.user;
+                return this.$auth.user
             },
+            loggedIn() {
+                return this.$auth.loggedIn
+            }
+        },
+        watch: {
+            loggedIn(newValue) {
+                if (newValue === true) {
+                    this.hideModal();
+                    this.hideMenu();
+                }
+            }
         },
         methods: {
             showMenu() {
@@ -143,32 +154,24 @@
                 }
                 this.hideMenu();
             },
-            /*clearForms() {
-                this.$root.$emit('app::auth-form::clear');
-            },*/
             onLogout() {
                 this.$auth.logout('local').then(() => {
                     this.$notify.info({message: 'Вы вышли из системы'});
                     this.hideMenu();
-                    this.$root.$emit('app::auth-form::logout');
                 }).catch(() => {
                 });
             }
         },
         created() {
             this.$fa.add(faUserCircle, faTimes, faStream);
-            this.$root.$on('app::auth-form::login', () => {
-                this.hideModal();
-                this.hideMenu();
-            });
+            /*
             this.$root.$on('app::auth-form::reset', () => {
                 this.hideModal();
                 this.hideMenu();
-            });
+            });*/
         },
-        beforeDestroy() {
-            this.$root.$off('app::auth-form::login');
+        /*beforeDestroy() {
             this.$root.$off('app::auth-form::reset');
-        }
+        }*/
     }
 </script>
