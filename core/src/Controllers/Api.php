@@ -47,51 +47,10 @@ class Api
             return (new \App\Processor($this->container))->failure('Запрошен неизвестный метод "' . $args['name'] . '"');
         }
 
-        if ($token = $this->getToken($request)) {
-            /** @var User $user */
-            if ($user = User::query()->where(['active' => true])->find($token->id)) {
-                $this->container->user = $user;
-                $this->container->user_scopes = $user->role->scope;
-            }
-        }
-
+        $this->container->loadUser();
         /** @var \App\Processor $processor */
         $processor = new $class($this->container);
 
         return $processor->process();
-    }
-
-
-    /**
-     * @param \Slim\Http\Request $request
-     *
-     * @return object|null
-     */
-    protected function getToken($request)
-    {
-        $pcre = '#Bearer\s+(.*)$#i';
-        $token = null;
-
-        $header = $request->getHeaderLine('Authorization');
-        if (!empty($header) && preg_match($pcre, $header, $matches)) {
-            $token = $matches[1];
-        } else {
-            $cookieParams = $request->getCookieParams();
-            if (isset($cookieParams['auth._token.local'])) {
-                $token = preg_match($pcre, $cookieParams['auth._token.local'], $matches)
-                    ? $matches[1]
-                    : $cookieParams['auth._token.local'];
-            };
-        }
-
-        if ($token) {
-            try {
-                return JWT::decode($token, getenv('JWT_SECRET'), ["HS256", "HS512", "HS384"]);
-            } catch (Exception $e) {
-                return null;
-            }
-        }
-
-        return null;
     }
 }

@@ -93,6 +93,7 @@ class Lessons extends \App\Processor
             $next_lessons = $course->lessons()
                 ->where(['section' => $lesson->section])
                 ->where('rank', '>', $lesson->rank)
+                ->orderBy('rank', 'asc')
                 ->get();
             /** @var Lesson $next */
             foreach ($next_lessons as $next) {

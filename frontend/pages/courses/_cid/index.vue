@@ -201,7 +201,7 @@
                                     <div v-for="(item, rank) in items" class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column">
                                       <div class="lesson__item--video">
                                         <div class="disabled" v-if="record.progress.section > 0 && (record.progress.section < item.section || (record.progress.section == item.section && record.progress.rank < rank))">
-                                          <img class="img-responsive bonus__lesson--thumb" :src="lessons[0][0].preview['295x166']"/>
+                                          <img class="img-responsive bonus__lesson--thumb" :src="item.preview['295x166']"/>
                                         </div>
                                         <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: item.id}}" v-else class="video">
                                           <img class="img-responsive lesson__video--thumb" :src="item.preview['295x166']" alt="" v-if="item.preview['295x166']">

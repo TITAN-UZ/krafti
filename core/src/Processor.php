@@ -36,9 +36,11 @@ class Processor
                 : $this->container->request->getParams()
         );
 
-        $check = $this->checkPermissions();
+        $check = $this->checkScope();
         if ($check !== true) {
-            return $this->failure($check);
+            return !$this->container->user
+                ? $this->failure('Требуется авторизация', 401)
+                : $this->failure($check);
         }
 
         $method = strtolower($this->container->request->getMethod());
@@ -59,19 +61,19 @@ class Processor
     /**
      * @return string|bool
      */
-    protected function checkPermissions()
+    protected function checkScope()
     {
         if ($this->container->request->isOptions() || empty($this->scope)) {
             return true;
         }
 
         // Allow access for all actions in this processor
-        if (in_array($this->scope, $this->container->user_scopes)) {
+        if (in_array($this->scope, $this->container->user->role->scope)) {
             return true;
         }
         // Allow access only for this action
         $scope = $this->scope . '/' . strtolower($this->container->request->getMethod());
-        if (in_array($scope, $this->container->user_scopes)) {
+        if (in_array($scope, $this->container->user->role->scope)) {
             return true;
         }
 
@@ -154,6 +156,9 @@ class Processor
         /*if ($this->container->token && $this->container->token['exp'] < (time() + 7200)) {
             $data['token'] = $this->container->makeToken($this->container->token['id']);
         }*/
+        if ($this->container->user) {
+            //$data['token'] = $this->container->makeToken($this->container->user->id);
+        }
 
         return $this->container->response->withJson($data, $code, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
             ->withHeader('Content-Type', 'application/json; charset=utf-8')

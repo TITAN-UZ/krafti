@@ -143,8 +143,8 @@
             </div>
           </template>
           <template slot="video" slot-scope="row">
-            <a :href="row.value['1920x1080']" target="_blank" v-if="row.value['100x75'] && row.value['1920x1080']">
-              <img :src="row.value['100x75']" class="mr-2"/>
+            <a :href="row.value[Object.keys(row.value).pop()]" target="_blank">
+              <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2"/>
             </a>
           </template>
           <template slot="title" slot-scope="row">

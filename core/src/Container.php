@@ -3,9 +3,8 @@
 namespace App;
 
 use App\Model\User;
-use App\Service\Logger;
+use App\Model\UserToken;
 use Firebase\JWT\JWT;
-use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Symfony\Component\Dotenv\Dotenv;
@@ -17,13 +16,13 @@ if (!defined('BASE_DIR')) {
 /**
  * Class Container
  *
+ * @property Request $request
+ * @property Response $response
  * @property-read \Fenom $view
  * @property-read \Monolog\Logger logger
  * @property-read \Tuupola\Middleware\JwtAuthentication jwt
  * @property-read \Illuminate\Database\Capsule\Manager capsule
  * @property-read \Illuminate\Database\DatabaseManager db
- * @property-read Request $request
- * @property-read Response $response
  * @property-read \App\Service\Mail $mail
  * @property-read \Vimeo\Vimeo $vimeo
  */
@@ -32,8 +31,6 @@ class Container extends \Slim\Container
 
     /** @var User $user */
     public $user = null;
-    /** @var array $user_scopes */
-    public $user_scopes = [];
 
 
     /**
@@ -101,22 +98,22 @@ class Container extends \Slim\Container
             return $logger;
         };
 
-        $this['jwt'] = function () {
+        /*$this['jwt'] = function () {
             $container = $this;
 
             $jwt = new \Tuupola\Middleware\JwtAuthentication([
                 'rules' => [
                     new \Tuupola\Middleware\JwtAuthentication\RequestMethodRule([
-                        'ignore' => ['OPTIONS']
+                        'ignore' => ['OPTIONS'],
                     ]),
                     new Service\Jwt([
                         'path' => '/api',
                         'force' => ['/api/web/course/lessons', '/api/web/course/comments'],
                         'ignore' => [
                             '/api/security/',
-                            '/api/web/'
+                            '/api/web/',
                         ],
-                    ])
+                    ]),
                 ],
                 'cookie' => 'auth._token.local',
                 'secure' => false, // Dev
@@ -130,9 +127,6 @@ class Container extends \Slim\Container
                         'id' => $request->getAttribute('token')['id'],
                         'active' => true,
                     ])->first();
-                    if ($container->user) {
-                        $container->user_scopes = $container->user->role->scope;
-                    }
                 },
                 'after' => function (Response $response) use ($container) {
                     return !$container->user
@@ -142,7 +136,7 @@ class Container extends \Slim\Container
             ]);
 
             return $jwt;
-        };
+        };*/
 
         $this['vimeo'] = function () {
             return new \Vimeo\Vimeo(getenv('VIMEO_ID'), getenv('VIMEO_SECRET'), getenv('VIMEO_TOKEN'));
@@ -161,14 +155,109 @@ class Container extends \Slim\Container
      */
     public function makeToken($id)
     {
-        $data = [
-            'id' => $id,
-            'iat' => time(),
-            'exp' => time() + (24 * 60 * 60),
-            //'exp' => time() + 10,
-        ];
+        $time = time();
 
-        return JWT::encode($data, getenv('JWT_SECRET'));
+        // Invalidate old tokens
+        UserToken::query()
+            ->where(['user_id' => $id, 'active' => true])
+            ->where('valid_till', '<', date('Y-m-d H:i:s', $time))
+            ->update(['active' => false]);
+
+        /** @var UserToken $user_token */
+        if ($user_token = UserToken::query()->where(['user_id' => $id, 'created_at' => date('Y-m-d H:i:s', $time), 'active' => true])->first()) {
+            $token = $user_token->token;
+        } else {
+            $data = [
+                'id' => $id,
+                'iat' => $time,
+                'exp' => $time + getenv('JWT_EXPIRE'),
+            ];
+            $token = JWT::encode($data, getenv('JWT_SECRET'));
+
+            $user_token = new UserToken([
+                'user_id' => $id,
+                'token' => $token,
+                'valid_till' => date('Y-m-d H:i:s', $data['exp']),
+                'ip' => $this->request->getAttribute('ip_address'),
+            ]);
+            $user_token->save();
+        }
+
+        // Limit active tokens
+        if (UserToken::query()->where(['user_id' => $id, 'active' => true])->count() > getenv('JWT_MAX')) {
+            UserToken::query()
+                ->where(['user_id' => $id, 'active' => true])
+                ->orderBy('updated_at', 'asc')
+                ->orderBy('created_at', 'asc')
+                ->first()
+                ->update(['active' => false]);
+        }
+
+        return $token;
+    }
+
+
+    /**
+     * Check token and load user
+     */
+    public function loadUser()
+    {
+        if ($token = $this->getToken($this->request)) {
+            /** @var UserToken $user_token */
+            if ($user_token = UserToken::query()->where(['user_id' => $token->id, 'token' => $token->token, 'active' => true])->first()) {
+                if ($user_token->valid_till > date('Y-m-d H:i:s')) {
+                    /** @var User $user */
+                    if ($user = $user_token->user()->where(['active' => true])->first()) {
+                        $this->user = $user;
+
+                        return true;
+                    }
+                } else {
+                    $user_token->active = false;
+                    $user_token->save();
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return object|null
+     */
+    protected function getToken($request)
+    {
+        $pcre = '#Bearer\s+(.*)$#i';
+        $token = null;
+
+        $header = $request->getHeaderLine('Authorization');
+        if (!empty($header) && preg_match($pcre, $header, $matches)) {
+            $token = $matches[1];
+        } else {
+            $cookies = $request->getCookieParams();
+            if (isset($cookies['auth._token.local'])) {
+                $token = preg_match($pcre, $cookies['auth._token.local'], $matches)
+                    ? $matches[1]
+                    : $cookies['auth._token.local'];
+            };
+        }
+
+        if ($token) {
+            try {
+                $decoded = JWT::decode($token, getenv('JWT_SECRET'), ['HS256', 'HS512', 'HS384']);
+                $decoded->token = $token;
+                $this->request = $this->request->withAttribute('token', $token);
+
+                return $decoded;
+            } catch (\Throwable $e) {
+                return null;
+            }
+        }
+
+        return null;
     }
 
 }

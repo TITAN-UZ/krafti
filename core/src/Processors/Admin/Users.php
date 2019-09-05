@@ -48,6 +48,8 @@ class Users extends \App\ObjectProcessor
             $c->where('confirmed', '=', (bool)$confirmed);
         }
 
+        $c->withCount('referrals');
+
         return $c;
     }
 
@@ -64,11 +66,6 @@ class Users extends \App\ObjectProcessor
         $array['photo'] = $object->photo
             ? $object->photo->getUrl()
             : null;
-        //$array['referrals'] = $object->referrals()->count();
-
-        /*$array['background'] = $object->background
-            ? $object->background->getUrl()
-            : null;*/
 
         return $array;
     }

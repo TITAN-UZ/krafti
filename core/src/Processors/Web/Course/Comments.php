@@ -16,7 +16,7 @@ class Comments extends \App\ObjectProcessor
     /**
      * @return string|bool
      */
-    protected function checkPermissions()
+    protected function checkScope()
     {
         if ($this->container->request->isOptions() || empty($this->scope)) {
             return true;
@@ -32,7 +32,7 @@ class Comments extends \App\ObjectProcessor
             return 'У вас нет доступа к этому курсу';
         }
 
-        return parent::checkPermissions();
+        return parent::checkScope();
     }
 
 

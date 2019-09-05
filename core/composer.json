@@ -26,6 +26,7 @@
     "stadline/monolog-echo-handler": "^0.2.0",
     "zircote/swagger-php": "^3.0",
     "hybridauth/hybridauth": "^3.0",
-    "paypal/rest-api-sdk-php": "^1.14"
+    "paypal/rest-api-sdk-php": "^1.14",
+    "akrabat/ip-address-middleware": "^1.0"
   }
 }

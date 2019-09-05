@@ -90,9 +90,8 @@ export default {
       local: {
         endpoints: {
           login: {url: 'security/login', method: 'post', propertyName: 'token'},
+          logout: {url: 'security/logout', method: 'post'},
           user: {url: 'user/profile', method: 'get', propertyName: 'user'},
-          //logout: {url: 'security/logout', method: 'post'},
-          logout: false
         },
       },
     }

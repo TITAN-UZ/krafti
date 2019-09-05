@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal hide-footer visible size="xl" @hidden="onHidden" @shown="onShown" ref="modalVideo" dialog-class="modal-video">
+    <b-modal hide-footer visible size="xl" @hidden="onHidden" @shown="onShown" ref="modalVideo" dialog-class="modal-video" :key="record.id">
       <div class="wrapper">
         <!--<div class="wrapper__bg bg_600 js-bg-selection" :style="style_bg">
           <a class="ic__play&#45;&#45;white" href="" aria-label="video"></a>
@@ -146,14 +146,14 @@
                         <div
                           class="disabled"
                           v-if="course.progress.section > 0 && item.rank > course.progress.rank">
-                          <img class="media--thumb img-responsive" :src="item.preview['100x75']" alt="" v-if="item.preview['100x75']"/>
+                          <img class="media--thumb img-responsive" :src="item.preview[Object.keys(item.preview).shift()]" alt=""/>
                         </div>
                         <nuxt-link
                           v-else
                           :to="{name: 'courses-cid-index-lesson-lid', params: {cid: course.id, lid: item.id}}"
                           class="video"
                           @click.native="scrollToTop">
-                          <img class="media--thumb img-responsive" :src="item.preview['100x75']" alt="" v-if="item.preview['100x75']"/>
+                          <img class="media--thumb img-responsive" :src="item.preview[Object.keys(item.preview).shift()]" alt=""/>
                         </nuxt-link>
                       </div>
                       <div class="media-body">
@@ -238,7 +238,7 @@
                     })
             },
             scrollToTop() {
-                const el = document.getElementsByClassName('modal')[0];
+                /*const el = document.getElementsByClassName('modal')[0];
                 const scrollToTop = () => {
                     const c = el.scrollTop;
                     if (c > 0) {
@@ -246,7 +246,7 @@
                         el.scrollTo(0, c - c / 2);
                     }
                 };
-                scrollToTop();
+                scrollToTop();*/
             },
         },
         async asyncData({app, params, error}) {
