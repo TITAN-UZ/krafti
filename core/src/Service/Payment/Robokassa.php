@@ -5,18 +5,8 @@ namespace App\Service\Payment;
 use App\Container;
 use App\Model\Order;
 
-class Robokassa
+class Robokassa extends Payment
 {
-
-    /** @var Container */
-    public $container;
-
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
 
     /**
      * @param Order $order
@@ -49,18 +39,37 @@ class Robokassa
 
 
     /**
-     * @param array $data
+     * https://docs.robokassa.ru/#1222
+     * https://auth.robokassa.ru/Merchant/WebService/Service.asmx/OpState
+     * OutSum=3990.00&InvId=4&SignatureValue=f8fbb4e66a79248be714073d71ee40af61a8e97f&IsTest=1&Culture=en
+     *
+     * @param Order $order
+     * @param array $params
      *
      * @return bool
      */
-    public function checkCrc(array $data)
+    public function finalize(Order $order, array $params)
     {
-        $pass2 = !empty($data['IsTest'])
+        $pass2 = !empty($params['IsTest'])
             ? getenv('ROBOKASSA_TEST_PASS_2')
             : getenv('ROBOKASSA_PASS_2');
-        $crc = $data['SignatureValue'];
-        $my_crc = sha1(implode(':', [$data['OutSum'], $data['InvId'], $pass2]));
+        $my_crc = sha1(implode(':', [$params['OutSum'], $order->id, $pass2]));
 
-        return strtoupper($crc) === strtoupper($my_crc);
+        if (strtoupper($params['SignatureValue']) !== strtoupper($my_crc)) {
+            $this->container->logger->error('Robokassa signature error', [
+                'data' => [
+                    'order' => $order->toArray(),
+                    'params' => $params,
+                    'sig' => [
+                        'my' => $my_crc,
+                        'their' => sha1(implode(':', [$params['OutSum'], $params['InvId'], $pass2]))
+                    ],
+                ],
+            ]);
+
+            return false;
+        }
+
+        return true;
     }
 }

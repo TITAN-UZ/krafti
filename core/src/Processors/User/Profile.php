@@ -6,6 +6,7 @@ namespace App\Processors\User;
 use App\Model\Traits\UserValidate;
 use App\Model\UserFavorite;
 use App\Model\UserLike;
+use App\Model\UserOauth;
 
 class Profile extends \App\Processor
 {
@@ -18,10 +19,14 @@ class Profile extends \App\Processor
     {
         $user = $this->container->user;
 
-        $favorites = $likes = [];
+        $favorites = $oauth2 = [];
         /** @var UserFavorite $obj */
         foreach ($user->favorites()->get() as $obj) {
             $favorites[] = $obj->course_id;
+        }
+        /** @var UserOauth $obj */
+        foreach ($user->oauths()->get() as $obj) {
+            $oauth2[$obj->provider] = $obj->displayName;
         }
 
         $data = [
@@ -35,17 +40,22 @@ class Profile extends \App\Processor
             'dob' => $user->dob,
             'phone' => '+' . $user->phone,
             'scope' => $user->role->scope,
+            'children' => $user->children,
             'photo' => $user->photo
                 ? $user->photo->getUrl()
                 : null,
             'background' => $user->background
                 ? $user->background->getUrl()
                 : null,
-            'favorites' => $favorites ?: [],
             'promo' => $user->promo,
+            'favorites' => $favorites,
+            'oauth2' => $oauth2,
         ];
 
         $data['unread'] = 0;
+
+        $this->container->user->logged_at = date('Y-m-d H:i:m');
+        $this->container->user->save();
 
         return $this->success([
             'user' => $data,
@@ -56,6 +66,7 @@ class Profile extends \App\Processor
     public function patch()
     {
         $user = $this->container->user;
+
         $user->fill([
             'email' => trim($this->getProperty('email')),
             'dob' => $this->getProperty('dob'),
@@ -65,6 +76,12 @@ class Profile extends \App\Processor
             'company' => trim($this->getProperty('company')),
             'description' => trim($this->getProperty('description')),
         ]);
+
+        $children = $this->getProperty('children');
+        if (is_array($children)) {
+            $user->children = $children;
+        }
+
         $validate = $this->validate($user);
         if ($validate !== true) {
             return $this->failure($validate);

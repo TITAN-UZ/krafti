@@ -59,9 +59,7 @@ class Lessons extends \App\ObjectProcessor
             ->get();
         /** @var Lesson $record */
         foreach ($records as $record) {
-            if (!$section) {
-                $section = $record->section;
-            } elseif ($record->section > $section) {
+            if ($record->section > $section) {
                 $rank = 0;
                 $section = $record->section;
             }

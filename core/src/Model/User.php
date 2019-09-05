@@ -40,21 +40,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Order[] $orders
  * @property-read User[] $referrals
  * @property-read UserTransaction[] $transactions
+ * @property-read UserOauth[] $oauths
  */
 class User extends Model
 {
     public $timestamps = true;
-    protected $fillable = ['email', 'password', 'fullname', 'dob', 'phone', 'instagram', 'active', 'photo_id',
+    protected $guarded = ['id', 'tmp_password', 'created_at', 'updated_at', 'promo'];
+    protected $hidden = ['password', 'tmp_password'];
+    /*protected $fillable = ['email', 'password', 'fullname', 'dob', 'phone', 'instagram', 'active', 'photo_id',
         'company', 'description',
         'background_id', 'role_id', 'referrer_id', 'children', 'account', 'logged_at', 'reset_at',
-    ];
+    ];*/
     protected $casts = [
         'active' => 'boolean',
         'confirmed' => 'boolean',
         'children' => 'array',
-    ];
-    protected $hidden = [
-        'password', 'tmp_password',
     ];
 
 
@@ -184,6 +184,15 @@ class User extends Model
     public function transactions()
     {
         return $this->hasMany('App\Model\UserTransaction');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function oauths()
+    {
+        return $this->hasMany('App\Model\UserOauth');
     }
 
 

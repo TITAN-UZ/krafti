@@ -2,9 +2,21 @@
   <div class="auth-form">
     <div v-if="mode == 'login' && forms.includes('login')">
       <slot name="login-title">
-        <h5 class="title text-center mb-5">Вход</h5>
+        <h5 class="title text-center mb-5">Вход через</h5>
       </slot>
-      <form action="" method="post" @submit.prevent="onLogin">
+
+      <div class="social-providers">
+        <button class="vkontakte" @click="onPopup('vkontakte')">
+          <fa :icon="['fab', 'vk']"/>
+        </button>
+        <button class="instagram" @click="onPopup('instagram')">
+          <fa :icon="['fab', 'instagram']"/>
+        </button>
+      </div>
+
+      <h4 class="text-center">или</h4>
+
+      <b-form action="" method="post" @submit.prevent="onLogin">
         <b-form-group class="mb-3">
           <b-input v-model="login.email" type="email" placeholder="Адрес эл. почты" trim required autofocus/>
         </b-form-group>
@@ -35,13 +47,13 @@
             </a>
           </div>
         </div>
-      </form>
+      </b-form>
     </div>
     <div v-else-if="mode == 'register' && forms.includes('register')">
       <slot name="register-title">
         <h5 class="title text-center mb-5">Регистрация</h5>
       </slot>
-      <form action="" method="post" @submit.prevent="onRegister" :disabled="loading">
+      <form action="" method="post" @submit.prevent="onRegister">
         <b-form-group class="mb-2">
           <b-input v-model="register.fullname" placeholder="Имя Фамилия" trim required autofocus/>
         </b-form-group>
@@ -109,6 +121,8 @@
 </template>
 
 <script>
+    import {faVk, faInstagram} from '@fortawesome/free-brands-svg-icons'
+
     export default {
         name: 'auth-form',
         data() {
@@ -234,11 +248,43 @@
                         this.error.reset = res.data;
                     })
             },
+            onPopup(provider) {
+                this.error.login = '';
+                const x = screen.width / 2 - 700 / 2;
+                const y = screen.height / 2 - 450 / 2;
+
+                let oauth2 = this.$axios.defaults.baseURL + 'security/oauth2?provider=' + provider;
+                if (localStorage.promo !== undefined) {
+                    oauth2 += '&promo=' + localStorage.promo;
+                }
+                const win = window.open(oauth2, 'AuthPopup', 'width=700,height=450,modal=yes,alwaysRaised=yes,left=' + x + ',top=' + y);
+
+                let timer = this.setInterval(() => {
+                    try {
+                        let data = JSON.parse(win.document.body.innerText);
+                        win.close();
+                        if (data.token) {
+                            this.$auth.setUserToken(data.token);
+                            this.$root.$emit('app::auth-form::login');
+                            this.$notify.success({message: 'Добро пожаловать!'});
+                            localStorage.removeItem('promo');
+                        } else if (data.error) {
+                            this.error.login = data.error;
+                        }
+                    } catch (e) {
+                        //console.error(e)
+                    }
+                    if (win && win.closed) {
+                        this.clearInterval(timer);
+                    }
+                }, 500)
+            },
         },
         created() {
+            this.$fa.add(faVk, faInstagram);
+
             if (this.register.promo != '' && this.mode == 'login') {
                 this.mode = 'register'
-
             }
         }
     }

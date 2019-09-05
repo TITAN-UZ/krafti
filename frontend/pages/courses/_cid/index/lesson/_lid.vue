@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal hide-footer visible size="xl" @hidden="onHidden" ref="modalVideo" dialog-class="modal-video">
+    <b-modal hide-footer visible size="xl" @hidden="onHidden" @shown="onShown" ref="modalVideo" dialog-class="modal-video">
       <div class="wrapper">
         <!--<div class="wrapper__bg bg_600 js-bg-selection" :style="style_bg">
           <a class="ic__play&#45;&#45;white" href="" aria-label="video"></a>
@@ -10,6 +10,7 @@
                   v-if="record.video && record.video.vimeo"
                   class="embed-responsive-item"
                   :src="'https://player.vimeo.com/video/' + record.video.vimeo"
+                  allowfullscreen
                   allow="autoplay; fullscreen"></iframe>
         </div>
         <div class="wrapper__content pt-3 pt-md-5">
@@ -120,6 +121,7 @@
                                 v-if="record.bonus && record.bonus.vimeo"
                                 class="embed-responsive-item"
                                 :src="'https://player.vimeo.com/video/' + record.bonus.vimeo"
+                                allowfullscreen
                                 allow="autoplay; fullscreen"></iframe>
                       </div>
                     </div>
@@ -141,10 +143,17 @@
                   <div class="nextlessons__content">
                     <div class="media mb-2" v-for="item in record.next">
                       <div class="media--video mr-2">
-                        <nuxt-link class="video"
+                        <div
+                          class="disabled"
+                          v-if="course.progress.section > 0 && item.rank > course.progress.rank">
+                          <img class="media--thumb img-responsive" :src="item.preview['100x75']" alt="" v-if="item.preview['100x75']"/>
+                        </div>
+                        <nuxt-link
+                          v-else
                           :to="{name: 'courses-cid-index-lesson-lid', params: {cid: course.id, lid: item.id}}"
+                          class="video"
                           @click.native="scrollToTop">
-                          <img class="media--thumb img-responsive" :src="item.preview['100x75']" alt="" v-if="item.preview['100x75']">
+                          <img class="media--thumb img-responsive" :src="item.preview['100x75']" alt="" v-if="item.preview['100x75']"/>
                         </nuxt-link>
                       </div>
                       <div class="media-body">
@@ -169,9 +178,9 @@
 </template>
 
 <script>
-    //import bg from '../../../../../assets/images/general/headline_video.png'
     import {faTimes} from '@fortawesome/pro-light-svg-icons'
     import {faThumbsUp, faThumbsDown} from '@fortawesome/pro-duotone-svg-icons'
+    import Player from '@vimeo/player'
     import Comments from '../../../../../components/comments'
 
     export default {
@@ -182,7 +191,6 @@
         data() {
             return {
                 loading: false,
-                //style_bg: {'background-image': 'url(' + bg + ')'},
             }
         },
         components: {Comments},
@@ -193,6 +201,26 @@
             },
             onHidden() {
                 this.$router.push({name: 'courses-cid', params: this.$route.params})
+            },
+            onShown() {
+                let elem = document.getElementById('lesson-vimeo-iframe');
+                if (elem) {
+                    try {
+                        const player = new Player(elem);
+                        player.on('play', () => {
+                            this.setTimeout(() => {
+                                this.$axios.post('user/progress', {lesson_id: this.record.id})
+                                    .then(res => {
+                                        this.course.progress = res.data;
+                                        this.$root.$emit('app::course' + this.course.id + '::progress', res.data);
+                                    })
+                            }, 3000)
+                        });
+                        //player.play()
+                    } catch (e) {
+                        console.error(e)
+                    }
+                }
             },
             onLike(action = 'like') {
                 this.loading = action + ':' + this.record.id;
@@ -219,7 +247,7 @@
                     }
                 };
                 scrollToTop();
-            }
+            },
         },
         async asyncData({app, params, error}) {
             try {
@@ -259,6 +287,7 @@
     border-top-left-radius: 28.3099px;
     border-top-right-radius: 28.3099px;
   }
+
   #bonus-vimeo-iframe {
     border-radius: 15px;
   }

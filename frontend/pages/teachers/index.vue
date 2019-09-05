@@ -15,12 +15,9 @@
                 <div class="row item__wrap">
                   <div class="col-12 col-md-6 col-lg-4 m-width-80" v-for="item in authors">
                     <div class="review__item d-flex flex-column justify-content-center align-items-center">
-                      <!--<nuxt-link :to="{name: 'teachers-id', params: {id: item.id}}" class="review__item&#45;&#45;photo">
+                      <nuxt-link :to="{name: 'teachers-id', params: {id: item.id}}" class="review__item--photo">
                         <img class="rounded-circle" :src="item.photo" alt="">
-                      </nuxt-link>-->
-                      <div class="review__item--photo">
-                        <img class="rounded-circle" :src="item.photo" alt="">
-                      </div>
+                      </nuxt-link>
                       <h2 class="review__item--name">{{item.fullname}}</h2>
                       <div class="review__item--position">{{item.company}}</div>
                       <div class="review__item--text">{{item.description}}</div>

@@ -23,6 +23,7 @@
     "@netsells/vue-set-timeout": "^0.1.4",
     "@nuxtjs/auth": "^4.8.1",
     "@nuxtjs/axios": "^5.5.4",
+    "@nuxtjs/dotenv": "^1.4.0",
     "@nuxtjs/moment": "^1.2.0",
     "@nuxtjs/pwa": "^2.6.0",
     "@voerro/vue-tagsinput": "^2.0.1",

@@ -44,11 +44,15 @@ class Register extends \App\Processor
         }
 
         if ($user->save()) {
-            $secret = getenv('EMAIL_SECRET');
-            $encrypted = base64_encode(openssl_encrypt($user->email, 'AES-256-CBC', $secret));
-            $this->sendMail($user, $encrypted);
+            if ($user->email) {
+                $secret = getenv('EMAIL_SECRET');
+                $encrypted = base64_encode(openssl_encrypt($user->email, 'AES-256-CBC', $secret));
+                $this->sendMail($user, $encrypted);
+            }
 
-            return $this->success();
+            return $this->success([
+                'id' => $user->id,
+            ]);
         }
 
         return $this->failure('Неизвестная ошибка');

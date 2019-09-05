@@ -287,12 +287,15 @@ section.lesson__content--bottom {
     .media--video {
       position: relative;
       display: block;
-      cursor: pointer;
       &:hover {
         opacity: 0.8;
       }
       a {
+        cursor: pointer;
         @include play-button;
+      }
+      .disabled {
+        @include lock-button;
       }
 
       .media--thumb {

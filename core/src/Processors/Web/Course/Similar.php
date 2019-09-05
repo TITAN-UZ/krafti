@@ -17,9 +17,8 @@ class Similar extends \App\Processors\Web\Courses
      */
     protected function beforeCount($c)
     {
-        $this->setProperty('limit', 6);
         $c->where('id', '!=', (int)$this->getProperty('course_id'));
 
-        return $c;
+        return parent::beforeCount($c);
     }
 }

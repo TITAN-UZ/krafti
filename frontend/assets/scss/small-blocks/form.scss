@@ -23,16 +23,16 @@ form {
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.102764) !important;
     }
   }
+}
+.form-body {
+  label {
+    width: 100%;
+  }
 
-
-  .form-body {
-    margin-bottom: 30px;
-
-    label, .form-group-title {
-      color: $lightGray;
-      font-size: 14px;
-      line-height: 20px;
-    }
+  label, .form-group-title {
+    color: $lightGray;
+    font-size: 14px;
+    line-height: 20px;
   }
 }
 

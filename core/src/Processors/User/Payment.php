@@ -4,6 +4,7 @@ namespace App\Processors\User;
 
 use App\Model\Course;
 use App\Model\Order;
+use App\Service\Payment\Paypal;
 use App\Service\Payment\Robokassa;
 
 class Payment extends \App\Processor
@@ -13,7 +14,7 @@ class Payment extends \App\Processor
     {
         /** @var Course $course */
         if (!$course_id = (int)$this->getProperty('course_id')) {
-            return $this->failure('Вы должны указать id покпаемого курса');
+            return $this->failure('Вы должны указать id покупаемого курса');
         } elseif (!$course = Course::query()->where(['active' => true])->find($course_id)) {
             return $this->failure('Не могу загрузить указанный курс');
         }
@@ -67,18 +68,19 @@ class Payment extends \App\Processor
         $order->discount = $discount;
         $order->save();
 
-        $link = '';
+        $link = false;
         switch ($service) {
             case 'robokassa':
                 $link = (new Robokassa($this->container))->getPaymentLink($order);
                 break;
-            //case'paypal':
-            //    break;
+            case'paypal':
+                $link = (new Paypal($this->container))->getPaymentLink($order);
+                break;
         }
 
-        return $this->success([
-            'redirect' => $link,
-        ]);
+        return $link
+            ? $this->success(['redirect' => $link])
+            : $this->failure('Не могу сгенерировать ссылку на оплату');
     }
 
 }

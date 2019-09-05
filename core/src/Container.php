@@ -118,6 +118,7 @@ class Container extends \Slim\Container
                         ],
                     ])
                 ],
+                'cookie' => 'auth._token.local',
                 'secure' => false, // Dev
                 //'logger' => $this->logger,
                 'secret' => getenv('JWT_SECRET'),

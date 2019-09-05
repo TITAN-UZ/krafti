@@ -2,7 +2,6 @@
   <div class="wrapper">
     <client-only>
       <office-header/>
-          <!--TODO Личный кабинет юзера-->
       <div class="wrapper__content">
         <section class="container__940 tabs">
           <div class="container">
@@ -11,10 +10,10 @@
                 <div class="row mob_container">
                   <div class="col-12 tab__wrap--scroll">
                     <ul class="nav nav-tabs" id="diplomsList" role="tablist">
-                      <b-nav-item v-for="(title, to) in menu" :to="to" :key="to">
+                      <b-nav-item v-for="(title, to) in menu" :to="{name: to}" :key="to">
                         {{title}}
                         <span class="label ml-2"
-                              v-if="to == '/office/messages' && user.unread">{{user.unread}}</span>
+                              v-if="to == 'office-messages' && user.unread">{{user.unread}}</span>
                       </b-nav-item>
                     </ul>
                     <div class="tab-content">
@@ -43,11 +42,11 @@
         data() {
             return {
                 menu: {
-                    '/office/store': 'Магазин',
-                    '/office/diplomas': 'Дипломы',
-                    '/office/courses': 'Мои курсы',
-                    '/office/messages': 'Сообщения',
-                    '/office/works': 'Мои работы',
+                    'office-courses': 'Мои курсы',
+                    'office-works': 'Мои работы',
+                    'office-messages': 'Сообщения',
+                    'office-diplomas': 'Дипломы',
+                    //'office/store': 'Магазин',
                 }
             }
         },

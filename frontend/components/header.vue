@@ -165,6 +165,10 @@
                 this.hideModal();
                 this.hideMenu();
             });
+        },
+        beforeDestroy() {
+            this.$root.$off('app::auth-form::login');
+            this.$root.$off('app::auth-form::reset');
         }
     }
 </script>

@@ -8,10 +8,40 @@ class Order extends \App\GetProcessor
 {
     protected $class = 'App\Model\Order';
 
-    /*public function get()
+
+    /**
+     * @return \Slim\Http\Response
+     */
+    public function post()
     {
-        return $this->failure($this->container->user->id);
-    }*/
+        /** @var \App\Model\Order $order */
+        if ($order = $this->container->user->orders()->find((int)$this->getProperty('InvId'))) {
+            if ($order->status === 2) {
+                return $this->success([
+                    'id' => $order->course->id,
+                ]);
+            }
+
+            if ($order->status === 1) {
+                if ($handler = $order->getPaymentHandler($this->container)) {
+                    $res = $handler->finalize($order, $this->getProperties());
+                    if ($res === null) {
+                        return $this->success('Processing...', 204);
+                    } elseif ($res === true) {
+                        $order->changeStatus(2);
+
+                        return $this->success([
+                            'id' => $order->course->id,
+                        ]);
+                    }
+                } else {
+                    return $this->failure('Неизвестный способ оплаты');
+                }
+            }
+        }
+
+        return $this->failure('Не могу проверить платёж');
+    }
 
 
     /**
@@ -21,9 +51,7 @@ class Order extends \App\GetProcessor
      */
     public function beforeGet($c)
     {
-        $c->where(['user_id' => $this->container->user->id]);
-
-        return $c;
+        return $this->beforeCount($c);
     }
 
 

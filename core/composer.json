@@ -1,5 +1,4 @@
 {
-  "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
     "no-dev": "true"
@@ -16,7 +15,7 @@
     "pelago/emogrifier": "^2.1",
     "phpmailer/phpmailer": "^6.0",
     "symfony/dotenv": "^4.3",
-    "robmorgan/phinx": "^0.10.8",
+    "robmorgan/phinx": "^0.11.1",
     "tuupola/slim-jwt-auth": "^3.4",
     "monolog/monolog": "^1.24",
     "fenom/fenom": "^2.11",
@@ -24,6 +23,9 @@
     "ext-json": "*",
     "league/flysystem": "^1.0",
     "vimeo/vimeo-api": "^3.0",
-    "stadline/monolog-echo-handler": "^0.2.0"
+    "stadline/monolog-echo-handler": "^0.2.0",
+    "zircote/swagger-php": "^3.0",
+    "hybridauth/hybridauth": "^3.0",
+    "paypal/rest-api-sdk-php": "^1.14"
   }
 }

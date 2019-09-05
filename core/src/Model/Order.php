@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -44,5 +45,54 @@ class Order extends Model
     public function course()
     {
         return $this->belongsTo('App\Model\Course');
+    }
+
+
+    /**
+     * @param Container $container
+     *
+     * @return \App\Service\Payment\Payment|bool
+     */
+    public function getPaymentHandler(Container $container)
+    {
+        $service = false;
+        switch ($this->service) {
+            case 'paypal':
+                $service = new \App\Service\Payment\Paypal($container);
+                break;
+            case 'robokassa':
+                $service = new \App\Service\Payment\Robokassa($container);
+                break;
+        }
+
+        return $service;
+    }
+
+
+    /**
+     * @param $status
+     *
+     * @return bool
+     */
+    public function changeStatus($status)
+    {
+        if (!$this->status != $status) {
+            if ($status == 2) {
+                $this->status = 2;
+                $this->paid_at = date('Y-m-d H:i:s');
+                $this->paid_till = date('Y-m-d H:i:s', strtotime("+$this->period month"));
+                $this->save();
+
+                if ($this->discount) {
+                    $user = $this->user;
+                    $user->referrer->makeTransaction(getenv('COINS_PROMO'), 'purchase', [
+                        'referral_id' => $user->id,
+                        'course_id' => $this->course->id,
+                    ]);
+                }
+            }
+        }
+
+        return true;
     }
 }

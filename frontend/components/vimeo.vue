@@ -14,6 +14,7 @@
         <iframe id="vimeo-iframe"
                 class="embed-responsive-item"
                 :src="'https://player.vimeo.com/video/' + video"
+                allowfullscreen
                 allow="autoplay; fullscreen"></iframe>
       </div>
       <template slot="modal-header">
@@ -60,7 +61,7 @@
                         const player = new Player(elem);
                         player.play()
                     } catch (e) {
-                        console.log(e.data)
+                        console.error(e)
                     }
                 }
             },

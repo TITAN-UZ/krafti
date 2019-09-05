@@ -2,11 +2,12 @@
 
 namespace App\Processors\User;
 
+use App\GetProcessor;
 use App\Model\Course;
 use App\Model\File;
 use App\Model\Homework;
-use App\GetProcessor;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class Homeworks extends GetProcessor
 {
@@ -35,12 +36,19 @@ class Homeworks extends GetProcessor
     public function beforeCount($c)
     {
         $c->where(['user_id' => $this->container->user->id]);
+        $c->select(['id', 'course_id', 'lesson_id', 'file_id', 'section']);
+
         if ($course_id = (int)$this->getProperty('course_id')) {
             $lesson_id = (int)$this->getProperty('lesson_id');
             $c->where([
                 'course_id' => $course_id,
                 'lesson_id' => $lesson_id ?: null,
             ]);
+        } else {
+            /*$c->with(['course' => function (Relation $query) {
+                $query->select(['id', 'title']);
+            }]);*/
+            $c->with('course:id,title');
         }
 
         return $c;
@@ -54,15 +62,10 @@ class Homeworks extends GetProcessor
      */
     public function prepareRow($object)
     {
-        $array = [
-            'id' => $object->id,
-            'course_id' => $object->course_id,
-            'lesson_id' => $object->lesson_id,
-            'section' => $object->section,
-            'file' => $object->file
-                ? $object->file->getUrl()
-                : null,
-        ];
+        $array = $object->toArray();
+        $array['file'] = $object->file
+            ? $object->file->getUrl()
+            : null;
 
         return $array;
     }
@@ -109,9 +112,16 @@ class Homeworks extends GetProcessor
             $homework->save();
 
             if ($coins) {
-                $this->container->user->makeTransaction(getenv('COINS_HOMEWORK'), 'homework', [
-                    'course_id' => $course->id,
-                ]);
+                if (getenv('COINS_HOMEWORK')) {
+                    $this->container->user->makeTransaction(getenv('COINS_HOMEWORK'), 'homework', [
+                        'course_id' => $course->id,
+                    ]);
+                }
+                if ($section == 3 && getenv('COINS_PALETTE')) {
+                    $this->container->user->makeTransaction(getenv('COINS_PALETTE'), 'palette', [
+                        'course_id' => $course->id,
+                    ]);
+                }
             }
 
             $progress = $this->container->user->getProgress($course);

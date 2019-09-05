@@ -593,16 +593,21 @@
               margin-bottom: 20px;
               position: relative;
               display: block;
-              cursor: pointer;
               &:hover {
                 opacity: 0.8;
+                a {
+                  cursor: pointer;
+                }
+              }
+              img {
+                border-radius: 20px;
               }
               a {
-                img {
-                  border-radius: 20px;
-                  transition: opacity 0.3s;
-                }
                 @include play-button;
+                transition: opacity 0.3s;
+              }
+              .disabled {
+                @include lock-button;
               }
             }
 

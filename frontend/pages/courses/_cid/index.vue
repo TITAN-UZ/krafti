@@ -173,7 +173,7 @@
                         <div
                           class="col-lg-8 col-12 palitra__info d-flex justify-content-center align-items-center flex-column">
                           <div class="palitra__info--title">Палитра прогресса</div>
-                          <div class="palitra__info--count">+450 крафтиков</div>
+                          <div class="palitra__info--count">+{{palette_bonus}} {{palette_bonus | noun('крафтик|крафтика|крафтиков')}}</div>
                           <div class="palitra__info--text">Это ваша персональная палитра прогресса. Смотрите уроки,
                             отправляйте домашние задания и ваша палитра будет заполняться цветами. За полную палитру вы
                             получаете крафтики.
@@ -197,12 +197,13 @@
                                      :title="section + ' этап'"
                                      :disabled="(record.progress.section > 0 && section > record.progress.section)">
                                 <div class="step__wrap">
-                                  <div class="row lessons__list">
-                                    <div
-                                      class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column"
-                                      v-for="item in items">
+                                  <div class="row lessons__list align-items-start">
+                                    <div v-for="(item, rank) in items" class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column">
                                       <div class="lesson__item--video">
-                                        <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: item.id}}" class="video" >
+                                        <div class="disabled" v-if="record.progress.section > 0 && (record.progress.section < item.section || (record.progress.section == item.section && record.progress.rank < rank))">
+                                          <img class="img-responsive bonus__lesson--thumb" :src="lessons[0][0].preview['295x166']"/>
+                                        </div>
+                                        <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: item.id}}" v-else class="video">
                                           <img class="img-responsive lesson__video--thumb" :src="item.preview['295x166']" alt="" v-if="item.preview['295x166']">
                                         </nuxt-link>
                                       </div>
@@ -217,9 +218,8 @@
                                       <img class="img-responsive" src="~assets/images/general/work_thumb.png" alt="">
                                     </div>
                                     <div class="home__work--title">Домашнее задание этапа {{section}}</div>
-                                    <div class="home__work--count">+150 крафтиков</div>
-                                    <div class="home__work--text">Отправьте нам фотографию того, что у вас получилось
-                                    </div>
+                                    <!--<div class="home__work&#45;&#45;count">+150 крафтиков</div>-->
+                                    <div class="home__work--text">Отправьте нам фотографию того, что у вас получилось</div>
                                     <client-only>
                                       <upload-homework
                                         :course_id="record.id"
@@ -258,7 +258,7 @@
                           </div>
                           <div class="bonus__btn" v-if="record.progress.section != 0">
                             <nuxt-link class="btn btn-default btn__buy" :to="{name: 'courses-cid-index-buy-bonus', cid: record.id}">
-                              <span class="ic__star mr-2"></span>Купить за 450 крафтиков
+                              <span class="ic__star mr-2"></span>Купить за {{bonus_cost | number}} {{bonus_cost | noun('крафтик|крафтика|крафтиков')}}
                             </nuxt-link>
                           </div>
                         </div>
@@ -364,8 +364,11 @@
         },
         components: {CoursesList, ReviewsList, HeaderBg, 'social-sharing': SocialSharing},
         scrollToTop: false,
-        async asyncData({app, params, error}) {
-            let data = {};
+        async asyncData({app, params, error, env}) {
+            let data = {
+                palette_bonus: env.COINS_PALETTE,
+                bonus_cost: env.COINS_BUY_BONUS,
+            };
             try {
                 const res = await app.$axios.get('web/courses', {params: {id: params.cid}});
                 data.record = res.data
@@ -374,7 +377,7 @@
             }
 
             const [similar, authors, reviews, lessons, homeworks/*, reviews*/] = await Promise.all([
-                app.$axios.get('web/course/similar', {params: {course_id: params.cid, limit: 2}}),
+                app.$axios.get('web/course/similar', {params: {course_id: params.cid, limit: 4}}),
                 app.$axios.get('web/course/authors', {params: {course_id: params.cid, limit: 10}}),
                 app.$axios.get('web/course/reviews', {params: {course_id: params.cid, limit: 10}}),
                 data.record.bought
@@ -383,7 +386,6 @@
                 data.record.bought
                     ? app.$axios.get('user/homeworks', {params: {course_id: params.cid}})
                     : null,
-                //app.$axios.get('web/course/reviews', {params: {course_id: params.cid, limit: 0}}),
             ]);
             data.similar = similar.data.rows;
             data.authors = authors.data.rows;

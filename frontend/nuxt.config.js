@@ -53,6 +53,12 @@ export default {
     '@nuxtjs/auth',
     '@nuxtjs/pwa',
     '@nuxtjs/moment',
+    '@nuxtjs/dotenv',
+    ['@nuxtjs/dotenv', {
+      path: '../core/',
+      filename: '.env',
+      only: ['COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE'],
+    }],
     'nuxt-izitoast',
     //'@nuxtjs/eslint-module'
   ],
@@ -100,9 +106,9 @@ export default {
       for (let i in routes) {
         if (routes.hasOwnProperty(i)) {
           if (routes[i].name == 'admin') {
-            routes[i].redirect = '/admin/courses';
+            routes[i].redirect = {name: 'admin-courses'};
           } else if (routes[i].name == 'office') {
-            routes[i].redirect = '/office/store';
+            routes[i].redirect = {name: 'office-courses'};
           }
         }
       }

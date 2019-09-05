@@ -1,11 +1,11 @@
 section.about__info {
   margin-bottom: 60px;
 
-  .about__text {
+  /*.about__text {
     font-weight: 200;
     font-size: 18px;
     line-height: 21px;
-  }
+  }*/
 }
 
 section.subscription {
@@ -47,34 +47,32 @@ section.subscription {
       }
     }
 
-    form.subscription__form {
-
+    .subscription-form {
       label {
         position: relative;
+        display: flex;
+        align-items: center;
+        input[type="email"] {
+          position: relative;
+          border-radius: 25px;
+          background: rgba(255, 255, 255, 0.6);
+          border: 0;
+          color: $gray;
+          padding: 15px 60px 15px 30px;
 
-        //noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget,CssUnknownTarget
-        &::before {
-          position: absolute;
-          display: block;
-          content: '';
-          width: 31px;
-          height: 25px;
-          right: 25px;
-          top: 17px;
-          background: url(~assets/images/general/ic_send.svg) no-repeat;
-          background-size: 100% 100%;
+          &::placeholder {
+            color: $white;
+          }
         }
-      }
 
-      input[type="email"] {
-        border-radius: 25px;
-        background: rgba(255, 255, 255, 0.6);
-        border: 0;
-        color: $gray;
-        padding: 15px 30px 16px;
-
-        &::placeholder {
-          color: $white;
+        button {
+          position: absolute;
+          right: 10px;
+          font-size: 26px;
+          color: $lightPink;
+          &:hover {
+            color: $pink;
+          }
         }
       }
     }

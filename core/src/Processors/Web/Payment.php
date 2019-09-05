@@ -9,41 +9,37 @@ class Payment extends \App\Processor
 
     public function post()
     {
-        $this->container->logger->error('Payment!', ['data' => $this->getProperties()]);
+        $this->container->logger->info('New payment', ['data' => $this->getProperties()]);
 
         // Robokassa
         if ($id = (int)$this->getProperty('InvId')) {
-            /** @var Order $order */
-            if ($order = Order::query()->find($id)) {
-                $service = new \App\Service\Payment\Robokassa($this->container);
-                if ($service->checkCrc($this->getProperties())) {
-                    $order->status = 2;
-                    $order->paid_at = date('Y-m-d H:i:s');
-                    $order->paid_till = date('Y-m-d H:i:s', strtotime("+$order->period month"));
-                    $order->save();
+            $properties = $this->getProperties();
+        } elseif ($resource = $this->getProperty('resource')) {
+            // Paypal
+            $id = $resource['transactions'][0]['invoice_number'];
+            $properties = [
+                'paymentId' => $resource['id'],
+                'PayerID' => $resource['payer']['payer_info']['payer_id'],
+            ];
+        }
 
-                    if ($order->discount) {
-                        $user = $order->user;
-                        $user->referrer->makeTransaction(getenv('COINS_PROMO'), 'purchase', [
-                            'referral_id' => $user->id,
-                            'course_id' => $order->id,
-                        ]);
+        /** @var Order $order */
+        if ($id && $order = Order::query()->find($id)) {
+            if ($order->status === 2) {
+                return $this->success('Ok');
+            }
+
+            if ($order->status === 1) {
+                if ($handler = $order->getPaymentHandler($this->container)) {
+                    if ($handler->finalize($order, $properties)) {
+                        $order->changeStatus(2);
+
+                        return $this->success('Ok');
                     }
-
-                    return $this->success('Ok!');
-                } else {
-                    $this->container->logger->error('Wrong Signature', ['data' => $this->getProperties()]);
                 }
             }
         }
 
         return $this->failure('Error');
     }
-
-
-    /*protected function sendEmail(array $data)
-    {
-
-    }*/
-
 }

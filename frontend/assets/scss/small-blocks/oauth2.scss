@@ -1,0 +1,60 @@
+.social-providers {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+
+  button {
+    @extend .btn;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 50px;
+    border: 1px solid #fff;
+    font-size: 30px;
+    line-height: 30px;
+    color: #fff;
+
+    &:hover {
+      opacity: .8;
+      color: #fff;
+    }
+
+    svg {
+      color: #fff;
+      text-align: center;
+      width: 1.25em !important;
+      height: 1.25em !important;
+    }
+
+    &.vkontakte {
+      background: #4c75a3;
+    }
+
+    &.instagram {
+      background: #d6249f;
+      background: radial-gradient(circle at 30% 100%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    }
+
+    &.inactive {
+      background: #aaa;
+    }
+  }
+
+  &.profile {
+    button {
+      font-size: 20px;
+      line-height: 20px;
+      padding: 10px;
+      border-radius: 15px;
+      span {
+        font-size: 16px;
+      }
+      svg {
+        &.fa-times {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

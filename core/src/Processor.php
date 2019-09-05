@@ -156,6 +156,7 @@ class Processor
         }*/
 
         return $this->container->response->withJson($data, $code, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+            ->withHeader('Content-Type', 'application/json; charset=utf-8')
             ->withHeader('Access-Control-Allow-Origin', $this->container->request->getHeader('HTTP_ORIGIN'));
     }
 
@@ -169,6 +170,7 @@ class Processor
     public function failure($message = '', $code = 422)
     {
         return $this->container->response->withJson($message, $code, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+            ->withHeader('Content-Type', 'application/json; charset=utf-8')
             ->withHeader('Access-Control-Allow-Origin', $this->container->request->getHeader('HTTP_ORIGIN'));
     }
 }

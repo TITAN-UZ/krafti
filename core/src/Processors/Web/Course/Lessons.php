@@ -99,6 +99,8 @@ class Lessons extends \App\Processor
                 $data['next'][] = [
                     'id' => $next->id,
                     'title' => $next->title,
+                    'section' => $next->section,
+                    'rank' => $next->rank,
                     'description' => $next->description,
                     'preview' => $next->video
                         ? $next->video->preview
@@ -121,12 +123,13 @@ class Lessons extends \App\Processor
 
         $lessons = [];
         /** @var Lesson $lesson */
-        foreach ($course->lessons()->where(['active' => true])->get() as $lesson) {
+        foreach ($course->lessons()->where(['active' => true])->orderBy('section', 'asc')->orderBy('rank', 'asc')->get() as $lesson) {
             $lessons[] = [
                 'id' => $lesson->id,
                 'title' => $lesson->title,
                 'description' => $lesson->description,
                 'section' => $lesson->section,
+                'rank' => $lesson->rank,
                 'views_count' => $lesson->views_count,
                 'likes_count' => $lesson->likes_count,
                 'preview' => $lesson->video

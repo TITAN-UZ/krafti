@@ -16,10 +16,6 @@ class Login extends \App\Processor
             if (!$user->active) {
                 return $this->failure('Учётная запись отключена');
             } elseif ($user->verifyPassword($password)) {
-
-                $user->logged_at = date('Y-m-d H:i:m');
-                $user->save();
-
                 return $this->success([
                     'token' => $this->container->makeToken($user->id),
                 ]);

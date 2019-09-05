@@ -27,7 +27,7 @@ class Reviews extends \App\GetProcessor
      */
     public function beforeCount($c)
     {
-        //$c->groupBy('user_id'); // TODO remove on prod
+        $c->groupBy('user_id');
         $c->where(['review' => true, 'deleted' => false]);
         $c->with('user');
 
