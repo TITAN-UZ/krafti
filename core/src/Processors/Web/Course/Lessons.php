@@ -57,7 +57,7 @@ class Lessons extends \App\Processor
                     : null,
                 'bonus' => $lesson->bonus
                     ? [
-                        'vimeo' => $lesson->video->remote_key,
+                        'vimeo' => $lesson->bonus->remote_key,
                         'title' => $lesson->bonus->title,
                         'description' => $lesson->bonus->description,
                         'preview' => $lesson->bonus->preview,

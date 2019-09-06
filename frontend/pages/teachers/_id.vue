@@ -17,20 +17,24 @@
                       <h2 class="teacher__info--name">{{record.fullname}}</h2>
                       <div class="teacher__info--position">{{record.company}}</div>
                     </div>
-                    <div class="teacher__text">{{record.description}}
+                    <div class="teacher__text">
+                      {{record.description}}
                     </div>
-                    <!--<div class="teacher__gallery d-flex">
-                      <div class="left__block mr-1"><img class="img-responsive"
-                                                         src="~assets/images/content/teacher/img.jpg" alt=""></div>
-                      <div class="right__block"><img class="mb-15 img-responsive"
-                                                     src="~assets/images/content/teacher/img-2.jpg" alt="">
-                        <img class="img-responsive" src="~assets/images/content/teacher/img-3.jpg" alt="">
-                      </div>
-                    </div>-->
-                    <!--<div class="teacher__text">These cases are perfectly simple and easy to distinguish. In a free hour,
-                      when our power of choice is untrammelled and when nothing prevents our being able to do what we
-                      like best, every pleasure is to be welcomed and every pain avoided.
-                    </div>-->
+                    <div class="teacher__gallery">
+                      <swiper-gallery :object-id="record.id" object-name="User" thumbs="4"/>
+                      <!--
+                        <div class="left__block mr-1">
+                          <img class="img-responsive" src="~assets/images/content/teacher/img.jpg" alt="">
+                        </div>
+                        <div class="right__block">
+                          <img class="mb-15 img-responsive" src="~assets/images/content/teacher/img-2.jpg" alt="">
+                          <img class="img-responsive" src="~assets/images/content/teacher/img-3.jpg" alt="">
+                        </div>
+                      -->
+                    </div>
+                    <div class="teacher__text">
+                      {{record.long_description}}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -43,15 +47,23 @@
 </template>
 
 <script>
+    import SwiperGallery from '../../components/swiper-gallery'
+
     export default {
         auth: false,
         validate({params}) {
             return /^\d+$/.test(params.id)
         },
+        components: {SwiperGallery},
         async asyncData({app, params, error}) {
             try {
-                const res = await app.$axios.get('web/authors', {params: params});
-                return {record: res.data}
+                const [record] = await Promise.all([
+                    app.$axios.get('web/authors', {params: params}),
+                ]);
+
+                return {
+                    record: record.data,
+                }
             } catch (e) {
                 return error({statusCode: 404, message: 'Страница не найдена'})
             }
@@ -61,8 +73,8 @@
                 title: 'Крафти / Наша команда / Преподаватель ' + this.$route.params.id,
             }
         },
-        mounted() {
-            document.getElementsByTagName('header')[0].classList.remove('header_img')
+        created() {
+            this.$app.header_image.set(false)
         }
     }
 </script>

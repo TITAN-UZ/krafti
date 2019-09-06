@@ -13,17 +13,16 @@
               </div>
               <div class="container__940">
                 <div class="row item__wrap">
-                  <div class="col-12 col-md-6 col-lg-4 m-width-80" v-for="item in authors">
+                  <div class="col-12 col-md-6 col-lg-4" v-for="item in authors">
                     <div class="review__item d-flex flex-column justify-content-center align-items-center">
                       <nuxt-link :to="{name: 'teachers-id', params: {id: item.id}}" class="review__item--photo">
                         <img class="rounded-circle" :src="item.photo" alt="">
                       </nuxt-link>
                       <h2 class="review__item--name">{{item.fullname}}</h2>
-                      <div class="review__item--position">{{item.company}}</div>
+                      <div class="review__item--position text-center">{{item.company}}</div>
                       <div class="review__item--text">{{item.description}}</div>
                     </div>
                   </div>
-
                 </div>
               </div>
               <!--<div class="row">

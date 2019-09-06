@@ -113,10 +113,8 @@
                 title: 'Крафти / Личный кабинет / Избранное',
             }
         },
-        methods: {
-        },
-        mounted() {
-            document.getElementsByTagName('header')[0].classList.add('header_img');
+        created() {
+            this.$app.header_image.set(true)
         }
     }
 </script>

@@ -105,8 +105,8 @@
                 title: 'Крафти / Контакты',
             }
         },
-        mounted() {
-            document.getElementsByTagName('header')[0].classList.remove('header_img');
+        created() {
+            this.$app.header_image.set(false)
         }
     }
 </script>

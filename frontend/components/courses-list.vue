@@ -5,7 +5,9 @@
                  :style="{'background-image': (course.cover ? 'url(' + course.cover + ')' : false)}">
         <div class="d-flex flex-column justify-content-between h-100">
           <div class="mt-3">
-            <div class="title">{{course.title}}</div>
+            <div class="title">
+              <!--{{course.title}}-->
+            </div>
             <div class="tagline mt-3">{{course.tagline}}</div>
           </div>
           <div class="d-flex justify-content-between align-items-center">

@@ -8,9 +8,8 @@
   <!--TODO-DONE Подключить PayPal-->
   <!--TODO-DONE Ограничение просмотра до 5 устройств-->
   <!--TODO-DONE Вывод информации по рефералам-->
-
-  <!--TODO Управление авторами (добавить 3 фото в аккаунт автора) и расширить описание-->
-  <!--TODO Галерея выполненных работ в курсе (Lingallery, Vue.Draggable)-->
+  <!--TODO-DONE Управление авторами (добавить 3 фото в аккаунт автора) и расширить описание-->
+  <!--TODO-DONE Галерея выполненных работ в курсе-->
 
   <!--TODO Генерация дипломов об окончании курса-->
   <!--TODO Генерация и вывод уведомлений об окончании оплаты курса, днях рождения, начислении крафтиков и выпуске дипломов-->
@@ -71,7 +70,7 @@
             </div>
           </div>
         </section>
-        <section class="courses-list mt-5">
+        <section class="courses-list mt-5" v-if="courses_total > 0">
           <div class="container">
             <div class="row">
               <div class="col-md-8 offset-md-2">
@@ -86,7 +85,7 @@
             </div>
           </div>
         </section>
-        <section class="reviews_list tab__wrap--scroll mt-5">
+        <section class="reviews_list tab__wrap--scroll mt-5" v-if="reviews_total > 0">
           <div class="container">
             <div class="row">
               <div class="col-md-8 offset-md-2">
@@ -181,11 +180,10 @@
             }
         },
         created() {
-            this.$fa.add(faPaperPlane)
+            this.$fa.add(faPaperPlane);
+            this.$app.header_image.set(true);
         },
         mounted() {
-            document.getElementsByTagName('header')[0].classList.add('header_img');
-
             new Swiper('.swiper-container', {
                 pagination: {
                     el: '.swiper-pagination',

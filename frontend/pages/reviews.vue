@@ -4,14 +4,10 @@
     <div class="wrapper__content">
       <section class="feedbacks tab__wrap--scroll">
         <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <h2 class="section__title">Отзывы</h2>
-            </div>
-          </div>
-          <div class="container__940">
-            <reviews-list :reviews="reviews"/>
-          </div>
+            <h2 class="section__title">Отзывы</h2>
+        </div>
+        <div class="container__940">
+          <reviews-list :reviews="reviews"/>
         </div>
       </section>
     </div>
@@ -25,11 +21,8 @@
     export default {
         auth: false,
         components: {HeaderBg, ReviewsList},
-        async asyncData({app, redirect}) {
+        async asyncData({app}) {
             const reviews = await app.$axios.get('web/reviews', {params: {limit: 100}});
-            if (!reviews.data.total) {
-                redirect('/')
-            }
 
             return {reviews: reviews.data.rows}
         },

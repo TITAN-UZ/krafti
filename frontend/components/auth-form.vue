@@ -74,6 +74,12 @@
           <b-input v-model="register.instagram" placeholder="@instagram" trim/>
         </b-form-group>
 
+        <b-form-group>
+          <b-form-checkbox class="mt-3" v-model="register.agree">
+            Я соглашаюсь на обработку <a href="" @click.prevent="">персональных данных</a>
+          </b-form-checkbox>
+        </b-form-group>
+
         <div class="alert alert-danger" v-if="error.register != ''">
           {{error.register}}
         </div>
@@ -136,6 +142,7 @@
                     fullname: '',
                     instagram: '',
                     password: '',
+                    agree: false,
                     promo: process.client && localStorage.promo !== undefined
                         ? localStorage.promo
                         : '',
@@ -183,7 +190,7 @@
                 return this.login.email == '' || this.login.password == '' || this.loading
             },
             checkRegister() {
-                return this.register.fullname == '' || this.register.email == '' || this.loading
+                return this.register.fullname == '' || this.register.email == '' || !this.register.agree || this.loading
             },
             checkReset() {
                 return this.reset.email == '' || this.loading

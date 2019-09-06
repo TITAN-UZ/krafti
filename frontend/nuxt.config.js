@@ -39,6 +39,7 @@ export default {
     '~/plugins/filters.js',
     '~/plugins/vimeo.js',
     '~/plugins/metrika.js',
+    '~/plugins/app.js',
     {src: '~/plugins/autosuggest.js', ssr: false},
     {src: '~/plugins/mixins.js', ssr: false},
     {src: '~/plugins/alertify.js', ssr: false},

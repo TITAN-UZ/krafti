@@ -8,7 +8,10 @@
             <div class="col-md-8 offset-md-2">
               <h2 class="section__title">Избранное</h2>
               <div class="courses-list">
-                <courses-list :courses="courses"/>
+                <courses-list :courses="courses" v-if="courses.length"/>
+                <div class="alert alert-info" v-else>
+                  Вы еще ничего не добавляли в избранное
+                </div>
               </div>
             </div>
           </div>
@@ -39,5 +42,8 @@
                 title: 'Крафти / Личный кабинет / Избранное',
             }
         },
+        created() {
+            this.$app.header_image.set(true)
+        }
     }
 </script>

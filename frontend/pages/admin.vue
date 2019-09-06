@@ -22,6 +22,9 @@
     export default {
         //middleware: 'token',
         auth: true,
+        created() {
+            this.$app.header_image.set(false);
+        }
     }
 </script>
 

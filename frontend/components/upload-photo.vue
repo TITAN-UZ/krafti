@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="upload-avatar-wrapper">
     <file-pond ref="filepond"
                accepted-file-types="image/jpeg, image/png"
                :allow-multiple="false"
@@ -8,6 +8,8 @@
                :imagePreviewHeight="size"
                :imageResizeTargetWidth="600"
                :imageResizeTargetHeight="600"
+               imageResizeMode="contain"
+               :imageResizeUpscale="false"
                :server="{process: handleUpload}"
                :instantUpload="true"
                :allowDrop="true"
@@ -18,13 +20,13 @@
                styleButtonProcessItemPosition="center bottom"
                styleButtonRemoveItemPosition="center bottom"/>
     <img class="avatar" alt="" :style="{width: size + 'px', height: size + 'px'}"
-         :src="$auth.user.photo || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='"/>
+         :src="photo || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='"/>
   </div>
 </template>
 
 <script>
     import {icon} from '@fortawesome/fontawesome-svg-core'
-    import {faCameraAlt} from '@fortawesome/pro-light-svg-icons'
+    import {faCameraAlt} from '@fortawesome/pro-duotone-svg-icons'
 
     export default {
         name: 'upload-photo',
@@ -44,6 +46,28 @@
                 required: false,
                 default: 150,
             },
+            userId: {
+                type: Number,
+                required: false,
+                default: null,
+            },
+            value: {
+                type: String,
+                required: false,
+                default() {
+                    return this.$auth.user.photo
+                },
+            }
+        },
+        computed: {
+            photo: {
+                get() {
+                    return this.value
+                },
+                set(newValue) {
+                    this.$emit('input', newValue)
+                }
+            }
         },
         methods: {
             handleUpload(fieldName, file, metadata, load, error, progress, abort) {
@@ -51,19 +75,29 @@
                 metadata.type = 'photo';
                 formData.append('metadata', JSON.stringify(metadata));
                 formData.append('file', file, file.name);
+                if (this.userId) {
+                    formData.append('user_id', this.userId);
+                }
 
                 this.$axios({
                     method: 'POST',
-                    url: '/user/picture',
+                    url: !this.userId
+                      ? 'user/picture'
+                      : 'admin/users' ,
                     data: formData,
                     onUploadProgress: (e) => {
                         progress(e.lengthComputable, e.loaded, e.total)
                     }
                 }).then((res) => {
-                    load(res.data.file);
+                    load(file);
                     this.$refs.filepond.removeFile();
-                    this.$auth.setUser(res.data.user);
+                    if (!this.userId) {
+                        this.$auth.setUser(res.data.user)
+                    } else {
+                        this.photo = res.data.photo
+                    }
                 }).catch(() => {
+                    error(file)
                 });
 
                 return {
@@ -75,6 +109,15 @@
 </script>
 
 <style lang="scss">
+  .upload-avatar-wrapper {
+    .avatar {
+      display: block;
+      margin: auto;
+      border-radius: 50%;
+      box-shadow: 0 .125rem .25rem rgba(#000, .075);
+    }
+  }
+
   .upload-avatar {
     position: absolute;
     left: 50%;

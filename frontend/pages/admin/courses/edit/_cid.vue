@@ -168,6 +168,9 @@
 
         <table-footer :table="$options.name" :totalRows="totalRows" :limit="limit" :page.sync="page"></table-footer>
       </b-tab>
+      <b-tab title="Галерея">
+        <gallery-manager :object-id="record.id" object-name="Course"/>
+      </b-tab>
     </b-tabs>
     <nuxt-child></nuxt-child>
   </b-modal>

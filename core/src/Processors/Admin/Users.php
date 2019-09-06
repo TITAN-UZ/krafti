@@ -2,8 +2,10 @@
 
 namespace App\Processors\Admin;
 
+use App\Model\File;
 use App\Model\Traits\UserValidate;
 use App\Model\User;
+use App\Processors\User\Profile;
 use Illuminate\Database\Eloquent\Builder;
 
 class Users extends \App\ObjectProcessor
@@ -11,6 +13,38 @@ class Users extends \App\ObjectProcessor
     use UserValidate;
     protected $class = '\App\Model\User';
     protected $scope = 'users';
+
+
+    /**
+     * @return \Slim\Http\Response
+     */
+    public function post()
+    {
+
+        if (!$user_id = (int)$this->getProperty('user_id')) {
+            return $this->failure('Вы должны указать id пользователя');
+        }
+
+        /** @var User $user */
+        if (!$user = User::query()->find($user_id)) {
+            return $this->failure('Не могу загрузить указанного пользователя');
+        }
+
+        if (!$file = $user->photo) {
+            $file = new File();
+        }
+        if ($id = $file->uploadFile($_FILES['file'], json_decode($_POST['metadata'], true))) {
+            $user->photo_id = $id;
+            $user->save();
+        } else {
+            return $this->failure('Не могу загрузить файл');
+        }
+        $user = User::query()->find($user->id);
+
+        return $this->success([
+            'photo' => $user->photo->getUrl(),
+        ]);
+    }
 
 
     /**

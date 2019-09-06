@@ -6,7 +6,7 @@
     <div v-else>
       <div v-if="home.length">
         <h2 class="worksList--title">Домашние работы</h2>
-        <div class="row item__wrap worksList">
+        <div class="row item__wrap worksList align-items-center">
           <div class="col-lg-3 col-md-4 col-6 m-width-80" v-for="item in home">
             <a :href="item.file" target="_blank" class="work__item">
               <div class="work__item">
@@ -24,7 +24,7 @@
       </div>
       <div v-if="works.length">
         <h2 class="worksList--title">Выполненные уроки</h2>
-        <div class="row item__wrap worksList">
+        <div class="row item__wrap worksList  align-items-center">
           <div class="col-lg-3 col-md-4 col-6 m-width-80" v-for="item in works">
             <a :href="item.file" target="_blank" class="work__item">
               <div class="work__item">

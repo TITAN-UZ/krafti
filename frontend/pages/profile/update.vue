@@ -374,10 +374,8 @@
             }
         },
         created() {
+            this.$app.header_image.set(false);
             this.$fa.add(faCopy, faPlusCircle, faCheckCircle, faTimesCircle, faTimes, faVk, faInstagram, faMale, faFemale);
-        },
-        mounted() {
-            document.getElementsByTagName('header')[0].classList.remove('header_img');
         },
     }
 </script>

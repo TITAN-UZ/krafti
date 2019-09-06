@@ -20,13 +20,7 @@ class Authors extends \App\GetProcessor
      */
     protected function beforeGet($c)
     {
-        $c->where(['users.active' => true])
-            ->groupBy('users.id')
-            ->where('users.role_id', '<', 3)
-            ->select(['users.id', 'users.fullname', 'users.company', 'users.description', 'users.photo_id'])
-            ->join('lessons', 'lessons.author_id', '=', 'users.id');
-
-        return $c;
+        return $this->beforeCount($c);
     }
 
 
@@ -39,11 +33,11 @@ class Authors extends \App\GetProcessor
      */
     protected function beforeCount($c)
     {
-        $c->where(['users.active' => true])
-            ->groupBy('users.id')
-            ->where('users.role_id', '<', 3)
-            ->select(['users.id', 'users.fullname', 'users.company', 'users.description', 'users.photo_id'])
-            ->join('lessons', 'lessons.author_id', '=', 'users.id');
+        $c->where(['users.active' => true, 'favorite' => true]);
+        //->groupBy('users.id')
+        //->where('users.role_id', '<', 3)
+        //->select(['users.id', 'users.fullname', 'users.company', 'users.description', 'users.photo_id'])
+        //->join('lessons', 'lessons.author_id', '=', 'users.id');
 
         return $c;
     }
@@ -61,6 +55,7 @@ class Authors extends \App\GetProcessor
             'fullname' => $object->fullname,
             'company' => $object->company,
             'description' => $object->description,
+            'long_description' => $object->long_description,
             'photo' => $object->photo
                 ? $object->photo->getUrl()
                 : null,

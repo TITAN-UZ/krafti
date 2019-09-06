@@ -19,6 +19,7 @@ class User extends Migration
             $table->string('instagram', 100)->nullable();
             $table->string('company')->nullable();
             $table->text('description')->nullable();
+            $table->text('long_description')->nullable();
             $table->boolean('active')->default(true)->index();
             $table->boolean('confirmed')->default(false)->index();
             $table->integer('photo_id')->unsigned()->nullable();
@@ -27,6 +28,7 @@ class User extends Migration
             $table->integer('referrer_id')->unsigned()->nullable();
             $table->integer('account')->unsigned()->default(0);
             $table->string('promo', 100)->nullable()->unique();
+            $table->boolean('favorite')->nullable()->default(false);
             $table->json('children')->nullable();
             $table->timestamp('logged_at')->nullable();
             $table->timestamp('reset_at')->nullable();

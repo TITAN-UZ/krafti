@@ -88,13 +88,23 @@
                     </div>
                   </div>
                   <div class="row buy__wrap">
-                    <button class="btn btn-default btn__play" v-if="!record.lessons_count">Готовится к публикации</button>
+                    <button
+                      class="btn btn-default btn__play"
+                      v-if="!record.lessons_count">
+                      Готовится к публикации
+                    </button>
                     <nuxt-link
                       class="btn btn-default btn__play"
-                      v-else-if="record.bought === true && lessons[record.progress.section][record.progress.rank]"
+                      v-else-if="record.bought === true && lessons[record.progress.section] && lessons[record.progress.section][record.progress.rank]"
                       :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons[record.progress.section][record.progress.rank].id}}">
                       <span v-if="record.progress.section > 1 || record.progress.rank > 0">Продолжить просмотр</span>
                       <span v-else>Начать просмотр</span>
+                    </nuxt-link>
+                    <nuxt-link
+                      class="btn btn-default btn__play"
+                      v-else-if="record.bought === true"
+                      :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons[1][1].id}}">
+                      <span>Начать просмотр</span>
                     </nuxt-link>
                     <nuxt-link
                       class="btn btn-default btn__buy"
@@ -113,7 +123,12 @@
                 <div class="col-12 tab__wrap--scroll">
                   <b-tabs v-model="tab">
                     <b-tab title="Описание">
-                      <div class="text">{{record.description}}</div>
+                      <div class="text">
+                        <div class="mb-3">
+                          {{record.description}}
+                        </div>
+                        <swiper-gallery :object-id="record.id" object-name="Course"/>
+                      </div>
                     </b-tab>
                     <b-tab title="Отзывы" v-if="reviews.length">
                       <reviews-list :reviews="reviews" row-class="row reviews__wrap"/>
@@ -168,7 +183,7 @@
                         </div>
                       </div>
                     </b-tab>
-                    <b-tab title="Уроки" v-if="Object.keys(lessons).length" active>
+                    <b-tab title="Уроки" v-if="Object.keys(lessons).length">
                       <div class="row palitra">
                         <div
                           class="col-lg-8 col-12 palitra__info d-flex justify-content-center align-items-center flex-column">
@@ -343,6 +358,7 @@
     import CoursesList from '../../../components/courses-list'
     import ReviewsList from '../../../components/reviews-list'
     import HeaderBg from '../../../components/header-bg'
+    import SwiperGallery from '../../../components/swiper-gallery'
     import {faHeart as faHeartSolid} from '@fortawesome/pro-solid-svg-icons'
     import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
     import {faFacebook, faPinterest, faVk, faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -379,7 +395,7 @@
                 }
             }
         },
-        components: {CoursesList, ReviewsList, HeaderBg, 'social-sharing': SocialSharing},
+        components: {CoursesList, ReviewsList, HeaderBg, SwiperGallery, 'social-sharing': SocialSharing},
         scrollToTop: false,
         async asyncData({app, params, error, env}) {
             let data = {
@@ -485,11 +501,11 @@
             }
         },
         mounted() {
-            document.getElementsByTagName('header')[0].classList.add('header_img');
             // Scroll to top fix
             window.scrollTo(0,0);
         },
         created() {
+            this.$app.header_image.set(true);
             this.$fa.add(faHeartSolid, faHeartLight, faShare);
             this.$fa.add(faFacebook, faPinterest, faVk, faTwitter);
             this.$fa.add(faUser, faThumbsUp, faEye);

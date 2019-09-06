@@ -1,5 +1,4 @@
 <template>
-  <!--<div class="wrapper__bg-shadow" :style="{'background-image': 'url(' + ($auth.user.background || bg) + ')'}">-->
   <div class="upload-homework-wrapper">
     <file-pond
       ref="filepond"
@@ -10,6 +9,7 @@
       :imagePreviewHeight="size == 500 ? 300 : 150"
       :imageResizeTargetWidth="3000"
       :imageResizeTargetHeight="1000"
+      imageResizeMode="contain"
       :imageResizeUpscale="false"
       :server="{process: handleUpload}"
       :instantUpload="true"
@@ -27,9 +27,8 @@
 </template>
 
 <script>
-    import bg from '../assets/images/general/headline_photo.png';
     import {icon} from '@fortawesome/fontawesome-svg-core'
-    import {faCameraAlt} from '@fortawesome/pro-light-svg-icons'
+    import {faCameraAlt} from '@fortawesome/pro-duotone-svg-icons'
 
     export default {
         name: 'upload-homework',
@@ -60,7 +59,6 @@
         },
         data() {
             return {
-                bg: bg,
                 faCameraAlt: icon(faCameraAlt, {transform: {size: 36}}).html[0],
             }
         },

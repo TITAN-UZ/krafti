@@ -41,7 +41,7 @@
     </aside>
 
     <!-- Main menu -->
-    <header class="header header_img">
+    <header :class="{header: true, header_img: $app.header_image.get() === true}">
       <div class="container">
         <div class="header__wrap d-flex justify-content-between align-items-center">
           <div class="header__logo">

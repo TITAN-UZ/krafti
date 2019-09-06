@@ -62,13 +62,8 @@
                 return this.$auth.user;
             },
         },
-        /*created() {
-            if (this.$route.name == 'office') {
-                this.$router.replace('office/store')
-            }
-        },*/
-        mounted() {
-            document.getElementsByTagName('header')[0].classList.add('header_img');
-        }
+        created() {
+            this.$app.header_image.set(true)
+        },
     }
 </script>

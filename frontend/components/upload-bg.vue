@@ -11,6 +11,7 @@
       :imagePreviewHeight="500"
       :imageResizeTargetWidth="3000"
       :imageResizeTargetHeight="1000"
+      imageResizeMode="contain"
       :imageResizeUpscale="false"
       :server="{process: handleUpload}"
       :instantUpload="true"
@@ -26,7 +27,7 @@
 <script>
     import bg from '../assets/images/general/headline_photo.png';
     import {icon} from '@fortawesome/fontawesome-svg-core'
-    import {faCameraAlt} from '@fortawesome/pro-light-svg-icons'
+    import {faCameraAlt} from '@fortawesome/pro-duotone-svg-icons'
 
     export default {
         name: 'upload-bg',

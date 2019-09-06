@@ -21,11 +21,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $background_id
  * @property int $role_id
  * @property int $referrer_id
+ * @property bool $favorite
  * @property array $children
  * @property int $account
  * @property string $promo
  * @property string $company
  * @property string $description
+ * @property string $long_description
  * @property string $logged_at
  * @property string $reset_at
  * @property string $created_at
@@ -49,12 +51,13 @@ class User extends Model
     protected $hidden = ['password', 'tmp_password'];
     //protected $guarded = ['id', 'tmp_password', 'created_at', 'updated_at', 'promo'];
     protected $fillable = ['email', 'password', 'fullname', 'dob', 'phone', 'instagram', 'active', 'photo_id',
-        'company', 'description',
+        'company', 'description', 'long_description', 'favorite',
         'background_id', 'role_id', 'referrer_id', 'children', 'account', 'logged_at', 'reset_at',
     ];
     protected $casts = [
         'active' => 'boolean',
         'confirmed' => 'boolean',
+        'favorite' => 'boolean',
         'children' => 'array',
     ];
 
