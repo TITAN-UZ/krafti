@@ -1,7 +1,7 @@
 <template>
     <div>
         <table-filter :filters="filters" :table="$options.name">
-            <template slot="actions">
+            <template slot="cell(actions)">
                 <router-link class="btn btn-secondary" to="users/create">
                     <fa icon="plus"/> Добавить
                 </router-link>
@@ -22,13 +22,13 @@
                  no-local-sorting
                  empty-text="Подходящих результатов не найдено"
                  empty-filtered-text="Подходящих результатов не найдено">
-            <template slot="photo" slot-scope="row">
+            <template slot="cell(photo)" slot-scope="row">
                 <img v-if="row.value" :src="row.value" class="mr-2"/>
             </template>
-            <template slot="email" slot-scope="row">
+            <template slot="cell(email)" slot-scope="row">
                 <strong>{{row.value}}</strong>
             </template>
-            <template slot="actions" slot-scope="row">
+            <template slot="cell(actions)" slot-scope="row">
                 <router-link class="btn btn-sm" :to="'users/edit/' + row.item.id">
                     <fa icon="edit"/>
                 </router-link>

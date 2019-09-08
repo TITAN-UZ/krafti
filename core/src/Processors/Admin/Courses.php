@@ -66,6 +66,18 @@ class Courses extends \App\ObjectProcessor
             }
         }
 
+        if ($diploma = $this->getProperty('diploma')) {
+            if (is_array($diploma) && !empty($diploma['file'])) {
+                if (!$file = $record->diploma) {
+                    $file = new File();
+                }
+
+                if ($id = $file->uploadBase64($diploma['file'], $diploma['metadata'])) {
+                    $record->diploma_id = $id;
+                }
+            }
+        }
+
         return true;
     }
 
@@ -95,6 +107,9 @@ class Courses extends \App\ObjectProcessor
                 : null,
             'video' => $object->video
                 ? $object->video->preview
+                : null,
+            'diploma' => $object->diploma
+                ? $object->diploma->getUrl()
                 : null,
         ];
 

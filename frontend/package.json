@@ -24,6 +24,7 @@
     "@nuxtjs/auth": "^4.8.1",
     "@nuxtjs/axios": "^5.5.4",
     "@nuxtjs/dotenv": "^1.4.0",
+    "@nuxtjs/markdownit": "^1.2.6",
     "@nuxtjs/moment": "^1.2.0",
     "@nuxtjs/pwa": "^2.6.0",
     "@voerro/vue-tagsinput": "^2.0.1",
@@ -57,6 +58,7 @@
     "vue-vimeo-player": "^0.0.9",
     "vue-yandex-metrika": "^1.8.2",
     "vue2-datepicker": "^2.12.0",
+    "vuedraggable": "^2.23.0",
     "vuex": "latest"
   },
   "devDependencies": {

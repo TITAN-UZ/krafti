@@ -20,6 +20,7 @@ class Course extends Migration
 
             $table->integer('cover_id')->unsigned()->nullable();
             $table->integer('video_id')->unsigned()->nullable();
+            $table->integer('diploma_id')->unsigned()->nullable();
 
             $table->integer('views_count')->unsigned()->nullable()->default(0);
             $table->integer('reviews_count')->unsigned()->nullable()->default(0);
@@ -37,6 +38,10 @@ class Course extends Migration
                 ->references('id')->on('videos')
                 ->onUpdate('restrict')
                 ->onDelete('set null');
+            $table->foreign('diploma_id')
+                ->references('id')->on('files')
+                ->onUpdate('restrict')
+                ->onDelete('set null');
         });
     }
 
@@ -46,6 +51,7 @@ class Course extends Migration
         $this->schema->table('courses', function (Blueprint $table) {
             $table->dropForeign('courses_cover_id_foreign');
             $table->dropForeign('courses_video_id_foreign');
+            $table->dropForeign('courses_diploma_id_foreign');
         });
         $this->schema->drop('courses');
     }

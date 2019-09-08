@@ -23,8 +23,8 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property int $rank
  * @property int $section
  * @property bool $active
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  * @property-read Course $course
  * @property-read Video $video

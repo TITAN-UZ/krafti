@@ -1,5 +1,5 @@
 <template>
-  <div class="lesson-comments" style="max-height: 600px; overflow: auto">
+  <div class="lesson-comments">
     <div class="s-title">Комментарии ({{total}})</div>
     <div class="comments__content">
       <!-- Form -->

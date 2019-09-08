@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $role_id
  * @property int $referrer_id
  * @property bool $favorite
- * @property array $children
  * @property int $account
  * @property string $promo
  * @property string $company
@@ -30,8 +29,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $long_description
  * @property string $logged_at
  * @property string $reset_at
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  * @property-read UserRole $role
  * @property-read User $referrer
@@ -44,6 +43,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read UserTransaction[] $transactions
  * @property-read UserOauth[] $oauths
  * @property-read UserToken[] $tokens
+ * @property-read UserChild[] $children
+ * @property-read Diploma[] $diplomas
+ * @property-read Message[] $messages
  */
 class User extends Model
 {
@@ -52,13 +54,12 @@ class User extends Model
     //protected $guarded = ['id', 'tmp_password', 'created_at', 'updated_at', 'promo'];
     protected $fillable = ['email', 'password', 'fullname', 'dob', 'phone', 'instagram', 'active', 'photo_id',
         'company', 'description', 'long_description', 'favorite',
-        'background_id', 'role_id', 'referrer_id', 'children', 'account', 'logged_at', 'reset_at',
+        'background_id', 'role_id', 'referrer_id', 'account', 'logged_at', 'reset_at',
     ];
     protected $casts = [
         'active' => 'boolean',
         'confirmed' => 'boolean',
         'favorite' => 'boolean',
-        'children' => 'array',
     ];
 
 
@@ -210,6 +211,33 @@ class User extends Model
 
 
     /**
+     * @return HasMany
+     */
+    public function children()
+    {
+        return $this->hasMany('App\Model\UserChild');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function diplomas()
+    {
+        return $this->hasMany('App\Model\Diploma')->whereNotNull('file_id');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function messages()
+    {
+        return $this->hasMany('App\Model\Message');
+    }
+
+
+    /**
      * @param array $options
      *
      * @return bool
@@ -349,41 +377,54 @@ class User extends Model
             $progress = new UserProgress($key);
             $progress->section = 1;
         }
-
         $progress->section = $section;
         $progress->rank = $rank;
         $progress->save();
 
-        return $progress;
-
-        /*if ($bonus) {
-            $progress->section = 0;
-            $progress->rank = 0;
-        } elseif ($lesson && $progress->section) {
-            $next = $course->lessons()
-                ->where('section', '=', $section)
-                ->where('rank', '>', $rank)
-                ->orderBy('rank', 'asc')
-                ->first();
-            if ($next) {
-                $progress->rank = $next->rank;
-            } else {
-                $next = $course->lessons()
-                    ->where('section', '>', $lesson->section)
-                    ->where('rank', '=', 0)
-                    ->orderBy('section', 'asc')
-                    ->first();
-                if ($next) {
-                    $progress->section = $next->section;
-                    $progress->rank = 0;
-                } else {
-                    $progress->section = 0;
-                    $progress->rank = 0;
+        // Generate diplomas
+        if (!$section && !$rank) {
+            $key = ['course_id' => $course->id, 'user_id' => $this->id];
+            /** @var Diploma $diploma */
+            if (!$diploma = Diploma::query()->where($key)->first()) {
+                $diploma = new Diploma($key);
+                $diploma->child_id = null;
+                $diploma->save();
+            }
+            if ($this->children) {
+                foreach ($this->children as $child) {
+                    $key['child_id'] = $child->id;
+                    if (!$diploma = Diploma::query()->where($key)->first()) {
+                        $diploma = new Diploma($key);
+                        $diploma->save();
+                    }
                 }
             }
         }
-        $progress->save();
 
-        return $progress;*/
+        return $progress;
+    }
+
+
+    /**
+     * @param string $message
+     * @param string $type
+     * @param null $sender_id
+     * @param array $data
+     */
+    public function sendMessage($message, $type, $sender_id = null, array $data = null)
+    {
+        $obj = new Message([
+            'user_id' => $this->id,
+            'type' => $type,
+            'message' => $message,
+            'read' => false,
+        ]);
+        if ($sender_id) {
+            $obj->sender_id = $sender_id;
+        }
+        if ($data) {
+            $obj->data = $data;
+        }
+        $obj->save();
     }
 }

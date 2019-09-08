@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $course_id
  * @property int $section
  * @property int $rank
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  * @property-read User $user
  * @property-read Course $course

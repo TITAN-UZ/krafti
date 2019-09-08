@@ -31,7 +31,8 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12 col-lg-5">
+                  <!--<div class="col-12 col-lg-5">-->
+                  <div class="col-12">
                     <div class="about__text">
                       <p>Привет! Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно
                         поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!</p>
@@ -41,10 +42,10 @@
                       <p>Учитесь, творите, развивайтесь, вдохновляйте окружающих!</p>
                     </div>
                   </div>
-                  <div class="col-12 col-lg-7 swiper-container">
+                  <!--<div class="col-12 col-lg-7 swiper-container">
                     <div class="gallery__slider swiper-wrapper">
                       <div class="slider__item swiper-slide">
-                        <div class="slider__wrap--item d-flex">
+                        <div class="slider__wrap&#45;&#45;item d-flex">
                           <div class="left__block mr-1">
                             <img class="img-responsive" src="~assets/images/content/teacher/img.jpg" alt=""></div>
                           <div class="right__block">
@@ -54,7 +55,7 @@
                         </div>
                       </div>
                       <div class="slider__item swiper-slide">
-                        <div class="slider__wrap--item d-flex">
+                        <div class="slider__wrap&#45;&#45;item d-flex">
                           <div class="left__block mr-1"><img class="img-responsive"
                                                              src="~assets/images/content/teacher/img.jpg" alt=""></div>
                           <div class="right__block"><img class="mb-15 img-responsive"
@@ -64,7 +65,7 @@
                       </div>
                     </div>
                     <div class="swiper-pagination"></div>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>
@@ -133,7 +134,6 @@
 </template>
 
 <script>
-
     import CoursesList from '../components/courses-list'
     import ReviewsList from '../components/reviews-list'
     import Swiper from 'swiper'

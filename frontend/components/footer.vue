@@ -33,13 +33,20 @@
                                     </b-nav-item>
                                 </ul>
                             </nav>
-                            <nav>
+                            <!--<nav>
                                 <ul class="list">
                                     <li class="nav-item" v-for="i in $settings.menu.footer.right" :key="i.to">
                                         <a :href="i.to" class="nav-link" target="_blank">{{i.title}}</a>
                                     </li>
                                 </ul>
-                            </nav>
+                            </nav>-->
+                          <nav>
+                            <ul class="list">
+                              <b-nav-item v-for="i in $settings.menu.footer.right"
+                                          :to="i.to" :key="i.to">{{i.title}}
+                              </b-nav-item>
+                            </ul>
+                          </nav>
                         </div>
                     </div>
                 </div>

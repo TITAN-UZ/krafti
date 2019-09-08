@@ -21,8 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $birthDay
  * @property int $birthMonth
  * @property int $birthYear
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  * @property-read User $user
  */

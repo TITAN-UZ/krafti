@@ -44,7 +44,7 @@ export default ({app}, inject) => {
     });
 
     Vue.filter('dateago', (value) => {
-        return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').fromNow();
+        return app.$moment(value, 'YYYY-MM-DDTHH:mm:ssZ').fromNow();
     });
 
     Vue.filter('years', (value) => {

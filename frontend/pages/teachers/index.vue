@@ -130,9 +130,7 @@
 
     export default {
         auth: false,
-        components: {
-            'header-bg': HeaderBg,
-        },
+        components: {HeaderBg},
         asyncData({app}) {
             return app.$axios.get('web/authors', {params: {limit: 30}})
                 .then(res => {

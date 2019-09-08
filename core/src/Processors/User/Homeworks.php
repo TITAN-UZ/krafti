@@ -7,7 +7,6 @@ use App\Model\Course;
 use App\Model\File;
 use App\Model\Homework;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\Relation;
 
 class Homeworks extends GetProcessor
 {
@@ -49,6 +48,7 @@ class Homeworks extends GetProcessor
                 $query->select(['id', 'title']);
             }]);*/
             $c->with('course:id,title');
+            $c->with('lesson:id,title,section,rank');
         }
 
         return $c;
@@ -110,6 +110,7 @@ class Homeworks extends GetProcessor
         if ($id = $file->uploadFile($_FILES['file'], json_decode($_POST['metadata'], true))) {
             $homework->file_id = $id;
             $homework->save();
+            $last_section = $homework->course->lessons()->max('section');
 
             if ($coins) {
                 if (getenv('COINS_HOMEWORK')) {
@@ -117,7 +118,7 @@ class Homeworks extends GetProcessor
                         'course_id' => $course->id,
                     ]);
                 }
-                if ($section == 3 && getenv('COINS_PALETTE')) {
+                if ($section == $last_section && getenv('COINS_PALETTE')) {
                     $this->container->user->makeTransaction(getenv('COINS_PALETTE'), 'palette', [
                         'course_id' => $course->id,
                     ]);
@@ -126,10 +127,10 @@ class Homeworks extends GetProcessor
 
             $progress = $this->container->user->getProgress($course);
             if (!empty($section) && $progress->section == $section) {
-                $new_section = $section == 3
+                $new_section = $section >= $last_section
                     ? 0
                     : $section + 1;
-                $this->container->user->makeProgress($course, $new_section);
+                $this->container->user->makeProgress($course, $new_section, 0);
             }
         }
 
@@ -141,7 +142,7 @@ class Homeworks extends GetProcessor
                 'section' => $progress->section,
                 'rank' => $progress->rank,
             ],
-            'homeworks' => @json_decode($homeworks->getBody())->rows ?: [],
+            'homeworks' => @json_decode($homeworks->getBody()->__toString())->rows ?: [],
         ]);
     }
 

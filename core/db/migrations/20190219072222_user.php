@@ -29,7 +29,6 @@ class User extends Migration
             $table->integer('account')->unsigned()->default(0);
             $table->string('promo', 100)->nullable()->unique();
             $table->boolean('favorite')->nullable()->default(false);
-            $table->json('children')->nullable();
             $table->timestamp('logged_at')->nullable();
             $table->timestamp('reset_at')->nullable();
             $table->timestamps();

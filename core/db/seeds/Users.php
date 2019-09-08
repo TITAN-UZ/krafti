@@ -8,9 +8,9 @@ class Users extends AbstractSeed
     public function run()
     {
         $users = [
-            'admin@krafti.ru' => [
+            'admin' => [
                 'password' => '2head',
-                'fullname' => 'Admin',
+                'fullname' => 'Администрация Krafti',
                 'confirmed' => 1,
                 'role_id' => 1,
             ],

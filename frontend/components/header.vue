@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Mobile menu -->
-    <aside class="menu">
+    <aside :class="{menu: true, active: $app.mobile_menu.get()}">
       <div class="menu-content">
         <div class="menu-header">
           <div class="login" v-if="$auth.loggedIn">
@@ -135,12 +135,10 @@
         },
         methods: {
             showMenu() {
-                document.getElementsByTagName('aside')[0].classList.add('active');
-                document.getElementsByTagName('html')[0].classList.add('off');
+                this.$app.mobile_menu.set(true);
             },
             hideMenu() {
-                document.getElementsByTagName('aside')[0].classList.remove('active');
-                document.getElementsByTagName('html')[0].classList.remove('off');
+                this.$app.mobile_menu.set(false);
             },
             hideModal() {
                 if (this.$refs['modalWindow']) {
@@ -164,14 +162,6 @@
         },
         created() {
             this.$fa.add(faUserCircle, faTimes, faStream);
-            /*
-            this.$root.$on('app::auth-form::reset', () => {
-                this.hideModal();
-                this.hideMenu();
-            });*/
-        },
-        /*beforeDestroy() {
-            this.$root.$off('app::auth-form::reset');
-        }*/
+        }
     }
 </script>

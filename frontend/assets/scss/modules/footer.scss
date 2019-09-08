@@ -15,8 +15,12 @@ footer.footer {
       nav {
         width: 250px;
 
-        a.active {
-          color: #e62121;
+        a {
+          line-height: 20px;
+
+          &.active {
+            color: #e62121;
+          }
         }
       }
     }

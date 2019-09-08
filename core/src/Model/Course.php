@@ -19,17 +19,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $age
  * @property int $cover_id
  * @property int $video_id
+ * @property int $diploma_id
  * @property int $views_count
  * @property int $reviews_count
  * @property int $likes_sum
  * @property int $lessons_count
  * @property bool $active
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  * @property-read File $cover
  * @property-read Video $video
  * @property-read Lesson $bonus
+ * @property-read File $diploma
  * @property-read Lesson[] $lessons
  * @property-read Order[] $orders
  * @property-read UserProgress[] $progresses
@@ -37,7 +39,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Course extends Model
 {
     protected $fillable = ['title', 'tagline', 'description', 'price', 'category', 'properties', 'age',
-        'cover_id', 'video_id', 'active'];
+        'cover_id', 'video_id', 'diploma_id', 'active'];
     protected $casts = [
         'properties' => 'array',
         'price' => 'array',
@@ -60,6 +62,15 @@ class Course extends Model
     public function video()
     {
         return $this->belongsTo('App\Model\Video');
+    }
+
+
+    /**
+     * @return belongsTo
+     */
+    public function diploma()
+    {
+        return $this->belongsTo('App\Model\File');
     }
 
 

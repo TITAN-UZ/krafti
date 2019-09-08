@@ -8,8 +8,8 @@
       :allow-multiple="false"
       :instantUpload="false"
       :allowDrop="true"
-      :imageResizeTargetWidth="1920"
-      :imageResizeTargetHeight="1080"
+      :imageResizeTargetWidth="maxHeight"
+      :imageResizeTargetHeight="maxWidth"
       :imagePreviewMaxHeight="300"
       :imagePreviewHeight="176"
       imageResizeMode="contain"
@@ -37,12 +37,24 @@
             value: {
                 type: Object,
                 required: false,
-                default: {},
+                default() {
+                    return {}
+                },
             },
             label: {
                 type: String,
                 required: false,
                 default: 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
+            },
+            maxWidth: {
+                type: Number,
+                required: false,
+                default: 1920
+            },
+            maxHeight: {
+                type: Number,
+                required: false,
+                default: 1080
             },
         },
         computed: {

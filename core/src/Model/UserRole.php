@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $title
  * @property array $scope
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  * @property-read User[] $users
  */

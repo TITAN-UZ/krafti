@@ -3,7 +3,7 @@
 namespace App\Processors\Web;
 
 use App\Model\GalleryItem;
-use \Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class Gallery extends \App\GetProcessor
 {

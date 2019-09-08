@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $height
  * @property int $duration
  * @property int $views_count
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  */
 class Video extends Model

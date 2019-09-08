@@ -1,10 +1,6 @@
 <template>
   <client-only>
     <div class="wrapper__bg" :style="bg"></div>
-    <!--<div class="wrapper__bg">
-      <img :src="require('../assets/images/background/' + image)"
-           :srcset="require('../assets/images/background/' + image).srcSet"/>
-    </div>-->
   </client-only>
 </template>
 
@@ -54,7 +50,7 @@
             }
         },
         mounted() {
-            document.getElementsByTagName('header')[0].classList.add('header_img')
+            this.$app.header_image.set(true);
         }
     }
 </script>

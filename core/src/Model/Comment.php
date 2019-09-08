@@ -16,11 +16,12 @@ use Illuminate\Support\Carbon;
  * @property string $text
  * @property bool $deleted
  * @property bool $review
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  * @property-read User $user
  * @property-read Lesson $lesson
+ * @property-read Comment $parent
  * @property-read Comment[] $comment
  */
 class Comment extends Model
@@ -57,6 +58,11 @@ class Comment extends Model
     public function comments()
     {
         return $this->hasMany('App\Model\Comment', 'id', 'parent_id');
+    }
+
+
+    public function parent() {
+        return $this->belongsTo('App\Model\Comment');
     }
 
 }

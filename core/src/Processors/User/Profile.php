@@ -40,7 +40,6 @@ class Profile extends \App\Processor
             'dob' => $user->dob,
             'phone' => '+' . $user->phone,
             'scope' => $user->role->scope,
-            'children' => $user->children,
             'photo' => $user->photo
                 ? $user->photo->getUrl()
                 : null,
@@ -52,10 +51,12 @@ class Profile extends \App\Processor
             'oauth2' => $oauth2,
         ];
 
-        $data['unread'] = 0;
+        $data['unread'] = $user->messages()->where(['read' => false])->count();
 
         $this->container->user->logged_at = date('Y-m-d H:i:m');
         $this->container->user->save();
+
+        //$user->sendMessage('Test ' . rand());
 
         return $this->success([
             'user' => $data,
@@ -76,11 +77,6 @@ class Profile extends \App\Processor
             'company' => trim($this->getProperty('company')),
             'description' => trim($this->getProperty('description')),
         ]);
-
-        $children = $this->getProperty('children');
-        if (is_array($children)) {
-            $user->children = $children;
-        }
 
         $validate = $this->validate($user);
         if ($validate !== true) {

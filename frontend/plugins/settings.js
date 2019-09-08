@@ -20,7 +20,7 @@ let settings = {
         to: '/courses',
         title: 'Курсы',
         scope: false,
-      },{
+      }, {
         to: '/reviews',
         title: 'Отзывы',
         scope: false,
@@ -64,20 +64,35 @@ let settings = {
         title: 'Контакты',
         auth: false,
       }],
-      /*right: [],*/
+      right: [{
+        to: '/info/agreement',
+        title: 'Пользовательское соглашение',
+        auth: false,
+      },
+        {
+          to: '/info/offer',
+          title: 'Публичная оферта',
+          auth: false,
+        },
+        {
+          to: '/info/privacy',
+          title: 'Политика конфиденциальности',
+          auth: false,
+        }],
     }
   },
 };
-
+/*
 settings.menu.footer.right = [{
   to: settings.links.email,
   title: 'Почта',
-}, /*{
+}, {
   to: settings.links.whatsapp,
   title: 'WhatsApp',
-},*/ {
+}, {
   to: settings.links.instagram,
   title: 'Instagram',
 }];
+*/
 
 Vue.$settings = Vue.prototype.$settings = settings;

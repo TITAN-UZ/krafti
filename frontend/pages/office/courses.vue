@@ -79,7 +79,13 @@
             return {
                 courses: courses.data.rows,
             }
-        }
+        },
+
+        head() {
+            return {
+                title: 'Крафти / Личный кабинет / Мои курсы',
+            }
+        },
     }
 </script>
 

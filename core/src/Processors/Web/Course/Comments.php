@@ -4,7 +4,8 @@ namespace App\Processors\Web\Course;
 
 use App\Model\Comment;
 use App\Model\Course;
-use \Illuminate\Database\Eloquent\Builder;
+use App\Model\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class Comments extends \App\ObjectProcessor
 {
@@ -80,7 +81,7 @@ class Comments extends \App\ObjectProcessor
             'id' => $object->id,
             'parent_id' => $object->parent_id,
             'text' => $object->text,
-            'created_at' => $object->created_at->toDateTimeString(),
+            'created_at' => $object->created_at->toIso8601String(),
             'user' => [
                 'id' => $object->user_id,
                 'fullname' => $object->user->fullname,
@@ -101,8 +102,22 @@ class Comments extends \App\ObjectProcessor
     public function put()
     {
         $this->setProperty('user_id', $this->container->user->id);
+        $this->setProperty('text', strip_tags($this->getProperty('text')));
+        $put = parent::put();
 
-        return parent::put();
+        $id = json_decode($put->getBody()->__toString())->id;
+        /** @var Comment $reply */
+        if ($reply = Comment::query()->find($id)) {
+            if ($parent = $reply->parent) {
+                $parent->user->sendMessage($reply->text, 'reply', $reply->user_id, [
+                    'comment_id' => $reply->id,
+                    'lesson_id' => $reply->lesson_id,
+                    'course_id' => $reply->lesson->course_id,
+                ]);
+            }
+        }
+
+        return $put;
     }
 
 

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property string $email
  * @property int $user_id
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  */
 class Subscriber extends Model
 {

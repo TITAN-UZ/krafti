@@ -90,6 +90,15 @@
             <b-form-input id="input-age" placeholder="4-8" v-model="record.age" required/>
           </b-form-group>
 
+          <b-form-group
+            label-cols-lg="3"
+            label-align-lg="right"
+            label="Шаблон диплома"
+            label-for="input-cover"
+            description="Загрузите файл с шаблоном">
+            <upload-cover v-model="diploma" :label="record.diploma"/>
+          </b-form-group>
+
           <b-form-checkbox class="offset-lg-3" v-model="record.active">Опубликован</b-form-checkbox>
 
           <b-row no-gutters class="mt-4 justify-content-between">
@@ -105,7 +114,7 @@
       </b-tab>
       <b-tab title="Уроки" active>
         <table-filter :filters="filters" :table="$options.name">
-          <template slot="actions">
+          <template slot="cell(actions)">
             <router-link class="btn btn-secondary" :to="$route.params.cid + '/create'">
               <fa icon="plus"/>
               Добавить
@@ -134,7 +143,7 @@
                  no-local-sorting
                  empty-text="Подходящих результатов не найдено"
                  empty-filtered-text="Подходящих результатов не найдено">
-          <template slot="section" slot-scope="row">
+          <template slot="cell(section)" slot-scope="row">
             <div v-if="row.value == 0">
               Бонус
             </div>
@@ -142,15 +151,15 @@
               Этап: <strong>{{row.value}}</strong>
             </div>
           </template>
-          <template slot="video" slot-scope="row">
+          <template slot="cell(video)" slot-scope="row">
             <a :href="row.value[Object.keys(row.value).pop()]" target="_blank">
               <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2"/>
             </a>
           </template>
-          <template slot="title" slot-scope="row">
+          <template slot="cell(title)" slot-scope="row">
             {{row.item.rank + 1}}. <strong>{{row.value}}</strong>
           </template>
-          <template slot="actions" slot-scope="row">
+          <template slot="cell(actions)" slot-scope="row">
             <router-link class="btn btn-sm" :to="$route.params.cid + '/edit/' + row.item.id">
               <fa icon="edit"/>
             </router-link>
@@ -199,6 +208,7 @@
                     {key: 'actions', label: 'Действия'},
                 ],
                 cover: {},
+                diploma: {},
                 page: 1,
                 limit: 10,
                 totalRows: 0,
@@ -219,6 +229,7 @@
                 this.loading = true;
                 let record = JSON.parse(JSON.stringify(this.record));
                 record.cover = this.cover;
+                record.diploma = this.diploma;
                 this.$axios.patch('admin/courses', record)
                     .then(res => {
                         this.loading = false;

@@ -16,9 +16,5 @@
             'page-header': header,
             'page-footer': footer,
         },
-        created() {
-            //console.log(this.$router.options.routes)
-            //console.log(this)
-        },
     }
 </script>

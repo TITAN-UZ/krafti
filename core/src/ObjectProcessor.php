@@ -210,6 +210,17 @@ class ObjectProcessor extends Processor
 
 
     /**
+     * @param Model $record
+     *
+     * @return bool
+     */
+    protected function beforeDelete($record)
+    {
+        return true;
+    }
+
+
+    /**
      * @return Response
      */
     public function delete()
@@ -221,6 +232,11 @@ class ObjectProcessor extends Processor
         /** @var Model $record */
         if (!$record = $this->class::query()->find($id)) {
             return $this->failure('Не могу найти запись');
+        }
+
+        $check = $this->beforeDelete($record);
+        if ($check !== true) {
+            return $this->failure($check);
         }
 
         try {

@@ -127,7 +127,7 @@
                         <div class="mb-3">
                           {{record.description}}
                         </div>
-                        <swiper-gallery :object-id="record.id" object-name="Course"/>
+                        <swiper-gallery :object-id="record.id" object-name="Course" v-if="tab === 0"/>
                       </div>
                     </b-tab>
                     <b-tab title="Отзывы" v-if="reviews.length">
@@ -177,13 +177,13 @@
                               <img class="rounded-circle" :src="item.photo" alt="" v-if="item.photo">
                             </div>
                             <h2 class="teacher__item--name">{{item.fullname}}</h2>
-                            <div class="teacher__item--position">{{item.company}}</div>
+                            <div class="teacher__item--position text-center">{{item.company}}</div>
                             <div class="teacher__item--text">{{item.description}}</div>
                           </div>
                         </div>
                       </div>
                     </b-tab>
-                    <b-tab title="Уроки" v-if="Object.keys(lessons).length">
+                    <b-tab title="Уроки" v-if="Object.keys(lessons).length" active>
                       <div class="row palitra">
                         <div
                           class="col-lg-8 col-12 palitra__info d-flex justify-content-center align-items-center flex-column">

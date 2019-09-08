@@ -55,10 +55,11 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/moment',
     '@nuxtjs/dotenv',
+    '@nuxtjs/markdownit',
     ['@nuxtjs/dotenv', {
       path: '../core/',
       filename: '.env',
-      only: ['COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE'],
+      only: ['COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE', 'CHILDREN_MAX'],
     }],
     'nuxt-izitoast',
     //'@nuxtjs/eslint-module'
@@ -72,9 +73,14 @@ export default {
     localesToKeep: ['ru'],
     defaultLocale: 'ru',
   },
+  markdownit: {
+    html: true,
+    linkify: true,
+    typographer: true,
+    breaks: true,
+  },
   axios: {
-    baseURL: 'https://krafti.2head.ru/api/',
-    //baseURL: 'http://s4.h2.modhost.test/api/',
+    baseURL: 'https://krafti.ru/api/',
     progress: true,
     proxyHeaders: false,
     credentials: false
@@ -147,5 +153,5 @@ export default {
   server: {
     port: 3000,
     //host: '0.0.0.0',
-  },
+  }
 }

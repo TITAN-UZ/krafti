@@ -2,6 +2,7 @@
 
 namespace App\Processors\Security;
 
+use App\Model\File;
 use App\Model\User;
 use App\Model\UserOauth;
 use Hybridauth\Adapter\OAuth2 as Provider;
@@ -94,11 +95,20 @@ class Oauth2 extends \App\Processor
                     if ($response->getStatusCode() !== 200) {
                         return $response;
                     }
-                    $body = $response->getBody();
-                    $body->rewind();
-                    $user_id = json_decode($body->getContents())->id;
-                    $user = User::query()->find($user_id);
-                    $oauth->user_id = $user_id;
+
+                    if ($user_id = json_decode($response->getBody()->__toString())->id) {
+                        $user = User::query()->find($user_id);
+                        $oauth->user_id = $user_id;
+                    } else {
+                        $this->container->logger->error('Could not save Oauth');
+                    }
+
+                    // Import photo from remote service
+                    /*if ($profile->photoURL) {
+                        if ($image = file_get_contents($profile->photoURL)) {
+                            $file = new File();
+                        }
+                    }*/
                 }
                 $oauth->fill(json_decode(json_encode($profile), true));
                 $oauth->save();

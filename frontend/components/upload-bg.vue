@@ -10,7 +10,7 @@
       :imagePreviewMaxHeight="500"
       :imagePreviewHeight="500"
       :imageResizeTargetWidth="3000"
-      :imageResizeTargetHeight="1000"
+      :imageResizeTargetHeight="1500"
       imageResizeMode="contain"
       :imageResizeUpscale="false"
       :server="{process: handleUpload}"

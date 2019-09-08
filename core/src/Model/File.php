@@ -14,8 +14,8 @@ use League\Flysystem\Filesystem;
  * @property array $preview
  * @property string $type
  * @property string $description
- * @property string $created_at
- * @property string $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
  */
 class File extends Model

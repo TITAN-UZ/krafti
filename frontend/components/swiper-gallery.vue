@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-gallery container">
+  <div class="swiper-gallery container" v-if="items.length">
     <div class="swiper-container gallery-top">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="item in items" :style="'background-image:url(' + item.file + ')'" :key="item.id"></div>
@@ -60,9 +60,11 @@
                 this.$axios.get('web/gallery', {params: {object_id: this.objectId, object_name: this.objectName}})
                     .then(res => {
                         this.items = res.data.rows;
-                        this.setTimeout(() => {
-                            this.initGallery()
-                        }, 200)
+                        if (res.data.total > 0) {
+                            this.setTimeout(() => {
+                                this.initGallery()
+                            }, 200)
+                        }
                     })
             },
             initGallery() {

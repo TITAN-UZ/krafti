@@ -23,7 +23,7 @@
 
                   <b-form-group class="mb-3" label="Авторизация через соц.сети" label-for="form-social">
                     <div class="social-providers flex-wrap profile">
-                      <button class="vkontakte inactive col-12 col-md-6" v-if="$auth.user.oauth2.vkontakte === undefined" @click.prevent="onLink('vkontakte')">
+                      <button class="vkontakte inactive col-12 col-md-6" v-if="$auth.user && $auth.user.oauth2.vkontakte === undefined" @click.prevent="onLink('vkontakte')">
                         <fa :icon="['fab', 'vk']" class="mr-2"/>
                         <span>Подключить</span>
                       </button>
@@ -106,7 +106,8 @@
                       <b-textarea v-model="form.description" rows="5" trim no-resize/>
                     </b-form-group>-->
 
-                    <b-form-group class="mb-3" label="Ваш промокод" label-for="form-promo" description="Если ваш друг использует этот код при регистрации, он получит скидку на первую покупку, а вы - крафтики!">
+                    <b-form-group class="mb-3" label="Ваш промокод" label-for="form-promo"
+                                  description="Если ваш друг использует этот код при регистрации, он получит скидку на первую покупку, а вы - крафтики!">
                       <b-input-group>
                         <b-form-input :value="$auth.user.promo" readonly style="background: transparent"/>
                         <b-input-group-append>
@@ -119,9 +120,12 @@
 
                     <div class="children-form mb-5">
                       <h4 class="text-muted">Ваши дети</h4>
+                      <small class="text-muted">
+                        После прохождения курсов мы генерируем дипломы для указанных имён.
+                      </small>
 
-                      <div class="row mb-3 justify-content-center" v-if="form.children.length">
-                        <b-badge pill variant="primary" v-for="(child, idx) in form.children" :key="idx" class="ml-3 mb-2 child-badge" @click="removeChild(idx)">
+                      <div class="row mt-3 mb-3 justify-content-center" v-if="children.length">
+                        <b-badge pill variant="primary" v-for="child in children" :key="child.id" class="ml-3 mb-2 child-badge" @click="deleteChild(child.id)">
                           <fa :icon="['fad', 'female']" class="mr-2" v-if="child.gender > 0"/>
                           <fa :icon="['fad', 'male']" class="mr-2" v-else/>
                           {{child.name}}, {{child.dob | years}} {{child.dob | years | noun('год|года|лет')}}
@@ -173,10 +177,10 @@
                         </div>
                       </transition>
 
-                      <div class="form-group" v-if="form.children.length < 4">
+                      <div class="form-group" v-if="children.length < max_children">
                         <b-button variant="default" class="d-flex align-items-center" v-if="!children_form" @click.prevent="addChild">
                           <fa :icon="['fad', 'plus-circle']" class="mr-2"/>
-                          <span v-if="!form.children.length">Добавить ребёнка</span>
+                          <span v-if="!children.length">Добавить ребёнка</span>
                           <span v-else>Добавить еще одного ребёнка</span>
                         </b-button>
                         <div class="d-flex justify-content-between" v-else>
@@ -259,13 +263,19 @@
                 }
             },
         },
-        asyncData({app, params}) {
-            return app.$axios.get('user/profile')
-                .then((res) => {
-                    app.$auth.setUser(res.data.user);
-                }).catch(() => {
-                    app.$auth.logout()
-                })
+        async asyncData({app, env}) {
+            const [record, children] = await Promise.all([
+                app.$axios.get('user/profile'),
+                app.$axios.get('user/children'),
+            ]);
+
+            app.$auth.setUser(record.data.user);
+
+            return {
+                record: record.data.user,
+                children: children.data.rows,
+                max_children: env.CHILDREN_MAX
+            }
         },
         methods: {
             getYear(minus = 12) {
@@ -344,28 +354,35 @@
                             }
                         }
                     }
+                    this.children_form = false;
+                    if (this.children.length < this.max_children) {
+                        this.$axios.put('user/children', this.child)
+                            .then(res => {
+                                this.children.push(res.data);
 
-                    if (this.form.children.length < 4) {
-                        this.form.children.push(JSON.parse(JSON.stringify(this.child)));
-                        for (i in this.child) {
-                            if (this.child.hasOwnProperty(i)) {
-                                this.child[i] = null;
-                            }
-                        }
+                                for (i in this.child) {
+                                    if (this.child.hasOwnProperty(i)) {
+                                        this.child[i] = null;
+                                    }
+                                }
+                            })
                     }
-                    this.children_form = false
+
                 } else {
                     this.children_form = true
                 }
             },
-            removeChild(idx) {
+            deleteChild(id) {
                 let newArr = [];
-                this.form.children.forEach((v, i) => {
-                    if (i !== idx) {
-                        newArr.push(v)
-                    }
-                });
-                this.form.children = newArr;
+                this.$axios.delete('user/children', {params: {id: id}})
+                    .then(res => {
+                        this.children.forEach(v => {
+                            if (v.id !== id) {
+                                newArr.push(v)
+                            }
+                        });
+                        this.children = newArr;
+                    })
             },
         },
         head() {

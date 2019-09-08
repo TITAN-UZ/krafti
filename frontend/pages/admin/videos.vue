@@ -1,7 +1,7 @@
 <template>
   <div>
     <table-filter :filters="filters" :table="$options.name">
-      <template slot="actions">
+      <template slot="cell(actions)">
         <a href="https://vimeo.com/manage/videos" target="_blank" class="btn btn-secondary">
           <fa :icon="['fas', 'external-link']"/>
           Перейти на Vimeo
@@ -21,21 +21,21 @@
              no-local-sorting
              empty-text="Подходящих результатов не найдено"
              empty-filtered-text="Подходящих результатов не найдено">
-      <template slot="preview" slot-scope="row">
+      <template slot="cell(preview)" slot-scope="row">
         <a :href="row.value[Object.keys(row.value).pop()]" target="_blank">
           <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2"/>
         </a>
       </template>
-      <template slot="title" slot-scope="row">
+      <template slot="cell(title)" slot-scope="row">
         <strong>{{row.value}}</strong>
       </template>
-      <template slot="duration" slot-scope="row">
+      <template slot="cell(duration)" slot-scope="row">
         {{row.value | duration}}
       </template>
-      <template slot="row-details" slot-scope="row">
+      <template slot="cell(row-details)" slot-scope="row">
         {{row.item.description}}
       </template>
-      <template slot="actions" slot-scope="row">
+      <template slot="cell(actions)" slot-scope="row">
         <a :href="'https://vimeo.com/manage/' + row.item.remote_key + '/general'" class="btn btn-sm" target="_blank">
           <fa :icon="['fas', 'external-link']"/>
         </a>
