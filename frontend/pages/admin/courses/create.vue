@@ -43,7 +43,7 @@
           label-align-lg="right"
           label="Описание курса:"
           label-for="input-description">
-          <b-form-textarea id="input-description" no-resize rows="3" v-model="record.description"/>
+          <b-form-textarea id="input-description" rows="3" v-model="record.description"/>
         </b-form-group>
 
         <b-form-group

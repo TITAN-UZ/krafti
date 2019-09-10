@@ -23,6 +23,12 @@ $app->any('/api[/{name:.+}]', function ($request, $response, $args) use ($contai
     return (new \App\Controllers\Api($container))->process($request, $response, $args);
 });
 
+$app->any('/image/{id:\d+}/{size:\d+x\d+}', function ($request, $response, $args) use ($container) {
+    $container->request = $request;
+    $container->response = $response;
+    return (new \App\Controllers\Image($container))->process($request, $response, $args);
+});
+
 try {
     $app->run();
 } catch (Throwable $e) {

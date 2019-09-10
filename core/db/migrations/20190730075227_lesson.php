@@ -28,6 +28,7 @@ class Lesson extends Migration
             $table->smallInteger('rank')->default(0)->index();
             $table->smallInteger('section')->index();
             $table->boolean('active')->default(0)->index();
+            $table->boolean('extra')->default(0)->index();
             $table->timestamps();
 
             $table->foreign('course_id')

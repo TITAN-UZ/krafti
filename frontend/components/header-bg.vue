@@ -1,6 +1,8 @@
 <template>
   <client-only>
-    <div class="wrapper__bg" :style="bg"></div>
+    <div :class="cssClass" :style="bg">
+      <slot name="content"></slot>
+    </div>
   </client-only>
 </template>
 
@@ -18,21 +20,33 @@
                 type: String,
                 required: true,
             },
+            cssClass: {
+                type: String,
+                default: 'wrapper__bg'
+            }
         },
         methods: {
             getBg() {
-                const image = require('../assets/images/background/' + this.image + '.jpg');
+                let image = require('../assets/images/background/' + this.image + '.jpg');
                 let url = image.src;
-                if (process.browser) {
-                    const width = window.innerWidth;
-                    const images = image.images;
-                    for (let i in images) {
-                        if (images.hasOwnProperty(i)) {
-                            if (images[i].width > width) {
-                                url = images[i].path;
-                            } else {
-                                break;
-                            }
+                if (!process.client) {
+                    return {'background-image': 'url(' + url + ')'};
+                }
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                if (height > width) {
+                    try {
+                        image = require('../assets/images/background/' + this.image + '-mob.jpg');
+                    } catch (e) {
+                    }
+                }
+                const images = image.images;
+                for (let i in images) {
+                    if (images.hasOwnProperty(i)) {
+                        if (images[i].width > width) {
+                            url = images[i].path;
+                        } else {
+                            break;
                         }
                     }
                 }

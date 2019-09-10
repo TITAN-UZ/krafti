@@ -25,6 +25,7 @@ class Course extends Migration
             $table->integer('views_count')->unsigned()->nullable()->default(0);
             $table->integer('reviews_count')->unsigned()->nullable()->default(0);
             $table->integer('lessons_count')->unsigned()->nullable()->default(0);
+            $table->integer('videos_count')->unsigned()->nullable()->default(0);
             $table->integer('likes_sum')->nullable()->default(0);
 
             $table->boolean('active')->default(0);

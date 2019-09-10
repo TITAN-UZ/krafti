@@ -19,9 +19,9 @@
       labelTapToCancel="Отмена"
       labelFileWaitingForSize="Ожидание размера"
     />
-    <div class="uploaded" v-if="image != ''">
+    <div class="uploaded" v-if="image_id">
       <div>Вы уже отправили нам вот эту работу</div>
-      <img :src="image"/>
+      <img :src="[$settings.image_url, image_id, '500x250'].join('/')"/>
     </div>
   </div>
 </template>
@@ -46,10 +46,10 @@
                 type: Number,
                 required: true,
             },
-            image: {
-                type: String,
+            image_id: {
+                type: Number,
                 required: false,
-                default: '',
+                default: null,
             },
             size: {
                 type: Number,

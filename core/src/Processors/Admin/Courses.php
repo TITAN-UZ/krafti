@@ -94,7 +94,7 @@ class Courses extends \App\ObjectProcessor
             'title' => $object->title,
             'tagline' => $object->tagline,
             'description' => $object->description,
-            //'cover_id' => $object->cover_id,
+            'cover_id' => $object->cover_id,
             'video_id' => $object->video_id,
             'lessons_count' => $object->lessons_count,
             'category' => $object->category,

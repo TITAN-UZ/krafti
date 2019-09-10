@@ -10,7 +10,7 @@
           <div class="col-lg-3 col-md-4 col-6 m-width-80" v-for="item in homeworks">
             <a :href="item.file" target="_blank" class="work__item">
               <div class="work__item">
-                <img class="img-responsive" :src="item.file" alt="">
+                <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="">
               </div>
             </a>
             <div class="mt-2 text-center text-muted">
@@ -31,11 +31,11 @@
           <div class="col-lg-3 col-md-4 col-6 m-width-80" v-for="item in lessonworks">
             <a :href="item.file" target="_blank" class="work__item">
               <div class="work__item">
-                <img class="img-responsive" :src="item.file" alt="">
+                <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="">
               </div>
             </a>
             <div class="mt-2 text-center text-muted">
-              {{item.course.title}}, этап {{item.lesson.section}}, урок {{item.lesson.rank + 1}}
+              {{item.course.title}} / {{item.lesson.title}}
             </div>
           </div>
           <!--<div class="col-lg-3 col-md-4 col-6 m-width-80">

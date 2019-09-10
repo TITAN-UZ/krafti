@@ -67,7 +67,7 @@
               <div class="title text-right">{{user.fullname}}</div>
               <a @click.prevent="onLogout" class="logout-link text-right">Выход</a>
             </div>
-            <b-link :to="{'name': user && user.unread > 0 ? 'office-messages' : 'office'}">
+            <b-link :to="{'name': user && user.unread > 0 ? 'office-messages' : 'profile-update'}">
               <img v-if="user && user.photo" :src="user.photo" class="avatar"/>
               <fa v-else :icon="['fad', 'user-circle']" class="avatar"/>
               <span class="label" v-if="user.unread > 0">{{user.unread}}</span>

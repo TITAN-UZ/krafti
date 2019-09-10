@@ -146,24 +146,25 @@ class Lessons extends \App\ObjectProcessor
             'course_id' => $object->course_id,
             'course' => $object->course
                 ? $object->course->title
-                : '',
+                : null,
             'video_id' => $object->video_id,
             'video' => $object->video
                 ? $object->video->preview
-                : '',
+                : null,
             'bonus_id' => $object->bonus_id,
             'bonus' => $object->bonus
                 ? $object->bonus->preview
-                : '',
+                : null,
             //'file_id' => $object->file_id,
             'file' => $object->file
                 ? $object->file->getUrl()
-                : '',
+                : null,
             'author_id' => $object->author_id,
             'author' => $object->author
                 ? $object->author->fullname
-                : '',
+                : null,
             'active' => $object->active,
+            'extra' => $object->extra,
         ];
 
         return $array;

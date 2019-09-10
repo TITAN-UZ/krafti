@@ -113,6 +113,7 @@
       .close {
         margin-left: auto;
         color: #fff;
+        filter: drop-shadow(0 0 1px rgba(0, 0, 0, .7));
       }
     }
     .modal-body {

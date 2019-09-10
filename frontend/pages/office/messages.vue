@@ -3,7 +3,7 @@
     <div class="row messages__wrap">
       <div class="col-lg-7 col-12">
 
-        <div class="media message__item" v-for="message in messages" :key="message.id">
+        <div :class="{media: true, message__item: true, cursor: message.type == 'reply'}" v-for="message in messages" :key="message.id" @click="onClick(message)">
           <div class="wrap mr-2">
             <img class="message__item--photo rounded-circle" v-if="!message.sender" :src="logo" alt="">
             <img class="message__item--photo rounded-circle" v-else :src="message.sender.photo" alt="">
@@ -15,9 +15,7 @@
               <span class="days_ago">{{message.created_at | dateago}}</span>
             </div>
             <div class="media-body-bottom d-flex align-items-center justify-content-between">
-              <div class="message__item--info">
-                {{message.message}}
-              </div>
+              <div class="message__item--info" style="white-space: pre-line">{{message.message}}</div>
               <!--<div class="message__item&#45;&#45;video">
                 <a class="video" href="">
                   <img class="video__thumb img-responsive" src="~assets/images/content/video.jpg" alt="">
@@ -27,10 +25,12 @@
           </div>
         </div>
 
-        <b-pagination v-if="total > limit"
-                      v-model="page"
-                      :total-rows="total"
-                      :per-page="limit"
+        <b-pagination
+          class="mt-4"
+          v-if="total > limit"
+          v-model="page"
+          :total-rows="total"
+          :per-page="limit"
         />
       </div>
       <div class="col-5 d-none d-md-none d-lg-block">
@@ -67,6 +67,14 @@
 
                         this.$auth.fetchUser()
                     })
+            },
+            onClick(item) {
+                console.log(item);
+                switch (item.type) {
+                    case 'reply':
+                        this.$router.push({name: 'courses-cid-index-lesson-lid', params: {cid: item.data.course_id, lid: item.data.lesson_id}, hash: '#comment-' + item.data.comment_id})
+                        break;
+                }
             }
         },
         created() {
@@ -79,3 +87,9 @@
         },
     }
 </script>
+
+<style lang="scss">
+  .media.cursor {
+    cursor: pointer;
+  }
+</style>

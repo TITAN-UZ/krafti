@@ -46,7 +46,10 @@ class Gallery extends \App\GetProcessor
         $array = [
             'id' => $object->file_id,
             'file' => $file->getUrl(),
+            'title' => $file->title,
             'rank' => $object->rank,
+            'width' => $file->width,
+            'height' => $file->height,
             //'title' => $file->title,
             //'description' => $file->description,
         ];

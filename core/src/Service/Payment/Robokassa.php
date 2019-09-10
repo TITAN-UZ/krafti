@@ -26,10 +26,21 @@ class Robokassa extends Payment
             'OutSum' => $order->cost,
             'InvId' => $order->id,
             'Desc' => 'Оплата за курс занятий "' . $order->course->title . '"',
-            'SignatureValue' => sha1(implode(':', [$login, $order->cost, $order->id, $pass1])),
             'IncCurrLabel' => '',
-            'Culture' => 'RU',
+            'Culture' => 'ru',
+            'Receipt' => json_encode([
+                'sno' => 'usn_income',
+                'items' => [
+                    'name' => $order->course->title,
+                    'quantity' => 1,
+                    'sum' => $order->cost,
+                    'payment_method' => 'full_payment',
+                    'payment_object' => 'payment',
+                    'tax' => 'none',
+                ],
+            ]),
         ];
+        $request['SignatureValue'] = sha1(implode(':', [$login, $order->cost, $order->id, $request['Receipt'], $pass1]));
         if (getenv('ROBOKASSA_TEST')) {
             $request['isTest'] = 1;
         }
@@ -62,7 +73,7 @@ class Robokassa extends Payment
                     'params' => $params,
                     'sig' => [
                         'my' => $my_crc,
-                        'their' => sha1(implode(':', [$params['OutSum'], $params['InvId'], $pass2]))
+                        'their' => sha1(implode(':', [$params['OutSum'], $params['InvId'], $pass2])),
                     ],
                 ],
             ]);

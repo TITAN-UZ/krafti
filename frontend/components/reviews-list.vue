@@ -1,6 +1,6 @@
 <template>
   <div :class="rowClass">
-    <div v-if="reviews.length">
+    <template v-if="reviews.length">
       <div :class="itemClass" v-for="review in reviews">
         <div class="review__item d-flex flex-column justify-content-center align-items-center">
           <div class="review__item--photo">
@@ -14,7 +14,7 @@
           <div class="review__item--text">{{review.text}}</div>
         </div>
       </div>
-    </div>
+    </template>
     <div class="alert alert-info w-100 m-auto" style="max-width: 85%;"  v-else>
       Отзывов пока нет
     </div>

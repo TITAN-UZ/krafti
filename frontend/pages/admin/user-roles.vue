@@ -1,7 +1,7 @@
 <template lang="html">
     <div>
         <table-filter :filters="filters" :table="$options.name">
-            <template slot="cell(actions)">
+            <template slot="actions">
                 <router-link class="btn btn-secondary" to="user-roles/create">
                     <fa icon="plus"/> Добавить
                 </router-link>

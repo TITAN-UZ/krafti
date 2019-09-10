@@ -66,6 +66,9 @@ class Homeworks extends GetProcessor
         $array['file'] = $object->file
             ? $object->file->getUrl()
             : null;
+        /*$array['file_id'] = $object->file
+            ? $object->file->getUrl()
+            : null;*/
 
         return $array;
     }

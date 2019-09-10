@@ -85,6 +85,7 @@ class Lessons extends \App\Processor
                     'section' => $progress->section,
                     'rank' => $progress->rank,
                 ],
+                'extra' => $lesson->extra,
                 'next' => [],
                 'comments' => [],
                 'homework' => [],
@@ -102,6 +103,7 @@ class Lessons extends \App\Processor
                     'title' => $next->title,
                     'section' => $next->section,
                     'rank' => $next->rank,
+                    'extra' => $next->extra,
                     'description' => $next->description,
                     'preview' => $next->video
                         ? $next->video->preview
@@ -113,6 +115,7 @@ class Lessons extends \App\Processor
             if ($homework = $lesson->homeworks()->where(['user_id' => $this->container->user->id])->first()) {
                 $data['homework'] = [
                     'id' => $homework->id,
+                    'file_id' => $homework->file_id,
                     'file' => $homework->file
                         ? $homework->file->getUrl()
                         : null,
@@ -131,6 +134,7 @@ class Lessons extends \App\Processor
                 'description' => $lesson->description,
                 'section' => $lesson->section,
                 'rank' => $lesson->rank,
+                'extra' => $lesson->extra,
                 'views_count' => $lesson->views_count,
                 'likes_count' => $lesson->likes_count,
                 'preview' => $lesson->video

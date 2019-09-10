@@ -21,6 +21,7 @@ class Videos extends \App\GetProcessor
         if ($query = trim($this->getProperty('query', ''))) {
             $c->where(function (Builder $c) use ($query) {
                 $c->where('title', 'LIKE', "%$query%");
+                $c->orWhere('remote_key', 'LIKE', "$query%");
             });
         }
 

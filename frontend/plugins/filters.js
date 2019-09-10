@@ -35,12 +35,12 @@ export default ({app}, inject) => {
         return verb(num, tmp[0], tmp[1], tmp[2]);
     });
 
-    Vue.filter('date', (value) => {
-        return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').format('DD.MM.YY');
+    Vue.filter('date', (value, format = 'DD.MM.YYYY') => {
+        return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').format(format);
     });
 
-    Vue.filter('datetime', (value) => {
-        return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').format('DD.MM.YY HH:mm');
+    Vue.filter('datetime', (value, format = 'DD.MM.YYYY HH:mm') => {
+        return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').format(format);
     });
 
     Vue.filter('dateago', (value) => {

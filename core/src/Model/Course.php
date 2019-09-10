@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $reviews_count
  * @property int $likes_sum
  * @property int $lessons_count
+ * @property int $videos_count
  * @property bool $active
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -211,13 +212,33 @@ class Course extends Model
      */
     public function updateLessonsCount($save = true)
     {
-        $count = $this->lessons()->where(['active' => true])->count();
+        $lessons_count = $videos_count = 0;
+        /** @var Lesson $lesson */
+        foreach ($this->lessons()->where(['active' => true])->get() as $lesson) {
+            $lessons_count++;
+
+            if ($lesson->video_id) {
+                $videos_count++;
+            }
+            if ($lesson->bonus_id) {
+                $videos_count++;
+            }
+        }
+        if ($this->lessons_count != $lessons_count || $this->videos_count != $videos_count) {
+            $this->lessons_count = $lessons_count;
+            $this->videos_count = $videos_count;
+            if ($save) {
+                $this->save();
+            }
+        }
+
+        /*$count = $this->lessons()->where(['active' => true])->count();
         if ($this->lessons_count != $count) {
             $this->lessons_count = $count;
             if ($save) {
                 $this->save();
             }
-        }
+        }*/
 
         return $count;
     }

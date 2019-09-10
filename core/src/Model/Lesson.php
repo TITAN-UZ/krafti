@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property int $rank
  * @property int $section
  * @property bool $active
+ * @property bool $extra
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  *
@@ -36,11 +37,11 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  */
 class Lesson extends Model
 {
-    protected $fillable = ['title', 'description', 'products', 'course_id', 'video_id', 'bonus_id', 'file_id', 'author_id',
-        'rank', 'section', 'active'];
+    protected $fillable = ['title', 'description', 'products', 'course_id', 'video_id', 'bonus_id', 'file_id', 'author_id', 'rank', 'section', 'active', 'extra'];
     protected $casts = [
         'products' => 'array',
         'active' => 'boolean',
+        'extra' => 'boolean',
     ];
 
 
@@ -120,11 +121,10 @@ class Lesson extends Model
                 ->count();
         }
 
-        $likes = ($this->isDirty('likes_count') || $this->isDirty('dislikes_count')) && $this->course;
-        $lessons = $this->isDirty('active') && $this->course;
+        $likes = $this->isDirty('likes_count') || $this->isDirty('dislikes_count');
+        $lessons = $this->isDirty('active') || $this->isDirty('video_id') || $this->isDirty('bonus_id');
 
         $save = parent::save($options);
-
         if ($likes) {
             $this->course->updateLikesCount();
         }
@@ -138,13 +138,16 @@ class Lesson extends Model
 
     public function delete()
     {
+        $course = $this->course;
         $delete = parent::delete();
 
-        if ($this->course) {
-            $this->course->lessons_count = $this->course->lessons()->where(['active' => true])->count();
+        if ($course) {
+            $this->course->updateLikesCount();
+            $this->course->updateLessonsCount();
+            /*$this->course->lessons_count = $this->course->lessons()->where(['active' => true])->count();
             $this->course->likes_sum = $this->course->lessons()->where(['active' => true])->sum('likes_count') -
                 $this->course->lessons()->where(['active' => true])->sum('dislikes_count');
-            $this->course->save();
+            $this->course->save();*/
         }
 
         return $delete;

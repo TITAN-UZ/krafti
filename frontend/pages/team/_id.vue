@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper">
-    <!--<div class="wrapper__bg" :style="style_bg"></div>-->
     <div class="wrapper__content">
       <section class="teacher__content">
         <div class="container">
@@ -21,7 +20,7 @@
                       {{record.description}}
                     </div>
                     <div class="teacher__gallery">
-                      <swiper-gallery :object-id="record.id" object-name="User" thumbs="4"/>
+                      <gallery-lightbox :object-id="record.id" object-name="User"/>
                       <!--
                         <div class="left__block mr-1">
                           <img class="img-responsive" src="~assets/images/content/teacher/img.jpg" alt="">
@@ -47,14 +46,14 @@
 </template>
 
 <script>
-    import SwiperGallery from '../../components/swiper-gallery'
+    import GalleryLightbox from '../../components/gallery-lightbox'
 
     export default {
         auth: false,
         validate({params}) {
             return /^\d+$/.test(params.id)
         },
-        components: {SwiperGallery},
+        components: {GalleryLightbox},
         async asyncData({app, params, error}) {
             try {
                 const [record] = await Promise.all([

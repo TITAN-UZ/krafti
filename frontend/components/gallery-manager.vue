@@ -28,20 +28,20 @@
 
     <draggable v-model="items" @end="onSort">
       <transition-group tag="div" name="list" class="gallery d-flex flex-wrap">
-        <div v-for="item in items" :key="item.id" class="col-6 col-md-4 gallery-manager-item-wrapper">
+        <div v-for="item in items" :key="item.id" class="col-auto gallery-manager-item-wrapper">
           <div class="gallery-manager-item">
             <div :class="{image: true, disabled: !item.active}">
               <a :href="item.file" target="_blank">
-                <img :src="item.file"/>
+                <img :src="[$settings.image_url, item.id, '200x200'].join('/')"/>
               </a>
               <div class="actions">
-                <button class="btn btn-success" @click.prevent="onEnable(item)" v-if="!item.active" title="Включить" v-b-tooltip.hover.bottom>
+                <button class="btn btn-success" @click.prevent="onEnable(item)" v-if="!item.active" title="Включить">
                   <fa :icon="['fad', 'check-circle']"/>
                 </button>
-                <button class="btn btn-warning" @click.prevent="onDisable(item)" v-else title="Отключить" v-b-tooltip.hover.bottom>
+                <button class="btn btn-warning" @click.prevent="onDisable(item)" v-else title="Отключить">
                   <fa :icon="['fad', 'power-off']"/>
                 </button>
-                <button class="btn btn-danger" @click.prevent="onDelete(item)" title="Удалить" v-b-tooltip.hover.bottom>
+                <button class="btn btn-danger" @click.prevent="onDelete(item)" title="Удалить">
                   <fa :icon="['fad', 'times-circle']"/>
                 </button>
               </div>

@@ -78,6 +78,7 @@ export default {
     linkify: true,
     typographer: true,
     breaks: true,
+    injected: true,
   },
   axios: {
     baseURL: 'https://krafti.ru/api/',
@@ -142,7 +143,7 @@ export default {
           // min: 720,
           // max: 3000,
           // step: 10,
-          sizes: [2560, 1440, 960],
+          sizes: [2560, 1440, 960, 640],
           placeholder: false,
           quality: 85,
           adapter: require('responsive-loader/sharp')
@@ -150,8 +151,8 @@ export default {
       })
     }
   },
-  server: {
-    port: 3000,
-    //host: '0.0.0.0',
-  }
+  server: process.env.NODE_ENV === 'production'
+    //? {socket: '../tmp/nuxt.socket'}
+    ? {host: '127.0.0.1', port: 3876}
+    : {host: '127.0.0.1', port: 3000}
 }

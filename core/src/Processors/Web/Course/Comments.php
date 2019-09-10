@@ -109,11 +109,13 @@ class Comments extends \App\ObjectProcessor
         /** @var Comment $reply */
         if ($reply = Comment::query()->find($id)) {
             if ($parent = $reply->parent) {
-                $parent->user->sendMessage($reply->text, 'reply', $reply->user_id, [
-                    'comment_id' => $reply->id,
-                    'lesson_id' => $reply->lesson_id,
-                    'course_id' => $reply->lesson->course_id,
-                ]);
+                if ($parent->user_id !== $reply->user_id) {
+                    $parent->user->sendMessage($reply->text, 'reply', $reply->user_id, [
+                        'comment_id' => $reply->id,
+                        'lesson_id' => $reply->lesson_id,
+                        'course_id' => $reply->lesson->course_id,
+                    ]);
+                }
             }
         }
 

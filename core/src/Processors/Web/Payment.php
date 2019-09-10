@@ -24,9 +24,9 @@ class Payment extends \App\Processor
         }
 
         /** @var Order $order */
-        if ($id && $order = Order::query()->find($id)) {
+        if ($id && !empty($properties) && $order = Order::query()->find($id)) {
             if ($order->status === 2) {
-                return $this->success('Ok');
+                return $this->success('OK' . $id);
             }
 
             if ($order->status === 1) {

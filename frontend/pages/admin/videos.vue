@@ -1,7 +1,7 @@
 <template>
   <div>
     <table-filter :filters="filters" :table="$options.name">
-      <template slot="cell(actions)">
+      <template slot="actions">
         <a href="https://vimeo.com/manage/videos" target="_blank" class="btn btn-secondary">
           <fa :icon="['fas', 'external-link']"/>
           Перейти на Vimeo

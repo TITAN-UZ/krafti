@@ -3,13 +3,15 @@
     <header-bg image="course"/>
     <div class="wrapper__content">
       <section class="course__content">
-        <vimeo :video="355023151" ref="mainVideo"/>
         <div class="container">
           <div class="row course__content--header">
             <div class="col-lg-7 col-12">
-              <div class="course-video">
-                <a class="video-link" @click.prevent="$refs.mainVideo.show()"
-                   :style="{'background-image': (record.cover ? 'url(' + record.cover + ')' : false)}"></a>
+              <div class="course-video" v-if="record.video">
+                <a class="video-link" @click.prevent="$refs.mainVideo.show()" :style="{'background-image': (record.cover ? 'url(' + record.cover + ')' : false)}"></a>
+                <vimeo :video="record.video.remote_key" ref="mainVideo"/>
+              </div>
+              <div class="course-video" v-else>
+                <div class="video-link disabled" :style="{'background-image': (record.cover ? 'url(' + record.cover + ')' : false)}"></div>
               </div>
             </div>
             <div class="col-lg-5 col-12">
@@ -66,7 +68,7 @@
                   </client-only>
                 </div>
                 <div class="course__info--pretop d-flex justify-content-center align-items-center">
-                  <span class="count__lessons">{{record.lessons_count}} видео {{record.lessons_count | noun('урок|урока|уроков')}}</span>
+                  <span class="count__lessons">{{record.videos_count}} видео</span>
                 </div>
                 <div class="course__info--body d-flex align-items-center justify-content-center flex-column">
                   <div class="course__title">{{record.title}}</div>
@@ -88,9 +90,7 @@
                     </div>
                   </div>
                   <div class="row buy__wrap">
-                    <button
-                      class="btn btn-default btn__play"
-                      v-if="!record.lessons_count">
+                    <button class="btn btn-default btn__play" v-if="!record.lessons_count">
                       Готовится к публикации
                     </button>
                     <nuxt-link
@@ -124,10 +124,8 @@
                   <b-tabs v-model="tab">
                     <b-tab title="Описание">
                       <div class="text">
-                        <div class="mb-3">
-                          {{record.description}}
-                        </div>
-                        <swiper-gallery :object-id="record.id" object-name="Course" v-if="tab === 0"/>
+                        <div class="mb-3 markdown" v-html="$md.render(record.description)"></div>
+                        <gallery-lightbox :object-id="record.id" object-name="Course" v-if="tab === 0"/>
                       </div>
                     </b-tab>
                     <b-tab title="Отзывы" v-if="reviews.length">
@@ -215,15 +213,18 @@
                                   <div class="row lessons__list align-items-start">
                                     <div v-for="(item, rank) in items" class="col-lg-4 col-12 col-md-6 lesson__item d-flex justify-content-lg-center align-content-center flex-lg-column">
                                       <div class="lesson__item--video">
-                                        <div class="disabled" v-if="record.progress.section > 0 && (record.progress.section < item.section || (record.progress.section == item.section && record.progress.rank < rank))">
-                                          <img class="img-responsive bonus__lesson--thumb" :src="item.preview['295x166']"/>
-                                        </div>
-                                        <nuxt-link :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: item.id}}" v-else class="video">
+                                        <nuxt-link
+                                          v-if="isLessonOpen(item, rank)"
+                                          :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: item.id}}"
+                                          class="video">
                                           <img class="img-responsive lesson__video--thumb" :src="item.preview['295x166']" alt="" v-if="item.preview['295x166']">
                                         </nuxt-link>
+                                        <div class="disabled" v-else>
+                                          <img class="img-responsive bonus__lesson--thumb" :src="item.preview['295x166']"/>
+                                        </div>
                                       </div>
                                       <div class="lesson__item--info d-flex align-items-center justify-content-center">
-                                        {{item.description}}
+                                        {{item.title}}
                                       </div>
                                     </div>
                                   </div>
@@ -239,7 +240,7 @@
                                       <upload-homework
                                         :course_id="record.id"
                                         :section="Number(section)"
-                                        :image="homeworks[section] ? homeworks[section].file : ''"
+                                        :image_id="homeworks[section] ? homeworks[section].file_id : 0"
                                         :size="500"/>
                                     </client-only>
                                   </div>
@@ -358,7 +359,7 @@
     import CoursesList from '../../../components/courses-list'
     import ReviewsList from '../../../components/reviews-list'
     import HeaderBg from '../../../components/header-bg'
-    import SwiperGallery from '../../../components/swiper-gallery'
+    import GalleryLightbox from '../../../components/gallery-lightbox'
     import {faHeart as faHeartSolid} from '@fortawesome/pro-solid-svg-icons'
     import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
     import {faFacebook, faPinterest, faVk, faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -376,6 +377,7 @@
                 lesson_tab: 0,
                 style_bg: {'background-image': 'url(' + bg + ')'},
                 homeworks: {},
+                extra: false,
             }
         },
         computed: {
@@ -395,7 +397,7 @@
                 }
             }
         },
-        components: {CoursesList, ReviewsList, HeaderBg, SwiperGallery, 'social-sharing': SocialSharing},
+        components: {CoursesList, ReviewsList, HeaderBg, GalleryLightbox, 'social-sharing': SocialSharing},
         scrollToTop: false,
         async asyncData({app, params, error, env}) {
             let data = {
@@ -409,7 +411,7 @@
                 return error({statusCode: 404, message: 'Страница не найдена'})
             }
 
-            const [similar, authors, reviews, lessons, homeworks/*, reviews*/] = await Promise.all([
+            const [similar, authors, reviews, lessons, homeworks] = await Promise.all([
                 app.$axios.get('web/course/similar', {params: {course_id: params.cid, limit: 4}}),
                 app.$axios.get('web/course/authors', {params: {course_id: params.cid, limit: 10}}),
                 app.$axios.get('web/course/reviews', {params: {course_id: params.cid, limit: 10}}),
@@ -464,6 +466,20 @@
                         this.loading = false;
                     })
             },
+            isLessonOpen(item) {
+                const progress = this.record.progress;
+                if (item.section == 1) {
+                    if (!this.extra && !item.extra) {
+                        this.extra = item.id;
+
+                        return true;
+                    } else if (this.extra && this.extra === item.id) {
+                        return true;
+                    }
+                }
+
+                return item.extra || progress.section > item.section || (progress.section == item.section && progress.rank > item.rank);
+            },
             async loadLessons() {
                 const res = await this.$axios.get('web/courses', {params: {id: this.record.id}});
 
@@ -502,7 +518,7 @@
         },
         mounted() {
             // Scroll to top fix
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         },
         created() {
             this.$app.header_image.set(true);

@@ -1,7 +1,7 @@
 <template>
     <div>
         <table-filter :filters="filters" :table="$options.name">
-            <template slot="cell(actions)">
+            <template slot="actions">
                 <router-link class="btn btn-secondary" to="users/create">
                     <fa icon="plus"/> Добавить
                 </router-link>
@@ -23,7 +23,7 @@
                  empty-text="Подходящих результатов не найдено"
                  empty-filtered-text="Подходящих результатов не найдено">
             <template slot="cell(photo)" slot-scope="row">
-                <img v-if="row.value" :src="row.value" class="mr-2"/>
+                <img v-if="row.value" :src="[$settings.image_url, row.item.photo_id, '50x50'].join('/')" class="mr-2"/>
             </template>
             <template slot="cell(email)" slot-scope="row">
                 <strong>{{row.value}}</strong>
@@ -123,7 +123,6 @@
                 title: 'Админка / Пользователи'
             }
         }
-
     }
 </script>
 

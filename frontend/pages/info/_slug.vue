@@ -25,21 +25,3 @@
         },
     }
 </script>
-
-<style lang="scss">
-  .markdown {
-    h2, h4 {
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    ul, ol {
-      margin: -20px 0 20px 30px;
-      list-style-type: disc;
-    }
-
-    blockquote {
-      padding-left: 20px;
-    }
-  }
-</style>

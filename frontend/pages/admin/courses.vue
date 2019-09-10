@@ -1,7 +1,7 @@
 <template>
   <div>
     <table-filter :filters="filters" :table="$options.name">
-      <template slot="cell(actions)">
+      <template slot="actions">
         <router-link class="btn btn-secondary" to="courses/create">
           <fa icon="plus"/>
           Добавить
@@ -27,7 +27,7 @@
       </template>
       <template slot="cell(cover)" slot-scope="row">
         <a :href="row.value" target="_blank" v-if="row.value">
-          <img :src="row.value" class="mr-2" width="100"/>
+          <img v-if="row.value" :src="[$settings.image_url, row.item.cover_id, '100x50'].join('/')" class="mr-2" width="100"/>
         </a>
       </template>
       <template slot="cell(actions)" slot-scope="row">

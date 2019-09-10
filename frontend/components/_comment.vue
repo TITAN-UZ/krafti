@@ -1,5 +1,5 @@
 <template>
-  <div class="message__item">
+  <div class="message__item" :id="'comment-' + comment.id">
     <div class="">
       <div :class="{'d-flex': true, 'comment-body': true, owner: comment.user.id == $auth.user.id, review: comment.review, deleted: comment.deleted}">
         <div class="wrap mr-2">

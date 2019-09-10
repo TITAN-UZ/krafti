@@ -1,16 +1,24 @@
 <template>
   <div class="wrapper">
     <header-bg image="reviews"/>
-    <div class="wrapper__content">
-      <section class="feedbacks tab__wrap--scroll">
-        <div class="container">
-            <h2 class="section__title">Отзывы</h2>
-        </div>
-        <div class="container__940">
-          <reviews-list :reviews="reviews"/>
-        </div>
-      </section>
-    </div>
+      <div class="wrapper__content">
+        <section class="container__940 tabs">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                  <section class="feedbacks tab__wrap--scroll">
+                    <div class="container">
+                      <h2 class="section__title">Отзывы</h2>
+                    </div>
+                    <div class="container__940">
+                      <reviews-list :reviews="reviews"/>
+                    </div>
+                  </section>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
   </div>
 </template>
 

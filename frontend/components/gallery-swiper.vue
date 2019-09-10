@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-gallery container" v-if="items.length">
+  <div class="gallery-swiper container" v-if="items.length">
     <div class="swiper-container gallery-top">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="item in items" :style="'background-image:url(' + item.file + ')'" :key="item.id"></div>
@@ -28,7 +28,7 @@
     import {faChevronLeft, faChevronRight} from '@fortawesome/pro-light-svg-icons'
 
     export default {
-        name: 'swiper-gallery',
+        name: 'gallery-swiper',
         props: {
             objectId: {
                 type: Number,
@@ -132,7 +132,7 @@
 
 <style lang="scss">
 
-  .swiper-gallery {
+  .gallery-swiper {
     height: 1024px;
     margin: 0;
     padding: 0;
@@ -175,7 +175,7 @@
       }
     }
 
-    .swiper-button-next, .swiper-button-prev {
+    /*.swiper-button-next, .swiper-button-prev {
       position: absolute;
       top: 50%;
       //width: 48px;
@@ -193,7 +193,7 @@
       &:hover {
         opacity: 1;
       }
-    }
+    }*/
 
     .swiper-button-next {
       right: 1px;

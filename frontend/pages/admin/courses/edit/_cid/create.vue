@@ -16,7 +16,7 @@
           label-align-lg="right"
           label="Описание урока:"
           label-for="input-description">
-          <b-form-textarea id="input-description" no-resize rows="3" v-model="record.description"/>
+          <b-form-textarea id="input-description" rows="3" v-model="record.description"/>
         </b-form-group>
 
         <b-form-group
@@ -80,6 +80,7 @@
         </b-form-group>
 
         <b-form-checkbox class="offset-lg-3" v-model="record.active">Опубликован</b-form-checkbox>
+        <b-form-checkbox class="offset-lg-3 mt-2" v-model="record.extra">Дополнительный материал</b-form-checkbox>
 
         <b-row no-gutters class="mt-4 justify-content-between">
           <b-button variant="secondary" @click="$root.$emit('bv::hide::modal', 'myNestedModal')"

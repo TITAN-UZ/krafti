@@ -11,6 +11,12 @@
     background: url($icon) no-repeat;
     background-size: 100% 100%;
     z-index: 1;
+    opacity: .5;
+  }
+  &:hover {
+    &::before {
+      opacity: 1;
+    }
   }
 }
 
@@ -20,4 +26,41 @@
 
 @mixin lock-button() {
   @include thumb-icon('~assets/images/general/ic_locked.svg')
+}
+
+@mixin size($a, $b: $a) {
+  width: $a;
+  height: $b;
+}
+
+@mixin placeholder {
+  ::-webkit-input-placeholder {
+    @content
+  }
+
+  :-moz-placeholder {
+    @content
+  }
+
+  ::-moz-placeholder {
+    @content
+  }
+
+  :-ms-input-placeholder {
+    @content
+  }
+}
+
+@mixin font-face($font-family, $file-path, $display: auto, $weight: normal, $style: normal) {
+  @font-face {
+    font-family: $font-family;
+    font-weight: $weight;
+    font-style: $style;
+    font-display: $display;
+
+    src: url('#{$file-path}.eot');
+    src: url('#{$file-path}.eot?#iefix') format('embedded-opentype'),
+    url('#{$file-path}.woff') format('woff'),
+    url('#{$file-path}.ttf') format('truetype');
+  }
 }

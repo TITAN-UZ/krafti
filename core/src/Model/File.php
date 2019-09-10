@@ -13,7 +13,10 @@ use League\Flysystem\Filesystem;
  * @property string $title
  * @property array $preview
  * @property string $type
+ * @property int $width
+ * @property int $height
  * @property string $description
+ * @property array $metadata
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  *
@@ -21,9 +24,10 @@ use League\Flysystem\Filesystem;
 class File extends Model
 {
     public $timestamps = true;
-    protected $fillable = ['file', 'path', 'title', 'preview', 'type', 'description'];
+    protected $fillable = ['file', 'path', 'title', 'preview', 'type', 'width', 'height', 'description', 'metadata'];
     protected $casts = [
         'preview' => 'array',
+        'metadata' => 'array',
     ];
     /** @var Filesystem $filesystem */
     protected $filesystem;
@@ -66,6 +70,13 @@ class File extends Model
         $this->path = $path;
         $this->file = $filename;
         $this->type = $file['type'];
+        $this->metadata = $metadata;
+        if (strpos($file['type'], 'image/') === 0) {
+            if ($size = getimagesize($this->getFile())) {
+                $this->width = $size[0];
+                $this->height = $size[1];
+            }
+        }
         $this->save();
 
         return $this->id;
@@ -94,7 +105,6 @@ class File extends Model
         } catch (\Exception $e) {
             return false;
         }
-
         if ($this->file) {
             $this->deleteFile();
         }
@@ -103,6 +113,13 @@ class File extends Model
         $this->path = $path;
         $this->file = $filename;
         $this->type = $type;
+        $this->metadata = $metadata;
+        if (strpos($type, 'image/') === 0) {
+            if ($size = getimagesize($this->getFile())) {
+                $this->width = $size[0];
+                $this->height = $size[1];
+            }
+        }
         $this->save();
 
         return $this->id;

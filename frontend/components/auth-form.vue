@@ -76,7 +76,7 @@
 
         <b-form-group>
           <b-form-checkbox class="mt-3" v-model="register.agree">
-            Я соглашаюсь на обработку <a href="" @click.prevent="">персональных данных</a>
+            Я соглашаюсь на обработку <a href="/info/privacy" target="_blank">персональных данных</a>
           </b-form-checkbox>
         </b-form-group>
 

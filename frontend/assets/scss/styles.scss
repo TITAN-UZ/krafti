@@ -30,13 +30,16 @@
 @import "~bootstrap/scss/spinners";
 @import "~swiper/src/swiper";
 
+$backdrop-opacity: .7;
+$lg-path-fonts: '~lightgallery.js/src/fonts';
+$lg-path-images: '~lightgallery.js/src/img';
+@import "~lightgallery.js/src/sass/lightgallery";
+
 //@import "~bootstrap-vue/src/variables";
 //@import "~bootstrap-vue/src/utilities";
 //@import "~bootstrap-vue/src/components/toast/index.scss";
 
 @import "mixins";
-@import "utils/mixins";
-@import "utils/fonts";
 @import "modules/buttons";
 @import "modules/footer";
 @import "modules/header";
@@ -63,6 +66,17 @@
 @import "components/alertify";
 @import "components/tags";
 @import "info";
+
+@include font-face("sfprodisplay-black", "../fonts/SFPro/SFProDisplay-Black", auto, 900);
+//@include font-face("sfprodisplay-heavy", "../fonts/SFPro/SFProDisplay-Heavy", auto, 800);
+@include font-face("sfprodisplay", "../fonts/SFPro/SFProDisplay-Bold", auto, 600);
+@include font-face("sfprodisplay", "../fonts/SFPro/SFProDisplay-Semibold", auto, 500);
+//@include font-face("sfprodisplay", "../fonts/SFPro/SFProDisplay-Medium", auto, 500);
+@include font-face("sfprodisplay", "../fonts/SFPro/SFProDisplay-Regular", auto, 400);
+@include font-face("sfprodisplay", "../fonts/SFPro/SFProDisplay-Light", auto, 200);
+//@include font-face("sfprodisplay", "../fonts/SFPro/SFProDisplay-LightItalic", auto, 200, italic);
+//@include font-face("montserrat", "../fonts/Montserrat/Montserrat-Black", auto, bold);
+
 
 ::placeholder {
   color: $lightGray;
@@ -483,13 +497,13 @@ section {
   .left__block {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
-    flex-basis: 70%;
+    flex-basis: 66.5%;
   }
 
   .right__block {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
-    flex-basis: 30%;
+    flex-basis: 33%;
 
     .mb-15 {
       margin-bottom: 0.15rem;
@@ -551,6 +565,23 @@ section {
 .dropdown-toggle.dropdown-toggle-no-caret {
   &::after {
     display: none;
+  }
+}
+
+.markdown {
+  h2, h4 {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  ul, ol {
+    margin: 0 0 0 20px;
+    list-style-type: disc;
+  }
+
+  blockquote {
+    font-weight: 200;
+    padding-left: 20px;
   }
 }
 

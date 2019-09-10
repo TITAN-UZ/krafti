@@ -35,7 +35,7 @@
       background-size: cover;
       background-image: url('~assets/images/content/main/course-1.png');
       background-repeat: no-repeat;
-      background-position: top center;
+      background-position: center;
     }
 
     .title {
@@ -82,30 +82,30 @@
       .video-link {
         position: relative;
         display: block;
-        cursor: pointer;
         height: 400px;
         border-radius: 20px;
         background-size: cover;
         background-image: url('~assets/images/content/main/course-1.png');
         background-repeat: no-repeat;
         background-position: top center;
-
-        &::before {
-          position: absolute;
-          display: block;
-          content: '';
-          opacity: .7;
-          width: 45px;
-          height: 45px;
-          bottom: 10px;
-          right: 30px;
-          background: url(~assets/images/general/ic_play_btn.svg) no-repeat;
-          background-size: 100% 100%;
-        }
-
-        &:hover {
+        &:not(.disabled) {
+          cursor: pointer;
           &::before {
-            opacity: 1;
+            position: absolute;
+            display: block;
+            content: '';
+            opacity: .7;
+            width: 45px;
+            height: 45px;
+            bottom: 10px;
+            right: 30px;
+            background: url(~assets/images/general/ic_play_btn.svg) no-repeat;
+            background-size: 100% 100%;
+          }
+          &:hover {
+            &::before {
+              opacity: 1;
+            }
           }
         }
       }

@@ -17,7 +17,7 @@
           <div class="lesson__info container__940">
             <div class="container">
               <div class="row">
-                <div class="col-lg-7 col-12">
+                <div :class="{'col-12': true, 'col-lg-7': record.extra !== true}">
                   <div class="lesson__info--description">
                     <div class="s-title">{{record.title}}</div>
                     {{record.description}}
@@ -35,7 +35,7 @@
                     </a>
                   </div>
                 </div>
-                <div class="col-lg-5 col-12">
+                <div class="col-lg-5 col-12" v-if="record.extra !== true">
                   <div class="lesson__info--note">По окончании урока, вы можете поделиться с нами своим результатом.
                     Достаточно сделать фото и отправить его нам. Лучшие работы будут опубликованы на главной странице.
                   </div>
@@ -44,7 +44,7 @@
                     :lesson_id="record.id"
                     :course_id="course.id"
                     :section="0"
-                    :image="record.homework.file"
+                    :image_id="record.homework.file_id"
                     :size="150"/>
                   <!--<div class="lesson__info&#45;&#45;share">
                     <button class="button">Поделиться работой</button>
@@ -79,7 +79,7 @@
             <div class="container">
               <div class="row">
                 <div class="col-12">
-                  <div class="s-title">Преподаватели</div>
+                  <div class="s-title">Преподаватель</div>
                 </div>
               </div>
               <div class="row">
@@ -106,7 +106,7 @@
                 <div class="col-lg-8 offset-lg-2 col-12">
                   <div class="wrapper__science">
                     <div class="science__content--img">
-                      <img class="img-responsive" src="~assets/images/general/bg_science.png" alt="">
+                      <img src="~assets/images/general/bg_science.png" alt="">
                     </div>
                     <div class="science__content--pretitle">мини-лекция</div>
                     <h2 class="science__content--title">
@@ -143,18 +143,17 @@
                   <div class="nextlessons__content">
                     <div class="media mb-2" v-for="item in record.next">
                       <div class="media--video mr-2">
-                        <div
-                          class="disabled"
-                          v-if="course.progress.section > 0 && item.rank > course.progress.rank">
-                          <img class="media--thumb img-responsive" :src="item.preview[Object.keys(item.preview).shift()]" alt=""/>
-                        </div>
                         <nuxt-link
-                          v-else
+                          v-if="isLessonOpen(item)"
                           :to="{name: 'courses-cid-index-lesson-lid', params: {cid: course.id, lid: item.id}}"
                           class="video"
                           @click.native="scrollToTop">
                           <img class="media--thumb img-responsive" :src="item.preview[Object.keys(item.preview).shift()]" alt=""/>
                         </nuxt-link>
+                        <div class="disabled" v-else>
+                          <img class="media--thumb img-responsive" :src="item.preview[Object.keys(item.preview).shift()]" alt=""/>
+                        </div>
+
                       </div>
                       <div class="media-body">
                         <div><strong>{{item.title}}</strong></div>
@@ -221,6 +220,14 @@
                         console.error(e)
                     }
                 }
+                if (this.$route.hash) {
+                    this.setTimeout(() => {
+                        const elem = document.getElementById(this.$route.hash.replace(/^#/, ''));
+                        if (elem) {
+                            elem.scrollIntoView();
+                        }
+                    }, 200)
+                }
             },
             onLike(action = 'like') {
                 this.loading = action + ':' + this.record.id;
@@ -236,6 +243,9 @@
                     .finally(() => {
                         this.loading = false
                     })
+            },
+            isLessonOpen(item) {
+                 return this.$parent.isLessonOpen(item)
             },
             scrollToTop() {
                 /*const el = document.getElementsByClassName('modal')[0];

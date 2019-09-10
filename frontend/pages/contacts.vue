@@ -18,8 +18,14 @@
                       <p>Свяжитесь с нами любым удобным способом:</p>
                     </div>
                     <ul class="contacts__list">
-                      <li class="contact__item" v-for="i in $settings.menu.footer.right" :key="i.to">
-                        <a :href="i.to" class="contact__link" target="_blank">{{i.title}}</a>
+                      <li class="contact__item">
+                        <a :href="$settings.links.email" class="contact__link" target="_blank">Почта</a>
+                      </li>
+                      <li class="contact__item">
+                        <a :href="$settings.links.instagram" class="contact__link" target="_blank">Instagram</a>
+                      </li>
+                      <li class="contact__item">
+                        <a :href="$settings.links.whatsapp" class="contact__link" target="_blank">WhatsApp</a>
                       </li>
                     </ul>
                   </div>

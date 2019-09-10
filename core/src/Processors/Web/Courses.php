@@ -53,11 +53,15 @@ class Courses extends \App\GetProcessor
             'reviews_count' => $object->reviews_count,
             'likes_sum' => $object->likes_sum,
             'lessons_count' => $object->lessons_count,
+            'videos_count' => $object->videos_count,
             'cover' => $object->cover
                 ? $object->cover->getUrl()
                 : null,
             'video' => $object->video
-                ? $object->video->preview
+                ? [
+                    'id' => $object->video->id,
+                    'remote_key' => $object->video->remote_key
+                ]
                 : null,
             'bought' => false,
             'discount' => 0,

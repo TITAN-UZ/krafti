@@ -1,83 +1,110 @@
 <template>
-    <div>
-        <b-row no-gutters class="justify-content-center justify-content-md-between align-items-center">
-            <slot name="actions"></slot>
+  <div>
+    <b-row no-gutters class="justify-content-center justify-content-md-between align-items-center">
+      <slot name="actions"></slot>
 
-            <slot name="search">
-                <b-input-group class="mt-2 mt-md-0 ml-md-auto col-md-4">
-                    <b-input-group-prepend v-if="moreFilters">
-                        <b-button @click.prevent="showFilters = !showFilters" :variant="showFilters ? 'success' : 'secondary'">
-                            <fa :icon="['far', 'filter']"/>
-                        </b-button>
-                    </b-input-group-prepend>
-                    <b-form-input v-model="filters.query" placeholder="Поиск..." @keydown="changeQuery()"/>
-                    <b-input-group-append>
-                        <b-button :disabled="!filters.query" @click.prevent="filters.query = ''">
-                            <fa :icon="['far', 'times']"/>
-                        </b-button>
-                    </b-input-group-append>
-                </b-input-group>
-            </slot>
-        </b-row>
+      <slot name="search">
+        <b-input-group class="mt-2 mt-md-0 ml-md-auto col-md-4">
+          <b-input-group-prepend v-if="moreFilters">
+            <b-button @click.prevent="showFilters = !showFilters" :variant="showFilters ? 'success' : 'secondary'">
+              <fa :icon="['far', 'filter']"/>
+            </b-button>
+          </b-input-group-prepend>
+          <b-form-input v-model="filters.query" placeholder="Поиск..." @keydown="changeQuery()"/>
+          <b-input-group-append>
+            <b-button :disabled="!filters.query" @click.prevent="filters.query = ''">
+              <fa :icon="['far', 'times']"/>
+            </b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </slot>
+    </b-row>
 
-        <b-alert v-model="showFilters" @dismissed="showFilters = false" class="mt-2" v-if="moreFilters">
-            <b-row class="text-center justify-content-around justify-content-md-between">
-                <div v-if="filters.date !== undefined">
-                    <b-form-group label="Дата">
-                        <date-picker v-model="filters.date" ref="datepicker"
-                                     type="date" format="DD.MM.YY" lang="ru" range-separator="~" width="auto"
-                                     :confirm="false"
-                                     :editable="true"
-                                     :range="true"
-                                     :shortcuts="false"
-                                     :first-day-of-week="1"
-                                     :value-type="formatDate"
-                                     input-class="form-control"
-                                     @clear="onDateClear"
-                                     @change="onDateChange">
-                            <template slot="calendar-icon"><fa :icon="['far', 'calendar-alt']"/></template>
-                            <template slot="mx-clear-icon"><fa :icon="['far', 'times']"/></template>
-                        </date-picker>
-                    </b-form-group>
-                </div>
+    <b-alert v-model="showFilters" @dismissed="showFilters = false" class="mt-2" v-if="moreFilters">
+      <b-row class="text-center justify-content-around justify-content-md-between">
+        <div v-if="filters.date !== undefined">
+          <b-form-group label="Дата">
+            <date-picker
+              ref="datepicker"
+              v-model="filters.date"
+              type="date" format="DD.MM.YY" lang="ru" range-separator="~" width="auto"
+              :confirm="false"
+              :editable="true"
+              :range="true"
+              :shortcuts="false"
+              :first-day-of-week="1"
+              :value-type="formatDate"
+              input-class="form-control"
+              @clear="onDateClear"
+              @change="onDateChange">
+              <template slot="calendar-icon">
+                <fa :icon="['far', 'calendar-alt']"/>
+              </template>
+              <template slot="mx-clear-icon">
+                <fa :icon="['far', 'times']"/>
+              </template>
+            </date-picker>
+          </b-form-group>
+        </div>
 
-                <div v-if="filters.role_id !== undefined">
-                    <b-form-group label="Группа юзеров">
-                        <b-form-select v-model="filters.role_id" value-field="id" text-field="title" :options="roles">
-                            <template slot="first">
-                                <option :value="null">Все</option>
-                            </template>
-                        </b-form-select>
-                    </b-form-group>
-                </div>
+        <div v-if="filters.role_id !== undefined">
+          <b-form-group label="Группа юзеров">
+            <b-form-select v-model="filters.role_id" value-field="id" text-field="title" :options="roles">
+              <template slot="first">
+                <option :value="null">Все</option>
+              </template>
+            </b-form-select>
+          </b-form-group>
+        </div>
 
-                <div v-if="filters.confirmed !== undefined">
-                    <b-form-group label="Email проверен">
-                        <b-form-select v-model="filters.confirmed">
-                            <option :value="null">Все</option>
-                            <option :value="0">Не проверен</option>
-                            <option :value="1">Проверен</option>
-                        </b-form-select>
-                    </b-form-group>
-                </div>
+        <div v-if="filters.course_id !== undefined">
+          <b-form-group label="Курс">
+            <b-form-select v-model="filters.course_id" value-field="id" text-field="title" :options="courses">
+              <template slot="first">
+                <option :value="null">Все</option>
+              </template>
+            </b-form-select>
+          </b-form-group>
+        </div>
 
-                <div v-if="filters.active !== undefined">
-                    <b-form-group label="Статус пользователя">
-                        <b-form-select v-model="filters.active">
-                            <option :value="null">Все</option>
-                            <option :value="0">Неактивные</option>
-                            <option :value="1">Активные</option>
-                        </b-form-select>
-                    </b-form-group>
-                </div>
-            </b-row>
-            <b-row  v-if="changedFilters">
-                <a href="#" @click.prevent="clearFilters" class="ml-auto text-danger">
-                    <fa :icon="['far', 'backspace']"/> Очистить
-                </a>
-            </b-row>
-        </b-alert>
-    </div>
+        <div v-if="filters.status !== undefined">
+          <b-form-group label="Статус заказа">
+            <b-form-select v-model="filters.status">
+              <option :value="null">Все</option>
+              <option :value="1">Новый</option>
+              <option :value="2">Оплачен</option>
+            </b-form-select>
+          </b-form-group>
+        </div>
+
+        <div v-if="filters.confirmed !== undefined">
+          <b-form-group label="Email проверен">
+            <b-form-select v-model="filters.confirmed">
+              <option :value="null">Все</option>
+              <option :value="0">Не проверен</option>
+              <option :value="1">Проверен</option>
+            </b-form-select>
+          </b-form-group>
+        </div>
+
+        <div v-if="filters.active !== undefined">
+          <b-form-group label="Статус пользователя">
+            <b-form-select v-model="filters.active">
+              <option :value="null">Все</option>
+              <option :value="0">Неактивные</option>
+              <option :value="1">Активные</option>
+            </b-form-select>
+          </b-form-group>
+        </div>
+      </b-row>
+      <b-row v-if="changedFilters">
+        <a href="#" @click.prevent="clearFilters" class="ml-auto text-danger">
+          <fa :icon="['far', 'backspace']"/>
+          Очистить
+        </a>
+      </b-row>
+    </b-alert>
+  </div>
 </template>
 
 <script>
@@ -134,12 +161,12 @@
             }
         },
         watch: {
-           filters: {
-               deep: true,
-               handler() {
-                   this.$root.$emit('app::' + this.table + '::update', this.filters);
-               },
-           }
+            filters: {
+                deep: true,
+                handler() {
+                    this.$root.$emit('app::' + this.table + '::update', this.filters);
+                },
+            }
         },
         computed: {
             moreFilters() {
@@ -198,6 +225,9 @@
                 if (i == 'role_id') {
                     action = 'admin/user-roles';
                     storage = 'roles';
+                } else if (i == 'course_id') {
+                    action = 'admin/courses';
+                    storage = 'courses';
                 }
 
                 if (action && storage) {
@@ -215,30 +245,35 @@
 </script>
 
 <style lang="scss">
-    .mx-range-wrapper {
-        width: auto;
-        display: flex;
-        flex-wrap: wrap;
+  .mx-range-wrapper {
+    width: auto;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .mx-input-wrapper {
+    .mx-input-append {
+      top: 2px;
+      cursor: pointer;
     }
-    .mx-input-wrapper {
-        .mx-input-append {
-            top: 2px;
-            cursor: pointer;
-        }
-        .mx-clear-wrapper {
-            display: block;
-            & + .mx-input-append {
-                display: none;
-            }
-        }
+
+    .mx-clear-wrapper {
+      display: block;
+
+      & + .mx-input-append {
+        display: none;
+      }
     }
-    .checkbox-group {
-        legend {
-            text-indent: -999999px;
-        }
-        .form-control {
-            background: transparent;
-            border-color: transparent;
-        }
+  }
+
+  .checkbox-group {
+    legend {
+      text-indent: -999999px;
     }
+
+    .form-control {
+      background: transparent;
+      border-color: transparent;
+    }
+  }
 </style>

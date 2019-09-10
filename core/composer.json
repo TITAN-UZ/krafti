@@ -28,6 +28,8 @@
     "hybridauth/hybridauth": "^3.0",
     "paypal/rest-api-sdk-php": "^1.14",
     "akrabat/ip-address-middleware": "^1.0",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "intervention/image": "^2.5",
+    "intervention/imagecache": "^2.4"
   }
 }

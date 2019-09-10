@@ -12,8 +12,8 @@
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <div class="price">
-              <span v-if="!course.lessons_count">Готовится к публикации</span>
-              <span v-else-if="!course.bought">от {{course.price['3'] - course.discount | number}} р.</span>
+              <!--<span v-if="!course.lessons_count">Готовится к публикации</span>-->
+              <span v-if="course.lessons_count && !course.bought">от {{course.price['3'] - course.discount | number}} р.</span>
             </div>
             <b-spinner small type="grow" v-if="loading == course.id"/>
             <fa :icon="['fal', 'heart']" @click.prevent="addFavorite(course.id)" v-else-if="$auth.user && !$auth.user.favorites.includes(course.id)"/>

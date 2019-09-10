@@ -15,6 +15,7 @@ export default ({app, store}, inject) => {
         }
       },
     },
+
     mobile_menu: {
       get() {
         return store.getters['app/mobile_menu'];
