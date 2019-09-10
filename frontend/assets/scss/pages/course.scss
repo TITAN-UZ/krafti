@@ -801,11 +801,13 @@
       }
       .course-video {
         position: relative;
-        margin-top: -230px;
+        margin-top: -130px;
+
 
         .video-link {
           margin: 0 auto;
           max-width: 70%;
+          height: 200px;
 
           .video__thumb.desktop {
             display: none;

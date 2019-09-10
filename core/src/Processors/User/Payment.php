@@ -4,11 +4,37 @@ namespace App\Processors\User;
 
 use App\Model\Course;
 use App\Model\Order;
+use App\Model\Promo;
 use App\Service\Payment\Paypal;
 use App\Service\Payment\Robokassa;
 
 class Payment extends \App\Processor
 {
+
+    public function get()
+    {
+        $code = trim($this->getProperty('code'));
+
+        /** @var Promo $promo */
+        if ($code && $promo = Promo::query()->where(['code' => $code])->first()) {
+            $check = $promo->check();
+            if ($check !== true) {
+                return $this->success([
+                    'success' => false,
+                    'message' => $check,
+                ]);
+            }
+
+            return $this->success([
+                'success' => true,
+            ]);
+        }
+
+        return $this->success([
+            'success' => false,
+        ]);
+    }
+
 
     public function post()
     {
@@ -57,7 +83,31 @@ class Payment extends \App\Processor
         ];
         if (!$order = Order::query()->where($key)->first()) {
             $order = new Order($key);
+        } else {
+            $order->discount = 0;
+            $order->promo_id = null;
         }
+
+        // Check promo code
+        $code = $this->getProperty('code');
+        /** @var Promo $promo */
+        if ($code && $promo = Promo::query()->where(['code' => $code])->first()) {
+            $check = $promo->check();
+            if ($check !== true) {
+                return $this->failure($check);
+            }
+
+            $tmp = $promo->percent
+                ? $cost * ($promo->discount / 100)
+                : $promo->discount;
+            if ($tmp > $discount) {
+                $discount = $tmp;
+                $order->promo_id = $promo->id;
+                $promo->used += 1;
+                $promo->save();
+            }
+        }
+
         $order->service = $service;
         $order->status = 1; // New
         $order->period = $period;

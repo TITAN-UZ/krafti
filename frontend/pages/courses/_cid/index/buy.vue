@@ -46,6 +46,14 @@
         у вас есть скидка <strong>{{record.discount | number}} р.</strong> на первую покупку.
       </div>
 
+      <div class="mt-4 text-center">
+        <div class="auth-form">
+          <b-form-group description="Если у вас есть промокод - укажите его здесь">
+            <b-form-input v-model.trim="payment.code" placeholder="Промокод" :state="discount_code"/>
+          </b-form-group>
+        </div>
+      </div>
+
       <div v-if="$auth.loggedIn" class="mt-5 d-flex justify-content-center">
         <button class="button d-flex align-items-center" type="submit" aria-label="submit" :disabled="loading">
           <b-spinner class="mr-2" small v-if="loading"/>
@@ -95,7 +103,9 @@
                     period: 6,
                     service: 'robokassa',
                     course_id: this.$route.params.cid,
+                    code: null,
                 },
+                discount_code: null,
                 ppLogo,
                 rbLogo,
             }
@@ -106,12 +116,38 @@
         computed: {
             loggedIn() {
                 return this.$auth.loggedIn;
-            }
+            },
+            /*checkCode() {
+                if (this.payment.code === '') {
+                    return null
+                }
+
+                this.$axios.get('user/payment', {params: {code: this.payment.code}})
+                    .then(() => {
+                        this.discount_code = true;
+                    })
+            }*/
         },
         watch: {
             loggedIn(newValue) {
                 if (newValue === true) {
                     this.onSubmit()
+                }
+            },
+            'payment.code': function(val) {
+                if (val === '') {
+                    this.discount_code = null;
+                } else {
+                    this.$axios.get('user/payment', {params: {code: val}})
+                        .then(res => {
+                            if (!res.data.success && res.data.message) {
+                                this.$notify.info({message: res.data.message});
+                                this.payment.code = '';
+                                this.discount_code = null;
+                            } else {
+                                this.discount_code = res.data.success;
+                            }
+                        })
                 }
             }
         },
@@ -157,10 +193,12 @@
 <style lang="scss">
   .payment-form {
     .payment {
-      button{
+      button {
         padding: 15px 20px;
+
         &.active {
           border-color: #ff7474;
+
           &:focus {
             box-shadow: 0 0 0 0.2rem rgba(200, 119, 119, 0.5);
           }

@@ -335,6 +335,34 @@ class User extends Model
         $transaction->fill($data);
         $transaction->save();
 
+        switch ($action) {
+            case 'bonus':
+                $this->sendMessage('Мы списали у вас ' . ($amount * -1) . ' крафтиков за покупку бонусного урока', $action, null, [
+                    'transaction_id' => $transaction->id,
+                ]);
+                break;
+            case 'homework':
+                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за выполнение домашней работы', $action, null, [
+                    'transaction_id' => $transaction->id,
+                ]);
+                break;
+            case 'purchase':
+                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за первую покупку вашего друга', $action, null, [
+                    'transaction_id' => $transaction->id,
+                ]);
+                break;
+            case 'palette':
+                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за полностью закрытую палитру урока!', $action, null, [
+                    'transaction_id' => $transaction->id,
+                ]);
+                break;
+            case 'subscribe':
+                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за подписку на наши новости', $action, null, [
+                    'transaction_id' => $transaction->id,
+                ]);
+                break;
+        }
+
         $this->updateAccount();
     }
 

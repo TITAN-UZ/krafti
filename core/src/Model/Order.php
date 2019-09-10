@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $service
  * @property int $cost
  * @property int $discount
+ * @property int $promo_id
  * @property int $status
  * @property int $period
  * @property \Carbon\Carbon $paid_at
@@ -22,11 +23,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property-read User $user
  * @property-read Course $course
+ * @property-read Promo $promo
  */
 class Order extends Model
 {
     protected $fillable = [
-        'user_id', 'course_id', 'service', 'cost', 'discount', 'status', 'period', 'paid_at', 'paid_till',
+        'user_id', 'course_id', 'service', 'cost', 'discount', 'promo_id', 'status', 'period', 'paid_at', 'paid_till',
     ];
     protected $dates = [
         'paid_at', 'paid_till',
@@ -48,6 +50,15 @@ class Order extends Model
     public function course()
     {
         return $this->belongsTo('App\Model\Course');
+    }
+
+
+    /**
+     * @return BelongsTo
+     */
+    public function promo()
+    {
+        return $this->belongsTo('App\Model\Promo');
     }
 
 

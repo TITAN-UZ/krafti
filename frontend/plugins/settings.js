@@ -6,7 +6,7 @@ export default ({app, $axios}, inject) => {
     copyright: 'Крафти © 2019. Продажа творческих, спортивных онлайн курсов для детей и взрослых. Все права защищены.',
     links: {
       instagram: 'https://www.instagram.com/krafti.ru/',
-      whatsapp: 'https://api.whatsapp.com/send?phone=79137109520',
+      whatsapp: 'https://bit.ly/2m451wi',
       email: 'mailto:info@krafti.ru',
       favorites: '/profile/favorites',
       profile: '/profile/update',
