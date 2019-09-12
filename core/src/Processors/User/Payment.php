@@ -10,6 +10,8 @@ use App\Service\Payment\Robokassa;
 
 class Payment extends \App\Processor
 {
+    // Запросы могут слать и гости
+    //protected $scope = 'profile';
 
     public function get()
     {
@@ -38,6 +40,10 @@ class Payment extends \App\Processor
 
     public function post()
     {
+        if (!$this->container->user) {
+            return $this->failure('Требуется авторизация', 401);
+        }
+
         /** @var Course $course */
         if (!$course_id = (int)$this->getProperty('course_id')) {
             return $this->failure('Вы должны указать id покупаемого курса');

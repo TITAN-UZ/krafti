@@ -152,7 +152,7 @@
             </div>
           </template>
           <template slot="cell(video)" slot-scope="row">
-            <a :href="row.value[Object.keys(row.value).pop()]" target="_blank">
+            <a :href="row.value[Object.keys(row.value).pop()]" target="_blank" rel="noreferrer">
               <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2"/>
             </a>
           </template>

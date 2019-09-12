@@ -68,12 +68,12 @@ class Processor
         }
 
         // Allow access for all actions in this processor
-        if (in_array($this->scope, $this->container->user->role->scope)) {
+        if ($this->container->user && in_array($this->scope, $this->container->user->role->scope)) {
             return true;
         }
         // Allow access only for this action
         $scope = $this->scope . '/' . strtolower($this->container->request->getMethod());
-        if (in_array($scope, $this->container->user->role->scope)) {
+        if ($this->container->user && in_array($scope, $this->container->user->role->scope)) {
             return true;
         }
 

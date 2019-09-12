@@ -12,8 +12,7 @@
       :per-page="limit"
       :sort-by.sync="sort"
       :sort-direction.sync="dir"
-      :sortDesc="dir == 'desc'"
-      :tbody-tr-class="rowClass"
+      :sort-desc="dir == 'desc'"
       show-empty
       no-sort-reset
       no-local-sorting
@@ -28,17 +27,27 @@
       <template slot="cell(period)" slot-scope="row">
         {{row.value}} мес.
       </template>
+      <template slot="cell(cost)" slot-scope="row">
+        {{row.value | number}} руб.
+        <div v-if="row.item.discount" class="small text-muted">скидка {{row.item.discount}} руб.</div>
+      </template>
       <template slot="cell(status)" slot-scope="row">
-        <div v-if="row.value == 1" class="text-muted">Новый</div>
+        <div v-if="row.value == 1">
+          <span>Новый</span>
+          <div class="small text-muted" v-if="row.item.created_at">{{row.item.created_at | datetime}}</div>
+        </div>
         <div v-else-if="row.value == 2">
           <span class="text-success">Оплачен</span>
-          <span class="small" v-if="row.item.paid_at">{{row.item.paid_at | datetime}}</span>
-          <div class="small" v-if="row.item.paid_till">До {{row.item.paid_till | date}}</div>
+          <span class="small" v-if="row.item.paid_till">до {{row.item.paid_till | date}}</span>
+          <div class="small" v-if="row.item.paid_at">{{row.item.paid_at | datetime}}</div>
         </div>
       </template>
-      <template slot="cell(actions)" slot-scope="row">
-        <button class="btn btn-sm text-success" v-if="row.item.status === 1" @click.prevent="changeStatus(row.item, 2)">
-          <fa :icon="['fas', 'check']"/>
+      <template slot="cell(actions)" slot-scope="row" v-if="row.item.status === 1">
+        <button class="btn btn-sm text-success" @click.prevent="changeStatus(row.item, 2)">
+          <fa :icon="['fas', 'check-circle']"/>
+        </button>
+        <button class="btn btn-sm text-danger" @click.prevent="onDelete(row.item)">
+          <fa :icon="['fas', 'times']"/>
         </button>
       </template>
     </b-table>
@@ -46,6 +55,7 @@
     <table-footer
       :table="$options.name"
       :totalRows="totalRows"
+      :totalCost="totalCost"
       :limit="limit"
       :page.sync="page"
       forms="заказ|заказа|заказов"/>
@@ -53,7 +63,7 @@
 </template>
 
 <script>
-    import {faTimes, faCheck} from '@fortawesome/pro-solid-svg-icons'
+    import {faTimes, faCheckCircle} from '@fortawesome/pro-solid-svg-icons'
 
     export default {
         name: 'admin-orders',
@@ -69,8 +79,9 @@
                     {key: 'user.photo_id', label: 'Фото', sortable: false},
                     {key: 'user.fullname', label: 'Пользователь', sortable: true},
                     {key: 'course.title', label: 'Курс'},
-                    {key: 'created_at', label: 'Создан', sortable: true},
+                    //{key: 'created_at', label: 'Создан', sortable: true},
                     {key: 'status', label: 'Статус', sortable: true},
+                    {key: 'cost', label: 'Цена', sortable: true},
                     {key: 'period', label: 'Период', sortable: true},
                     //{key: 'lesson', label: 'Урок', formatter: this.renderLesson},
                     {key: 'actions', label: 'Действия'},
@@ -78,11 +89,13 @@
                 page: 1,
                 limit: 20,
                 totalRows: 0,
+                totalCost: 0,
                 sort: 'created_at',
                 dir: 'desc',
                 filters: {
                     query: '',
                     date: null,
+                    service: null,
                     status: null,
                     course_id: null,
                 },
@@ -107,12 +120,18 @@
                             this.refresh()
                         })
                 });
-
-
+            },
+            onDelete(item) {
+                this.$message.confirm('Вы уверены, что хотите <b>удалить</b> этот заказ?', () => {
+                    this.$axios.delete('admin/orders', {params: {id: item.id}})
+                        .then(() => {
+                            this.refresh()
+                        })
+                });
             },
         },
         created() {
-            this.$fa.add(faTimes, faCheck);
+            this.$fa.add(faTimes, faCheckCircle);
 
             this.$root.$on('app::' + this.$options.name + '::update', () => {
                 this.refresh();

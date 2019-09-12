@@ -6,6 +6,7 @@ use App\GetProcessor;
 use App\Model\Course;
 use App\Model\File;
 use App\Model\Homework;
+use App\Model\UserProgress;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\JoinClause;
@@ -43,10 +44,9 @@ class Courses extends \App\Processors\Web\Courses
                     ->where('orders.paid_till', '>', date('Y-m-d H:i:s'));
             });
             $c->groupBy('courses.id');
-            $c->select('courses.*');
+            $c->select(['courses.*', 'orders.paid_till as paid_till']);
         }
 
         return $c;
     }
-
 }

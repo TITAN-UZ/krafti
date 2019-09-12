@@ -1,6 +1,6 @@
 <?php
 
-require dirname(__DIR__) . '/core/vendor/autoload.php';
+require dirname(__FILE__) . '/vendor/autoload.php';
 
 $container = new \App\Container();
 $app = new \Slim\App($container);

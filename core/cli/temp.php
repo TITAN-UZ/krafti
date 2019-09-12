@@ -6,8 +6,6 @@
 /** @var Slim\App $app */
 require '_initialize.php';
 
-
-
 /** @var \App\Model\File $file */
 foreach (\App\Model\File::query()->where('type', 'LIKE', 'image/%')->get() as $file) {
 

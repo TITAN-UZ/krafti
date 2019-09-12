@@ -69,7 +69,6 @@
                     })
             },
             onClick(item) {
-                console.log(item);
                 switch (item.type) {
                     case 'reply':
                         this.$router.push({name: 'courses-cid-index-lesson-lid', params: {cid: item.data.course_id, lid: item.data.lesson_id}, hash: '#comment-' + item.data.comment_id})

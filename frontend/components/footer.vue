@@ -8,7 +8,7 @@
                             <b-link to="/"><img src="~assets/images/general/logo.svg" alt=""></b-link>
                         </div>
                         <div class="footer__instagram">
-                            <a class="ic__instagram" :href="$settings.links.instagram" target="_blank"></a>
+                            <a class="ic__instagram" :href="$settings.links.instagram" target="_blank" rel="noreferrer"></a>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                             <!--<nav>
                                 <ul class="list">
                                     <li class="nav-item" v-for="i in $settings.menu.footer.right" :key="i.to">
-                                        <a :href="i.to" class="nav-link" target="_blank">{{i.title}}</a>
+                                        <a :href="i.to" class="nav-link" target="_blank" rel="noreferrer">{{i.title}}</a>
                                     </li>
                                 </ul>
                             </nav>-->
@@ -63,8 +63,8 @@
                                 <li class="ic_applepay"></li>
                             </ul>
                             <div class="pay__text">
-                              <p>ИП Матюшкин А.А<br>ИНН 542512143999 / ОГРН 318547600033813</p>
-                              <p>630047, г.Новосибирск, ул. Кузьмы Минина 9/1, кв 163.<br>Контактное лицо: Матюшкин Антон, тел. +7-913-790-10-90</p>
+                              <p>ИП Матюшкин А. А.<br>ИНН 542512143999 / ОГРН 318547600033813</p>
+                              <p>630047, г. Новосибирск, ул. Кузьмы Минина, 9/1, кв. 163<br>Контактное лицо: Матюшкин Антон, тел. +7-913-790-10-90</p>
                               <p></p>
                             </div>
                         </div>

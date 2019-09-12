@@ -7,6 +7,7 @@ use App\Model\User;
 use App\Model\UserOauth;
 use Hybridauth\Adapter\OAuth2 as Provider;
 use Hybridauth\User\Profile;
+use Intervention\Image\ImageManager;
 
 class Oauth2 extends \App\Processor
 {
@@ -24,7 +25,7 @@ class Oauth2 extends \App\Processor
 
         $uri = $this->container->request->getUri();
         $params = [
-            'provider' => $provider,
+            //'provider' => $provider,
         ];
         if ($promo = (string)$this->getProperty('promo')) {
             $params['promo'] = $promo;
@@ -86,29 +87,41 @@ class Oauth2 extends \App\Processor
                         'fullname' => !empty($profile->firstName) && !empty($profile->lastName)
                             ? $profile->firstName . ' ' . $profile->lastName
                             : $profile->displayName,
-                        'instagram' => $provider == 'instagram'
-                            ? array_pop(explode('/', $profile->profileURL))
-                            : '',
                         'promo' => $promo,
                     ]);
+                    if ($provider == 'instagram') {
+                        $tmp = explode('/', $profile->profileURL);
+                        $processor->setProperty('instagram', array_pop($tmp));
+                    }
+
                     $response = $processor->post();
                     if ($response->getStatusCode() !== 200) {
                         return $response;
                     }
 
+                    /** @var User $user */
                     if ($user_id = json_decode($response->getBody()->__toString())->id) {
                         $user = User::query()->find($user_id);
                         $oauth->user_id = $user_id;
                     } else {
                         $this->container->logger->error('Could not save Oauth');
+                        return $this->failure([
+                            'error' => 'Не могу получить созданного пользователя',
+                        ]);
                     }
 
                     // Import photo from remote service
-                    /*if ($profile->photoURL) {
-                        if ($image = file_get_contents($profile->photoURL)) {
+                    if ($profile->photoURL && $image = file_get_contents($profile->photoURL)) {
+                        $manager = new ImageManager(['driver' => 'imagick']);
+                        $res = $manager->make($image);
+                        if ($data = $res->encode('data-url')) {
                             $file = new File();
+                            if ($id = $file->uploadBase64($data)) {
+                                $user->photo_id = $id;
+                                $user->save();
+                            }
                         }
-                    }*/
+                    }
                 }
                 $oauth->fill(json_decode(json_encode($profile), true));
                 $oauth->save();

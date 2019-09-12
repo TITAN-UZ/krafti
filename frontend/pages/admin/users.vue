@@ -16,6 +16,7 @@
                  :per-page="limit"
                  :sort-by.sync="sort"
                  :sort-direction.sync="dir"
+                 :sort-desc="dir == 'desc'"
                  :tbody-tr-class="rowClass"
                  show-empty
                  no-sort-reset
@@ -63,14 +64,14 @@
                     {key: 'email', label: 'Email', sortable: true},
                     {key: 'fullname', label: 'ФИО', sortable: true},
                     {key: 'role_id', label: 'Группа', formatter: 'renderRole'},
-                    {key: 'referrals_count', label: 'Рефералы', sortable: true},
+                    {key: 'referrals_count', label: 'Рефералы', sortable: false},
                     {key: 'actions', label: 'Действия'},
                 ],
                 page: 1,
                 limit: 20,
                 totalRows: 0,
                 sort: 'id',
-                dir: 'asc',
+                dir: 'desc',
                 filters: {
                     query: '',
                     role_id: null,

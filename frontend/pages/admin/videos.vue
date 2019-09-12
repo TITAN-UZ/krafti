@@ -2,7 +2,7 @@
   <div>
     <table-filter :filters="filters" :table="$options.name">
       <template slot="actions">
-        <a href="https://vimeo.com/manage/videos" target="_blank" class="btn btn-secondary">
+        <a href="https://vimeo.com/manage/videos" target="_blank" rel="noreferrer" class="btn btn-secondary">
           <fa :icon="['fas', 'external-link']"/>
           Перейти на Vimeo
         </a>
@@ -22,7 +22,7 @@
              empty-text="Подходящих результатов не найдено"
              empty-filtered-text="Подходящих результатов не найдено">
       <template slot="cell(preview)" slot-scope="row">
-        <a :href="row.value[Object.keys(row.value).pop()]" target="_blank">
+        <a :href="row.value[Object.keys(row.value).pop()]" target="_blank" rel="noreferrer">
           <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2"/>
         </a>
       </template>
@@ -36,7 +36,7 @@
         {{row.item.description}}
       </template>
       <template slot="cell(actions)" slot-scope="row">
-        <a :href="'https://vimeo.com/manage/' + row.item.remote_key + '/general'" class="btn btn-sm" target="_blank">
+        <a :href="'https://vimeo.com/manage/' + row.item.remote_key + '/general'" class="btn btn-sm" target="_blank" rel="noreferrer">
           <fa :icon="['fas', 'external-link']"/>
         </a>
 
@@ -48,7 +48,7 @@
 
     <b-alert variant="warning" class="mt-3 mb-0" fade show>
       <strong>Внимание!</strong> Вся работа с видео проводится на
-      <a href="https://vimeo.com/manage/videos" target="_blank"><strong>Vimeo</strong></a>.
+      <a href="https://vimeo.com/manage/videos" target="_blank" rel="noreferrer"><strong>Vimeo</strong></a>.
       Изменения выгружаются на сайт примерно раз в час.
     </b-alert>
 

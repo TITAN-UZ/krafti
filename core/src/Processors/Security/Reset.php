@@ -27,7 +27,7 @@ class Reset extends \App\Processor
                 $user->save();
 
                 $secret = getenv('RESET_SECRET');
-                $encrypted = base64_encode(openssl_encrypt($password, 'AES-256-CBC', $secret));
+                $encrypted = base64_encode(@openssl_encrypt($password, 'AES-256-CBC', $secret));
                 $this->sendMail($user, $encrypted);
 
                 return $this->success();

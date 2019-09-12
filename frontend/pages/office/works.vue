@@ -8,7 +8,7 @@
         <h2 class="worksList--title">Домашние работы</h2>
         <div class="row item__wrap worksList align-items-center">
           <div class="col-lg-3 col-md-4 col-6 m-width-80" v-for="item in homeworks">
-            <a :href="item.file" target="_blank" class="work__item">
+            <a :href="item.file" target="_blank" rel="noreferrer" class="work__item">
               <div class="work__item">
                 <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="">
               </div>
@@ -29,7 +29,7 @@
         <h2 class="worksList--title">Выполненные уроки</h2>
         <div class="row item__wrap worksList  align-items-center">
           <div class="col-lg-3 col-md-4 col-6 m-width-80" v-for="item in lessonworks">
-            <a :href="item.file" target="_blank" class="work__item">
+            <a :href="item.file" target="_blank" rel="noreferrer" class="work__item">
               <div class="work__item">
                 <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="">
               </div>

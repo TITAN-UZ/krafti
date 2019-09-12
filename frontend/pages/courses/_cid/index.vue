@@ -167,19 +167,7 @@
                       </div>-->
                     </b-tab>
                     <b-tab title="Преподаватели" v-if="authors.length">
-                      <div class="row mob_container item__wrap d-flex tab__wrap--scroll">
-
-                        <div class="col-12 col-md-6 col-lg-4 m-width-80" v-for="item in authors">
-                          <div class="teacher__item d-flex flex-column justify-content-center align-items-center">
-                            <div class="teacher__item--photo">
-                              <img class="rounded-circle" :src="item.photo" alt="" v-if="item.photo">
-                            </div>
-                            <h2 class="teacher__item--name">{{item.fullname}}</h2>
-                            <div class="teacher__item--position text-center">{{item.company}}</div>
-                            <div class="teacher__item--text">{{item.description}}</div>
-                          </div>
-                        </div>
-                      </div>
+                      <authors-list :authors="authors"/>
                     </b-tab>
                     <b-tab title="Уроки" v-if="Object.keys(lessons).length" active>
                       <div class="row palitra">
@@ -331,7 +319,7 @@
                             <div class="process__item--number">3</div>
                             <div class="process__item--body">
                               <div class="title">Открываете следующий этап</div>
-                              <div class="text">После отправки всех трёх домашних заданий, вы получите бонусный урок</div>
+                              <div class="text">После отправки всех трёх домашних заданий вы получите бонусный урок</div>
                             </div>
                           </div>
                         </div>
@@ -360,11 +348,12 @@
     import ReviewsList from '../../../components/reviews-list'
     import HeaderBg from '../../../components/header-bg'
     import GalleryLightbox from '../../../components/gallery-lightbox'
+    import AuthorsList from '../../../components/authors-list';
     import {faHeart as faHeartSolid} from '@fortawesome/pro-solid-svg-icons'
     import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
     import {faFacebook, faPinterest, faVk, faTwitter} from '@fortawesome/free-brands-svg-icons'
-    import {faUser, faThumbsUp, faEye, faShare} from '@fortawesome/pro-duotone-svg-icons'
 
+    import {faUser, faThumbsUp, faEye, faShare} from '@fortawesome/pro-duotone-svg-icons'
     import SocialSharing from 'vue-social-sharing'
     import bg from '../../../assets/images/general/headline_course.png';
 
@@ -397,7 +386,7 @@
                 }
             }
         },
-        components: {CoursesList, ReviewsList, HeaderBg, GalleryLightbox, 'social-sharing': SocialSharing},
+        components: {AuthorsList, CoursesList, ReviewsList, HeaderBg, GalleryLightbox, 'social-sharing': SocialSharing},
         scrollToTop: false,
         async asyncData({app, params, error, env}) {
             let data = {
@@ -478,7 +467,7 @@
                     }
                 }
 
-                return item.extra || progress.section > item.section || (progress.section == item.section && progress.rank > item.rank);
+                return item.extra || progress.section > item.section || (progress.section == item.section && progress.rank >= item.rank);
             },
             async loadLessons() {
                 const res = await this.$axios.get('web/courses', {params: {id: this.record.id}});
@@ -511,8 +500,9 @@
             return {
                 title: 'Крафти / Курсы / ' + this.record.title,
                 meta: [
-                    {property: 'og:description', content: this.record.description},
-                    {property: 'og:image', content: this.record.cover},
+                    {hid: 'og:title', property: 'og:title', content: this.record.title},
+                    {hid: 'og:description', property: 'og:description', content: this.record.description},
+                    {hid: 'og:image', property: 'og:image', content: this.record.cover},
                 ],
             }
         },

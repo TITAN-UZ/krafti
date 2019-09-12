@@ -310,7 +310,7 @@
                 const x = screen.width / 2 - 700 / 2;
                 const y = screen.height / 2 - 450 / 2;
 
-                let oauth2 = this.$axios.defaults.baseURL + 'security/oauth2?provider=' + provider;
+                let oauth2 = this.$axios.defaults.baseURL + 'security/oauth2/' + provider;
                 const win = window.open(oauth2, 'AuthPopup', 'width=700,height=450,modal=yes,alwaysRaised=yes,left=' + x + ',top=' + y);
 
                 let timer = this.setInterval(() => {

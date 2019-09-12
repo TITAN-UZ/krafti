@@ -80,7 +80,9 @@ class Order extends \App\GetProcessor
             'course_id' => $object->course_id,
             'status' => $object->status,
             'cost' => $object->cost,
-            'paid_till' => $object->paid_till,
+            'paid_till' => $object->paid_till
+                ? $object->paid_till->toIso8601String()
+                : null,
             'period' => $object->period,
         ];
 

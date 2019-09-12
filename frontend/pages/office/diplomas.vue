@@ -1,23 +1,28 @@
 <template>
   <div class="row diplomsList flex-wrap">
-    <div class="col-lg-6 col-12"  v-for="diploma in diplomas">
-      <div class="diploam__item d-flex align-content-center justify-content-between">
-        <div class="left__block d-flex justify-content-start align-items-end">
-          <div class="diploam__info">
-            <h2 class="diploam__info--title">
-              {{diploma.course.title}}
-              <span v-if="diploma.child">, {{diploma.child.name}}</span>
-            </h2>
-            <a class="diploam__info--link" :href="diploma.file" target="_blank">Скачать диплом</a>
+    <template v-if="diplomas.length > 0">
+      <div class="col-lg-6 col-12" v-for="diploma in diplomas">
+        <div class="diploam__item d-flex align-content-center justify-content-between">
+          <div class="left__block d-flex justify-content-start align-items-end">
+            <div class="diploam__info">
+              <h2 class="diploam__info--title">
+                {{diploma.course.title}}
+                <span v-if="diploma.child">, {{diploma.child.name}}</span>
+              </h2>
+              <a class="diploam__info--link" :href="diploma.file" target="_blank" rel="noreferrer">Скачать диплом</a>
+            </div>
           </div>
-        </div>
-        <div class="right-block">
-          <div class="diploam__item--img">
-            <img src="~assets/images/general/kraftik.png" alt="">
+          <div class="right-block">
+            <div class="diploam__item--img">
+              <img src="~assets/images/general/kraftik.png" alt="">
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
+    <b-alert variant="info" show v-else class="w-100 m-auto" style="max-width: 85%;">
+      Вы еще не получали дипломы
+    </b-alert>
   </div>
 </template>
 

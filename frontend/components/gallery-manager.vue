@@ -31,7 +31,7 @@
         <div v-for="item in items" :key="item.id" class="col-auto gallery-manager-item-wrapper">
           <div class="gallery-manager-item">
             <div :class="{image: true, disabled: !item.active}">
-              <a :href="item.file" target="_blank">
+              <a :href="item.file" target="_blank" rel="noreferrer">
                 <img :src="[$settings.image_url, item.id, '200x200'].join('/')"/>
               </a>
               <div class="actions">

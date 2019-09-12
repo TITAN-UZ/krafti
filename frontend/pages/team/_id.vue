@@ -11,14 +11,12 @@
                     <div class="teacher__info">
                       <div class="teacher__info--photo">
                         <img class="teacher-photo rounded-circle" :src="record.photo" alt="">
-                        <span class="label__shape"></span>
+                        <!--<span class="label__shape"></span>-->
                       </div>
                       <h2 class="teacher__info--name">{{record.fullname}}</h2>
                       <div class="teacher__info--position">{{record.company}}</div>
                     </div>
-                    <div class="teacher__text">
-                      {{record.description}}
-                    </div>
+                    <div class="teacher__text" v-if="record.description" v-html="$md.render(record.description)"></div>
                     <div class="teacher__gallery">
                       <gallery-lightbox :object-id="record.id" object-name="User"/>
                       <!--
@@ -31,9 +29,7 @@
                         </div>
                       -->
                     </div>
-                    <div class="teacher__text">
-                      {{record.long_description}}
-                    </div>
+                    <div class="teacher__text" v-if="record.long_description" v-html="$md.render(record.long_description)"></div>
                   </div>
                 </div>
               </div>
@@ -69,7 +65,12 @@
         },
         head() {
             return {
-                title: 'Крафти / Наша команда / Преподаватель ' + this.$route.params.id,
+                title: 'Крафти / Наша команда / ' + this.record.fullname,
+                meta: [
+                    {hid: 'og:title', property: 'og:title', content: this.record.fullname},
+                    {hid: 'og:description', property: 'og:description', content: this.record.description},
+                    {hid: 'og:image', property: 'og:image', content: this.record.photo},
+                ],
             }
         },
         created() {

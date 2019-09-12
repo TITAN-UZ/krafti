@@ -62,7 +62,7 @@
         computed: {
             photo: {
                 get() {
-                    return this.value
+                    return !this.userId ? this.$auth.user.photo : this.value
                 },
                 set(newValue) {
                     this.$emit('input', newValue)

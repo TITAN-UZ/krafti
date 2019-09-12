@@ -66,8 +66,8 @@
           <b-input v-model="register.password" type="password" placeholder="Пароль" trim required/>
         </b-form-group>
 
-        <b-form-group class="mb-2" description="Вы получите скидку на первую покупку, а ваш друг - крафтики">
-          <b-input v-model="register.promo" placeholder="Промокод" trim/>
+        <b-form-group class="mb-2" description="Вы получите скидку на первую покупку, а ваш друг - крафтики" v-show="false">
+          <b-input v-model="register.promo" placeholder="Реферальный код вашего друга" trim/>
         </b-form-group>
 
         <b-form-group class="mb-2">
@@ -76,7 +76,7 @@
 
         <b-form-group>
           <b-form-checkbox class="mt-3" v-model="register.agree">
-            Я соглашаюсь на обработку <a href="/info/privacy" target="_blank">персональных данных</a>
+            Я соглашаюсь на обработку <a href="/info/privacy" target="_blank" rel="noreferrer">персональных данных</a>
           </b-form-checkbox>
         </b-form-group>
 
@@ -258,9 +258,9 @@
                 const x = screen.width / 2 - 700 / 2;
                 const y = screen.height / 2 - 450 / 2;
 
-                let oauth2 = this.$axios.defaults.baseURL + 'security/oauth2?provider=' + provider;
+                let oauth2 = this.$axios.defaults.baseURL + 'security/oauth2/' + provider;
                 if (localStorage.promo !== undefined) {
-                    oauth2 += '&promo=' + localStorage.promo;
+                    oauth2 += '?promo=' + localStorage.promo;
                 }
                 const win = window.open(oauth2, 'AuthPopup', 'width=700,height=450,modal=yes,alwaysRaised=yes,left=' + x + ',top=' + y);
 

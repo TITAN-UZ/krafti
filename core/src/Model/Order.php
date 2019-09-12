@@ -99,10 +99,12 @@ class Order extends Model
 
                 if ($this->discount) {
                     $user = $this->user;
-                    $user->referrer->makeTransaction(getenv('COINS_PROMO'), 'purchase', [
-                        'referral_id' => $user->id,
-                        'course_id' => $this->course->id,
-                    ]);
+                    if ($user->referrer) {
+                        $user->referrer->makeTransaction(getenv('COINS_PROMO'), 'purchase', [
+                            'referral_id' => $user->id,
+                            'course_id' => $this->course->id,
+                        ]);
+                    }
                 }
             }
         }

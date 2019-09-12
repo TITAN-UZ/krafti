@@ -50,8 +50,8 @@ class Lessons extends \App\Processor
                 'video' => $lesson->video
                     ? [
                         'vimeo' => $lesson->video->remote_key,
-                        'title' => $lesson->bonus->title,
-                        'description' => $lesson->bonus->description,
+                        'title' => $lesson->video->title,
+                        'description' => $lesson->video->description,
                         'preview' => $lesson->video->preview,
                     ]
                     : null,
@@ -68,6 +68,7 @@ class Lessons extends \App\Processor
                     : null,
                 'author' => $lesson->author
                     ? [
+                        'id' => $lesson->author->id,
                         'fullname' => $lesson->author->fullname,
                         'company' => $lesson->author->company,
                         'description' => $lesson->author->description,

@@ -30,6 +30,9 @@ export default ({app}, inject) => {
             .then(res => {
                 let items = res.data;
                 $component.totalRows = (items.total || 0);
+                if (items.total_cost) {
+                  $component.totalCost = (items.total_cost || 0);
+                }
 
                 return items.rows || [];
             })

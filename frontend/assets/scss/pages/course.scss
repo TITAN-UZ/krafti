@@ -90,23 +90,7 @@
         background-position: top center;
         &:not(.disabled) {
           cursor: pointer;
-          &::before {
-            position: absolute;
-            display: block;
-            content: '';
-            opacity: .7;
-            width: 45px;
-            height: 45px;
-            bottom: 10px;
-            right: 30px;
-            background: url(~assets/images/general/ic_play_btn.svg) no-repeat;
-            background-size: 100% 100%;
-          }
-          &:hover {
-            &::before {
-              opacity: 1;
-            }
-          }
+          @include play-button;
         }
       }
     }
@@ -294,6 +278,7 @@
       &--position {
         font-size: 16px;
         line-height: 19px;
+        margin-bottom: 15px;
       }
 
       &--text {
@@ -789,7 +774,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 991px) {
   .course__content {
     .course__content--header {
       .course__info {
@@ -844,17 +829,6 @@
       }
 
       .description__wrap .text {
-        line-height: 19px;
-      }
-
-      .teacher__item--photo img {
-        width: 144px;
-        height: 144px;
-      }
-
-      .teacher__item--text {
-        font-weight: 200;
-        font-size: 16px;
         line-height: 19px;
       }
     }

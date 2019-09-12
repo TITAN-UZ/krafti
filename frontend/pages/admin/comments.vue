@@ -25,6 +25,9 @@
       <template slot="cell(lesson)" slot-scope="row">
         <span v-html="row.value"></span>
       </template>
+      <template slot="cell(created_at)" slot-scope="row">
+        {{row.value | dateago}}
+      </template>
       <template slot="cell(actions)" slot-scope="row">
         <button class="btn btn-sm text-success" v-if="row.item.deleted === true" @click.prevent="onRestore(row.item)">
           <fa :icon="['fas', 'check']"/>
@@ -104,7 +107,7 @@
             renderLesson(value, field, item) {
                 let title = item.lesson.title + ' / ' + item.course.title;
                 if (!item.deleted) {
-                    title = '<a href="/courses/' + item.course.id + '/lesson/' + item.lesson.id + '#comment-' + item.id + '" target="_blank">' + title + '</a>';
+                    title = '<a href="/courses/' + item.course.id + '/lesson/' + item.lesson.id + '#comment-' + item.id + '" target="_blank" rel="noreferrer">' + title + '</a>';
                     console.log(title)
                 }
 

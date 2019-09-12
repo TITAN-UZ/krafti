@@ -21,18 +21,19 @@ class Register extends \App\Processor
 
         /** @var User $user */
         $user = new User([
-            'email' => trim($this->getProperty('email')),
             'fullname' => trim($this->getProperty('fullname')),
             'password' => trim($this->getProperty('password')),
             'instagram' => trim($this->getProperty('instagram'), ' @'),
             'active' => true,
             'role_id' => 3, // Regular user
         ]);
-
+        if ($email = trim($this->getProperty('email'))) {
+            $user->email = $email;
+        }
         if ($promo = trim($this->getProperty('promo'))) {
             /** @var User $referrer */
             if (!$referrer = User::query()->where(['promo' => $promo, 'active' => true])->first()) {
-                return $this->failure('Указан недействительный промокод');
+                return $this->failure('Указан неправильный реферальный код');
             } else {
                 $user->referrer_id = $referrer->id;
             }
@@ -46,7 +47,7 @@ class Register extends \App\Processor
         if ($user->save()) {
             if ($user->email) {
                 $secret = getenv('EMAIL_SECRET');
-                $encrypted = base64_encode(openssl_encrypt($user->email, 'AES-256-CBC', $secret));
+                $encrypted = base64_encode(@openssl_encrypt($user->email, 'AES-256-CBC', $secret));
                 $this->sendMail($user, $encrypted);
             }
             $this->sendMessage($user);

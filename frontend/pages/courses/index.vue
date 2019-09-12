@@ -37,7 +37,7 @@
             'courses-list': CoursesList,
             'header-bg': HeaderBg,
         },
-        scrollToTop: false,
+        scrollToTop: true,
         asyncData({app}) {
             let data = {
                 courses: {},

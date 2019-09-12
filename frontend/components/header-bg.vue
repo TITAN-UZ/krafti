@@ -34,7 +34,7 @@
                 }
                 const width = window.innerWidth;
                 const height = window.innerHeight;
-                if (height > width) {
+                if (width <= 500 && height > width) {
                     try {
                         image = require('../assets/images/background/' + this.image + '-mob.jpg');
                     } catch (e) {

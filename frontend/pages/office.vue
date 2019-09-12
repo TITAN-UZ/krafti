@@ -36,6 +36,7 @@
     export default {
         //middleware: 'token',
         auth: true,
+        scrollToTop: false,
         components: {
             'office-header': office_header,
         },
@@ -65,5 +66,8 @@
         created() {
             this.$app.header_image.set(true)
         },
+        mounted() {
+            window.scrollTo(0, 0);
+        }
     }
 </script>

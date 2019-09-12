@@ -76,13 +76,46 @@ section.teachers {
 }
 
 .teacher__item {
-  border-bottom: 1px solid #F4F4F4;
-  padding: 15px 0;
+  //border-bottom: 1px solid #F4F4F4;
+  //padding: 15px 0;
 
-  .teacher__item--photo {
+  &--name {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+  }
+
+  &--position {
+    color: $lightPink;
+    margin-bottom: 24px;
+  }
+
+  &--photo {
+    margin-bottom: 20px;
     img {
       box-shadow: $box-shadow;
+      width: 180px;
+      height: 180px;
     }
+    .label__shape {
+      position: absolute;
+      &::before {
+        right: 0;
+      }
+    }
+  }
+
+  &--text {
+    /*font-weight: 200;
+    font-size: 16px;
+    line-height: 19px;*/
+    color: $lightGray;
+    font-style: italic;
+    font-weight: 200;
+    font-size: 20px;
+    line-height: 28px;
+    //max-width: 275px;
+    text-align: center;
   }
 
   .wrap {
@@ -96,10 +129,7 @@ section.teachers {
     }
 
     .label__shape {
-      position: absolute;
-
       &::before {
-        right: 0;
         width: 18px;
         height: 18px;
       }
@@ -119,13 +149,6 @@ section.teachers {
       line-height: 21px;
       margin-bottom: 4px;
     }
-  }
-
-  &--position {
-    color: $lightPink;
-    font-size: 14px;
-    line-height: 17px;
-    margin-bottom: 15px;
   }
 
   &--info {

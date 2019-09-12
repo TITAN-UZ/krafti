@@ -8,7 +8,9 @@
             <fa icon="sync"/>
         </b-button>
 
-        <div class="btn"><b>{{totalRows | number}}</b> {{totalRows | noun(forms)}}</div>
+        <div class="btn">
+          <b>{{totalRows | number}}</b> {{totalRows | noun(forms)}}<span v-if="totalCost">, на сумму <b>{{totalCost | number}}</b> руб.</span>
+        </div>
 
     </b-row>
 </template>
@@ -57,6 +59,10 @@
             totalRows: {
                 type: Number,
                 required: true,
+            },
+            totalCost: {
+                type: Number,
+                required: false,
             },
             forms: {
                 type: String,

@@ -4,13 +4,15 @@ namespace App\Model\Traits;
 
 use App\Model\User;
 
-trait UserValidate {
+trait UserValidate
+{
 
-    public function validate(User $record) {
+    public function validate(User $record)
+    {
         if ($record->email) {
-            if (!preg_match('#.+@.+\..+#', $record->email)) {
-                return 'Вы должны указать адрес электронной почты';
-            } elseif (!$record->id && User::query()->where(['email' => $record->email])->count()) {
+            if (!filter_var($record->email, FILTER_VALIDATE_EMAIL)) {
+                return 'Неправильный адрес электронной почты';
+            } elseif (User::query()->where(['email' => $record->email])->where('id', '!=', $record->id)->count()) {
                 return 'Этот email уже есть у нас в базе. Укажите другой адрес, или сделайте сброс пароля.';
             }
         }

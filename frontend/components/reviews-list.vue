@@ -53,7 +53,6 @@
 
 <style lang="scss">
   .user-placeholder {
-
     font-size: 500px;
     max-width: 180px;
     max-height: 180px;

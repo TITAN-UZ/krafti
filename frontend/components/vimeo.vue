@@ -44,7 +44,7 @@
             size: {
                 type: String,
                 required: false,
-                default: 'lg'
+                default: 'xl'
             }
         },
         methods: {

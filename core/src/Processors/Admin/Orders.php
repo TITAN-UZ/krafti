@@ -10,7 +10,24 @@ class Orders extends \App\ObjectProcessor
 
     protected $class = '\App\Model\Order';
     protected $scope = 'orders';
+    /** @var Builder $conditions */
+    protected $conditions;
 
+
+    public function get() {
+        $get = parent::get();
+
+        $res = json_decode($get->getBody()->__toString(), true);
+        if (isset($res['total'])) {
+            $res['total_cost'] = $this->conditions
+                ->where(['status' => 2])
+                ->sum('cost');
+
+            return $this->success($res);
+        }
+
+        return $get;
+    }
 
     /**
      * @param Builder $c
@@ -29,21 +46,28 @@ class Orders extends \App\ObjectProcessor
             $c->where(function (Builder $c) use ($query) {
                 $c->where('courses.title', 'LIKE', "%$query%");
                 $c->orWhere('users.fullname', 'LIKE', "%$query%");
+                $c->orWhere('users.email', 'LIKE', "%$query%");
             });
         }
 
-        if ($status = (int)$this->getProperty('status')) {
-            $c->where(['status' => $status]);
-        }
         if ($date = $this->getProperty('date')) {
             $c->whereBetween('created_at', $date);
         }
         if ($course_id = $this->getProperty('course_id')) {
             $c->where(['course_id' => $course_id]);
         }
+        if ($service = $this->getProperty('service')) {
+            $c->where(['service' => $service]);
+        }
+        $this->conditions = $c;
+
+        if ($status = (int)$this->getProperty('status')) {
+            $c->where(['status' => $status]);
+        }
 
         return $c;
     }
+
 
 
     /**
@@ -90,8 +114,17 @@ class Orders extends \App\ObjectProcessor
     }
 
 
-    public function delete()
+    /**
+     * @param Order $record
+     *
+     * @return bool|string
+     */
+    public function beforeDelete($record)
     {
-        return $this->failure('Удалять заказы нелья');
+        if ($record->status !== 1) {
+            return 'Оплаченные заказы удалять нелья';
+        }
+
+        return true;
     }
 }

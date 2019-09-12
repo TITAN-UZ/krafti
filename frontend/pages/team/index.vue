@@ -12,18 +12,7 @@
                 </div>
               </div>
               <div class="container__940">
-                <div class="row item__wrap">
-                  <div class="col-12 col-md-6 col-lg-4" v-for="item in authors">
-                    <div class="review__item d-flex flex-column justify-content-center align-items-center">
-                      <nuxt-link :to="{name: 'team-id', params: {id: item.id}}" class="review__item--photo">
-                        <img class="rounded-circle" :src="item.photo" alt="">
-                      </nuxt-link>
-                      <h2 class="review__item--name">{{item.fullname}}</h2>
-                      <div class="review__item--position text-center">{{item.company}}</div>
-                      <div class="review__item--text">{{item.description}}</div>
-                    </div>
-                  </div>
-                </div>
+                <authors-list :authors="authors"/>
               </div>
               <!--<div class="row">
                 <div class="col-12 tab__wrap&#45;&#45;scroll">
@@ -127,10 +116,11 @@
 
 <script>
     import HeaderBg from '../../components/header-bg'
+    import AuthorsList from '../../components/authors-list';
 
     export default {
         auth: false,
-        components: {HeaderBg},
+        components: {AuthorsList, HeaderBg},
         asyncData({app}) {
             return app.$axios.get('web/authors', {params: {limit: 30}})
                 .then(res => {

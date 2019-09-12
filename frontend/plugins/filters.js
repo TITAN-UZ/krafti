@@ -36,11 +36,11 @@ export default ({app}, inject) => {
     });
 
     Vue.filter('date', (value, format = 'DD.MM.YYYY') => {
-        return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').format(format);
+        return app.$moment(value, 'YYYY-MM-DDTHH:mm:ssZ').format(format);
     });
 
     Vue.filter('datetime', (value, format = 'DD.MM.YYYY HH:mm') => {
-        return app.$moment(value, 'YYYY-MM-DD HH:mm:ss').format(format);
+        return app.$moment(value, 'YYYY-MM-DDTHH:mm:ssZ').format(format);
     });
 
     Vue.filter('dateago', (value) => {

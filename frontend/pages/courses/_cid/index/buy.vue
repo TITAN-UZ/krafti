@@ -42,7 +42,7 @@
       </div>
 
       <div class="alert alert-info mt-5" v-if="record.discount">
-        Благодаря тому, что вы зарегистрировались по кромокоду,
+        Благодаря тому, что вы зарегистрировались по реферальной ссылке,
         у вас есть скидка <strong>{{record.discount | number}} р.</strong> на первую покупку.
       </div>
 
@@ -186,6 +186,9 @@
         },
         created() {
             this.$fa.add(faTimes);
+            if (this.record.bought) {
+                this.$router.push({name: 'courses-cid', params: this.$route.params})
+            }
         },
     }
 </script>

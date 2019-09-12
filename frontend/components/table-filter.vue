@@ -67,6 +67,16 @@
           </b-form-group>
         </div>
 
+        <div v-if="filters.service !== undefined">
+          <b-form-group label="Оплата">
+            <b-form-select v-model="filters.service">
+              <option :value="null">Все</option>
+              <option value="robokassa">Робокасса</option>
+              <option value="paypal">PayPal</option>
+            </b-form-select>
+          </b-form-group>
+        </div>
+
         <div v-if="filters.status !== undefined">
           <b-form-group label="Статус заказа">
             <b-form-select v-model="filters.status">

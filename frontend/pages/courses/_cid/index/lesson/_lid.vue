@@ -55,7 +55,7 @@
           </div>
           <div class="what__is__needed container__940 mt-5" v-if="record.products.length || record.file">
             <div class="container">
-              <div class="s-title">Что <br> понадобится</div>
+              <div class="s-title">Что понадобится</div>
               <div class="needed__list">
                 <div class="needed__list--wrapper d-flex justify-content-between flex-wrap" v-if="record.products.length">
                   <div
@@ -82,22 +82,25 @@
                   <div class="s-title">Преподаватель</div>
                 </div>
               </div>
-              <div class="row">
+
+              <authors-list :authors="[record.author]" row-class="d-flex justify-content-center" item-class="col-9"/>
+
+              <!--<div class="row">
                 <div class="col-12">
-                  <div class="teacher__detail--wrap">
+                  <div class="teacher__detail&#45;&#45;wrap">
                     <div class="teacher__info">
-                      <div class="teacher__info--photo" v-if="record.author.photo">
+                      <div class="teacher__info&#45;&#45;photo" v-if="record.author.photo">
                         <img class="teacher-photo rounded-circle" :src="record.author.photo" alt="">
                         <span class="label__shape"></span>
                       </div>
-                      <h2 class="teacher__info--name">{{record.author.fullname}}</h2>
-                      <div class="teacher__info--position">{{record.author.company}}</div>
+                      <h2 class="teacher__info&#45;&#45;name">{{record.author.fullname}}</h2>
+                      <div class="teacher__info&#45;&#45;position">{{record.author.company}}</div>
                     </div>
                     <div class="teacher__text">{{record.author.description}}
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>-->
             </div>
           </section>
           <section class="science__content container__940 mt-5" v-if="record.bonus">
@@ -181,6 +184,7 @@
     import {faThumbsUp, faThumbsDown} from '@fortawesome/pro-duotone-svg-icons'
     import Player from '@vimeo/player'
     import Comments from '../../../../../components/comments'
+    import AuthorsList from '../../../../../components/authors-list';
 
     export default {
         auth: true,
@@ -192,7 +196,7 @@
                 loading: false,
             }
         },
-        components: {Comments},
+        components: {AuthorsList, Comments},
         scrollToTop: false,
         methods: {
             hideModal() {

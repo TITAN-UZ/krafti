@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default {
   mode: 'universal',
   head: {
@@ -8,14 +10,13 @@ export default {
       {name: 'msapplication-TileColor', content: '#ffffff'},
       {name: 'theme-color', content: '#ffffff'},
       {name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'},
-      {name: 'title', content: 'Крафти'},
       {name: 'apple-mobile-web-app-title', content: 'Крафти'},
-      {name: 'description', content: ''},
-      {property: 'og:title', content: 'Крафти'},
+      {hid: 'title', name: 'title', content: 'Крафти'},
+      {hid: 'description', name: 'description', content: 'Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!'},
+      {hid: 'og:title', property: 'og:title', content: 'Крафти'},
+      {hid: 'og:description', property: 'og:description', content: 'Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!'},
+      {hid: 'og:image', property: 'og:image', content: 'https://krafti.ru/favicons/android-chrome-512x512.png'},
       {property: 'og:site_name', content: 'Krafti.ru'},
-      {property: 'og:description', content: ''},
-      //{property: 'og:url', content: ''},
-      {property: 'og:image', content: '/favicons/android-chrome-512x512.png'},
     ],
     link: [
       {rel: 'icon', type: 'image/x-icon', href: '/favicons/favicon.ico'},
@@ -50,6 +51,7 @@ export default {
   ],
   modules: [
     'bootstrap-vue/nuxt',
+    'nuxt-izitoast',
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/pwa',
@@ -61,7 +63,7 @@ export default {
       filename: '.env',
       only: ['COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE', 'CHILDREN_MAX'],
     }],
-    'nuxt-izitoast',
+    '@nuxtjs/sitemap',
     //'@nuxtjs/eslint-module'
   ],
   bootstrapVue: {
@@ -150,6 +152,38 @@ export default {
         }
       })
     }
+  },
+  generate: {
+    routes: async function () {
+      const [authors, courses] = await Promise.all([
+        axios.get('https://krafti.ru/api/web/authors'),
+        axios.get('https://krafti.ru/api/web/courses'),
+      ]);
+
+      let routes = [];
+      authors.data.rows.forEach(v => {
+        routes.push('/team/' + v.id)
+      });
+      courses.data.rows.forEach(v => {
+        routes.push('/courses/' + v.id)
+      });
+
+      return routes;
+    }
+  },
+  sitemap: {
+    hostname: 'https://krafti.ru',
+    gzip: false,
+    exclude: [
+      '/admin',
+      '/admin/**',
+      '/office',
+      '/office/**',
+      '/profile',
+      '/profile/**',
+      '/service',
+      '/service/**'
+    ],
   },
   server: process.env.NODE_ENV === 'production'
     //? {socket: '../tmp/nuxt.socket'}

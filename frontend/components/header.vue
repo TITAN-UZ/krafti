@@ -34,7 +34,7 @@
           </ul>
         </div>
         <div class="menu-footer">
-          <a class="ic__instagram" :href="$settings.links.instagram" target="_blank"></a>
+          <a class="ic__instagram" :href="$settings.links.instagram" target="_blank" rel="noreferrer"></a>
           <div class="copyright">{{$settings.copyright}}</div>
         </div>
       </div>

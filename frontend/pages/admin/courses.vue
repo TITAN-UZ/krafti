@@ -26,7 +26,7 @@
         <strong>{{row.value}}</strong>
       </template>
       <template slot="cell(cover)" slot-scope="row">
-        <a :href="row.value" target="_blank" v-if="row.value">
+        <a :href="row.value" target="_blank" rel="noreferrer" v-if="row.value">
           <img v-if="row.value" :src="[$settings.image_url, row.item.cover_id, '100x50'].join('/')" class="mr-2" width="100"/>
         </a>
       </template>

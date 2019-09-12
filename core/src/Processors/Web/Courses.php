@@ -75,6 +75,9 @@ class Courses extends \App\GetProcessor
             $array['bought'] = $object->wasBought($this->container->user->id);
             if (!$array['bought']) {
                 $array['discount'] = $object->getDiscount($this->container->user->id);
+            } elseif ($order = $this->container->user->orders()->where(['course_id' => $object->id])->first()) {
+                /** @var Order $order */
+                $array['paid_till'] = $order->paid_till->toIso8601String();
             }
             /** @var UserProgress $progress */
             if ($progress = $object->progresses()->where(['user_id' => $this->container->user->id])->first()) {
