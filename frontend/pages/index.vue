@@ -16,7 +16,10 @@
     <div class="wrapper">
       <header-bg image="index" class="wrapper__bg bg_600 index-bg">
         <template slot="content">
-          <a class="ic__play" @click.prevent="$refs.mainVideo.show()"></a>
+          <span class="play-button main" @click.prevent="$refs.mainVideo.show()">
+            <fa :icon="['fad', 'circle']"/>
+            <fa :icon="['fas', 'play']"/>
+          </span>
         </template>
       </header-bg>
       <vimeo :video="$settings.video.index" ref="mainVideo"/>
@@ -148,7 +151,8 @@
     import ReviewsList from '../components/reviews-list'
     //import Swiper from 'swiper'
     import HeaderBg from '../components/header-bg'
-    import {faPaperPlane} from '@fortawesome/pro-duotone-svg-icons'
+    import {faPaperPlane, faCircle} from '@fortawesome/pro-duotone-svg-icons'
+    import {faPlay} from '@fortawesome/pro-solid-svg-icons'
 
     import slide1 from '../assets/images/slider/slider-1.jpg'
     import slide2 from '../assets/images/slider/slider-2.jpg'
@@ -194,7 +198,7 @@
             }
         },
         created() {
-            this.$fa.add(faPaperPlane);
+            this.$fa.add(faCircle, faPaperPlane, faPlay);
             this.$app.header_image.set(true);
         },
         mounted() {

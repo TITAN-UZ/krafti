@@ -63,6 +63,7 @@
             totalCost: {
                 type: Number,
                 required: false,
+                default: null,
             },
             forms: {
                 type: String,

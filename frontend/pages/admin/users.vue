@@ -64,7 +64,7 @@
                     {key: 'email', label: 'Email', sortable: true},
                     {key: 'fullname', label: 'ФИО', sortable: true},
                     {key: 'role_id', label: 'Группа', formatter: 'renderRole'},
-                    {key: 'referrals_count', label: 'Рефералы', sortable: false},
+                    {key: 'referrals_count', label: 'Рефералы', sortable: true},
                     {key: 'actions', label: 'Действия'},
                 ],
                 page: 1,

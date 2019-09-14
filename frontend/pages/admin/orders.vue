@@ -1,6 +1,12 @@
 <template>
   <div>
-    <table-filter :filters="filters" :table="$options.name"/>
+    <table-filter :filters="filters" :table="$options.name">
+      <template slot="actions">
+        <router-link class="btn btn-secondary" :to="{name: 'admin-orders-create'}">
+          <fa icon="plus"/> Добавить
+        </router-link>
+      </template>
+    </table-filter>
 
     <b-table
       stacked="md"
@@ -59,11 +65,13 @@
       :limit="limit"
       :page.sync="page"
       forms="заказ|заказа|заказов"/>
+
+    <nuxt-child/>
   </div>
 </template>
 
 <script>
-    import {faTimes, faCheckCircle} from '@fortawesome/pro-solid-svg-icons'
+    import {faPlus, faTimes, faCheckCircle} from '@fortawesome/pro-solid-svg-icons'
 
     export default {
         name: 'admin-orders',
@@ -106,13 +114,6 @@
             refresh() {
                 this.$root.$emit('bv::refresh::table', this.$options.name)
             },
-            /*onDelete(item) {
-                this.$axios.patch('admin/comments', {id: item.id, deleted: true})
-                    .then(() => {
-                        //item.deleted = true
-                        this.refresh()
-                    })
-            },*/
             changeStatus(item, status) {
                 this.$message.confirm('Этот заказ еще не был оплачен. Вы уверены, что хотите вручную активировать его?', () => {
                     this.$axios.patch('admin/orders', {id: item.id, status: status})
@@ -131,7 +132,7 @@
             },
         },
         created() {
-            this.$fa.add(faTimes, faCheckCircle);
+            this.$fa.add(faPlus, faTimes, faCheckCircle);
 
             this.$root.$on('app::' + this.$options.name + '::update', () => {
                 this.refresh();

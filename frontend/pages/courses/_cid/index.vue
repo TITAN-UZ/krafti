@@ -7,7 +7,11 @@
           <div class="row course__content--header">
             <div class="col-lg-7 col-12">
               <div class="course-video" v-if="record.video">
-                <a class="video-link" @click.prevent="$refs.mainVideo.show()" :style="{'background-image': (record.cover ? 'url(' + record.cover + ')' : false)}"></a>
+                <div class="video-link" :style="{'background-image': (record.cover ? 'url(' + record.cover + ')' : false)}"></div>
+                <span class="play-button course" @click.prevent="$refs.mainVideo.show()">
+                  <fa :icon="['fad', 'circle']"/>
+                  <fa :icon="['fas', 'play']"/>
+                </span>
                 <vimeo :video="record.video.remote_key" ref="mainVideo"/>
               </div>
               <div class="course-video" v-else>
@@ -176,7 +180,7 @@
                           <div class="palitra__info--title">Палитра прогресса</div>
                           <div class="palitra__info--count">+{{palette_bonus}} {{palette_bonus | noun('крафтик|крафтика|крафтиков')}}</div>
                           <div class="palitra__info--text">Это ваша персональная палитра прогресса. Смотрите уроки,
-                            отправляйте домашние задания и ваша палитра будет заполняться цветами. За полную палитру вы
+                            отправляйте домашние задания, и ваша палитра будет заполняться цветами. За полную палитру вы
                             получаете крафтики.
                           </div>
                         </div>
@@ -353,7 +357,8 @@
     import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
     import {faFacebook, faPinterest, faVk, faTwitter} from '@fortawesome/free-brands-svg-icons'
 
-    import {faUser, faThumbsUp, faEye, faShare} from '@fortawesome/pro-duotone-svg-icons'
+    import {faUser, faThumbsUp, faEye, faShare, faCircle} from '@fortawesome/pro-duotone-svg-icons'
+    import {faPlay} from '@fortawesome/pro-solid-svg-icons'
     import SocialSharing from 'vue-social-sharing'
     import bg from '../../../assets/images/general/headline_course.png';
 
@@ -512,7 +517,7 @@
         },
         created() {
             this.$app.header_image.set(true);
-            this.$fa.add(faHeartSolid, faHeartLight, faShare);
+            this.$fa.add(faHeartSolid, faHeartLight, faShare, faCircle, faPlay);
             this.$fa.add(faFacebook, faPinterest, faVk, faTwitter);
             this.$fa.add(faUser, faThumbsUp, faEye);
 

@@ -16,6 +16,7 @@ class Order extends Migration
             $table->integer('discount')->unsigned()->nullable()->default(0);
             $table->smallInteger('status')->unsigned();
             $table->smallInteger('period')->unsigned();
+            $table->boolean('manual')->nullable()->default(false);
             $table->dateTime('paid_at')->nullable();
             $table->dateTime('paid_till')->nullable();
             $table->timestamps();

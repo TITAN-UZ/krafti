@@ -73,6 +73,7 @@
               <option :value="null">Все</option>
               <option value="robokassa">Робокасса</option>
               <option value="paypal">PayPal</option>
+              <option value="internal">Бесплатно</option>
             </b-form-select>
           </b-form-group>
         </div>
@@ -166,6 +167,7 @@
                 networks: {},
                 providers: {},
                 users: {},
+                courses: [],
                 showFilters: this.visible === true,
                 formatDate
             }

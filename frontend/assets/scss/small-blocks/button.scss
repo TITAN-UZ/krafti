@@ -23,3 +23,58 @@
     outline: 0;
   }
 }
+
+.play-button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px;
+  margin-top: -50px;
+  border-radius: 50%;
+
+  .fa-circle {
+    position: absolute;
+    color: $pink;
+    font-size: 100px;
+    //--fa-secondary-color: #fff;
+    --fa-secondary-opacity: .2;
+  }
+
+  .fa-play {
+    position: absolute;
+    font-size: 40px;
+    padding-left: 5px;
+    color: #fff;
+  }
+
+  &.course {
+    .fa-circle {
+      color: #fff;
+      --fa-secondary-color: #6577b4;
+      --fa-secondary-opacity: .8;
+    }
+    .fa-play {
+      color: #6577b4;
+      //color: blue;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(#fff, .8);
+  }
+
+  @media (max-width: 576px) {
+    .fa-circle {
+      font-size: 60px;
+    }
+    .fa-play {
+      font-size: 25px;
+    }
+  }
+}

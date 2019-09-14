@@ -2,7 +2,9 @@
 
 namespace App\Processors\Admin;
 
+use App\Model\Course;
 use App\Model\Order;
+use App\Model\User;
 use Illuminate\Database\Eloquent\Builder;
 
 class Orders extends \App\ObjectProcessor
@@ -14,20 +16,25 @@ class Orders extends \App\ObjectProcessor
     protected $conditions;
 
 
-    public function get() {
+    public function get()
+    {
         $get = parent::get();
 
         $res = json_decode($get->getBody()->__toString(), true);
         if (isset($res['total'])) {
-            $res['total_cost'] = $this->conditions
-                ->where(['status' => 2])
-                ->sum('cost');
+            $c = $this->conditions;
+            $c->where(['status' => 2]);
+            if ($this->getProperty('service') != 'internal') {
+                $c->where(['manual' => false]);
+            }
+            $res['total_cost'] = (int)$c->sum('cost');
 
             return $this->success($res);
         }
 
         return $get;
     }
+
 
     /**
      * @param Builder $c
@@ -69,7 +76,6 @@ class Orders extends \App\ObjectProcessor
     }
 
 
-
     /**
      * @param Order $object
      *
@@ -101,6 +107,7 @@ class Orders extends \App\ObjectProcessor
             return $this->failure('Не могу найти запись');
         }
         if ($status = $this->getProperty('status')) {
+            $record->manual = true;
             $record->changeStatus($status);
         }
 
@@ -108,9 +115,50 @@ class Orders extends \App\ObjectProcessor
     }
 
 
+    /**
+     * @return \Slim\Http\Response
+     */
     public function put()
     {
-        return $this->failure('Заказы создают пользователи');
+        $course_id = $this->getProperty('course_id');
+        /** @var Course $course */
+        if (!$course_id || !$course = Course::query()->find($course_id)) {
+            return $this->failure('Не могу загрузить курс');
+        }
+
+        $user_id = $this->getProperty('user_id');
+        /** @var User $user */
+        if (!$user_id || !$user = User::query()->find($user_id)) {
+            return $this->failure('Не могу загрузить пользователя');
+        }
+
+        $discount = 0;
+        $key = [
+            'course_id' => $course->id,
+            'user_id' => $user->id,
+        ];
+        if (Order::query()->where($key)->where(['status' => 1])->count()) {
+            return $this->failure('У этого пользователя уже есть неоплаченный заказ');
+        } elseif (Order::query()->where($key)->where(['status' => 2])->where('paid_till', '>', date('Y-m-d H:i:s'))->count()) {
+            return $this->failure('Этот курс у пользователя уже оплачен');
+        }
+
+        if (!$period = $this->getProperty('period')) {
+            return $this->failure('Вы должны выбрать период оплаты');
+        } elseif (!isset($course->price[$period])) {
+            return $this->failure('Указан неверный период оплаты');
+        }
+
+        $order = new Order($key);
+        $order->service = 'internal';
+        $order->status = 1;
+        $order->period = $period;
+        $order->cost = $course->price[$period] - $discount;
+        $order->discount = $discount;
+        $order->manual = true;
+        $order->save();
+
+        return $this->success($order->toArray());
     }
 
 

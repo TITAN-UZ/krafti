@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div @click="$emit('input', true)">
+    <div @click="isOpen = true">
       <slot name="button"></slot>
     </div>
     <b-modal ref="modalWindow"
              dialog-class="modal-vimeo"
              :size="size"
-             :visible="value"
+             :visible="isOpen"
              hide-footer
              @shown="onShown"
              @hidden="onHidden">
@@ -31,16 +31,21 @@
     import {faTimes} from '@fortawesome/pro-light-svg-icons'
 
     export default {
+        data() {
+            return {
+                isOpen: false,
+            }
+        },
         props: {
             video: {
                 type: Number,
                 required: true,
             },
-            value: {
+            /*value: {
                 type: Boolean,
                 required: false,
                 default: false,
-            },
+            },*/
             size: {
                 type: String,
                 required: false,
@@ -50,7 +55,7 @@
         methods: {
             onHidden(e) {
                 this.$emit('onHidden', e);
-                this.$emit('input', false);
+                this.isOpen = false;
             },
             onShown() {
                 let elem = document.getElementById('vimeo-iframe');

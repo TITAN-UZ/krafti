@@ -2,9 +2,6 @@
   <div>
     <b-modal hide-footer visible size="xl" @hidden="onHidden" @shown="onShown" ref="modalVideo" dialog-class="modal-video" :key="record.id">
       <div class="wrapper">
-        <!--<div class="wrapper__bg bg_600 js-bg-selection" :style="style_bg">
-          <a class="ic__play&#45;&#45;white" href="" aria-label="video"></a>
-        </div>-->
         <div class="embed-responsive embed-responsive-16by9">
           <iframe id="lesson-vimeo-iframe"
                   v-if="record.video && record.video.vimeo"
@@ -36,8 +33,9 @@
                   </div>
                 </div>
                 <div class="col-lg-5 col-12" v-if="record.extra !== true">
-                  <div class="lesson__info--note">По окончании урока, вы можете поделиться с нами своим результатом.
-                    Достаточно сделать фото и отправить его нам. Лучшие работы будут опубликованы на главной странице.
+                  <div class="lesson__info--note">Вы можете поделиться с нами результатом каждого урока.
+                    Нам очень интересно, что у вас получилось! Просто пришлите нам фотографию вашей картины.
+                    Лучшие работы мы опубликуем на главной странице сайта!
                   </div>
 
                   <upload-homework

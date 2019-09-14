@@ -87,7 +87,7 @@ class Payment extends \App\Processor
             'course_id' => $course->id,
             'user_id' => $this->container->user->id,
         ];
-        if (!$order = Order::query()->where($key)->first()) {
+        if (!$order = Order::query()->where($key)->where(['status' => 1])->first()) {
             $order = new Order($key);
         } else {
             $order->discount = 0;

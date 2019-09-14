@@ -22,9 +22,9 @@
              empty-text="Подходящих результатов не найдено"
              empty-filtered-text="Подходящих результатов не найдено">
       <template slot="cell(preview)" slot-scope="row">
-        <a :href="row.value[Object.keys(row.value).pop()]" target="_blank" rel="noreferrer">
-          <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2"/>
-        </a>
+        <vimeo :video="row.item.remote_key" style="cursor: pointer">
+          <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2" slot="button"/>
+        </vimeo>
       </template>
       <template slot="cell(title)" slot-scope="row">
         <strong>{{row.value}}</strong>
@@ -60,11 +60,13 @@
 
 <script>
     import {faAlignRight, faExternalLink, faInfoCircle} from '@fortawesome/pro-solid-svg-icons'
+    import Vimeo from '../../components/vimeo'
 
     export default {
         name: 'admin-videos',
         data() {
             return {
+                video: false,
                 items: (ctx) => {
                     return this.loadTable(ctx, this, 'admin/videos');
                 },
@@ -86,7 +88,7 @@
                 }
             }
         },
-
+        components: {Vimeo},
         methods: {
             refresh() {
                 this.$root.$emit('bv::refresh::table', this.$options.name)

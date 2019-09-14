@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $promo_id
  * @property int $status
  * @property int $period
+ * @property bool $manual
  * @property \Carbon\Carbon $paid_at
  * @property \Carbon\Carbon $paid_till
  * @property \Carbon\Carbon $created_at
@@ -28,10 +29,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Order extends Model
 {
     protected $fillable = [
-        'user_id', 'course_id', 'service', 'cost', 'discount', 'promo_id', 'status', 'period', 'paid_at', 'paid_till',
+        'user_id', 'course_id', 'service', 'cost', 'discount', 'promo_id', 'status', 'period', 'paid_at', 'paid_till', 'manual',
     ];
     protected $dates = [
         'paid_at', 'paid_till',
+    ];
+    protected $casts = [
+        'manual' => 'boolean',
     ];
 
 

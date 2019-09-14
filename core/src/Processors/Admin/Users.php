@@ -5,7 +5,6 @@ namespace App\Processors\Admin;
 use App\Model\File;
 use App\Model\Traits\UserValidate;
 use App\Model\User;
-use App\Processors\User\Profile;
 use Illuminate\Database\Eloquent\Builder;
 
 class Users extends \App\ObjectProcessor
@@ -20,7 +19,6 @@ class Users extends \App\ObjectProcessor
      */
     public function post()
     {
-
         if (!$user_id = (int)$this->getProperty('user_id')) {
             return $this->failure('Вы должны указать id пользователя');
         }
@@ -58,17 +56,16 @@ class Users extends \App\ObjectProcessor
             $c->where(function (Builder $c) use ($query) {
                 $c->where('email', 'LIKE', "%$query%");
                 $c->orWhere('fullname', 'LIKE', "%$query%");
+                $c->orWhere('instagram', 'LIKE', "%$query%");
             });
         }
 
-        if ($role_id = (int)$this->getProperty('role_id')) {
-            $c->where('role_id', '=', $role_id);
-        } elseif ($role = $this->getProperty('role')) {
-            if ($role == 'author') {
-                $c->where(function (Builder $c) use ($query) {
-                    $c->where('role_id', '<', 3);
-                    $c->where('id', '>', 1);
-                });
+        $c->where('id', '>', 1);
+        if ($role_id = $this->getProperty('role_id')) {
+            if (is_array($role_id)) {
+                $c->whereIn('role_id', $role_id);
+            } else {
+                $c->where(['role_id' => $role_id]);
             }
         }
 
@@ -82,7 +79,23 @@ class Users extends \App\ObjectProcessor
             $c->where('confirmed', '=', (bool)$confirmed);
         }
 
+
+        return $c;
+    }
+
+
+    /*
+     * @param Builder $c
+     *
+     * @return Builder
+     */
+    public function afterCount($c)
+    {
         $c->withCount('referrals');
+
+        if ($this->getProperty('sort') == 'referrals_count') {
+            $c->orderByRaw($this->container->db->raw('referrals_count ' . $this->getProperty('dir')));
+        }
 
         return $c;
     }
@@ -130,6 +143,26 @@ class Users extends \App\ObjectProcessor
         }
 
         return $this->validate($record);
+    }
+
+
+    /**
+     * @return bool|\Slim\Http\Response
+     */
+    public function delete()
+    {
+        if (!$id = $this->getProperty($this->primaryKey)) {
+            return $this->failure('Не указан id записи');
+        }
+
+        /** @var User $record */
+        if (!$record = User::query()->find($id)) {
+            return $this->failure('Не могу найти запись');
+        }
+        $record->active = false;
+        $record->save();
+
+        return true;
     }
 
 }

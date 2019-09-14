@@ -8,8 +8,10 @@
       @input="load"
       @selected="onSelected">
       <template slot-scope="{suggestion}">
-        <img :src="suggestion.item.photo" v-if="suggestion.item.photo" class="avatar"/>
-        {{suggestion.item.fullname}}
+        <div class="d-flex align-items-center">
+          {{suggestion.item.fullname}}
+          <img :src="suggestion.item.photo" v-if="suggestion.item.photo" class="avatar ml-auto"/>
+        </div>
       </template>
     </vue-autosuggest>
   </div>
@@ -24,7 +26,14 @@
                 type: Number,
                 required: false,
                 default: 0,
-            }
+            },
+            role_id: {
+                type: Array,
+                required: false,
+                default() {
+                    return [3]
+                },
+            },
         },
         data() {
             return {
@@ -35,7 +44,7 @@
         },
         methods: {
             load(query) {
-                this.$axios.get('admin/users', {params: {limit: 10, role: 'author', query: query || ''}})
+                this.$axios.get('admin/users', {params: {limit: 10, role_id: this.role_id, query: query || ''}})
                     .then(res => {
                         this.suggestions[0].data = res.data.rows;
                     })

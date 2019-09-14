@@ -88,9 +88,8 @@
         background-image: url('~assets/images/content/main/course-1.png');
         background-repeat: no-repeat;
         background-position: top center;
-        &:not(.disabled) {
-          cursor: pointer;
-          @include play-button;
+        .disabled {
+          .play-button { display: none; }
         }
       }
     }
