@@ -30,7 +30,7 @@
                     </ul>
                   </div>
                 </div>
-                <div class="col-6 d-none d-md-none d-lg-block">
+                <div class="col-6 d-none d-lg-block">
                   <img class="img-responsive contact__img" src="~assets/images/general/bg_contact.png" alt="">
                 </div>
               </div>

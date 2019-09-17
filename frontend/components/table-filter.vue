@@ -24,26 +24,7 @@
       <b-row class="text-center justify-content-around justify-content-md-between">
         <div v-if="filters.date !== undefined">
           <b-form-group label="Дата">
-            <date-picker
-              ref="datepicker"
-              v-model="filters.date"
-              type="date" format="DD.MM.YY" lang="ru" range-separator="~" width="auto"
-              :confirm="false"
-              :editable="true"
-              :range="true"
-              :shortcuts="false"
-              :first-day-of-week="1"
-              :value-type="formatDate"
-              input-class="form-control"
-              @clear="onDateClear"
-              @change="onDateChange">
-              <template slot="calendar-icon">
-                <fa :icon="['far', 'calendar-alt']"/>
-              </template>
-              <template slot="mx-clear-icon">
-                <fa :icon="['far', 'times']"/>
-              </template>
-            </date-picker>
+            <date-picker v-model="filters.date"/>
           </b-form-group>
         </div>
 
@@ -98,6 +79,16 @@
           </b-form-group>
         </div>
 
+        <div v-if="filters.work_type !== undefined">
+          <b-form-group label="Тип работы">
+            <b-form-select v-model="filters.work_type">
+              <option :value="null">Все</option>
+              <option value="home">Домашняя работа</option>
+              <option value="work">Обычный урок</option>
+            </b-form-select>
+          </b-form-group>
+        </div>
+
         <div v-if="filters.active !== undefined">
           <b-form-group label="Статус пользователя">
             <b-form-select v-model="filters.active">
@@ -130,10 +121,6 @@
                 default() {
                     return {
                         query: '',
-                        /*role_id: null,
-                        city_id: null,
-                        network_id: null,
-                        region_id: null,*/
                     }
                 }
             },
@@ -167,7 +154,7 @@
                 networks: {},
                 providers: {},
                 users: {},
-                courses: [],
+                courses: {},
                 showFilters: this.visible === true,
                 formatDate
             }

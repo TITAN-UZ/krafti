@@ -1,10 +1,8 @@
 import Vue from 'vue'
 
-import DatePicker from 'vue2-datepicker'
 import TableFilter from '../components/table-filter'
 import TableFooter from '../components/table-footer'
 
-Vue.component('date-picker', DatePicker);
 Vue.component('table-filter', TableFilter);
 Vue.component('table-footer', TableFooter);
 

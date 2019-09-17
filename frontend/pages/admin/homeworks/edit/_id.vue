@@ -1,16 +1,22 @@
 <template>
   <b-modal id="myModal" :title="record.title" @hidden="onHidden" hide-footer visible static>
     <b-form @submit.prevent="onSubmit">
+
+      <div id="homeworks-image">
+        <a :href="record.file" target="_blank">
+          <img :src="[$settings.image_url, record.file_id, '500x500'].join('/')"/>
+        </a>
+      </div>
+
       <b-form-group
-        label="Укажите название группы:"
-        label-for="input-title"
-        description="Название должно быть уникальным">
-        <b-form-input id="input-title" v-model="record.title" required/>
+        class="mt-3"
+        label="Отзыв:"
+        label-for="input-comment"
+        description="Напишите свой отзыв о работе">
+        <b-form-textarea id="input-comment" v-model="record.comment" rows="5" :required="record.approved"/>
       </b-form-group>
 
-      <b-form-group label="Укажите разрешения:" label-for="input-scope">
-        <tags v-model="record.scope" placeholder="" :add-tags-on-comma="true"/>
-      </b-form-group>
+      <b-form-checkbox class="mb-3" v-model="record.approved">Работа проверена</b-form-checkbox>
 
       <b-row no-gutters class="mt-2 justify-content-between">
         <b-button variant="secondary" @click="$root.$emit('bv::hide::modal', 'myModal')" :disabled="this.loading">
@@ -37,19 +43,20 @@
         },
         methods: {
             onHidden() {
-                this.$router.push({name: 'admin-user-roles'})
+                this.$router.push({name: 'admin-homeworks'})
             },
             onSubmit() {
                 this.loading = true;
-                let record = JSON.parse(JSON.stringify(this.record));
-                record.scope = record.scope.map(v => {
-                    return v.value;
-                });
-                this.$axios.patch('admin/user-roles', record)
+                let record = {
+                    id: this.record.id,
+                    comment: this.record.comment,
+                    approved: this.record.approved,
+                };
+                this.$axios.patch('admin/homeworks', record)
                     .then(res => {
                         this.loading = false;
                         this.$root.$emit('bv::hide::modal', 'myModal');
-                        this.$root.$emit('app::admin-user-roles::update', res.data);
+                        this.$root.$emit('app::admin-homeworks::update', res.data);
                     })
                     .catch(() => {
                         this.loading = false;
@@ -57,8 +64,19 @@
             },
         },
         async asyncData({app, params}) {
-            const res = await app.$axios.get('admin/user-roles', {params: {id: params.id}});
+            const res = await app.$axios.get('admin/homeworks', {params: {id: params.id}});
             return {record: res.data};
         }
     }
 </script>
+
+<style lang="scss">
+  #homeworks-image {
+    img {
+      display: block;
+      margin: auto;
+      max-width: 100%;
+      border-radius: 20px;
+    }
+  }
+</style>

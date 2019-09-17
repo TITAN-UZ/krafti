@@ -33,7 +33,7 @@
           :per-page="limit"
         />
       </div>
-      <div class="col-5 d-none d-md-none d-lg-block">
+      <div class="col-5 d-none d-lg-block">
         <img class="img-responsive contact__img" src="~assets/images/general/bg_message.png" alt="">
       </div>
     </div>

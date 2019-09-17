@@ -55,7 +55,9 @@ class GalleryItem extends Model
      */
     public function delete()
     {
-        $this->file->delete();
+        if (!Homework::query()->where(['file_id' => $this->file_id])->count()) {
+            $this->file->delete();
+        }
 
         return parent::delete();
     }

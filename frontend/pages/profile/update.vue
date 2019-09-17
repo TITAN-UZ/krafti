@@ -106,7 +106,7 @@
                       <b-textarea v-model="form.description" rows="5" trim no-resize/>
                     </b-form-group>-->
 
-                    <b-form-group class="mb-3" label="Ваш промокод" label-for="form-promo"
+                    <b-form-group class="mb-3" label="Ваш реферальный код" label-for="form-promo"
                                   description="Если ваш друг использует этот код при регистрации, он получит скидку на первую покупку, а вы - крафтики!">
                       <b-input-group>
                         <b-form-input :value="$auth.user.promo" readonly style="background: transparent"/>

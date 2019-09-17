@@ -144,7 +144,7 @@
         },
         head() {
             return {
-                title: 'Админка / Пользователи'
+                title: 'Админка / Заказы'
             }
         }
     }
@@ -157,10 +157,6 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-      }
-
-      .small {
-        font-size: 80%;
       }
     }
   }

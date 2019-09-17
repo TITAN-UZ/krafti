@@ -10,8 +10,8 @@ class Subscribe extends \App\Processor
     public function put()
     {
         $email = trim($this->getProperty('email'));
-        if (!$email || !preg_match('#.+@.+\..+#i', $email)) {
-            return $this->failure('Вы должны указать email');
+        if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $this->failure('Неправильный email');
         }
 
         if (!Subscriber::query()->find($email)) {

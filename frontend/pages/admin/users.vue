@@ -1,49 +1,52 @@
 <template>
-    <div>
-        <table-filter :filters="filters" :table="$options.name">
-            <template slot="actions">
-                <router-link class="btn btn-secondary" to="users/create">
-                    <fa icon="plus"/> Добавить
-                </router-link>
-            </template>
-        </table-filter>
+  <div>
+    <table-filter :filters="filters" :table="$options.name">
+      <template slot="actions">
+        <router-link class="btn btn-secondary" to="users/create">
+          <fa icon="plus"/>
+          Добавить
+        </router-link>
+      </template>
+    </table-filter>
 
-        <b-table stacked="md" class="mt-5"
-                 :id="$options.name"
-                 :items="items"
-                 :fields="fields"
-                 :current-page="page"
-                 :per-page="limit"
-                 :sort-by.sync="sort"
-                 :sort-direction.sync="dir"
-                 :sort-desc="dir == 'desc'"
-                 :tbody-tr-class="rowClass"
-                 show-empty
-                 no-sort-reset
-                 no-local-sorting
-                 empty-text="Подходящих результатов не найдено"
-                 empty-filtered-text="Подходящих результатов не найдено">
-            <template slot="cell(photo)" slot-scope="row">
-                <img v-if="row.value" :src="[$settings.image_url, row.item.photo_id, '50x50'].join('/')" class="mr-2"/>
-            </template>
-            <template slot="cell(email)" slot-scope="row">
-                <strong>{{row.value}}</strong>
-            </template>
-            <template slot="cell(actions)" slot-scope="row">
-                <router-link class="btn btn-sm" :to="'users/edit/' + row.item.id">
-                    <fa icon="edit"/>
-                </router-link>
-                <a href="#" class="btn btn-sm text-danger" @click.prevent="onDelete(row.item)">
-                    <fa icon="times"/>
-                </a>
-            </template>
-        </b-table>
+    <b-table
+      stacked="md"
+      class="mt-5"
+      :id="$options.name"
+      :items="items"
+      :fields="fields"
+      :current-page="page"
+      :per-page="limit"
+      :sort-by.sync="sort"
+      :sort-direction.sync="dir"
+      :sort-desc="dir == 'desc'"
+      :tbody-tr-class="rowClass"
+      show-empty
+      no-sort-reset
+      no-local-sorting
+      empty-text="Подходящих результатов не найдено"
+      empty-filtered-text="Подходящих результатов не найдено">
+      <template slot="cell(photo)" slot-scope="row">
+        <img v-if="row.value" :src="[$settings.image_url, row.item.photo_id, '50x50'].join('/')" class="mr-2"/>
+      </template>
+      <template slot="cell(email)" slot-scope="row">
+        <strong>{{row.value}}</strong>
+      </template>
+      <template slot="cell(actions)" slot-scope="row">
+        <router-link class="btn btn-sm" :to="'users/edit/' + row.item.id">
+          <fa icon="edit"/>
+        </router-link>
+        <a href="#" class="btn btn-sm text-danger" @click.prevent="onDelete(row.item)">
+          <fa icon="times"/>
+        </a>
+      </template>
+    </b-table>
 
-        <table-footer :table="$options.name" :totalRows="totalRows" :limit="limit" :page.sync="page"
-                      forms="пользователь|пользователя|пользователей"></table-footer>
+    <table-footer :table="$options.name" :totalRows="totalRows" :limit="limit" :page.sync="page"
+                  forms="пользователь|пользователя|пользователей"></table-footer>
 
-        <nuxt-child></nuxt-child>
-    </div>
+    <nuxt-child></nuxt-child>
+  </div>
 </template>
 
 <script>
@@ -128,13 +131,13 @@
 </script>
 
 <style lang="scss">
-    #admin-users {
-        td {
-            img {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-            }
-        }
+  #admin-users {
+    td {
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
     }
+  }
 </style>

@@ -34,13 +34,13 @@ export default {
     '~assets/scss/styles.scss',
   ],
   plugins: [
+    '~/plugins/app.js',
     '~/plugins/settings.js',
     '~/plugins/axios.js',
     '~/plugins/fontawesome.js',
     '~/plugins/filters.js',
     '~/plugins/vimeo.js',
     '~/plugins/metrika.js',
-    '~/plugins/app.js',
     {src: '~/plugins/autosuggest.js', ssr: false},
     {src: '~/plugins/mixins.js', ssr: false},
     {src: '~/plugins/alertify.js', ssr: false},
@@ -48,6 +48,7 @@ export default {
     {src: '~/plugins/mask.js', ssr: false},
     {src: '~/plugins/filepond.js', ssr: false},
     {src: '~/plugins/tags.js', ssr: false},
+    {src: '~/plugins/datepicker.js', ssr: false},
   ],
   modules: [
     'bootstrap-vue/nuxt',
@@ -169,7 +170,10 @@ export default {
       });
 
       return routes;
-    }
+    },
+    exclude: [
+      /^\/(admin|office|profile|p|service)\//
+    ]
   },
   sitemap: {
     hostname: 'https://krafti.ru',

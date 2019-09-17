@@ -16,6 +16,10 @@
 
   header.header {
 
+    .menu-open {
+      display: block;
+    }
+
     .header__wrap {
       position: relative;
       display: flex;
