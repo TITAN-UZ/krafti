@@ -19,13 +19,6 @@
         <b-form-checkbox v-model="record.percent">Скидка в процентах</b-form-checkbox>
       </b-form-group>
 
-      <!--<b-form-group
-        label="Название:"
-        label-for="input-title"
-        description="Внутреннее название промокода">
-        <b-form-input id="input-title" v-model="record.title"/>
-      </b-form-group>-->
-
       <b-form-group
         label="Количество использований:"
         label-for="input-limit"
@@ -37,29 +30,12 @@
         label="Время действия:"
         label-for="input-date"
         description="С какого и по какое число работает промокод">
-        <!--<date-picker id="input-date" v-model="record.date"/>-->
         <div class="row">
           <div class="col-6">
-            <vue2-datepicker
-              type="datetime"
-              format="DD.MM.YY HH:mm:ss"
-              lang="ru"
-              input-class="form-control"
-              v-model="record.date_start"
-              placeholder="работает с"
-              :value-type="formatDate"
-            />
+            <date-picker format="DD.MM.YY HH:mm:ss" v-model="record.date_start" :range="false"/>
           </div>
           <div class="col-6">
-            <vue2-datepicker
-              type="datetime"
-              format="DD.MM.YY HH:mm:ss"
-              lang="ru"
-              input-class="form-control"
-              v-model="record.date_end"
-              placeholder="работает по"
-              :value-type="formatDate"
-            />
+            <date-picker format="DD.MM.YY HH:mm:ss" v-model="record.date_end" :range="false"/>
           </div>
         </div>
       </b-form-group>

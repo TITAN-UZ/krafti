@@ -152,14 +152,6 @@ class Processor
      */
     public function success($data = [], $code = 200)
     {
-        // prolong token if it will expire in 2 hours
-        /*if ($this->container->token && $this->container->token['exp'] < (time() + 7200)) {
-            $data['token'] = $this->container->makeToken($this->container->token['id']);
-        }*/
-        if ($this->container->user) {
-            //$data['token'] = $this->container->makeToken($this->container->user->id);
-        }
-
         return $this->container->response->withJson($data, $code, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
             ->withHeader('Content-Type', 'application/json; charset=utf-8')
             ->withHeader('Access-Control-Allow-Origin', $this->container->request->getHeader('HTTP_ORIGIN'));

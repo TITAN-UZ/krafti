@@ -2,21 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Model\User;
-use Exception;
-use Firebase\JWT\JWT;
-use Psr\Log\LogLevel;
-use RuntimeException;
-
-/**
- * @OA\Info(title="Krafti API", version="1.0")
- *
- * @OA\Response(
- *        response="default",
- *        description="unexpected error",
- *        @OA\Schema(ref="#/components/schemas/Error")
- *    )
- */
 class Api
 {
 

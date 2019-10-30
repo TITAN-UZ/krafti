@@ -1,9 +1,9 @@
 <template>
   <file-pond
     ref="filepond"
-    acceptedFileTypes="application/zip, application/pdf"
+    _acceptedFileTypes="application/zip, application/pdf, image/jpeg, image/png"
     className="upload-file"
-    labelIdle="Нажмите для загрузки"
+    :labelIdle="label"
     :allow-multiple="false"
     :instantUpload="false"
     :allowDrop="true"
@@ -35,7 +35,7 @@
             label: {
                 type: String,
                 required: false,
-                default: 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
+                default: 'Нажмите для загрузки',
             },
         },
         computed: {

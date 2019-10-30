@@ -116,6 +116,13 @@ class Comments extends \App\ObjectProcessor
                         'course_id' => $reply->lesson->course_id,
                     ]);
                 }
+            } elseif ($user = User::query()->find(getenv('MANAGER_ID'))) {
+                /** @var User $user */
+                $user->sendMessage($reply->text, 'reply', $reply->user_id, [
+                    'comment_id' => $reply->id,
+                    'lesson_id' => $reply->lesson_id,
+                    'course_id' => $reply->lesson->course_id,
+                ]);
             }
         }
 

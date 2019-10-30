@@ -8,7 +8,7 @@
         </nuxt-link>
         <h2 class="teacher__item--name text-center">{{item.fullname}}</h2>
         <div class="teacher__item--position text-center">{{item.company}}</div>
-        <div class="teacher__item--text text-center">{{item.description}}</div>
+        <div class="teacher__item--text text-center" v-if="showDesc">{{item.description}}</div>
       </div>
     </div>
   </div>
@@ -32,6 +32,11 @@
                 type: String,
                 required: false,
                 default: 'col-12 col-md-6 col-lg-4 mb-5',
+            },
+            showDesc: {
+                type: Boolean,
+                required: false,
+                default: true,
             }
         },
     }

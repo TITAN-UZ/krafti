@@ -26,7 +26,7 @@ class UserOauth extends Migration
             $table->timestamps();
 
             $table->primary(['user_id', 'provider']);
-            $table->index(['identifier', 'provider']);
+            $table->unique(['provider', 'identifier']);
 
             $table->foreign('user_id')
                 ->references('id')->on('users')

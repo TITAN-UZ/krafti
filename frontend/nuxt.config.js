@@ -1,4 +1,5 @@
 import axios from 'axios'
+require('dotenv').config({path: '../core/.env'});
 
 export default {
   mode: 'universal',
@@ -6,16 +7,15 @@ export default {
     title: 'Крафти',
     meta: [
       {charset: 'utf-8'},
-      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
+      {name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'},
       {name: 'msapplication-TileColor', content: '#ffffff'},
       {name: 'theme-color', content: '#ffffff'},
-      {name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'},
       {name: 'apple-mobile-web-app-title', content: 'Крафти'},
       {hid: 'title', name: 'title', content: 'Крафти'},
       {hid: 'description', name: 'description', content: 'Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!'},
       {hid: 'og:title', property: 'og:title', content: 'Крафти'},
       {hid: 'og:description', property: 'og:description', content: 'Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!'},
-      {hid: 'og:image', property: 'og:image', content: 'https://krafti.ru/favicons/android-chrome-512x512.png'},
+      {hid: 'og:image', property: 'og:image', content: process.env.SITE_URL + 'favicons/android-chrome-512x512.png'},
       {property: 'og:site_name', content: 'Krafti.ru'},
     ],
     link: [
@@ -57,13 +57,8 @@ export default {
     '@nuxtjs/auth',
     '@nuxtjs/pwa',
     '@nuxtjs/moment',
-    '@nuxtjs/dotenv',
     '@nuxtjs/markdownit',
-    ['@nuxtjs/dotenv', {
-      path: '../core/',
-      filename: '.env',
-      only: ['COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE', 'CHILDREN_MAX'],
-    }],
+    '@nuxtjs/dotenv',
     '@nuxtjs/sitemap',
     //'@nuxtjs/eslint-module'
   ],
@@ -76,6 +71,11 @@ export default {
     localesToKeep: ['ru'],
     defaultLocale: 'ru',
   },
+  dotenv: {
+    path: '../core/',
+    filename: '.env',
+    only: ['SITE_URL', 'COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE', 'CHILDREN_MAX'],
+  },
   markdownit: {
     html: true,
     linkify: true,
@@ -84,7 +84,7 @@ export default {
     injected: true,
   },
   axios: {
-    baseURL: 'https://krafti.ru/api/',
+    baseURL: process.env.SITE_URL + 'api/',
     progress: true,
     proxyHeaders: false,
     credentials: false
@@ -157,8 +157,8 @@ export default {
   generate: {
     routes: async function () {
       const [authors, courses] = await Promise.all([
-        axios.get('https://krafti.ru/api/web/authors'),
-        axios.get('https://krafti.ru/api/web/courses'),
+        axios.get(process.env.SITE_URL + 'api/web/authors'),
+        axios.get(process.env.SITE_URL + 'api/web/courses'),
       ]);
 
       let routes = [];
@@ -176,7 +176,7 @@ export default {
     ]
   },
   sitemap: {
-    hostname: 'https://krafti.ru',
+    hostname: process.env.SITE_URL,
     gzip: false,
     exclude: [
       '/admin',

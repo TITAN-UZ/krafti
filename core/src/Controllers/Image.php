@@ -36,25 +36,43 @@ class Image
                 'path' => BASE_DIR . '/tmp/imagecache',
             ],
         ]);
+
         /** @var File $file */
         if ($file = File::query()->find($args['id'])) {
             $size = array_map(function ($v) {
                 return empty($v) ? null : $v;
             }, explode('x', $args['size']));
 
-            $image = $manager->cache(function (ImageCache $image) use ($file, $size) {
-                /** @noinspection PhpUndefinedMethodInspection */
-                $image->make($file->getFile())
-                    ->resize($size[0], $size[1], function (Constraint $constraint) {
+            $params = [];
+            if (!empty($args['params'])) {
+                $params = explode(',', $args['params']);
+            }
+
+            $image = $manager->cache(function (ImageCache $image) use ($file, $size, $params) {
+                $image->make($file->getFile());
+                if (in_array('fit', $params)) {
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    $image->fit($size[0], $size[1], function (Constraint $constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
-                    })
-                    ->interlace()
-                    ->encode('jpg', 90);
+                    });
+                } else {
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    $image->resize($size[0], $size[1], function (Constraint $constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+                }
+
+                /** @noinspection PhpUndefinedMethodInspection */
+                $image->interlace()->encode(str_replace('image/', '', $file->type), 90);
+
             }, $this::cache_time);
             $response->write($image);
 
-            return $response->withHeader('Content-Type', 'image/jpg');
+            return $response
+                ->withHeader('Expires', $file->updated_at->addDay()->toRfc822String())
+                ->withHeader('Content-Type', $file->type);
         }
 
         return $response->withStatus(404);

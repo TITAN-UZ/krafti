@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 export default ({app, $axios}, inject) => {
   let settings = {
     image_url: $axios.defaults.baseURL.replace('api/', 'image'),
@@ -9,7 +7,7 @@ export default ({app, $axios}, inject) => {
     },
     links: {
       instagram: 'https://www.instagram.com/krafti.ru/',
-      whatsapp: 'https://api.whatsapp.com/send?phone=79133735899',
+      whatsapp: 'https://api.whatsapp.com/send?phone=+79137206478',
       email: 'mailto:info@krafti.ru',
       favorites: '/profile/favorites',
       profile: '/profile/update',

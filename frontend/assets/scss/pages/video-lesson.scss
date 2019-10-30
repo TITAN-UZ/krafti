@@ -52,8 +52,8 @@ a.button {
     .needed__item {
       background: #EAEAEA;
       border-radius: 10px;
-      margin: 5px 0;
-      padding: 10px 10px 10px 26px;
+      margin: 2px 0;
+      padding: 5px 5px 5px 20px;
       flex-basis: 49%;
       position: relative;
 
@@ -64,12 +64,12 @@ a.button {
         left: 10px;
         border-left: 3px solid #4BBFDC;
         font-weight: 200;
-        font-size: 20px;
+        font-size: 14px;
         text-indent: -99999999px;
       }
 
       &--title {
-        font-size: 16px;
+        font-size: 14px;
       }
 
       &--cart {

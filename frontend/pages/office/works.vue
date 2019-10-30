@@ -6,15 +6,18 @@
     <div v-else>
       <div v-if="homeworks.length">
         <h2 class="worksList--title">Домашние работы</h2>
-        <div class="row item__wrap worksList align-items-center">
+        <div class="row item__wrap worksList align-items-center flex-wrap">
           <div class="col-lg-3 col-md-4 col-6 m-width-80" v-for="item in homeworks">
+            <div class="mt-2 text-center text-muted">
+              {{item.course.title}}, этап {{item.section}}
+            </div>
             <a :href="item.file" target="_blank" rel="noreferrer" class="work__item">
               <div class="work__item">
                 <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="">
               </div>
             </a>
-            <div class="mt-2 text-center text-muted">
-              {{item.course.title}}, этап {{item.section}}
+            <div v-if="item.comment" class="mt-2 text-center">
+              <strong>Отзыв от Krafti:</strong><br>{{item.comment}}
             </div>
           </div>
           <!--<div class="col-lg-3 col-md-4 col-6 m-width-80"><a class="work__item consideration" href="">
@@ -27,15 +30,18 @@
       </div>
       <div v-if="lessonworks.length">
         <h2 class="worksList--title">Выполненные уроки</h2>
-        <div class="row item__wrap worksList  align-items-center">
+        <div class="row item__wrap worksList align-items-center flex-wrap">
           <div class="col-lg-3 col-md-4 col-6 m-width-80" v-for="item in lessonworks">
+            <div class="mt-2 text-center text-muted">
+              {{item.course.title}} / {{item.lesson.title}} {{item.comment}}
+            </div>
             <a :href="item.file" target="_blank" rel="noreferrer" class="work__item">
               <div class="work__item">
                 <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="">
               </div>
             </a>
-            <div class="mt-2 text-center text-muted">
-              {{item.course.title}} / {{item.lesson.title}}
+            <div v-if="item.comment" class="mt-2 text-center">
+              <strong>Отзыв от Krafti:</strong> {{item.comment}}
             </div>
           </div>
           <!--<div class="col-lg-3 col-md-4 col-6 m-width-80">

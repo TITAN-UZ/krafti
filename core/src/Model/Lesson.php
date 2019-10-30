@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property int $section
  * @property bool $active
  * @property bool $extra
+ * @property bool $free
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  *
@@ -37,11 +38,12 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  */
 class Lesson extends Model
 {
-    protected $fillable = ['title', 'description', 'products', 'course_id', 'video_id', 'bonus_id', 'file_id', 'author_id', 'rank', 'section', 'active', 'extra'];
+    protected $fillable = ['title', 'description', 'products', 'course_id', 'video_id', 'bonus_id', 'file_id', 'author_id', 'rank', 'section', 'active', 'extra', 'free'];
     protected $casts = [
         'products' => 'array',
         'active' => 'boolean',
         'extra' => 'boolean',
+        'free' => 'boolean',
     ];
 
 

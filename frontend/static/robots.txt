@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /_nuxt/
+Disallow: /admin/
 Host: krafti.ru
 
 User-agent: AhrefsBot

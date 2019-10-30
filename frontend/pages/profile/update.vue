@@ -57,19 +57,9 @@
                     <b-form-group class="mb-3" label="Дата рождения" label-for="form-dob">
                       <date-picker
                         v-model="form.dob"
-                        ref="datepicker"
-                        input-class="form-control"
-                        type="date"
-                        format="DD.MM.YYYY"
-                        lang="ru"
-                        width="100%"
-                        value-type="format"
-                        :input-attr="{required: true}"
-                        :value-type="formatDate"
-                        :shortcuts="false"
-                        :clearable="false"
-                        :first-day-of-week="1"
-                        :default-value="getYear()"
+                        :required="true"
+                        :range="false"
+                        :default-value="getYear(20)"
                         :not-after="getYear()">
                         <template slot="calendar-icon">&nbsp;</template>
                       </date-picker>
@@ -147,18 +137,8 @@
                             label-align="right">
                             <date-picker
                               v-model="child.dob"
-                              ref="child-datepicker"
-                              input-class="form-control"
-                              type="date"
-                              format="DD.MM.YYYY"
-                              lang="ru"
-                              width="100%"
-                              value-type="format"
-                              :input-attr="{required: children_form}"
-                              :value-type="formatDate"
-                              :shortcuts="false"
-                              :clearable="false"
-                              :first-day-of-week="1"
+                              :range="false"
+                              :required="children_form"
                               :default-value="getYear(6)"
                               :not-after="getYear(2)">
                               <template slot="calendar-icon">&nbsp;</template>

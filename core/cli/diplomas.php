@@ -7,6 +7,7 @@ use App\Model\File;
 /** @var Slim\App $app */
 require '_initialize.php';
 $font = BASE_DIR . '/core/templates/fonts/koskobold.ttf';
+$new = 0;
 
 foreach (Diploma::query()->whereNull('file_id')->get() as $diploma) {
     /** @var Diploma $diploma */
@@ -29,6 +30,7 @@ foreach (Diploma::query()->whereNull('file_id')->get() as $diploma) {
     if ($id = $file->uploadFile(['tmp_name' => $tmp_name, 'type' => 'image/jpeg', 'name' => 'Diploma'])) {
         $diploma->file_id = $id;
         $diploma->save();
+        $new++;
 
         if ($child = $diploma->child) {
             $diploma->user->sendMessage('Мы сгенерировали диплом об окончании курса "' . $course->title . ' ' . ($child->gender ? 'вашей дочери' : 'вашему сыну') . ' ' . $child->name, 'diploma');
@@ -38,3 +40,7 @@ foreach (Diploma::query()->whereNull('file_id')->get() as $diploma) {
     }
     @unlink($tmp_name);
 }
+
+$container->logger->info('Processed all diplomas', [
+    'new' => $new,
+]);

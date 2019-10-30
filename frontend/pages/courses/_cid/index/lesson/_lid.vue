@@ -81,7 +81,7 @@
                 </div>
               </div>
 
-              <authors-list :authors="[record.author]" row-class="d-flex justify-content-center" item-class="col-9"/>
+              <authors-list :authors="[record.author]" :show-desc="false" row-class="d-flex justify-content-center" item-class="col-9"/>
 
               <!--<div class="row">
                 <div class="col-12">

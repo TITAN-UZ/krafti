@@ -85,6 +85,7 @@
 
       <b-form-checkbox class="offset-lg-3" v-model="record.active">Опубликован</b-form-checkbox>
       <b-form-checkbox class="offset-lg-3 mt-2" v-model="record.extra">Дополнительный материал</b-form-checkbox>
+      <!--<b-form-checkbox class="offset-lg-3 mt-2" v-model="record.free">Доступен бесплатно</b-form-checkbox>-->
 
       <b-row no-gutters class="mt-4 justify-content-between">
         <b-button variant="secondary" @click="$root.$emit('bv::hide::modal', 'myNestedModal')"

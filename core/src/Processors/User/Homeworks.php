@@ -35,7 +35,7 @@ class Homeworks extends GetProcessor
     public function beforeCount($c)
     {
         $c->where(['user_id' => $this->container->user->id]);
-        $c->select(['id', 'course_id', 'lesson_id', 'file_id', 'section']);
+        $c->select(['id', 'course_id', 'lesson_id', 'file_id', 'section', 'comment']);
 
         if ($course_id = (int)$this->getProperty('course_id')) {
             $lesson_id = (int)$this->getProperty('lesson_id');

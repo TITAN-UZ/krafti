@@ -24,7 +24,7 @@ class Progress extends \App\Processor
         }
 
         $progress = $this->container->user->getProgress($course);
-        if ($course->lessons()->where(['section' => $lesson->section])->where('rank', '>', $lesson->rank)->count()) {
+        if ($lesson->rank + 1 > $progress['rank'] && $course->lessons()->where(['section' => $lesson->section])->where('rank', '>', $lesson->rank)->count()) {
             $progress = $this->container->user->makeProgress($course, $lesson->section, $lesson->rank + 1);
         }/* elseif ($course->lessons()->where('section', '>', $lesson->section)->count()) {
             $progress = $this->container->user->makeProgress($course, $lesson->section + 1, 1);

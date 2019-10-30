@@ -104,7 +104,7 @@ class Oauth2 extends \App\Processor
                         $user = User::query()->find($user_id);
                         $oauth->user_id = $user_id;
                     } else {
-                        $this->container->logger->error('Could not save Oauth');
+                        $this->container->logger->error('Could not get saved user for oAuth', ['data' => $oauth->toArray()]);
                         return $this->failure([
                             'error' => 'Не могу получить созданного пользователя',
                         ]);
@@ -124,7 +124,9 @@ class Oauth2 extends \App\Processor
                     }
                 }
                 $oauth->fill(json_decode(json_encode($profile), true));
-                $oauth->save();
+                if (!$oauth->save()) {
+                    $this->container->logger->error('Could not save oAuth', ['data' => $oauth->toArray()]);
+                }
             }
 
             if (!$user->active) {

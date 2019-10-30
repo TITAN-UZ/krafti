@@ -273,6 +273,23 @@
                       </div>
 
                     </b-tab>
+                    <b-tab title="Пробный урок" v-else-if="record.free && record.free.length">
+                      <div class="alert alert-info pt-3 pb-3">
+                        <p>Вы можете посмотреть пробный урок перед покупкой курса, чтобы понять, подходят ли вам наши занятия.</p>
+                        <p>
+                          После покупки вы получите доступ к комментариям этого урока, познавательной лекции,
+                          списку необходимых инструментов и возможности отправить вашу работу преподавателю. Ну и, конечно, другим урокам нашего курса!
+                        </p>
+                      </div>
+                      <div class="embed-responsive embed-responsive-16by9" v-for="free in record.free">
+                        <iframe
+                          v-if="free.video && free.video.vimeo"
+                          class="embed-responsive-item rounded"
+                          :src="'https://player.vimeo.com/video/' + free.video.vimeo"
+                          allowfullscreen
+                          allow="autoplay; fullscreen"/>
+                      </div>
+                    </b-tab>
                   </b-tabs>
                 </div>
                 <div class="col-12 tab__wrap--scroll mt-5">
@@ -462,6 +479,7 @@
             },
             isLessonOpen(item) {
                 const progress = this.record.progress;
+                // Open first lesson in course
                 if (item.section == 1) {
                     if (!this.extra && !item.extra) {
                         this.extra = item.id;
@@ -472,7 +490,7 @@
                     }
                 }
 
-                return item.extra || progress.section > item.section || (progress.section == item.section && progress.rank >= item.rank);
+                return item.extra || (!progress.section && !progress.rank) || progress.section > item.section || (progress.section == item.section && progress.rank >= item.rank);
             },
             async loadLessons() {
                 const res = await this.$axios.get('web/courses', {params: {id: this.record.id}});

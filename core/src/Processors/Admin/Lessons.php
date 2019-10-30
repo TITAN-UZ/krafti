@@ -165,6 +165,7 @@ class Lessons extends \App\ObjectProcessor
                 : null,
             'active' => $object->active,
             'extra' => $object->extra,
+            'free' => $object->free,
         ];
 
         return $array;

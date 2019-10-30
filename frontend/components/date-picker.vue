@@ -3,18 +3,21 @@
     class="date-picker"
     v-model="date"
     ref="datepicker"
-    type="date"
-    format="DD.MM.YY"
     range-separator="~"
     input-class="form-control"
-    :width="width"
     :lang="'ru'"
     :confirm="false"
     :editable="true"
-    :range="true"
     :shortcuts="false"
+    :width="width"
+    :type="type"
+    :range="range"
+    :format="format"
     :first-day-of-week="1"
     :value-type="formatDate"
+    :input-attr="{required: required, disabled: disabled}"
+    :default-value="defaultValue"
+    :not-after="notAfter"
     @clear="onDateClear"
     @change="onDateChange">
     <template slot="calendar-icon">
@@ -45,16 +48,27 @@
             }
         },
         props: {
-            value: {
-                type: Array,
-                default() {
-                    return []
-                }
-            },
+            value: null,
             width: {
                 type: String,
                 default: 'auto'
             },
+            range: {
+                type: Boolean,
+                default: true
+            },
+            format: {
+                type: String,
+                default: 'DD.MM.YYYY'
+            },
+            type: {
+                type: String,
+                default: 'date'
+            },
+            disabled: false,
+            required: false,
+            defaultValue: null,
+            notAfter: null
         },
         computed: {
             date: {
@@ -82,9 +96,7 @@
 
 <style lang="scss">
   .date-picker {
-    /*.mx-datepicker-range {
-      width: 100%;
-    }*/
+    width: 100% !important;
 
     .mx-range-wrapper {
       width: auto;
@@ -94,15 +106,17 @@
 
     .mx-input-wrapper {
       .mx-input-append {
-        top: 2px;
         cursor: pointer;
-      }
-
-      .mx-clear-wrapper {
-        display: block;
-
-        & + .mx-input-append {
-          display: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        svg {
+          margin-top: -4px;
+        }
+        &.mx-clear-wrapper {
+          & + .mx-input-append {
+            display: none;
+          }
         }
       }
     }

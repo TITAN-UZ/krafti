@@ -10,7 +10,7 @@ class User extends Migration
     {
         $this->schema->create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('email', 100)->nullable()->index();
+            $table->string('email', 100)->nullable()->unique();
             $table->string('password')->nullable(false);
             $table->string('tmp_password')->nullable();
             $table->string('fullname', 100)->nullable();

@@ -18,9 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class UserToken extends Model
 {
-    use Traits\CompositeKey;
-
-    protected $primaryKey = ['user_id', 'created_at'];
+    public $incrementing = false;
+    protected $primaryKey = 'token';
     protected $fillable = ['token', 'user_id', 'active', 'ip', 'valid_till'];
     protected $casts = [
         'active' => 'boolean',

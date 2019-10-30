@@ -3,6 +3,7 @@
 namespace App\Processors\Web;
 
 use App\Model\Course;
+use App\Model\Lesson;
 use App\Model\Order;
 use App\Model\UserProgress;
 use Illuminate\Database\Eloquent\Builder;
@@ -60,7 +61,7 @@ class Courses extends \App\GetProcessor
             'video' => $object->video
                 ? [
                     'id' => $object->video->id,
-                    'remote_key' => $object->video->remote_key
+                    'remote_key' => $object->video->remote_key,
                 ]
                 : null,
             'bought' => false,
@@ -84,6 +85,17 @@ class Courses extends \App\GetProcessor
                 $array['progress'] = [
                     'section' => $progress->section,
                     'rank' => $progress->rank,
+                ];
+            }
+        } elseif ($free = $object->lessons()->where(['free' => true])->get()) {
+            /** @var Lesson $item */
+            foreach ($free as $item) {
+                $array['free'][] = [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'video' => $item->video
+                        ? ['vimeo' => $item->video->remote_key]
+                        : null,
                 ];
             }
         }
