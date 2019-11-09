@@ -46,6 +46,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read UserChild[] $children
  * @property-read Diploma[] $diplomas
  * @property-read Message[] $messages
+ * @property-read Homework[] $homeworks
+ * @property-read UserProgress[] $progresses
  */
 class User extends Model
 {
@@ -225,6 +227,24 @@ class User extends Model
     public function diplomas()
     {
         return $this->hasMany('App\Model\Diploma')->whereNotNull('file_id');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function homeworks()
+    {
+        return $this->hasMany('App\Model\Homework');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function progresses()
+    {
+        return $this->hasMany('App\Model\UserProgress');
     }
 
 
