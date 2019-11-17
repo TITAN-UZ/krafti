@@ -11,6 +11,11 @@ class Reviews extends \App\GetProcessor
     protected $class = '\App\Model\Comment';
 
 
+    /**
+     * @param Builder $c
+     *
+     * @return Builder
+     */
     public function beforeGet($c)
     {
         $c->where(['review' => true, 'deleted' => false]);
@@ -29,7 +34,10 @@ class Reviews extends \App\GetProcessor
     {
         $c->groupBy('user_id');
         $c->where(['review' => true, 'deleted' => false]);
-        $c->with('user');
+        $c->with('user:id,fullname,company,photo_id');
+        if ($this->getProperty('limit') < 20) {
+            $c->orderByRaw('RAND()');
+        }
 
         return $c;
     }

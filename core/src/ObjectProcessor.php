@@ -123,29 +123,30 @@ class ObjectProcessor extends Processor
         }
 
         $c = $this->beforeCount($c);
+        if ($limit = $this->getProperty('limit', 20)) {
+            $page = $this->getProperty('page', 1);
+            //$total = $c->count();
+            $total = $this->container->db->table($this->container->db->raw("({$c->toSql()}) as sub"))
+                ->mergeBindings($c->getQuery())
+                ->count();
+            $c->forPage($page, $limit);
+        }
+        $c = $this->afterCount($c);
+
+        $query = $c->getQuery();
+        if (empty($query->{$query->unions ? 'unionOrders' : 'orders'}) && $sort = $this->getProperty('sort')) {
+            $c->orderBy(/*$class->getTable() . '.' . */$sort, $this->getProperty('dir', 'asc'));
+        }
 
         $rows = [];
-        if ($total = $c->count()) {
-            $c = $this->afterCount($c);
-            if ($limit = $this->getProperty('limit', 20)) {
-                $page = $this->getProperty('page', 1);
-                $c->forPage($page, $limit);
-            }
-
-            $query = $c->getQuery();
-            if (empty($query->{$query->unions ? 'unionOrders' : 'orders'}) && $sort = $this->getProperty('sort', '')) {
-                $c->orderBy($class->getTable() . '.' . $sort, $this->getProperty('dir') == 'desc' ? 'desc' : 'asc');
-            }
-
-            $objects = $c->get();
-            foreach ($objects as $object) {
-                $data = $this->prepareRow($object);
-                $rows[] = $data;
-            }
+        foreach ($c->get() as $object) {
+            $rows[] = $this->prepareRow($object);
         }
 
         return $this->success([
-            'total' => $total,
+            'total' => isset($total)
+                ? $total
+                : count($rows),
             'rows' => $rows,
         ]);
     }

@@ -8,7 +8,7 @@ use App\Model\User;
 use App\Model\UserProgress;
 
 /** @var User $user */
-foreach (User::query()->whereHas('orders')->get() as $user) {
+foreach (User::query()->get() as $user) {
 
     /** @var UserProgress $progress */
     if ($progress = $user->progresses()->where('course_id', '=', 1)->first()) {
@@ -16,30 +16,39 @@ foreach (User::query()->whereHas('orders')->get() as $user) {
             continue;
         }
 
-        /** @var Homework $section */
-        $section = $user->homeworks()
+        /** @var Homework $homework */
+        $homework = $user->homeworks()
+            ->where('section', '>=', $progress->section)
             ->orderBy('section', 'desc')
             ->orderBy('lesson_id', 'desc')
             ->first();
 
-        if ($section) {
-            if ($section->section > $progress->section) {
-                echo $user->id, ' ' . $user->fullname, ': ', $progress->section, ' - ', $section->section, "\n";
-                $progress->section = $section->section;
-                /** @var Homework $lesson */
-                $lesson = $user->homeworks()
-                    ->join('lessons', 'lessons.id', '=', 'homeworks.lesson_id')
-                    ->orderBy('lessons.section', 'desc')
-                    ->orderBy('lessons.rank', 'desc')
-                    ->first();
-                if ($lesson) {
-                    print_r($lesson->toArray());die;
-                } else {
-                    $progress->rank = 1;
-                }
-                //$progress->save();
+        if ($homework) {
+            echo "$user->id: $user->fullname: $homework->section, $progress->section/$progress->rank";
+            if ($homework->section >= 3) {
+                $progress->section = 0;
+                $progress->rank = 0;
+            } else {
+                $progress->section = ($homework->section + 1);
+                $progress->rank = 0;
+            }
+        } else {
+            continue;
+        }
+
+        /** @var Homework $homework */
+        $homework = $user->homeworks()
+            ->where('section', '=', 0)
+            ->orderBy('lesson_id', 'desc')
+            ->first();
+        if ($homework) {
+            if ($homework->lesson->section == $progress->section && $homework->lesson->rank > $progress->rank) {
+                $progress->rank = $homework->lesson->rank;
             }
         }
+
+        echo " --- $progress->section/$progress->rank\n";
+        //$progress->save();
     }
 }
 
