@@ -14,8 +14,7 @@
                 <div class="col-lg-6 col-12">
                   <div class="contacts__links-block">
                     <div class="contacts__text mb-2">
-                      <p>Хотите поделиться впечатлениями, задать вопросы или предложить тему для творчества?</p>
-                      <p>Свяжитесь с нами любым удобным способом:</p>
+
                     </div>
                     <ul class="contacts__list">
                       <li class="contact__item">
