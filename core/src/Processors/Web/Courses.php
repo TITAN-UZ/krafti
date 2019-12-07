@@ -66,6 +66,7 @@ class Courses extends \App\GetProcessor
                 : null,
             'bought' => false,
             'discount' => 0,
+            'discount_type' => '',
             'progress' => [
                 'section' => 1,
                 'rank' => 0,
@@ -75,7 +76,10 @@ class Courses extends \App\GetProcessor
         if ($this->container->user) {
             $array['bought'] = $object->wasBought($this->container->user->id);
             if (!$array['bought']) {
-                $array['discount'] = $object->getDiscount($this->container->user->id);
+                if ($tmp = $object->getDiscount($this->container->user->id)) {
+                    $array['discount'] = $tmp['discount'];
+                    $array['discount_type'] = $tmp['type'];
+                }
             } elseif ($order = $this->container->user->orders()->where(['course_id' => $object->id])->first()) {
                 /** @var Order $order */
                 $array['paid_till'] = $order->paid_till->toIso8601String();

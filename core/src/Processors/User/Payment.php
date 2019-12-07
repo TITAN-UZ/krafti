@@ -81,7 +81,13 @@ class Payment extends \App\Processor
             return $this->failure('Не указана стоимость курса');
         }
         $cost = $course->price[$period];
-        $discount = $course->getDiscount($this->container->user->id);
+        $discount = 0;
+        if ($tmp = $course->getDiscount($this->container->user->id)) {
+            $discount = $tmp['discount'];
+            if ($discount && substr($discount, -1) == '%') {
+                $discount = $cost * (rtrim($discount, '%') / 100);
+            }
+        }
 
         $key = [
             'course_id' => $course->id,

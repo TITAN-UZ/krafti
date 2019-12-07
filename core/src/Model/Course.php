@@ -138,7 +138,10 @@ class Course extends Model
                 return true;
             }
             /** @var Order $order */
-            $order = $this->orders()->where(['user_id' => $user_id, 'status' => 2])->first();
+            $order = $this->orders()
+                ->where(['user_id' => $user_id, 'status' => 2])
+                ->orderBy('paid_till', 'desc')
+                ->first();
 
             return $order && $order->paid_till > date('Y-m-d H:i:s');
         }
@@ -150,19 +153,27 @@ class Course extends Model
     /**
      * @param $user_id
      *
-     * @return bool
+     * @return array|false
      */
     public function getDiscount($user_id)
     {
-        $discount = 0;
+        $res = false;
         /** @var User $user */
         if ($user = User::query()->find($user_id)) {
-            if ($user->referrer_id && !$this->orders()->where(['user_id' => $user_id, 'status' => 2])->count()) {
-                $discount = getenv('COURSE_DISCOUNT');
+            if ($this->orders()->where(['user_id' => $user_id, 'status' => 2])->where('paid_till', '<', date('Y-m-d H:i:s'))->count()) {
+                $res = [
+                    'discount' => getenv('COURSE_PROLONG_DISCOUNT'),
+                    'type' => 'order'
+                ];
+            } elseif ($user->referrer_id && !$this->orders()->where(['user_id' => $user_id, 'status' => 2])->count()) {
+                $res = [
+                    'discount' => getenv('COURSE_DISCOUNT'),
+                    'type' => 'referrer'
+                ];
             }
         }
 
-        return $discount;
+        return $res;
     }
 
 

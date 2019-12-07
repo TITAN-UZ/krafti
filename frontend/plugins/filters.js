@@ -17,6 +17,20 @@ export default ({app}, inject) => {
         return password;
     });
 
+    Vue.filter('price', (price, discount = 0) => {
+        if (typeof discount == 'string') {
+            const x = discount.length - 1;
+            if (discount[x] == '%') {
+                discount = discount.slice(0, x);
+                discount = price * (discount / 100);
+            }
+        }
+        if (discount > 0) {
+            price -= discount
+        }
+        return price;
+    });
+
     Vue.filter('number', (value) => {
         return value
             ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')

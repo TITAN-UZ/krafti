@@ -239,7 +239,7 @@
         computed: {
             promo: {
                 get() {
-                    return 'https://krafti.ru/p/' + this.$auth.user.promo;
+                    return process.env.SITE_URL + 'p/' + this.$auth.user.promo;
                 }
             },
         },

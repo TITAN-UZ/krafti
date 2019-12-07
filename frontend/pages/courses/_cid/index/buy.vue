@@ -8,19 +8,19 @@
           :size="payment.period == 3 ? 'lg' : ''"
           :variant="payment.period == 3 ? 'primary' : 'outline-secondary'"
           :disabled="loading"
-          @click="payment.period = 3">Доступ на<br>3 месяца<br>за {{record.price['3'] - record.discount | number}} р
+          @click="payment.period = 3">Доступ на<br>3 месяца<br>за {{record.price['3'] | price(record.discount) | number}} р
         </b-button>
         <b-button
           :size="payment.period == 6 ? 'lg' : ''"
           :variant="payment.period == 6 ? 'primary' : 'outline-secondary'"
           :disabled="loading"
-          @click="payment.period = 6">Доступ на<br>6 месяцев<br>за {{record.price['6'] - record.discount | number}} р
+          @click="payment.period = 6">Доступ на<br>6 месяцев<br>за {{record.price['6'] | price(record.discount) | number}} р
         </b-button>
         <b-button
           :size="payment.period == 12 ? 'lg' : ''"
           :variant="payment.period == 12 ? 'primary' : 'outline-secondary'"
           :disabled="loading"
-          @click="payment.period = 12">Доступ на<br>1 год<br>за {{record.price['12'] - record.discount | number}} р
+          @click="payment.period = 12">Доступ на<br>1 год<br>за {{record.price['12'] | price(record.discount) | number}} р
         </b-button>
       </div>
       <div class="mt-5 payment">
@@ -42,13 +42,18 @@
       </div>
 
       <div class="alert alert-info mt-5" v-if="record.discount">
-        Благодаря тому, что вы зарегистрировались по реферальной ссылке,
-        у вас есть скидка <strong>{{record.discount | number}} р.</strong> на первую покупку.
+        <template v-if="record.discount_type == 'order'">
+          Вы уже покупали этот курс, и получаете скидку <strong>{{record.discount}}</strong> на продление.
+        </template>
+        <template v-else>
+          Благодаря тому, что вы зарегистрировались по реферальной ссылке,
+          у вас есть скидка <strong>{{record.discount | number}} р.</strong> на первую покупку.
+        </template>
       </div>
 
       <div class="mt-4 text-center">
         <div class="auth-form">
-          <b-form-group description="Если у вас есть промокод - укажите его здесь">
+          <b-form-group description="Если у вас есть промокод - укажите его здесь. Скидки не суммируются, выбирается максимальная.">
             <b-form-input v-model.trim="payment.code" placeholder="Промокод" :state="discount_code"/>
           </b-form-group>
         </div>

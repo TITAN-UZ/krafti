@@ -40,7 +40,7 @@
                           <fa :icon="['fad', 'share']" size="2x"/>
                         </a>
                       </template>
-                      <social-sharing :url="'https://krafti.ru/courses/' + $route.params.cid" inline-template>
+                      <social-sharing :url="SITE_URL + 'courses/' + $route.params.cid" inline-template>
                         <div>
                           <b-dropdown-item>
                             <network network="facebook">
@@ -82,7 +82,7 @@
                   <div class="row course__dopinfo mb-2 d-flex align-items-center justify-content-around">
                     <div class="col nowrap">
                       <fa :icon="['fad', 'eye']"/>
-                      <span class="text">{{record.views_count}}</span>
+                      <span class="text">{{record.views_count | number}}</span>
                     </div>
                     <div class="col nowrap">
                       <fa :icon="['fad', 'user']"/>
@@ -90,7 +90,7 @@
                     </div>
                     <div class="col nowrap">
                       <fa :icon="['fad', 'thumbs-up']"/>
-                      <span class="text">{{record.likes_sum}}</span>
+                      <span class="text">{{record.likes_sum | number}}</span>
                     </div>
                   </div>
                   <div class="row buy__wrap">
@@ -114,7 +114,7 @@
                       class="btn btn-default btn__buy"
                       v-else-if="record.bought === false"
                       :to="{name: 'courses-cid-index-buy', params: $route.params}">
-                      Купить от <span class="price ml-2">{{record.price[3] - record.discount | number}} р</span>
+                      Купить от <span class="price ml-2">{{record.price[3] | price(record.discount) | number}} р</span>
                     </nuxt-link>
                   </div>
                 </div>
@@ -389,6 +389,7 @@
                 style_bg: {'background-image': 'url(' + bg + ')'},
                 homeworks: {},
                 extra: false,
+                SITE_URL: process.env.SITE_URL
             }
         },
         computed: {
