@@ -5,10 +5,8 @@
         <div class="diploam__item d-flex align-content-center justify-content-between">
           <div class="left__block d-flex justify-content-start align-items-end">
             <div class="diploam__info">
-              <h2 class="diploam__info--title">
-                {{diploma.course.title}}
-                <span v-if="diploma.child">, {{diploma.child.name}}</span>
-              </h2>
+              <h2 class="diploam__info--title">{{diploma.course.title}}</h2>
+              <div v-if="diploma.child" class="mb-2">{{diploma.child.name}}</div>
               <a class="diploam__info--link" :href="diploma.file" target="_blank" rel="noreferrer">Скачать диплом</a>
             </div>
           </div>
