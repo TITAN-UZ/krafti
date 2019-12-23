@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div :class="'mb-3 mb-md-0 course ' + (courses.length == 1 ? 'big' : 'small')" v-for="course in courses">
+    <div :class="'mb-3 course ' + (courses.length == 1 ? 'big' : 'small')" v-for="course in courses">
       <nuxt-link :to="{name: 'courses-cid', params: {cid: course.id}}"
                  :style="{'background-image': (course.cover ? 'url(' + course.cover + ')' : false)}">
         <div class="d-flex flex-column justify-content-between h-100">

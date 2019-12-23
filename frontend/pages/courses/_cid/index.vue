@@ -107,7 +107,7 @@
                     <nuxt-link
                       class="btn btn-default btn__play"
                       v-else-if="record.bought === true"
-                      :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons[1][1].id}}">
+                      :to="{name: 'courses-cid-index-lesson-lid', params: {cid: record.id, lid: lessons[1][1] ? lessons[1][1].id : lessons[1][0].id}}">
                       <span>Начать просмотр</span>
                     </nuxt-link>
                     <nuxt-link
@@ -174,7 +174,7 @@
                       <authors-list :authors="authors"/>
                     </b-tab>
                     <b-tab title="Уроки" v-if="Object.keys(lessons).length" active>
-                      <div class="row palitra">
+                      <div class="row palitra" v-if="Object.keys(lessons).length > 1">
                         <div
                           class="col-lg-8 col-12 palitra__info d-flex justify-content-center align-items-center flex-column">
                           <div class="palitra__info--title">Палитра прогресса</div>
