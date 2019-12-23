@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Diploma extends Model
 {
-    
+
     protected $fillable = ['user_id', 'course_id', 'child_id', 'file_id'];
 
 
@@ -58,5 +58,18 @@ class Diploma extends Model
     public function file()
     {
         return $this->belongsTo('App\Model\File');
+    }
+
+    /**
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        if ($file = $this->file) {
+            $file->delete();
+        }
+
+        return parent::delete();
     }
 }

@@ -32,7 +32,7 @@ class Diploma extends Migration
             $table->foreign('file_id')
                 ->references('id')->on('files')
                 ->onUpdate('restrict')
-                ->onDelete('cascade');
+                ->onDelete('set null');
         });
     }
 
