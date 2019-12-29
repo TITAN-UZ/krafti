@@ -143,7 +143,7 @@
                 if (val === '') {
                     this.discount_code = null;
                 } else {
-                    this.$axios.get('user/payment', {params: {code: val}})
+                    this.$axios.get('user/payment', {params: {code: val, course_id: this.$route.params.cid}})
                         .then(res => {
                             if (!res.data.success && res.data.message) {
                                 this.$notify.info({message: res.data.message});

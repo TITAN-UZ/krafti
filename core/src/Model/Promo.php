@@ -32,9 +32,10 @@ class Promo extends Model
 
 
     /**
+     * @param int $course_id
      * @return bool|string
      */
-    public function check()
+    public function check($course_id = 0)
     {
         $date = date('Y-m-d H:i:s');
 
@@ -46,6 +47,10 @@ class Promo extends Model
         }
         if ($this->limit && $this->used >= $this->limit) {
             return 'Этот промокод больше не действителен';
+        }
+
+        if ($course_id && $course_id != 1) {
+            return 'Промокод действителен только для детского курса';
         }
 
         return true;

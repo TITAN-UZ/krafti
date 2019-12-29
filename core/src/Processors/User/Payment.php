@@ -16,10 +16,11 @@ class Payment extends \App\Processor
     public function get()
     {
         $code = trim($this->getProperty('code'));
+        $course_id = (int)$this->getProperty('course_id');
 
         /** @var Promo $promo */
         if ($code && $promo = Promo::query()->where(['code' => $code])->first()) {
-            $check = $promo->check();
+            $check = $promo->check($course_id);
             if ($check !== true) {
                 return $this->success([
                     'success' => false,
@@ -104,7 +105,7 @@ class Payment extends \App\Processor
         $code = $this->getProperty('code');
         /** @var Promo $promo */
         if ($code && $promo = Promo::query()->where(['code' => $code])->first()) {
-            $check = $promo->check();
+            $check = $promo->check($course->id);
             if ($check !== true) {
                 return $this->failure($check);
             }
