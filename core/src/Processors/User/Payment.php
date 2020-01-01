@@ -131,13 +131,20 @@ class Payment extends \App\Processor
         $order->save();
 
         $link = false;
-        switch ($service) {
-            case 'robokassa':
-                $link = (new Robokassa($this->container))->getPaymentLink($order);
-                break;
-            case'paypal':
-                $link = (new Paypal($this->container))->getPaymentLink($order);
-                break;
+        if (!$order->cost) {
+            // Если скидка полностью перекрыла цену - сразу активируем заказ
+            $order->changeStatus(2);
+            $link = getenv('SITE_URL') . 'courses/' . $course_id;
+        } else {
+            // Иначе отправляем на оплату
+            switch ($service) {
+                case 'robokassa':
+                    $link = (new Robokassa($this->container))->getPaymentLink($order);
+                    break;
+                case'paypal':
+                    $link = (new Paypal($this->container))->getPaymentLink($order);
+                    break;
+            }
         }
 
         return $link
