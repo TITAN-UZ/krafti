@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="myModal" title="Новый промокод" @hidden="onHidden" hide-footer visible static>
+  <b-modal id="myModal" :title="record.code" @hidden="onHidden" hide-footer visible static>
     <b-form @submit.prevent="onSubmit">
 
       <b-form-group
@@ -17,6 +17,13 @@
           <b-form-input type="number" id="input-discount" v-model="record.discount" required/>
         </b-input-group>
         <b-form-checkbox v-model="record.percent">Скидка в процентах</b-form-checkbox>
+      </b-form-group>
+
+      <b-form-group
+        label="Курсы:"
+        label-for="input-courses"
+        description="Выберите курсы, для которых работает этот код. Если не выбрано ничего, то скидка применится ко всем курсам">
+        <b-form-checkbox-group v-model="record.courses" :options="courses" stacked/>
       </b-form-group>
 
       <b-form-group
@@ -55,44 +62,57 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            const formatDate = {
-                value2date: value => {
-                    return value ? this.$moment(new Date(value), 'DD.MM.YY HH:mm:ss').toDate() : null;
-                },
-                date2value: date => {
-                    return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : null;
-                }
-            };
-            return {
-                formatDate,
-                loading: false,
-            }
+  export default {
+    data() {
+      const formatDate = {
+        value2date: value => {
+          return value ? this.$moment(new Date(value), 'DD.MM.YY HH:mm:ss').toDate() : null;
         },
-        validate({params}) {
-            return /^\d+$/.test(params.id)
-        },
-        methods: {
-            onHidden() {
-                this.$router.push({name: 'admin-discounts'})
-            },
-            onSubmit() {
-                this.loading = true;
-                this.$axios.patch('admin/promos', this.record)
-                    .then(res => {
-                        this.loading = false;
-                        this.$root.$emit('bv::hide::modal', 'myModal');
-                        this.$root.$emit('app::admin-promos::update', res.data);
-                    })
-                    .catch(() => {
-                        this.loading = false;
-                    });
-            },
-        },
-        async asyncData({app, params}) {
-            const res = await app.$axios.get('admin/promos', {params: {id: params.id}});
-            return {record: res.data};
+        date2value: date => {
+          return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : null;
         }
+      };
+      return {
+        formatDate,
+        loading: false,
+        record: {},
+        courses: [],
+      }
+    },
+    validate({params}) {
+      return /^\d+$/.test(params.id)
+    },
+    methods: {
+      onHidden() {
+        this.$router.push({name: 'admin-discounts'})
+      },
+      onSubmit() {
+        this.loading = true;
+        this.$axios.patch('admin/promos', this.record)
+          .then(res => {
+            this.loading = false;
+            this.$root.$emit('bv::hide::modal', 'myModal');
+            this.$root.$emit('app::admin-promos::update', res.data);
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      },
+    },
+    async asyncData({app, params}) {
+      const [{data: record}, {data: courses}] = await Promise.all([
+        app.$axios.get('admin/promos', {params: {id: params.id}}),
+        app.$axios.get('admin/courses', {params: {limit: 0, combo: true}}),
+      ]);
+
+      courses.rows.map((v, idx, arr) => {
+        arr[idx] = {value: v.id, text: v.title}
+      });
+
+      return {
+        record,
+        courses: courses.rows
+      }
     }
+  }
 </script>

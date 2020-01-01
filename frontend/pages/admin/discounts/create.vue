@@ -20,6 +20,13 @@
       </b-form-group>
 
       <b-form-group
+        label="Курсы:"
+        label-for="input-courses"
+        description="Выберите курсы, для которых работает этот код. Если не выбрано ничего, то скидка применится ко всем курсам">
+        <b-form-checkbox-group v-model="record.courses" :options="courses" stacked/>
+      </b-form-group>
+
+      <b-form-group
         label="Количество использований:"
         label-for="input-limit"
         description="">
@@ -54,45 +61,61 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            const formatDate = {
-                value2date: value => {
-                    return value ? this.$moment(new Date(value), 'DD.MM.YY HH:mm:ss').toDate() : null;
-                },
-                date2value: date => {
-                    return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : null;
-                }
-            };
-            return {
-                formatDate,
-                loading: false,
-                record: {
-                    code: '',
-                    discount: null,
-                    percent: true,
-                    title: null,
-                    date_start: null,
-                    date_end: null,
-                },
-            }
+  export default {
+    data() {
+      const formatDate = {
+        value2date: value => {
+          return value ? this.$moment(new Date(value), 'DD.MM.YY HH:mm:ss').toDate() : null;
         },
-        methods: {
-            onHidden() {
-                this.$router.push({name: 'admin-discounts'})
-            },
-            onSubmit() {
-                this.loading = true;
-                this.$axios.put('admin/promos', this.record)
-                    .then(res => {
-                        this.loading = false;
-                        this.$root.$emit('bv::hide::modal', 'myModal');
-                        this.$root.$emit('app::admin-promos::update', res.data);
-                    })
-                    .catch(() => {
-                        this.loading = false;
-                    });
-            },
+        date2value: date => {
+          return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : null;
+        }
+      };
+      return {
+        formatDate,
+        loading: false,
+        record: {
+          code: '',
+          discount: null,
+          percent: true,
+          title: null,
+          date_start: null,
+          date_end: null,
         },
-    }
+        networks: [],
+      }
+    },
+    methods: {
+      onHidden() {
+        this.$router.push({name: 'admin-discounts'})
+      },
+      onSubmit() {
+        this.loading = true;
+        this.$axios.put('admin/promos', this.record)
+          .then(res => {
+            this.loading = false;
+            this.$root.$emit('bv::hide::modal', 'myModal');
+            this.$root.$emit('app::admin-promos::update', res.data);
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      },
+    },
+    async asyncData({app}) {
+      try {
+        const {data: courses} = await app.$axios.get('admin/courses', {params: {limit: 0, combo: true}});
+
+        courses.rows.map((v, idx, arr) => {
+          arr[idx] = {value: v.id, text: v.title}
+        });
+
+        return {
+          courses: courses.rows
+        }
+      } catch (e) {
+        error({statusCode: e.statusCode, message: e.data})
+      }
+    },
+  }
 </script>

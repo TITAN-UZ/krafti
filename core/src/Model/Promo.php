@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 /**
  * @property int $id
@@ -10,24 +11,35 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $discount
  * @property bool $percent
  * @property string $title
- * @property \Carbon\Carbon $date_start
- * @property \Carbon\Carbon $date_end
+ * @property array $courses
+ * @property Carbon $date_start
+ * @property Carbon $date_end
  * @property int $limit
  * @property int $used
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  */
 class Promo extends Model
 {
     protected $fillable = [
-        'code', 'discount', 'percent', 'title', 'date_start', 'date_end', 'limit', 'used',
+        'code',
+        'discount',
+        'percent',
+        'title',
+        'courses',
+        'date_start',
+        'date_end',
+        'limit',
+        'used',
     ];
     protected $dates = [
-        'date_start', 'date_end',
+        'date_start',
+        'date_end',
     ];
     protected $casts = [
         'percent' => 'boolean',
+        'courses' => 'array',
     ];
 
 
@@ -49,8 +61,10 @@ class Promo extends Model
             return 'Этот промокод больше не действителен';
         }
 
-        if ($course_id && $course_id != 1) {
-            return 'Промокод действителен только для детского курса';
+        if ($course_id && !empty($this->courses)) {
+            if (!in_array($course_id, $this->courses)) {
+                return 'Ваш промокод не действует на этот курс';
+            }
         }
 
         return true;
