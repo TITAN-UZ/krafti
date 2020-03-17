@@ -32,7 +32,7 @@
                     </a>
                   </div>
                 </div>
-                <div class="col-lg-5 col-12" v-if="record.extra !== true">
+                <div class="col-lg-5 col-12" v-if="record.extra !== true && !record.title.includes('Домашнее задание')">
                   <div class="lesson__info--note">Вы можете поделиться с нами результатом каждого урока.
                     Нам очень интересно, что у вас получилось! Просто пришлите нам фотографию вашей картины.
                     Лучшие работы мы опубликуем на главной странице сайта!
@@ -134,13 +134,13 @@
           <section class="lesson__content--bottom container__940 mt-5">
             <div class="container">
               <div class="row">
-                <div class="col-lg-7 col-12">
+                <div :class="{'col-12': true, 'col-lg-7': record.next.length > 0}">
                   <client-only>
                     <comments :course_id="course.id" :lesson_id="record.id"/>
                   </client-only>
                 </div>
-                <div class="col-lg-5 col-12">
-                  <div class="s-title" v-if="record.next.length">Следующие уроки</div>
+                <div class="col-lg-5 col-12" v-if="record.next.length">
+                  <div class="s-title">Следующие уроки</div>
                   <div class="nextlessons__content">
                     <div class="media mb-2" v-for="item in record.next">
                       <div class="media--video mr-2">

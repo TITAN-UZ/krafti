@@ -143,7 +143,7 @@ class Course extends Model
                 ->orderBy('paid_till', 'desc')
                 ->first();
 
-            return $order && $order->paid_till >= date('Y-m-d H:i:s');
+            return $order && date('Y-m-d', $order->paid_till->timestamp) >= date('Y-m-d');
         }
 
         return false;
