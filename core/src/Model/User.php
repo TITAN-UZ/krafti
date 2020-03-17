@@ -454,6 +454,32 @@ class User extends Model
 
 
     /**
+     * @param array|string $scope
+     *
+     * @return bool
+     */
+    public function hasScope($scope)
+    {
+        if ($this->role_id === 1) {
+            return true;
+        }
+
+        if (!is_array($scope)) {
+            $scope = [$scope];
+        }
+        $user_scope = $this->role->scope;
+
+        foreach ($scope as $v) {
+            if (!in_array($v, $user_scope)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
      * @param string $message
      * @param string $type
      * @param null $sender_id

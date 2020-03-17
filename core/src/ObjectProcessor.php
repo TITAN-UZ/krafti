@@ -129,6 +129,9 @@ class ObjectProcessor extends Processor
             $total = $this->container->db->table($this->container->db->raw("({$c->toSql()}) as sub"))
                 ->mergeBindings($c->getQuery())
                 ->count();
+            if ($limit > getenv('QUERY_GET_LIMIT')) {
+                $limit = getenv('QUERY_GET_LIMIT');
+            }
             $c->forPage($page, $limit);
         }
         $c = $this->afterCount($c);

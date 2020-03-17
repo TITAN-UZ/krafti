@@ -5,6 +5,7 @@ namespace App;
 use App\Model\User;
 use App\Model\UserToken;
 use Firebase\JWT\JWT;
+use Illuminate\Events\Dispatcher;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Symfony\Component\Dotenv\Dotenv;
@@ -41,7 +42,7 @@ class Container extends \Slim\Container
         parent::__construct();
 
         try {
-            $dotenv = new Dotenv();
+            $dotenv = new Dotenv(true);
             $dotenv->load(BASE_DIR . '/core/.env');
         } catch (\Exception $e) {
             exit($e->getMessage());
@@ -75,11 +76,12 @@ class Container extends \Slim\Container
                 'charset' => getenv('DB_CHARSET'),
                 'collation' => getenv('DB_COLLATION'),
             ]);
-            $capsule->bootEloquent();
+            $capsule->setEventDispatcher(new Dispatcher());
+            $capsule->setAsGlobal();
 
             return $capsule;
         };
-        $this->capsule->setAsGlobal();
+        $this->capsule->bootEloquent();
 
         $this['db'] = function () {
             return $this->capsule->getDatabaseManager();

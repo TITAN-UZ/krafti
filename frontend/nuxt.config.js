@@ -190,7 +190,6 @@ export default {
     ],
   },
   server: process.env.NODE_ENV === 'production'
-    //? {socket: '../tmp/nuxt.socket'}
-    ? {host: '127.0.0.1', port: 3876}
-    : {host: '127.0.0.1', port: 3000}
+    ? {socket: '../tmp/nuxt.socket', timing: {total: true}}
+    : {host: 'localhost', port: 3876},
 }
