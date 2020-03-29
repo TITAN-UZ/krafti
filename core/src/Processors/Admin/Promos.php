@@ -13,21 +13,6 @@ class Promos extends \App\ObjectProcessor
 
 
     /**
-     * @param Promo $record
-     *
-     * @return bool|\Slim\Http\Response
-     */
-    public function beforeDelete($record)
-    {
-        if ($record->used > 0) {
-            return 'Нельзя удалять уже использованные промокоды';
-        }
-
-        return true;
-    }
-
-
-    /**
      * @param Builder $c
      *
      * @return Builder
@@ -39,16 +24,19 @@ class Promos extends \App\ObjectProcessor
             $c->orWhere('title', 'LIKE', "%$query%");
         }
 
-        /*if ($course_id = $this->getProperty('course_id')) {
-            $c->where(['course_id' => $course_id]);
-        }
-        if ($date = $this->getProperty('date')) {
-            $c->whereBetween('created_at', $date);
-        }*/
-
         return $c;
     }
 
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function afterCount($c)
+    {
+        $c->withCount('orders');
+
+        return $c;
+    }
 
     /**
      * @param Promo $object
@@ -58,15 +46,22 @@ class Promos extends \App\ObjectProcessor
     public function prepareRow($object)
     {
         $array = $object->toArray();
-        $array['date_start'] = $object->date_start
-            ? $object->date_start->toIso8601String()
-            : null;
-        $array['date_end'] = $object->date_end
-            ? $object->date_end->toIso8601String()
-            : null;
-        $array['created_at'] = $object->created_at->toIso8601String();
         $array['active'] = $object->check() === true;
 
         return $array;
+    }
+
+    /**
+     * @param Promo $record
+     *
+     * @return bool|\Slim\Http\Response
+     */
+    public function beforeDelete($record)
+    {
+        if ($record->used > 0) {
+            return 'Нельзя удалять уже использованные промокоды';
+        }
+
+        return true;
     }
 }

@@ -110,7 +110,7 @@ export default {
       this.$root.$emit('bv::refresh::table', this.$options.name)
     },
     onEdit(item) {
-      console.log(item)
+      // console.log(item)
     },
   },
   head() {

@@ -128,7 +128,7 @@ export default {
           '" target="_blank" rel="noreferrer">' +
           title +
           '</a>'
-        console.log(title)
+        // console.log(title)
       }
 
       return title

@@ -554,55 +554,6 @@
           line-height: 19px;
           margin-bottom: 30px;
         }
-
-        .lessons__list {
-          margin-bottom: 30px;
-
-          .lesson__item {
-            margin-bottom: 30px;
-
-            &.viewed {
-              .lesson__item--video .lesson__video--thumb {
-                opacity: 0.5;
-              }
-
-              &:hover {
-                .lesson__item--video .lesson__video--thumb {
-                  opacity: 0.8;
-                }
-              }
-            }
-
-            &--video {
-              margin-bottom: 20px;
-              position: relative;
-              display: block;
-              &:hover {
-                opacity: 0.8;
-                a {
-                  cursor: pointer;
-                }
-              }
-              img {
-                border-radius: 20px;
-              }
-              a {
-                @include play-button;
-                transition: opacity 0.3s;
-              }
-              .disabled {
-                @include lock-button;
-              }
-            }
-
-            &--info {
-              color: $white;
-              font-size: 14px;
-              line-height: 17px;
-              padding: 0 10px;
-            }
-          }
-        }
       }
 
       .home__work {
@@ -769,6 +720,55 @@
 
     &:hover {
       background: #2fd8aa;
+    }
+  }
+}
+
+.lessons__list {
+  margin-bottom: 30px;
+
+  .lesson__item {
+    margin-bottom: 30px;
+
+    &.viewed {
+      .lesson__item--video .lesson__video--thumb {
+        opacity: 0.5;
+      }
+
+      &:hover {
+        .lesson__item--video .lesson__video--thumb {
+          opacity: 0.8;
+        }
+      }
+    }
+
+    &--video {
+      margin-bottom: 20px;
+      position: relative;
+      display: block;
+      &:hover {
+        opacity: 0.8;
+        a {
+          cursor: pointer;
+        }
+      }
+      img {
+        border-radius: 20px;
+      }
+      a {
+        @include play-button;
+        transition: opacity 0.3s;
+      }
+      .disabled {
+        @include lock-button;
+      }
+    }
+
+    &--info {
+      color: $white;
+      font-size: 14px;
+      line-height: 17px;
+      padding: 0 10px;
     }
   }
 }

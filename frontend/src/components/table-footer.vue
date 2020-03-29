@@ -1,5 +1,5 @@
 <template>
-  <b-row no-gutters class="justify-content-center justify-content-md-start mt-5">
+  <b-row no-gutters class="b-table-pagination justify-content-center justify-content-md-start mt-5 align-items-center">
     <b-pagination
       v-if="totalRows > limit"
       v-model="currentPage"
@@ -9,24 +9,21 @@
       :limit="pageLimit"
     />
 
-    <b-button class="ml-2 d-none d-md-block" @click.prevent="refresh">
-      <fa icon="sync" />
+    <b-button class="ml-2" @click.prevent="refresh">
+      <b-spinner v-if="busy" small />
+      <fa v-else :icon="['fas', 'sync']" />
     </b-button>
 
-    <div class="btn">
-      <b>{{ totalRows | number }}</b> {{ totalRows | noun(forms)
-      }}<span v-if="totalCost"
-        >, на сумму <b>{{ totalCost | number }}</b> руб.</span
-      >
+    <div class="col-12 col-md-auto mt-2 mt-md-0 ml-md-2 text-center">
+      <slot name="pagination-data">
+        <b>{{ totalRows | number }}</b> {{ totalRows | noun(forms) }}
+      </slot>
     </div>
   </b-row>
 </template>
 
 <script>
-import {library} from '@fortawesome/fontawesome-svg-core'
 import {faSync} from '@fortawesome/pro-solid-svg-icons'
-
-library.add(faSync)
 
 export default {
   name: 'TableFooter',
@@ -47,11 +44,6 @@ export default {
       type: Number,
       required: true,
     },
-    totalCost: {
-      type: Number,
-      required: false,
-      default: null,
-    },
     forms: {
       type: String,
       default: 'запись|записи|записей',
@@ -60,11 +52,11 @@ export default {
       type: Number,
       default: 7,
     },
-  },
-  data() {
-    return {
-      // page: this.page
-    }
+    busy: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   computed: {
     currentPage: {
@@ -75,6 +67,9 @@ export default {
         this.$emit('update:page', newValue)
       },
     },
+  },
+  created() {
+    this.$fa.add(faSync)
   },
   methods: {
     refresh() {

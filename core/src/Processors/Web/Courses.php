@@ -71,6 +71,11 @@ class Courses extends \App\GetProcessor
                 'section' => 1,
                 'rank' => 0,
             ],
+            'free_lesson' => $object->lessons()
+                ->where(['active' => true, 'free' => true])
+                ->orderByRaw('RAND()')
+                ->limit(1)
+                ->first(['id']),
         ];
 
         if ($this->container->user) {
@@ -89,17 +94,6 @@ class Courses extends \App\GetProcessor
                 $array['progress'] = [
                     'section' => $progress->section,
                     'rank' => $progress->rank,
-                ];
-            }
-        } elseif ($free = $object->lessons()->where(['free' => true])->get()) {
-            /** @var Lesson $item */
-            foreach ($free as $item) {
-                $array['free'][] = [
-                    'id' => $item->id,
-                    'title' => $item->title,
-                    'video' => $item->video
-                        ? ['vimeo' => $item->video->remote_key]
-                        : null,
                 ];
             }
         }

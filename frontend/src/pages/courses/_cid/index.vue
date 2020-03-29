@@ -131,14 +131,24 @@
                     >
                       <span>Начать просмотр</span>
                     </nuxt-link>
-                    <nuxt-link
-                      v-else-if="record.bought === false"
-                      class="btn btn-default btn__buy"
-                      :to="{name: 'courses-cid-index-buy', params: $route.params}"
-                    >
-                      Купить от
-                      <span class="price ml-2">{{ record.price[3] | price(record.discount) | number }} р</span>
-                    </nuxt-link>
+                    <template v-else-if="record.bought === false">
+                      <nuxt-link
+                        class="btn btn-default btn__buy"
+                        :to="{name: 'courses-cid-index-buy', params: $route.params}"
+                      >
+                        Купить от
+                        <span class="price ml-2">{{ record.price[3] | price(record.discount) | number }} р</span>
+                      </nuxt-link>
+                      <template v-if="record.free_lesson">
+                        <div class="flex-grow-1 text-center p-2">или</div>
+                        <nuxt-link
+                          class="btn btn-default btn__play"
+                          :to="{name: 'courses-cid-index-free', params: {cid: record.id, id: record.free_lesson.id}}"
+                        >
+                          Попробовать бесплатно!
+                        </nuxt-link>
+                      </template>
+                    </template>
                   </div>
                 </div>
               </div>
@@ -356,7 +366,7 @@
                         </div>
                       </div>
                     </b-tab>
-                    <b-tab v-else-if="record.free && record.free.length" title="Пробный урок">
+                    <!--<b-tab v-else-if="record.free && record.free.length" title="Пробный урок">
                       <div class="alert alert-info pt-3 pb-3">
                         <p>
                           Вы можете посмотреть пробный урок перед покупкой курса, чтобы понять, подходят ли вам наши
@@ -377,7 +387,7 @@
                           allow="autoplay; fullscreen"
                         />
                       </div>
-                    </b-tab>
+                    </b-tab>-->
                   </b-tabs>
                 </div>
                 <div class="col-12 tab__wrap--scroll mt-5">

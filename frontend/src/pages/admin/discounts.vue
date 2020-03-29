@@ -1,38 +1,19 @@
 <template>
   <div>
-    <table-filter :filters="filters" :table="$options.name">
+    <app-table ref="table" :url="url" :fields="fields" :filters="filters" :sort="sort" :dir="dir" :row-class="rowClass">
       <template slot="actions">
         <nuxt-link class="btn btn-secondary" :to="{name: 'admin-discounts-create'}">
           <fa :icon="['fas', 'plus']" />
           Добавить
         </nuxt-link>
       </template>
-    </table-filter>
 
-    <b-table
-      :id="$options.name"
-      stacked="md"
-      class="mt-3"
-      :items="items"
-      :fields="fields"
-      :current-page="page"
-      :per-page="limit"
-      :sort-by.sync="sort"
-      :sort-direction.sync="dir"
-      :sort-desc="dir == 'desc'"
-      :tbody-tr-class="rowClass"
-      show-empty
-      no-sort-reset
-      no-local-sorting
-      empty-text="Подходящих результатов не найдено"
-      empty-filtered-text="Подходящих результатов не найдено"
-    >
-      <template slot="cell(discount)" slot-scope="row">
+      <template v-slot:cell(discount)="row">
         {{ row.value | number }}
         <template v-if="row.item.percent">%</template>
         <template v-else>руб.</template>
       </template>
-      <template slot="cell(date)" slot-scope="row">
+      <template v-slot:cell(date)="row">
         <template v-if="row.item.date_start && row.item.date_end">
           c {{ row.item.date_start | datetime }}<br />по {{ row.item.date_end | datetime }}
         </template>
@@ -40,7 +21,7 @@
         <template v-else-if="row.item.date_end"> по {{ row.item.date_end | datetime }} </template>
         <template v-else>∞</template>
       </template>
-      <template slot="cell(actions)" slot-scope="row">
+      <template v-slot:cell(actions)="row">
         <nuxt-link class="btn btn-sm" :to="{name: 'admin-discounts-edit-id', params: {id: row.item.id}}">
           <fa :icon="['fas', 'edit']" />
         </nuxt-link>
@@ -48,11 +29,9 @@
           <fa :icon="['fas', 'times']" />
         </button>
       </template>
-    </b-table>
+    </app-table>
 
-    <table-footer :table="$options.name" :total-rows="totalRows" :limit="limit" :page.sync="page"></table-footer>
-
-    <nuxt-child></nuxt-child>
+    <nuxt-child />
   </div>
 </template>
 
@@ -63,50 +42,33 @@ export default {
   name: 'AdminPromos',
   data() {
     return {
-      video: false,
-      items: (ctx) => {
-        return this.loadTable(ctx, this, 'admin/promos')
-      },
+      url: 'admin/promos',
       fields: [
         {key: 'id', label: 'Id', sortable: true},
         {key: 'code', label: 'Код', sortable: false},
         {key: 'discount', label: 'Скидка', sortable: false},
         {key: 'date', label: 'Время действия', sortable: false},
         {key: 'limit', label: 'Лимит', sortable: false},
+        {key: 'orders_count', label: 'Заказы', sortable: true},
         {key: 'used', label: 'Использован', sortable: true},
         {key: 'actions', label: 'Действия'},
       ],
-      page: 1,
-      limit: 20,
-      totalRows: 0,
-      sort: 'id',
-      dir: 'desc',
       filters: {
         query: '',
       },
+      sort: 'id',
+      dir: 'desc',
     }
   },
   created() {
     this.$fa.add(faTimes, faEdit, faPlus)
-
-    this.$root.$on('app::' + this.$options.name + '::update', () => {
-      this.refresh()
-    })
-
-    this.$root.$on('app::' + this.$options.name + '::change', () => {
-      this.refresh()
-    })
-
-    this.$root.$on('app::' + this.$options.name + '::query', () => {
-      this.page = 1
-    })
   },
   methods: {
     refresh() {
-      this.$root.$emit('bv::refresh::table', this.$options.name)
+      this.$refs.table.refresh()
     },
     onEdit(item) {
-      console.log(item)
+      // console.log(item)
     },
     onDelete(item) {
       this.$message.confirm('Вы уверены, что хотите удалить эту запись?', () => {

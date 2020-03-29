@@ -38,7 +38,21 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  */
 class Lesson extends Model
 {
-    protected $fillable = ['title', 'description', 'products', 'course_id', 'video_id', 'bonus_id', 'file_id', 'author_id', 'rank', 'section', 'active', 'extra', 'free'];
+    protected $fillable = [
+        'title',
+        'description',
+        'products',
+        'course_id',
+        'video_id',
+        'bonus_id',
+        'file_id',
+        'author_id',
+        'rank',
+        'section',
+        'active',
+        'extra',
+        'free',
+    ];
     protected $casts = [
         'products' => 'array',
         'active' => 'boolean',

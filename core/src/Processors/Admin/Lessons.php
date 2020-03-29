@@ -152,7 +152,7 @@ class Lessons extends \App\ObjectProcessor
     {
         $c->with('video:id,preview');
         $c->orderBy('section', 'asc');
-        $c->orderBy($this->getProperty('sort', 'rank'), $this->getProperty('dir') == 'desc' ? 'desc' : 'asc');
+        $c->orderBy('rank', 'asc');
 
         return $c;
     }

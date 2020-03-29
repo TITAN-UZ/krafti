@@ -2,8 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
@@ -19,6 +20,7 @@ use Carbon\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @property-read Order[] $orders
  */
 class Promo extends Model
 {
@@ -42,6 +44,12 @@ class Promo extends Model
         'courses' => 'array',
     ];
 
+    /**
+     * @return HasMany
+     */
+    public function orders() {
+        return $this->hasMany('\App\Model\Order');
+    }
 
     /**
      * @param int $course_id

@@ -75,32 +75,58 @@
             </div>
           </div>
         </section>
-        <section v-if="courses_total > 0" class="courses-list mt-5">
+
+        <section v-if="free.total > 0" class="courses-list mt-5">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 offset-md-2">
+                <div class="row">
+                  <div class="col-12 d-flex justify-content-between align-items-center">
+                    <h2 class="section__title">Попробуйте бесплатно!</h2>
+                  </div>
+                </div>
+                <div class="d-flex lessons__list align-items-start">
+                  <template v-for="item in free.rows">
+                    <div :key="item.id" class="lesson__item">
+                      <div class="lesson__item--video">
+                        <nuxt-link :to="{name: 'index-free', params: {id: item.id}}" class="video">
+                          <b-img :src="item.video.preview['1280x720']" fluid-grow />
+                        </nuxt-link>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section v-if="courses.total > 0" class="courses-list mt-5">
           <div class="container">
             <div class="row">
               <div class="col-md-8 offset-md-2">
                 <div class="row">
                   <div class="col-12 d-flex justify-content-between align-items-center">
                     <h2 class="section__title">Курсы</h2>
-                    <b-link v-if="courses_total > 2" to="/courses" class="link__more">См. все</b-link>
+                    <b-link v-if="courses.total > 2" to="/courses" class="link__more">См. все</b-link>
                   </div>
                 </div>
-                <courses-list :courses="courses" />
+                <courses-list :courses="courses.rows" />
               </div>
             </div>
           </div>
         </section>
-        <section v-if="reviews_total > 0" class="reviews_list tab__wrap--scroll mt-5">
+        <section v-if="reviews.total > 0" class="reviews_list tab__wrap--scroll mt-5">
           <div class="container">
             <div class="row">
               <div class="col-md-8 offset-md-2">
                 <div class="row">
                   <div class="col-12 d-flex justify-content-between align-items-center">
                     <h2 class="section__title">Отзывы</h2>
-                    <b-link v-if="reviews_total > 3" :to="{name: 'reviews'}" class="link__more">См. все</b-link>
+                    <b-link v-if="reviews.total > 3" :to="{name: 'reviews'}" class="link__more">См. все</b-link>
                   </div>
                 </div>
-                <reviews-list :reviews="reviews" row-class="row mob_container item__wrap d-flex" />
+                <reviews-list :reviews="reviews.rows" row-class="row mob_container item__wrap d-flex" />
               </div>
             </div>
           </div>
@@ -140,6 +166,8 @@
         </div>
       </div>
     </section>
+
+    <nuxt-child />
   </div>
 </template>
 
@@ -159,16 +187,16 @@ export default {
   auth: false,
   components: {CoursesList, ReviewsList, HeaderBg},
   async asyncData({app, env}) {
-    const [courses, reviews] = await Promise.all([
+    const [{data: courses}, {data: reviews}, {data: free}] = await Promise.all([
       app.$axios.get('web/courses', {params: {limit: 2}}),
       app.$axios.get('web/reviews', {params: {limit: 3}}),
+      app.$axios.get('web/free-lessons', {params: {limit: 2}}),
     ])
 
     return {
-      courses: courses.data.rows,
-      courses_total: courses.data.total,
-      reviews: reviews.data.rows,
-      reviews_total: reviews.data.total,
+      courses,
+      reviews,
+      free,
       subscribe_bonus: env.COINS_SUBSCRIBE,
     }
   },
@@ -176,6 +204,9 @@ export default {
     return {
       loading: false,
       subscriber: '',
+      courses: {},
+      reviews: {},
+      free: {},
       slide1,
       slide2,
       slide3,

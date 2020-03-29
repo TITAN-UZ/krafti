@@ -7,12 +7,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Slim\Http\Response;
 
-class ObjectProcessor extends Processor
+abstract class ObjectProcessor extends Processor
 {
     /** @var Model $class */
     protected $class;
-    protected $relations = [];
-
     protected $primaryKey = 'id';
 
 
@@ -22,10 +20,6 @@ class ObjectProcessor extends Processor
     public function put()
     {
         try {
-            $options = [];
-            foreach ($this->relations as $v) {
-                $options[$v] = $this->getProperty($v);
-            }
             /** @var Model $record */
             $record = new $this->class();
             $record->fill($this->getProperties());
@@ -35,7 +29,7 @@ class ObjectProcessor extends Processor
                 return $this->failure($check);
             }
 
-            $record->save($options);
+            $record->save();
             $record = $this->afterSave($record);
 
             return $this->success($this->prepareRow($record));
@@ -58,10 +52,6 @@ class ObjectProcessor extends Processor
         }
 
         try {
-            $options = [];
-            foreach ($this->relations as $v) {
-                $options[$v] = $this->getProperty($v);
-            }
             $record->fill($this->getProperties());
 
             $check = $this->beforeSave($record);
@@ -69,7 +59,7 @@ class ObjectProcessor extends Processor
                 return $this->failure($check);
             }
 
-            $record->save($options);
+            $record->save();
             $record = $this->afterSave($record);
 
             return $this->success($this->prepareRow($record));
@@ -95,7 +85,7 @@ class ObjectProcessor extends Processor
      *
      * @return Model
      */
-    protected function afterSave(Model $record)
+    protected function afterSave($record)
     {
         return $record;
     }
@@ -129,16 +119,13 @@ class ObjectProcessor extends Processor
             $total = $this->container->db->table($this->container->db->raw("({$c->toSql()}) as sub"))
                 ->mergeBindings($c->getQuery())
                 ->count();
-            if ($limit > getenv('QUERY_GET_LIMIT')) {
-                $limit = getenv('QUERY_GET_LIMIT');
-            }
             $c->forPage($page, $limit);
         }
         $c = $this->afterCount($c);
 
         $query = $c->getQuery();
         if (empty($query->{$query->unions ? 'unionOrders' : 'orders'}) && $sort = $this->getProperty('sort')) {
-            $c->orderBy(/*$class->getTable() . '.' . */$sort, $this->getProperty('dir', 'asc'));
+            $c->orderBy(/*$class->getTable() . '.' . */ $sort, $this->getProperty('dir', 'asc'));
         }
 
         $rows = [];
@@ -146,12 +133,14 @@ class ObjectProcessor extends Processor
             $rows[] = $this->prepareRow($object);
         }
 
-        return $this->success([
+        $data = $this->prepareList([
+            'rows' => $rows,
             'total' => isset($total)
                 ? $total
                 : count($rows),
-            'rows' => $rows,
         ]);
+
+        return $this->success($data);
     }
 
 
@@ -201,22 +190,23 @@ class ObjectProcessor extends Processor
      */
     public function prepareRow($object)
     {
-        $data = $object->toArray();
-        foreach ($this->relations as $relation) {
-            $data[$relation] = [];
-            foreach ($object->{$relation} as $item) {
-                $data[$relation][] = $item['id'];
-            }
-        }
+        return $object->toArray();
+    }
 
-        return $data;
+    /**
+     * @param array $array
+     * @return array
+     */
+    public function prepareList(array $array)
+    {
+        return $array;
     }
 
 
     /**
      * @param Model $record
      *
-     * @return bool
+     * @return bool|string
      */
     protected function beforeDelete($record)
     {

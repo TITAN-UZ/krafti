@@ -1,51 +1,31 @@
 <template>
   <div>
-    <table-filter :filters="filters" :table="$options.name">
+    <app-table ref="table" :url="url" :fields="fields" :filters="filters" :row-class="rowClass">
       <template slot="actions">
-        <router-link class="btn btn-secondary" to="courses/create">
-          <fa icon="plus" />
-          Добавить
+        <router-link class="btn btn-secondary" :to="{name: 'admin-courses-create'}">
+          <fa icon="plus" /> Добавить
         </router-link>
       </template>
-    </table-filter>
 
-    <b-table
-      :id="$options.name"
-      stacked="md"
-      class="mt-5"
-      :items="items"
-      :fields="fields"
-      :current-page="page"
-      :per-page="limit"
-      :sort-by.sync="sort"
-      :tbody-tr-class="rowClass"
-      show-empty
-      no-sort-reset
-      no-local-sorting
-      empty-text="Подходящих результатов не найдено"
-      empty-filtered-text="Подходящих результатов не найдено"
-    >
-      <template slot="cell(title)" slot-scope="row">
+      <template v-slot:cell(title)="row">
         <strong>{{ row.value }}</strong>
       </template>
-      <template slot="cell(cover)" slot-scope="row">
+      <template v-slot:cell(cover)="row">
         <a v-if="row.value" :href="$image(row.value)" target="_blank" rel="noreferrer">
           <img v-if="row.value" :src="$image(row.value, '100x50', 'fit')" alt="" />
         </a>
       </template>
-      <template slot="cell(actions)" slot-scope="row">
-        <router-link class="btn btn-sm" :to="'courses/edit/' + row.item.id">
-          <fa icon="edit" />
+      <template v-slot:cell(actions)="row">
+        <router-link class="btn btn-sm" :to="{name: 'admin-courses-edit-cid', params: {cid: row.item.id}}">
+          <fa :icon="['fas', 'edit']" />
         </router-link>
-        <a href="#" class="btn btn-sm text-danger" @click.prevent="onDelete(row.item)">
-          <fa icon="times" />
-        </a>
+        <b-button size="sm" variant="outline-danger" @click.prevent="onDelete(row.item)">
+          <fa :icon="['fas', 'times']" />
+        </b-button>
       </template>
-    </b-table>
+    </app-table>
 
-    <table-footer :table="$options.name" :total-rows="totalRows" :limit="limit" :page.sync="page"></table-footer>
-
-    <nuxt-child></nuxt-child>
+    <nuxt-child />
   </div>
 </template>
 
@@ -53,12 +33,9 @@
 import {faEdit, faPlus, faSync, faTimes} from '@fortawesome/pro-solid-svg-icons'
 
 export default {
-  name: 'AdminCourses',
   data() {
     return {
-      items: (ctx) => {
-        return this.loadTable(ctx, this, 'admin/courses')
-      },
+      url: 'admin/courses',
       fields: [
         {key: 'id', label: 'Id', sortable: true},
         {key: 'cover', label: 'Обложка', sortable: false},
@@ -68,10 +45,6 @@ export default {
         {key: 'category', label: 'Категория', sortable: true},
         {key: 'actions', label: 'Действия'},
       ],
-      page: 1,
-      limit: 20,
-      totalRows: 0,
-      sort: 'id',
       filters: {
         query: '',
       },
@@ -79,27 +52,14 @@ export default {
   },
   created() {
     this.$fa.add(faSync, faEdit, faPlus, faTimes)
-
-    this.$root.$on('app::' + this.$options.name + '::update', () => {
-      this.refresh()
-    })
-
-    this.$root.$on('app::' + this.$options.name + '::change', () => {
-      this.refresh()
-    })
-
-    this.$root.$on('app::' + this.$options.name + '::query', () => {
-      this.page = 1
-    })
   },
-
   methods: {
     refresh() {
-      this.$root.$emit('bv::refresh::table', this.$options.name)
+      this.$refs.table.refresh()
     },
     onDelete(item) {
       this.$message.confirm('Вы уверены, что хотите удалить эту запись?', () => {
-        this.$axios.delete('admin/courses', {params: {id: item.id}}).then(() => {
+        this.$axios.delete(this.url, {params: {id: item.id}}).then(() => {
           this.refresh()
         })
       })

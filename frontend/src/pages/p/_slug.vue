@@ -14,7 +14,7 @@ export default {
     if (process.client) {
       localStorage.setItem('promo', this.$route.params.slug)
     }
-    console.log(this.$route.params.slug)
+    // console.log(this.$route.params.slug)
   },
   mounted() {
     if (!this.$auth.loggedIn) {

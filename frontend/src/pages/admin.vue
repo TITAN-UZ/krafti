@@ -42,6 +42,12 @@ export default {
 @import '~assets/scss/variables';
 
 #admin {
+  .b-table-wrapper {
+    width: 100%;
+    min-height: 300px;
+    overflow-x: auto;
+  }
+
   .form-control,
   .custom-select,
   .input-group-text {

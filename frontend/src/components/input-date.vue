@@ -22,12 +22,12 @@
     @clear="onDateClear"
   >
     <template slot="icon-calendar">
-      <b-button v-show="!myValue || !myValue.length" variant="outline-primary">
+      <b-button v-show="!myValue || !myValue.length" variant="secondary">
         <fa :icon="['fas', 'calendar-alt']" class="fa-fw" />
       </b-button>
     </template>
     <template v-show="myValue" slot="icon-clear">
-      <b-button variant="outline-primary">
+      <b-button variant="secondary">
         <fa :icon="['fas', 'times']" class="fa-fw" />
       </b-button>
     </template>

@@ -56,7 +56,7 @@ export default {
     {src: '~/plugins/alertify.js', mode: 'client'},
     {src: '~/plugins/tables.js', mode: 'client'},
     {src: '~/plugins/inputs.js', mode: 'client'},
-    // {src: '~/plugins/modals.js', mode: 'client'},
+    {src: '~/plugins/modals.js', mode: 'client'},
     {src: '~/plugins/filepond.js', mode: 'client'},
   ],
   modules: [
