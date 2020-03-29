@@ -29,13 +29,8 @@
         <strong>{{ row.value }}</strong>
       </template>
       <template slot="cell(cover)" slot-scope="row">
-        <a v-if="row.value" :href="row.value" target="_blank" rel="noreferrer">
-          <img
-            v-if="row.value"
-            :src="[$settings.image_url, row.item.cover_id, '100x50'].join('/')"
-            class="mr-2"
-            width="100"
-          />
+        <a v-if="row.value" :href="$image(row.value)" target="_blank" rel="noreferrer">
+          <img v-if="row.value" :src="$image(row.value, '100x50', 'fit')" alt="" />
         </a>
       </template>
       <template slot="cell(actions)" slot-scope="row">

@@ -55,149 +55,11 @@
 
                 <form class="edit-profile" @submit.prevent="onSubmit">
                   <div class="form-body">
-                    <b-form-group class="mb-3" label="Имя / Фамилия" label-for="form-fullname">
-                      <b-input v-model="form.fullname" trim required />
-                    </b-form-group>
-
-                    <b-form-group class="mb-3" label="Дата рождения" label-for="form-dob">
-                      <date-picker
-                        v-model="form.dob"
-                        :required="true"
-                        :range="false"
-                        :default-value="getYear(20)"
-                        :not-after="getYear()"
-                      >
-                        <template slot="calendar-icon">&nbsp;</template>
-                      </date-picker>
-                    </b-form-group>
-
-                    <b-form-group class="mb-3" label="Адрес электронной почты" label-for="form-email">
-                      <b-input v-model="form.email" type="email" trim required autocomplete="new-password" />
-                    </b-form-group>
-
-                    <b-form-group class="mb-3" label="Пароль" label-for="form-password">
-                      <b-input v-model="form.password" type="password" trim autocomplete="new-password" />
-                    </b-form-group>
-
-                    <b-form-group class="mb-3" label="Номер телефона" label-for="form-phone">
-                      <phone-input
-                        v-model="form.phone"
-                        type="tel"
-                        default-country="ru"
-                        placeholder=""
-                        input-classes="form-control"
-                        :only-countries="['ru', 'ua', 'by', 'kz']"
-                        :valid-characters-only="true"
-                      />
-                    </b-form-group>
-
-                    <b-form-group class="mb-3" label="Аккаунт Instagram" label-for="form-instagram">
-                      <b-input v-model="form.instagram" trim placeholder="@" />
-                    </b-form-group>
-
-                    <!--<b-form-group class="mb-3" label="Компания" label-for="form-company">
-                      <b-input v-model="form.company" trim/>
-                    </b-form-group>
-
-                    <b-form-group class="mb-3" label="О себе" label-for="form-company">
-                      <b-textarea v-model="form.description" rows="5" trim no-resize/>
-                    </b-form-group>-->
-
-                    <b-form-group
-                      class="mb-3"
-                      label="Ваш реферальный код"
-                      label-for="form-promo"
-                      description="Если ваш друг использует этот код при регистрации, он получит скидку на первую покупку, а вы - крафтики!"
-                    >
-                      <b-input-group>
-                        <b-form-input :value="$auth.user.promo" readonly style="background: transparent" />
-                        <b-input-group-append>
-                          <b-button variant="outline-primary" @click="copyLink">
-                            <fa :icon="['fad', 'copy']" />
-                          </b-button>
-                        </b-input-group-append>
-                      </b-input-group>
-                    </b-form-group>
-
-                    <div class="children-form mb-5">
-                      <h4 class="text-muted">Ваши дети</h4>
-                      <small class="text-muted">
-                        После прохождения курсов мы генерируем дипломы для указанных имён.
-                      </small>
-
-                      <div v-if="children.length" class="row mt-3 mb-3 justify-content-center">
-                        <b-badge
-                          v-for="childItem in children"
-                          :key="childItem.id"
-                          pill
-                          variant="primary"
-                          class="ml-3 mb-2 child-badge"
-                          @click="deleteChild(childItem.id)"
-                        >
-                          <fa v-if="child.gender > 0" :icon="['fad', 'female']" class="mr-2" />
-                          <fa v-else :icon="['fad', 'male']" class="mr-2" />
-                          {{ childItem.name }}, {{ childItem.dob | years }}
-                          {{ childItem.dob | years | noun('год|года|лет') }}
-                          <fa :icon="['fal', 'times']" class="ml-2" />
-                        </b-badge>
-                      </div>
-
-                      <transition name="fade">
-                        <div v-if="children_form">
-                          <b-form-group label-cols-md="4" label="Имя" label-align="right">
-                            <b-form-input v-model="child.name" autofocus :required="children_form" />
-                          </b-form-group>
-                          <b-form-group label-cols-md="4" label="Дата рождения" label-align="right">
-                            <date-picker
-                              v-model="child.dob"
-                              :range="false"
-                              :required="children_form"
-                              :default-value="getYear(6)"
-                              :not-after="getYear(2)"
-                            >
-                              <template slot="calendar-icon">&nbsp;</template>
-                            </date-picker>
-                          </b-form-group>
-                          <b-form-group label-cols-md="4" label="Пол ребенка" label-align="right">
-                            <b-form-radio-group v-model="child.gender" :required="children_form">
-                              <b-form-radio value="0">Мальчик</b-form-radio>
-                              <br />
-                              <b-form-radio value="1">Девочка</b-form-radio>
-                            </b-form-radio-group>
-                          </b-form-group>
-                        </div>
-                      </transition>
-
-                      <div v-if="children.length < max_children" class="form-group">
-                        <b-button
-                          v-if="!children_form"
-                          variant="default"
-                          class="d-flex align-items-center"
-                          @click.prevent="addChild"
-                        >
-                          <fa :icon="['fad', 'plus-circle']" class="mr-2" />
-                          <span v-if="!children.length">Добавить ребёнка</span>
-                          <span v-else>Добавить еще одного ребёнка</span>
-                        </b-button>
-                        <div v-else class="d-flex justify-content-between">
-                          <b-button variant="default" class="d-flex align-items-center" @click.prevent="addChild">
-                            <fa :icon="['fad', 'check-circle']" class="mr-2" />
-                            Ок
-                          </b-button>
-                          <b-button
-                            variant="default"
-                            class="d-flex align-items-center"
-                            @click.prevent="children_form = false"
-                          >
-                            Отмена
-                            <fa :icon="['fad', 'times-circle']" class="ml-2" />
-                          </b-button>
-                        </div>
-                      </div>
-                    </div>
-
+                    <form-profile v-model="childrenForm" :record="record" />
                     <div class="d-flex align-items-center justify-content-center">
-                      <button class="button" type="submit" aria-label="submit">Сохранить</button>
+                      <button class="button" type="submit" aria-label="submit" :disabled="childrenForm">
+                        Сохранить
+                      </button>
                     </div>
                   </div>
                 </form>
@@ -212,98 +74,38 @@
 
 <script>
 import Vue from 'vue'
-import {faVk, faInstagram} from '@fortawesome/free-brands-svg-icons'
 import VueClipboard from 'vue-clipboard2'
+import {faVk, faInstagram} from '@fortawesome/free-brands-svg-icons'
 import {faCopy, faPlusCircle, faCheckCircle, faTimesCircle, faMale, faFemale} from '@fortawesome/pro-duotone-svg-icons'
 import {faTimes} from '@fortawesome/pro-light-svg-icons'
+import FormProfile from '../../components/forms/profile'
 
 VueClipboard.config.autoSetContainer = true // add this line
 Vue.use(VueClipboard)
 
 export default {
+  components: {FormProfile},
   auth: true,
-  async asyncData({app, env}) {
-    const [record, children] = await Promise.all([app.$axios.get('user/profile'), app.$axios.get('user/children')])
-
-    app.$auth.setUser(record.data.user)
-
-    return {
-      record: record.data.user,
-      children: children.data.rows,
-      max_children: env.CHILDREN_MAX,
-    }
+  async asyncData({app}) {
+    const {data: record} = await app.$axios.get('user/profile')
+    return {record: record.user}
   },
   data() {
-    const formatDate = {
-      value2date: (value) => {
-        return value ? this.$moment(new Date(value), 'DD.MM.YYYY').toDate() : null
-      },
-      date2value: (date) => {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : null
-      },
-    }
-
-    const user = JSON.parse(JSON.stringify(this.$auth.user))
-
     return {
-      children_form: false,
-      child: {
-        name: null,
-        dob: null,
-        gender: null,
-      },
-      form: {
-        fullname: user.fullname,
-        dob: user.dob,
-        email: user.email,
-        phone: user.phone,
-        instagram: user.instagram,
-        password: '',
-        children: user.children || [],
-        company: user.company,
-        description: user.description,
-      },
-      formatDate,
+      record: {},
+      childrenForm: false,
     }
-  },
-  computed: {
-    promo: {
-      get() {
-        return process.env.SITE_URL + 'p/' + this.$auth.user.promo
-      },
-    },
   },
   created() {
     this.$app.header_image.set(false)
     this.$fa.add(faCopy, faPlusCircle, faCheckCircle, faTimesCircle, faTimes, faVk, faInstagram, faMale, faFemale)
   },
   methods: {
-    getYear(minus = 12) {
-      const d = new Date()
-
-      return d.setFullYear(d.getFullYear() - minus)
-    },
-    onSubmit() {
-      this.$axios
-        .patch('user/profile', this.form)
-        .then((res) => {
-          this.$auth.setUser(res.data.user)
-          this.updateForm()
-          this.$notify.success({message: 'Изменения успешно сохранены'})
-        })
-        .catch(() => {})
-    },
-    updateForm() {
-      for (const i in this.$auth.user) {
-        if (Object.prototype.hasOwnProperty.call(this.$auth.user, i) && this.form[i] !== undefined) {
-          this.form[i] = this.$auth.user[i]
-        }
-      }
-    },
-    copyLink() {
-      this.$copyText(this.promo).then(() => {
-        this.$notify.success({message: 'Ссылка успешно скопирована в буфер обмена!'})
-      })
+    async onSubmit() {
+      const {data: res} = await this.$axios.patch('user/profile', this.record)
+      this.record = res.user
+      this.$auth.fetchUser()
+      this.$notify.success({message: 'Изменения успешно сохранены'})
     },
     onLink(provider) {
       const x = screen.width / 2 - 700 / 2
@@ -324,9 +126,7 @@ export default {
             this.$notify.success({
               message: 'Вы успешно привязали ' + (provider === 'instagram' ? 'Instagram' : 'Вконтакте'),
             })
-            this.$auth.fetchUser().then(() => {
-              this.updateForm()
-            })
+            this.$auth.fetchUser()
           } else if (data.error) {
             this.$notify.error({message: data.error})
           }
@@ -341,46 +141,7 @@ export default {
     onUnlink(provider) {
       this.$axios.delete('security/oauth2', {params: {provider}}).then(() => {
         this.$notify.info({message: 'Вы успешно отвязали ' + (provider === 'instagram' ? 'Instagram' : 'Вконтакте')})
-        this.$auth.fetchUser().then(() => {
-          this.updateForm()
-        })
-      })
-    },
-    addChild() {
-      if (this.children_form === true) {
-        let i
-        for (i in this.child) {
-          if (Object.prototype.hasOwnProperty.call(this.child, i)) {
-            if (this.child[i] === null) {
-              return
-            }
-          }
-        }
-        this.children_form = false
-        if (this.children.length < this.max_children) {
-          this.$axios.put('user/children', this.child).then((res) => {
-            this.children.push(res.data)
-
-            for (i in this.child) {
-              if (Object.prototype.hasOwnProperty.call(this.child, i)) {
-                this.child[i] = null
-              }
-            }
-          })
-        }
-      } else {
-        this.children_form = true
-      }
-    },
-    deleteChild(id) {
-      const newArr = []
-      this.$axios.delete('user/children', {params: {id}}).then((res) => {
-        this.children.forEach((v) => {
-          if (v.id !== id) {
-            newArr.push(v)
-          }
-        })
-        this.children = newArr
+        this.$auth.fetchUser()
       })
     },
   },

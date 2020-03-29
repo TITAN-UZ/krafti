@@ -21,7 +21,7 @@
     />
     <div v-if="imageId" class="uploaded">
       <div>Вы уже отправили нам вот эту работу</div>
-      <img :src="[$settings.image_url, imageId, '500x250'].join('/')" />
+      <img :src="[$settings.image_url, imageId, '500x250', 'fit'].join('/')" />
     </div>
   </div>
 </template>

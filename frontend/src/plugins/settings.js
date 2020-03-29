@@ -1,6 +1,7 @@
 export default ({app, $axios}, inject) => {
   const settings = {
     image_url: $axios.defaults.baseURL.replace('api/', 'image'),
+    file_url: $axios.defaults.baseURL.replace('api/', 'file'),
     copyright: 'KRAFTi © 2019. Продажа творческих, спортивных онлайн-курсов для детей и взрослых. Все права защищены.',
     video: {
       index: 359213295,

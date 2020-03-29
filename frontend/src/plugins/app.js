@@ -30,4 +30,22 @@ export default ({app, store}, inject) => {
       },
     },
   })
+
+  inject('image', (data, size = null, type = null) => {
+    const params = [app.$settings.image_url]
+    params.push(/^\d+$/.test(data) ? data : data.id)
+    if (size) {
+      params.push(size)
+    }
+    if (type) {
+      params.push(type)
+    }
+
+    let url = params.join('/')
+    if (data.updated_at) {
+      url += '?t=' + new Date(data.updated_at).getTime()
+    }
+
+    return url
+  })
 }

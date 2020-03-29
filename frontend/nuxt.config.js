@@ -42,7 +42,6 @@ export default {
   },
   loading: {
     color: '#ff7474',
-    // throttle: 0,
   },
   css: ['~assets/scss/styles.scss'],
   plugins: [
@@ -53,14 +52,12 @@ export default {
     '~/plugins/filters.js',
     '~/plugins/vimeo.js',
     '~/plugins/metrika.js',
-    {src: '~/plugins/autosuggest.js', ssr: false},
-    {src: '~/plugins/mixins.js', ssr: false},
-    {src: '~/plugins/alertify.js', ssr: false},
-    {src: '~/plugins/tables.js', ssr: false},
-    {src: '~/plugins/mask.js', ssr: false},
-    {src: '~/plugins/filepond.js', ssr: false},
-    {src: '~/plugins/tags.js', ssr: false},
-    {src: '~/plugins/datepicker.js', ssr: false},
+    {src: '~/plugins/mixins.js', mode: 'client'},
+    {src: '~/plugins/alertify.js', mode: 'client'},
+    {src: '~/plugins/tables.js', mode: 'client'},
+    {src: '~/plugins/inputs.js', mode: 'client'},
+    // {src: '~/plugins/modals.js', mode: 'client'},
+    {src: '~/plugins/filepond.js', mode: 'client'},
   ],
   modules: [
     'bootstrap-vue/nuxt',
@@ -72,7 +69,6 @@ export default {
     '@nuxtjs/markdownit',
     '@nuxtjs/dotenv',
     '@nuxtjs/sitemap',
-    // '@nuxtjs/eslint-module'
   ],
   bootstrapVue: {
     css: false,

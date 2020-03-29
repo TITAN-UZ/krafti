@@ -1,9 +1,9 @@
 <template>
   <file-pond
     ref="filepond"
-    -accepted-file-types="application/zip, application/pdf, image/jpeg, image/png"
     class-name="upload-file"
-    :label-idle="label"
+    :accepted-file-types="acceptedFileTypes"
+    :label-idle="placeholder"
     :allow-multiple="false"
     :instant-upload="false"
     :allow-drop="true"
@@ -32,13 +32,16 @@ export default {
       },
     },
     label: {
-      type: String,
+      type: Object,
       required: false,
-      default: 'Нажмите для загрузки',
+      default() {
+        return {}
+      },
     },
-  },
-  data() {
-    return {}
+    acceptedFileTypes: {
+      type: String,
+      default: null,
+    },
   },
   computed: {
     myValue: {
@@ -49,17 +52,30 @@ export default {
         this.$emit('input', newValue)
       },
     },
+    placeholder() {
+      let message = ''
+      if (this.label && Object.keys(this.label).length) {
+        message += `<a href="${[this.$settings.file_url, this.label.id].join('/')}" target="_self">${
+          this.label.title
+        }</a>`
+      }
+      return message + 'Нажмите для загрузки'
+    },
   },
   methods: {
     addFile(e, file) {
-      this.myValue = {
+      const data = {
         id: file.id,
         metadata: file.getMetadata(),
         file: file.getFileEncodeDataURL(),
       }
+      data.metadata.name = file.filename
+      data.metadata.size = file.size
+      data.metadata.type = file.type
+      this.myValue = data
     },
-    removeFile(e, file) {
-      this.myValue = null
+    removeFile() {
+      this.myValue = {}
     },
   },
 }
@@ -71,11 +87,19 @@ export default {
   .filepond--file-status {
     color: black;
   }
+
   .filepond--drop-label {
     border: 1px solid #dee2e6;
     border-radius: 10px;
-    label {
-      text-align: left;
+    cursor: pointer;
+
+    > label {
+      cursor: pointer;
+
+      a {
+        display: block;
+        margin-bottom: 10px;
+      }
     }
   }
 }

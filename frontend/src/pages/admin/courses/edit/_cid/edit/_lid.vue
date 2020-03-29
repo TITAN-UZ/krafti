@@ -68,7 +68,7 @@
         label-for="input-scope"
         description="Набор товаров в произвольной форме, через запятую"
       >
-        <tags v-model="record.products" />
+        <input-tags v-model="record.products" />
       </b-form-group>
 
       <b-form-group
@@ -78,13 +78,7 @@
         label-for="input-author"
         description="Загрузите *.zip или *.pdf файл"
       >
-        <div v-if="record.file && !upload_new">
-          Файл уже загружен. Вы можете
-          <a :href="record.file" class="btn btn-outline-secondary" target="_self">скачать его</a>
-          или
-          <b-button variant="outline-secondary" @click="upload_new = true">заменить</b-button>
-        </div>
-        <upload-file v-else v-model="file" />
+        <upload-file v-model="record.new_file" :label="record.file" />
       </b-form-group>
 
       <b-form-checkbox v-model="record.active" class="offset-lg-3">Опубликован</b-form-checkbox>
@@ -122,8 +116,7 @@ export default {
   data() {
     return {
       loading: false,
-      upload_new: false,
-      file: {},
+      record: {},
     }
   },
   methods: {
@@ -132,15 +125,8 @@ export default {
     },
     onSubmit() {
       this.loading = true
-      const record = JSON.parse(JSON.stringify(this.record))
-      record.products = record.products.map((v) => {
-        return v.value
-      })
-      if (this.file) {
-        record.file = this.file
-      }
       this.$axios
-        .patch('admin/lessons', record)
+        .patch('admin/lessons', this.record)
         .then((res) => {
           this.loading = false
           this.$root.$emit('app::admin-lessons::update', res.data)

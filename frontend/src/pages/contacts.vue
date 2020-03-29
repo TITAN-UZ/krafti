@@ -54,12 +54,7 @@
                         <b-form-input v-model.trim="record.name" placeholder="Имя Фамилия" autofocus required />
                       </b-form-group>
                       <b-form-group :disabled="loading">
-                        <b-form-input
-                          v-model.trim="record.phone"
-                          v-mask="'##########?#?#?#'"
-                          placeholder="Номер телефона"
-                          required
-                        />
+                        <input-phone v-model.trim="record.phone" placeholder="Номер телефона" required />
                       </b-form-group>
                       <b-form-group :disabled="loading" class="mb-lg-0">
                         <b-form-input

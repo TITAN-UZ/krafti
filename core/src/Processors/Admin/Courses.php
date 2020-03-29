@@ -12,6 +12,17 @@ class Courses extends \App\ObjectProcessor
     protected $class = '\App\Model\Course';
     protected $scope = 'courses';
 
+    /**
+     * @param Builder $c
+     * @return mixed
+     */
+    protected function beforeGet($c)
+    {
+        $c->with('cover:id,title,updated_at');
+        $c->with('diploma:id,title,updated_at');
+
+        return $c;
+    }
 
     /**
      * @param Builder $c
@@ -26,6 +37,12 @@ class Courses extends \App\ObjectProcessor
                 $c->orWhere('description', 'LIKE', "%$query%");
             });
         }
+        if ($this->getProperty('combo')) {
+            $c->select('id', 'title');
+        }
+        $c->with('cover:id,title,updated_at');
+        $c->with('diploma:id,title,updated_at');
+        $c->with('video:id,preview');
 
         return $c;
     }
@@ -54,7 +71,7 @@ class Courses extends \App\ObjectProcessor
             return 'Неверный формат возраста. Укажите 2 числа: от и до, через дефис.';
         }
 
-        if ($cover = $this->getProperty('cover')) {
+        if ($cover = $this->getProperty('new_cover', $this->getProperty('cover'))) {
             if (is_array($cover) && !empty($cover['file'])) {
                 if (!$file = $record->cover) {
                     $file = new File();
@@ -66,7 +83,7 @@ class Courses extends \App\ObjectProcessor
             }
         }
 
-        if ($diploma = $this->getProperty('diploma')) {
+        if ($diploma = $this->getProperty('new_diploma', $this->getProperty('diploma'))) {
             if (is_array($diploma) && !empty($diploma['file'])) {
                 if (!$file = $record->diploma) {
                     $file = new File();
@@ -79,47 +96,5 @@ class Courses extends \App\ObjectProcessor
         }
 
         return true;
-    }
-
-
-    /**
-     * @param Course $object
-     *
-     * @return array
-     */
-    public function prepareRow($object)
-    {
-        if ($this->getProperty('combo')) {
-            $array = [
-                'id' => $object->id,
-                'title' => $object->title,
-            ];
-        } else {
-            $array = [
-                'id' => $object->id,
-                'title' => $object->title,
-                'tagline' => $object->tagline,
-                'description' => $object->description,
-                'cover_id' => $object->cover_id,
-                'video_id' => $object->video_id,
-                'lessons_count' => $object->lessons_count,
-                'category' => $object->category,
-                'price' => $object->price,
-                'age' => $object->age,
-                'active' => $object->active,
-                'properties' => $object->properties,
-                'cover' => $object->cover
-                    ? $object->cover->getUrl()
-                    : null,
-                'video' => $object->video
-                    ? $object->video->preview
-                    : null,
-                'diploma' => $object->diploma
-                    ? $object->diploma->getUrl()
-                    : null,
-            ];
-        }
-
-        return $array;
     }
 }

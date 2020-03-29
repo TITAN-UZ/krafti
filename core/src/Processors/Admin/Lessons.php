@@ -12,7 +12,9 @@ class Lessons extends \App\ObjectProcessor
     protected $class = '\App\Model\Lesson';
     protected $scope = 'lessons';
 
-
+    /**
+     * @return \Slim\Http\Response
+     */
     public function post()
     {
         if (!$action = $this->getProperty('action')) {
@@ -31,7 +33,10 @@ class Lessons extends \App\ObjectProcessor
                 if ($object->rank > 0) {
                     $object->rank -= 1;
                     /** @var Lesson $other */
-                    if ($other = $object->course->lessons()->where(['rank' => $object->rank, 'section' => $object->section])->first()) {
+                    if ($other = $object->course->lessons()->where([
+                        'rank' => $object->rank,
+                        'section' => $object->section,
+                    ])->first()) {
                         $other->rank += 1;
                         $other->save();
                     }
@@ -41,7 +46,10 @@ class Lessons extends \App\ObjectProcessor
             case 'move_down':
                 $object->rank += 1;
                 /** @var Lesson $other */
-                if ($other = $object->course->lessons()->where(['rank' => $object->rank, 'section' => $object->section])->first()) {
+                if ($other = $object->course->lessons()->where([
+                    'rank' => $object->rank,
+                    'section' => $object->section,
+                ])->first()) {
                     $other->rank -= 1;
                     $other->save();
                 }
@@ -71,6 +79,16 @@ class Lessons extends \App\ObjectProcessor
         return $this->success();
     }
 
+    /**
+     * @param Builder $c
+     * @return Builder|mixed
+     */
+    protected function beforeGet($c)
+    {
+        $c->with('file:id,title,updated_at');
+
+        return $c;
+    }
 
     /**
      * @param Lesson $record
@@ -80,12 +98,13 @@ class Lessons extends \App\ObjectProcessor
     public function beforeSave($record)
     {
         if ($record->section == 0) {
-            if (Lesson::query()->where(['section' => 0, 'course_id' => $record->course_id])->where('id', '!=', $record->id)->count()) {
+            if (Lesson::query()->where(['section' => 0, 'course_id' => $record->course_id])->where('id', '!=',
+                $record->id)->count()) {
                 return 'У вас уже есть бонусное видео в этом курсе. Такое видео может быть только одно.';
             }
         }
 
-        if ($archive = $this->getProperty('file')) {
+        if ($archive = $this->getProperty('new_file', $this->getProperty('file'))) {
             if (is_array($archive) && !empty($archive['file'])) {
                 if (!$file = $record->file) {
                     $file = new File();
@@ -122,52 +141,19 @@ class Lessons extends \App\ObjectProcessor
             $c->where(['section' => (int)$section]);
         }
 
+        return $c;
+    }
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function afterCount($c)
+    {
+        $c->with('video:id,preview');
         $c->orderBy('section', 'asc');
         $c->orderBy($this->getProperty('sort', 'rank'), $this->getProperty('dir') == 'desc' ? 'desc' : 'asc');
 
         return $c;
-    }
-
-
-    /**
-     * @param Lesson $object
-     *
-     * @return array
-     */
-    public function prepareRow($object)
-    {
-        $array = [
-            'id' => $object->id,
-            'title' => $object->title,
-            'description' => $object->description,
-            'rank' => $object->rank,
-            'section' => $object->section,
-            'products' => $object->products,
-            'course_id' => $object->course_id,
-            'course' => $object->course
-                ? $object->course->title
-                : null,
-            'video_id' => $object->video_id,
-            'video' => $object->video
-                ? $object->video->preview
-                : null,
-            'bonus_id' => $object->bonus_id,
-            'bonus' => $object->bonus
-                ? $object->bonus->preview
-                : null,
-            //'file_id' => $object->file_id,
-            'file' => $object->file
-                ? $object->file->getUrl()
-                : null,
-            'author_id' => $object->author_id,
-            'author' => $object->author
-                ? $object->author->fullname
-                : null,
-            'active' => $object->active,
-            'extra' => $object->extra,
-            'free' => $object->free,
-        ];
-
-        return $array;
     }
 }

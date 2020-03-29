@@ -4,6 +4,7 @@ namespace App\Processors\User;
 
 
 use App\Model\Traits\UserValidate;
+use App\Model\UserChild;
 use App\Model\UserFavorite;
 use App\Model\UserLike;
 use App\Model\UserOauth;
@@ -49,14 +50,13 @@ class Profile extends \App\Processor
             'promo' => $user->promo,
             'favorites' => $favorites,
             'oauth2' => $oauth2,
+            'children' => $user->children()->get(['id', 'name', 'dob', 'gender'])->toArray(),
         ];
 
         $data['unread'] = $user->messages()->where(['read' => false])->count();
 
         $this->container->user->logged_at = date('Y-m-d H:i:m');
         $this->container->user->save();
-
-        //$user->sendMessage('Test ' . rand());
 
         return $this->success([
             'user' => $data,
@@ -87,6 +87,15 @@ class Profile extends \App\Processor
             $user->password = $password;
         }
         $user->save();
+
+        $children = $this->getProperty('children');
+        $ids = [];
+        foreach ($children as $child) {
+            $ids[] = !empty($child['id'])
+                ? $child['id']
+                : ($user->children()->create($child))->id;
+        }
+        $user->children()->whereNotIn('id', $ids)->delete();
 
         return $this->get();
     }

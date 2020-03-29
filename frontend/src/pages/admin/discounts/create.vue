@@ -31,10 +31,10 @@
       >
         <div class="row">
           <div class="col-6">
-            <date-picker v-model="record.date_start" format="DD.MM.YY HH:mm:ss" :range="false" />
+            <input-date v-model="record.date_start" type="datetime" />
           </div>
           <div class="col-6">
-            <date-picker v-model="record.date_end" format="DD.MM.YY HH:mm:ss" :range="false" />
+            <input-date v-model="record.date_end" type="datetime" />
           </div>
         </div>
       </b-form-group>

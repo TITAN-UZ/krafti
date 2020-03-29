@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -11,29 +12,27 @@ use League\Flysystem\Filesystem;
  * @property string $file
  * @property string $path
  * @property string $title
- * @property array $preview
  * @property string $type
  * @property int $width
  * @property int $height
  * @property string $description
  * @property array $metadata
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- *
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class File extends Model
 {
-    public $timestamps = true;
-    protected $fillable = ['file', 'path', 'title', 'preview', 'type', 'width', 'height', 'description', 'metadata'];
+    protected $fillable = ['file', 'path', 'title', 'type', 'width', 'height', 'description', 'metadata'];
     protected $casts = [
-        'preview' => 'array',
         'metadata' => 'array',
     ];
     /** @var Filesystem $filesystem */
     protected $filesystem;
     const dir = 'upload';
 
-
+    /**
+     * @param array $attributes
+     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -41,7 +40,11 @@ class File extends Model
         $this->filesystem = new Filesystem($adapter);
     }
 
-
+    /**
+     * @param $file
+     * @param array $metadata
+     * @return bool|int
+     */
     public function uploadFile($file, array $metadata = [])
     {
         $stream = fopen($file['tmp_name'], 'r+');
@@ -109,7 +112,9 @@ class File extends Model
             $this->deleteFile();
         }
 
-        $this->title = $filename;
+        $this->title = !empty($metadata['name'])
+            ? $metadata['name']
+            : $filename;
         $this->path = $path;
         $this->file = $filename;
         $this->type = $type;
@@ -125,10 +130,24 @@ class File extends Model
         return $this->id;
     }
 
-
+    /**
+     * @return string
+     */
     public function getFile()
     {
         return BASE_DIR . '/' . $this::dir . '/' . $this->path . '/' . $this->file;
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getFileContent()
+    {
+        try {
+            return $this->filesystem->read($this->path . '/' . $this->file);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
 

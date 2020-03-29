@@ -24,7 +24,7 @@
       <b-row class="text-center justify-content-around justify-content-md-between">
         <div v-if="filters.date !== undefined">
           <b-form-group label="Дата">
-            <date-picker v-model="filters.date" />
+            <input-date v-model="filters.date" />
           </b-form-group>
         </div>
 

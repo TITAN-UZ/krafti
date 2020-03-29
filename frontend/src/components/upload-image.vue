@@ -3,14 +3,14 @@
     <file-pond
       ref="filepond"
       accepted-file-types="image/jpeg, image/png"
-      class-name="upload-cover"
+      class-name="upload-image"
       :allow-multiple="false"
       :instant-upload="false"
       :allow-drop="true"
       :image-resize-target-width="maxHeight"
       :image-resize-target-height="maxWidth"
       :image-preview-max-height="300"
-      :image-preview-height="176"
+      :image-preview-height="200"
       :image-resize-upscale="false"
       image-resize-mode="contain"
       label-idle="Нажмите для загрузки"
@@ -22,15 +22,20 @@
       @addfile="addFile"
       @removefile="removeFile"
     />
-    <div class="upload-cover-image">
-      <img alt="" height="176" :src="label" />
+    <div class="upload-image-placeholder">
+      <img alt="" height="200" :src="myValue || placeholder" />
+    </div>
+    <div v-if="label && Object.keys(label).length" class="text-center small mt-1">
+      <a :href="$image(label)" target="_blank" rel="noreferrer">
+        {{ label.title }}
+      </a>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'UploadCover',
+  name: 'UploadImage',
   props: {
     value: {
       type: Object,
@@ -40,9 +45,11 @@ export default {
       },
     },
     label: {
-      type: String,
+      type: Object,
       required: false,
-      default: 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
+      default() {
+        return {}
+      },
     },
     maxWidth: {
       type: Number,
@@ -61,36 +68,42 @@ export default {
   computed: {
     myValue: {
       get() {
-        return this.value
+        return Object.keys(this.value).length ? this.value : null
       },
       set(newValue) {
         this.$emit('input', newValue)
       },
     },
+    placeholder() {
+      return this.label && Object.keys(this.label).length
+        ? this.$image(this.label, '400x400', 'resize')
+        : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+    },
   },
   methods: {
     addFile(e, file) {
-      this.myValue = {
+      const data = {
         id: file.id,
         metadata: file.getMetadata(),
         file: file.getFileEncodeDataURL(),
       }
+      data.metadata.name = file.filename
+      data.metadata.size = file.size
+      data.metadata.type = file.type
+      this.myValue = data
     },
-    removeFile(e, file) {
-      this.myValue = null
+    removeFile() {
+      this.myValue = {}
     },
   },
 }
 </script>
 
 <style lang="scss">
-.upload-cover {
+.upload-image {
   z-index: 1050;
-  min-height: 176px;
-
-  .filepond--panel-root {
-    //background: transparent;
-  }
+  min-height: 200px;
+  cursor: pointer;
 
   .filepond--drop-label {
     > label {
@@ -104,9 +117,9 @@ export default {
   }
 }
 
-.upload-cover-image {
+.upload-image-placeholder {
   z-index: 1040;
-  margin-top: -176px;
+  margin-top: -200px;
   background: #222;
 
   img {

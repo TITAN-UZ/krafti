@@ -10,7 +10,7 @@
       </b-form-group>
 
       <b-form-group label="Укажите разрешения:" label-for="input-scope">
-        <tags v-model="record.scope" placeholder="" :add-tags-on-comma="true" />
+        <input-tags v-model="record.scope" />
       </b-form-group>
 
       <b-row no-gutters class="mt-2 justify-content-between">

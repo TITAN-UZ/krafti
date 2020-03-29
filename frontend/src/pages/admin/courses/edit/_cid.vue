@@ -24,7 +24,7 @@
             label-for="input-cover"
             description="Загрузите файл с обложкой"
           >
-            <upload-cover v-model="cover" :label="record.cover" />
+            <upload-image v-model="record.new_cover" :label="record.cover" />
           </b-form-group>
 
           <b-form-group
@@ -47,7 +47,6 @@
                 <b-form-input
                   id="input-price-3"
                   v-model="record.price['3']"
-                  v-mask="'###?#?#'"
                   type="number"
                   placeholder="2990"
                   required
@@ -57,7 +56,6 @@
                 <b-form-input
                   id="input-price-6"
                   v-model="record.price['6']"
-                  v-mask="'###?#?#'"
                   type="number"
                   placeholder="3990"
                   required
@@ -67,7 +65,6 @@
                 <b-form-input
                   id="input-price-12"
                   v-model="record.price['12']"
-                  v-mask="'###?#?#'"
                   type="number"
                   placeholder="5990"
                   required
@@ -103,7 +100,7 @@
             label-for="input-cover"
             description="Загрузите файл с шаблоном"
           >
-            <upload-cover v-model="diploma" :label="record.diploma" />
+            <upload-image v-model="record.new_diploma" :label="record.diploma" />
           </b-form-group>
 
           <b-form-checkbox v-model="record.active" class="offset-lg-3">Опубликован</b-form-checkbox>
@@ -166,7 +163,7 @@
               Этап: <strong>{{ row.value }}</strong>
             </div>
           </template>
-          <template slot="cell(video)" slot-scope="row">
+          <template slot="cell(video.preview)" slot-scope="row">
             <a :href="row.value[Object.keys(row.value).pop()]" target="_blank" rel="noreferrer">
               <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2" />
             </a>
@@ -232,12 +229,11 @@ export default {
       },
       fields: [
         {key: 'section', label: 'Этап', sortable: false},
-        {key: 'video', label: 'Превью', sortable: false},
+        {key: 'video.preview', label: 'Превью', sortable: false},
         {key: 'title', label: 'Название', sortable: false},
         {key: 'actions', label: 'Действия'},
       ],
-      cover: {},
-      diploma: {},
+      record: {},
       page: 1,
       limit: 10,
       totalRows: 0,
@@ -263,11 +259,8 @@ export default {
     },
     onSubmit() {
       this.loading = true
-      const record = JSON.parse(JSON.stringify(this.record))
-      record.cover = this.cover
-      record.diploma = this.diploma
       this.$axios
-        .patch('admin/courses', record)
+        .patch('admin/courses', this.record)
         .then((res) => {
           this.loading = false
           this.$root.$emit('bv::hide::modal', 'myModal')

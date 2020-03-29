@@ -22,7 +22,7 @@
         label-for="input-cover"
         description="Загрузите файл с обложкой"
       >
-        <upload-cover v-model="record.cover" />
+        <upload-image v-model="record.cover" />
       </b-form-group>
 
       <b-form-group
@@ -45,7 +45,6 @@
             <b-form-input
               id="input-price-3"
               v-model="record.price['3']"
-              v-mask="'###?#?#'"
               type="number"
               placeholder="2990"
               required
@@ -55,7 +54,6 @@
             <b-form-input
               id="input-price-6"
               v-model="record.price['6']"
-              v-mask="'###?#?#'"
               type="number"
               placeholder="3990"
               required
@@ -65,7 +63,6 @@
             <b-form-input
               id="input-price-12"
               v-model="record.price['12']"
-              v-mask="'###?#?#'"
               type="number"
               placeholder="5990"
               required

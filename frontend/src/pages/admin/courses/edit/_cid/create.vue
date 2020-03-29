@@ -68,7 +68,7 @@
         label-for="input-scope"
         description="Набор товаров в произвольной форме, через запятую"
       >
-        <tags v-model="record.products" />
+        <input-tags v-model="record.products" />
       </b-form-group>
 
       <b-form-group
@@ -78,7 +78,7 @@
         label-for="input-author"
         description="Загрузите *.zip или *.pdf файл"
       >
-        <upload-file v-model="file" />
+        <upload-file v-model="record.file" />
       </b-form-group>
 
       <b-form-checkbox v-model="record.active" class="offset-lg-3">Опубликован</b-form-checkbox>
@@ -128,9 +128,6 @@ export default {
       record.products = record.products.map((v) => {
         return v.value
       })
-      if (this.file) {
-        record.file = this.file
-      }
       this.$axios
         .put('admin/lessons', record)
         .then((res) => {

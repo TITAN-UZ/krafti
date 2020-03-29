@@ -10,7 +10,7 @@
       </b-form-group>
 
       <b-form-group label="Укажите разрешения:" label-for="input-scope">
-        <tags v-model="record.scope" placeholder="" :add-tags-on-comma="true" />
+        <input-tags v-model="record.scope" />
       </b-form-group>
 
       <b-row no-gutters class="mt-2 justify-content-between">
@@ -46,12 +46,8 @@ export default {
     },
     onSubmit() {
       this.loading = true
-      const record = JSON.parse(JSON.stringify(this.record))
-      record.scope = record.scope.map((v) => {
-        return v.value
-      })
       this.$axios
-        .patch('admin/user-roles', record)
+        .patch('admin/user-roles', this.record)
         .then((res) => {
           this.loading = false
           this.$root.$emit('bv::hide::modal', 'myModal')

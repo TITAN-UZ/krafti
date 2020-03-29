@@ -13,7 +13,7 @@ import FilePondPluginImageCrop from 'filepond-plugin-image-crop'
 import FilePondPluginFileEncode from 'filepond-plugin-image-transform'
 import UploadBg from '../components/upload-bg'
 import UploadPhoto from '../components/upload-photo'
-import UploadCover from '../components/upload-cover'
+import UploadImage from '../components/upload-image'
 import UploadFile from '../components/upload-file'
 import UploadHomework from '../components/upload-homework'
 import GalleryManager from '../components/gallery-manager'
@@ -31,7 +31,7 @@ Vue.component('file-pond', FilePond)
 
 Vue.component('upload-bg', UploadBg)
 Vue.component('upload-photo', UploadPhoto)
-Vue.component('upload-cover', UploadCover)
+Vue.component('upload-image', UploadImage)
 Vue.component('upload-file', UploadFile)
 Vue.component('upload-homework', UploadHomework)
 Vue.component('gallery-manager', GalleryManager)

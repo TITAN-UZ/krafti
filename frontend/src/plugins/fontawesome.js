@@ -6,4 +6,6 @@ Vue.component('fa', FontAwesomeIcon)
 Vue.use(library)
 Vue.config.productionTip = false
 
-Vue.$fa = Vue.$fontawesome = Vue.prototype.$fontawesome = Vue.prototype.$fa = library
+export default ({app}, inject) => {
+  inject('fa', library)
+}
