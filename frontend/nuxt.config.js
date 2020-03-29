@@ -1,8 +1,12 @@
-import axios from 'axios'
-require('dotenv').config({path: '../core/.env'});
+require('dotenv').config({path: '../core/.' + (process.env.USER === 's4000' ? 'prod' : 'dev') + '.env'})
 
 export default {
   mode: 'universal',
+  srcDir: './src/',
+  buildDir: './.nuxt/',
+  generate: {
+    dir: 'dist/',
+  },
   head: {
     title: 'Крафти',
     meta: [
@@ -12,9 +16,19 @@ export default {
       {name: 'theme-color', content: '#ffffff'},
       {name: 'apple-mobile-web-app-title', content: 'Крафти'},
       {hid: 'title', name: 'title', content: 'Крафти'},
-      {hid: 'description', name: 'description', content: 'Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!'},
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!',
+      },
       {hid: 'og:title', property: 'og:title', content: 'Крафти'},
-      {hid: 'og:description', property: 'og:description', content: 'Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!'},
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content:
+          'Мы — Крафти, новое слово в онлайн-обучении. Мы верим, что в каждом ребенке живет настоящий творец, а еще — что в каждом взрослом живет настоящий ребенок. Именно поэтому творческое и интеллектуальное развитие взрослых и детей стало нашей страстью!',
+      },
       {hid: 'og:image', property: 'og:image', content: process.env.SITE_URL + 'favicons/android-chrome-512x512.png'},
       {property: 'og:site_name', content: 'Krafti.ru'},
     ],
@@ -24,15 +38,13 @@ export default {
       {rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png'},
       {rel: 'apple-touch-icon', sizes: '180x180', href: '/favicons/apple-touch-icon.png'},
       {rel: 'manifest', href: '/favicons/site.webmanifest'},
-    ]
+    ],
   },
   loading: {
     color: '#ff7474',
-    //throttle: 0,
+    // throttle: 0,
   },
-  css: [
-    '~assets/scss/styles.scss',
-  ],
+  css: ['~assets/scss/styles.scss'],
   plugins: [
     '~/plugins/app.js',
     '~/plugins/settings.js',
@@ -60,7 +72,7 @@ export default {
     '@nuxtjs/markdownit',
     '@nuxtjs/dotenv',
     '@nuxtjs/sitemap',
-    //'@nuxtjs/eslint-module'
+    // '@nuxtjs/eslint-module'
   ],
   bootstrapVue: {
     css: false,
@@ -73,8 +85,16 @@ export default {
   },
   dotenv: {
     path: '../core/',
-    filename: '.env',
-    only: ['SITE_URL', 'COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE', 'CHILDREN_MAX'],
+    filename: '.' + (process.env.USER === 's4000' ? 'prod' : 'dev') + '.env',
+    only: [
+      'SITE_URL',
+      'COINS_PROMO',
+      'COINS_BUY_BONUS',
+      'COINS_SUBSCRIBE',
+      'COINS_HOMEWORK',
+      'COINS_PALETTE',
+      'CHILDREN_MAX',
+    ],
   },
   markdownit: {
     html: true,
@@ -87,7 +107,7 @@ export default {
     baseURL: process.env.SITE_URL + 'api/',
     progress: true,
     proxyHeaders: false,
-    credentials: false
+    credentials: false,
   },
   auth: {
     redirect: {
@@ -105,24 +125,22 @@ export default {
           user: {url: 'user/profile', method: 'get', propertyName: 'user'},
         },
       },
-    }
+    },
   },
   router: {
     linkActiveClass: 'active',
-    middleware: [
-      'auth'
-    ],
-    extendRoutes(routes, resolve) {
-      for (let i in routes) {
-        if (routes.hasOwnProperty(i)) {
-          if (routes[i].name == 'admin') {
-            routes[i].redirect = {name: 'admin-courses'};
-          } else if (routes[i].name == 'office') {
-            routes[i].redirect = {name: 'office-courses'};
+    middleware: ['auth'],
+    extendRoutes(routes) {
+      for (const i in routes) {
+        if (Object.prototype.hasOwnProperty.call(routes, i)) {
+          if (routes[i].name === 'admin') {
+            routes[i].redirect = {name: 'admin-courses'}
+          } else if (routes[i].name === 'office') {
+            routes[i].redirect = {name: 'office-courses'}
           }
         }
       }
-    }
+    },
   },
   izitoast: {
     position: 'bottomRight',
@@ -130,13 +148,12 @@ export default {
     transitionOut: 'fadeOutRight',
   },
   build: {
-    extend(config, ctx) {
+    extend(config) {
       // here I tell webpack not to include jpgs and pngs
       // as base64 as an inline image
-
       config.module.rules.find(
-        rule => rule.use && rule.use[0].loader === 'url-loader'
-      ).exclude = /background\/.*?\.(jpe?g|png)$/i;
+        (rule) => rule.use && rule.use[0].loader === 'url-loader',
+      ).exclude = /background\/.*?\.(jpe?g|png)$/i
 
       // now i configure the responsive-loader
       config.module.rules.push({
@@ -149,47 +166,38 @@ export default {
           sizes: [2560, 1440, 960, 640],
           placeholder: false,
           quality: 85,
-          adapter: require('responsive-loader/sharp')
-        }
+          adapter: require('responsive-loader/sharp'),
+        },
       })
-    }
+    },
   },
-  generate: {
-    routes: async function () {
+  // buildModules: ['@nuxtjs/eslint-module'],
+  /* generate: {
+    async routes() {
       const [authors, courses] = await Promise.all([
         axios.get(process.env.SITE_URL + 'api/web/authors'),
         axios.get(process.env.SITE_URL + 'api/web/courses'),
-      ]);
+      ])
 
-      let routes = [];
-      authors.data.rows.forEach(v => {
+      const routes = []
+      authors.data.rows.forEach((v) => {
         routes.push('/team/' + v.id)
-      });
-      courses.data.rows.forEach(v => {
+      })
+      courses.data.rows.forEach((v) => {
         routes.push('/courses/' + v.id)
-      });
+      })
 
-      return routes;
+      return routes
     },
-    exclude: [
-      /^\/(admin|office|profile|p|service)\//
-    ]
-  },
+    exclude: [/^\/(admin|office|profile|p|service)\//],
+  }, */
   sitemap: {
     hostname: process.env.SITE_URL,
     gzip: false,
-    exclude: [
-      '/admin',
-      '/admin/**',
-      '/office',
-      '/office/**',
-      '/profile',
-      '/profile/**',
-      '/service',
-      '/service/**'
-    ],
+    exclude: ['/admin', '/admin/**', '/office', '/office/**', '/profile', '/profile/**', '/service', '/service/**'],
   },
-  server: process.env.NODE_ENV === 'production'
-    ? {socket: '../tmp/nuxt.socket', timing: {total: true}}
-    : {host: 'localhost', port: 3876},
+  server:
+    process.env.NODE_ENV === 'production'
+      ? {socket: '../tmp/nuxt.socket', timing: {total: true}}
+      : {host: 'localhost', port: 3876},
 }

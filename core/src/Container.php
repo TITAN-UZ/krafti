@@ -43,7 +43,7 @@ class Container extends \Slim\Container
 
         try {
             $dotenv = new Dotenv(true);
-            $dotenv->load(BASE_DIR . '/core/.env');
+            $dotenv->load(BASE_DIR . '/core/' . (get_current_user() == 's4000' ? '.prod' : '.dev') . '.env');
         } catch (\Exception $e) {
             exit($e->getMessage());
         }

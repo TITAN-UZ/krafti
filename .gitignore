@@ -5,6 +5,8 @@ frontend/dist
 frontend/node_modules
 frontend/package-lock.json
 frontend/yarn.lock
-core/.env
+core/.dev.env
+core/.prod.env
 core/vendor
 core/composer.lock
+/frontend/src/static/sw.js
