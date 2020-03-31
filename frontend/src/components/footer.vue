@@ -8,7 +8,7 @@
               <b-link to="/"><img src="~assets/images/general/logo.svg" alt=""/></b-link>
             </div>
             <div class="footer__instagram">
-              <a class="ic__instagram" :href="$settings.links.instagram" target="_blank" rel="noreferrer"></a>
+              <a class="ic__instagram" :href="$settings.links.instagram" target="_blank" rel="noreferrer" />
             </div>
           </div>
         </div>
@@ -19,33 +19,21 @@
             <div class="footer__menu d-flex">
               <nav>
                 <ul class="list">
-                  <b-nav-item
-                    v-for="i in $settings.menu.footer.left"
-                    v-if="!i.auth || $auth.loggedIn"
-                    :key="i.to"
-                    :to="i.to"
-                    >{{ i.title }}
-                  </b-nav-item>
+                  <b-nav-item v-for="i in computedMenuLeft" :key="i.to" :to="i.to">{{ i.title }}</b-nav-item>
                 </ul>
               </nav>
               <nav>
                 <ul class="list">
-                  <b-nav-item
-                    v-for="i in $settings.menu.footer.center"
-                    v-if="!i.auth || $auth.loggedIn"
-                    :key="i.to"
-                    :to="i.to"
-                    >{{ i.title }}
-                  </b-nav-item>
+                  <b-nav-item v-for="i in computedMenuCenter" :key="i.to" :to="i.to">{{ i.title }}</b-nav-item>
                 </ul>
               </nav>
               <!--<nav>
-                                <ul class="list">
-                                    <li class="nav-item" v-for="i in $settings.menu.footer.right" :key="i.to">
-                                        <a :href="i.to" class="nav-link" target="_blank" rel="noreferrer">{{i.title}}</a>
-                                    </li>
-                                </ul>
-                            </nav>-->
+                  <ul class="list">
+                      <li class="nav-item" v-for="i in $settings.menu.footer.right" :key="i.to">
+                          <a :href="i.to" class="nav-link" target="_blank" rel="noreferrer">{{i.title}}</a>
+                      </li>
+                  </ul>
+              </nav>-->
               <nav>
                 <ul class="list">
                   <b-nav-item v-for="i in $settings.menu.footer.right" :key="i.to" :to="i.to"
@@ -70,10 +58,7 @@
               </ul>
               <div class="pay__text">
                 <p>ИП Матюшкин А. А.<br />ИНН 542512143999 / ОГРН 318547600033813</p>
-                <p>
-                  630047, г. Новосибирск, ул. Кузьмы Минина, 9/1, кв. 163<br />Контактное лицо: Матюшкин Антон, тел.
-                  +7-913-790-10-90
-                </p>
+                <p>630047, г. Новосибирск, ул. Кузьмы Минина, 9/1, кв. 163<br />Контактное лицо: Матюшкин Антон</p>
                 <p></p>
               </div>
             </div>
@@ -90,5 +75,14 @@
 </template>
 
 <script>
-export default {}
+export default {
+  computed: {
+    computedMenuLeft() {
+      return this.$settings.menu.footer.left.filter((item) => !item.auth || this.$auth.loggedIn)
+    },
+    computedMenuCenter() {
+      return this.$settings.menu.footer.center.filter((item) => !item.auth || this.$auth.loggedIn)
+    },
+  },
+}
 </script>
