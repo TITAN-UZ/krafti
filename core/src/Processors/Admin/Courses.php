@@ -38,11 +38,23 @@ class Courses extends \App\ObjectProcessor
             });
         }
         if ($this->getProperty('combo')) {
-            $c->select('id', 'title');
+            $c->select('id', 'title', 'price');
         }
-        $c->with('cover:id,title,updated_at');
-        $c->with('diploma:id,title,updated_at');
-        $c->with('video:id,preview');
+
+        return $c;
+    }
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function afterCount($c)
+    {
+        if (!$this->getProperty('combo')) {
+            $c->with('cover:id,title,updated_at');
+            $c->with('diploma:id,title,updated_at');
+            $c->with('video:id,preview');
+        }
 
         return $c;
     }

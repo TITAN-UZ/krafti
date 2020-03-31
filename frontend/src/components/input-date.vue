@@ -17,8 +17,9 @@
     :time-title-format="externalFormat"
     :first-day-of-week="1"
     :value-type="type === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'"
-    :input-attr="{required: required, disabled: disabled, autofocus: autofocus}"
+    :input-attr="{required: required, autofocus: autofocus}"
     :disabled-date="disabledDate"
+    :disabled="disabled"
     @clear="onDateClear"
   >
     <template slot="icon-calendar">
@@ -106,7 +107,7 @@ export default {
     },
     hideButtons: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   data() {

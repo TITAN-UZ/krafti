@@ -5,6 +5,7 @@ namespace App\Processors\Admin;
 use App\Model\Course;
 use App\Model\Order;
 use App\Model\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 class Orders extends \App\ObjectProcessor
@@ -16,71 +17,50 @@ class Orders extends \App\ObjectProcessor
     protected $conditions;
 
     /**
-     * @return \Slim\Http\Response
+     * @param Order $record
+     * @return bool|string
      */
-    public function patch()
+    protected function beforeSave($record)
     {
-        if (!$id = $this->getProperty($this->primaryKey)) {
-            return $this->failure('Вы должны указать id записи');
-        }
-        /** @var Order $record */
-        if (!$record = Order::query()->find($id)) {
-            return $this->failure('Не могу найти запись');
-        }
-        if ($status = $this->getProperty('status')) {
-            $record->manual = true;
-            $record->changeStatus($status);
-        }
-
-        return $this->get();
-    }
-
-
-    /**
-     * @return \Slim\Http\Response
-     */
-    public function put()
-    {
-        $course_id = $this->getProperty('course_id');
         /** @var Course $course */
-        if (!$course_id || !$course = Course::query()->find($course_id)) {
-            return $this->failure('Не могу загрузить курс');
+        if (!$course = Course::query()->find($this->getProperty('course_id'))) {
+            return 'Указанный курс не найден';
         }
 
-        $user_id = $this->getProperty('user_id');
         /** @var User $user */
-        if (!$user_id || !$user = User::query()->find($user_id)) {
-            return $this->failure('Не могу загрузить пользователя');
-        }
-
-        $discount = 0;
-        $key = [
-            'course_id' => $course->id,
-            'user_id' => $user->id,
-        ];
-        if (Order::query()->where($key)->where(['status' => 1])->count()) {
-            return $this->failure('У этого пользователя уже есть неоплаченный заказ');
-        } elseif (Order::query()->where($key)->where(['status' => 2])->where('paid_till', '>', date('Y-m-d H:i:s'))->count()) {
-            return $this->failure('Этот курс у пользователя уже оплачен');
+        if (!$user = User::query()->find($this->getProperty('user_id'))) {
+            return 'Указанный пользователь не найден';
         }
 
         if (!$period = $this->getProperty('period')) {
-            return $this->failure('Вы должны выбрать период оплаты');
+            return 'Вы должны выбрать период оплаты';
         } elseif (!isset($course->price[$period])) {
-            return $this->failure('Указан неверный период оплаты');
+            return 'Указан неверный период оплаты';
+        }
+        $record->period = $period;
+
+        if (!$record->exists) {
+            $key = [
+                'course_id' => $course->id,
+                'user_id' => $user->id,
+            ];
+            if (Order::query()->where($key)->where('status', 1)->count()) {
+                return $this->failure('У этого пользователя уже есть неоплаченный заказ, отредактируйте его');
+            } elseif (Order::query()->where($key)->where('status', 2)->where('paid_till', '>', date('Y-m-d H:i:s'))->count()) {
+                return $this->failure('Этот курс у пользователя уже оплачен');
+            }
+
+            $record->manual = true;
+            $record->service = 'internal';
+            $record->cost = $course->price[$period];
+            $record->status = $this->getProperty('status', 2); // Paid
+            $record->paid_at = date('Y-m-d H:i:s');
+            $record->paid_till = $this->getProperty('paid_till', Carbon::now()->addMonths($period)->toDateTime());
         }
 
-        $order = new Order($key);
-        $order->service = 'internal';
-        $order->status = 1;
-        $order->period = $period;
-        $order->cost = $course->price[$period] - $discount;
-        $order->discount = $discount;
-        $order->manual = true;
-        $order->save();
-
-        return $this->success($order->toArray());
+        return true;
     }
+
 
     /**
      * @param Builder $c
@@ -102,7 +82,7 @@ class Orders extends \App\ObjectProcessor
         }
 
         if ($date = $this->getProperty('date')) {
-            $c->whereBetween('created_at', $date);
+            $c->whereBetween('created_at', [$date[0] . ' 00:00:00', $date[1] . ' 23:59:59']);
         }
         if ($course_id = $this->getProperty('course_id')) {
             $c->where('course_id', $course_id);

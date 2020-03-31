@@ -130,14 +130,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-#autosuggest {
-  .avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-}
-</style>

@@ -8,7 +8,7 @@
       </template>
 
       <template v-slot:cell(user.photo)="row">
-        <b-img-lazy v-if="row.value" :src="$image(row.value, '50x50', 'fit')" class="mr-2" />
+        <b-avatar v-if="row.value" :src="$image(row.value, '100x100', 'fit')" size="50" />
       </template>
       <!--<template v-slot:cell(created_at)="row">
         {{ row.value | datetime }}
@@ -30,13 +30,13 @@
         </div>
       </template>
       <template v-slot:cell(actions)="row">
-        <template v-if="row.item.status === 1">
-          <button class="btn btn-sm text-success" @click.prevent="changeStatus(row.item, 2)">
-            <fa :icon="['fas', 'check-circle']" />
-          </button>
-          <button class="btn btn-sm text-danger" @click.prevent="onDelete(row.item)">
+        <nuxt-link :to="{name: 'admin-orders-edit-id', params: {id: row.item.id}}" class="btn btn-sm">
+          <fa :icon="['fas', 'edit']" />
+        </nuxt-link>
+        <template v-if="row.item.manual || row.item.status === 1">
+          <b-button size="sm" variant="outline-danger" @click.prevent="onDelete(row.item)">
             <fa :icon="['fas', 'times']" />
-          </button>
+          </b-button>
         </template>
       </template>
 
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import {faPlus, faTimes, faCheckCircle} from '@fortawesome/pro-solid-svg-icons'
+import {faPlus, faTimes, faEdit} from '@fortawesome/pro-solid-svg-icons'
 
 export default {
   name: 'AdminOrders',
@@ -84,18 +84,11 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faPlus, faTimes, faCheckCircle)
+    this.$fa.add(faPlus, faTimes, faEdit)
   },
   methods: {
     refresh() {
       this.$refs.table.refresh()
-    },
-    changeStatus(item, status) {
-      this.$message.confirm('Этот заказ еще не был оплачен. Вы уверены, что хотите вручную активировать его?', () => {
-        this.$axios.patch('admin/orders', {id: item.id, status}).then(() => {
-          this.refresh()
-        })
-      })
     },
     onDelete(item) {
       this.$message.confirm('Вы уверены, что хотите <b>удалить</b> этот заказ?', () => {
@@ -118,14 +111,3 @@ export default {
 }
 </script>
 
-<style lang="scss">
-#admin-orders {
-  td {
-    img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-    }
-  }
-}
-</style>
