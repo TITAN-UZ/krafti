@@ -13,21 +13,30 @@
         <template v-if="row.item.percent">%</template>
         <template v-else>руб.</template>
       </template>
+      <template v-slot:cell(orders_count)="row">
+        <div class="text-nowrap">
+          <span v-b-tooltip="'Выполненные заказы'">{{ row.value | number }}</span>
+          <sup v-if="row.item.used" v-b-tooltip="'Попытки'" class="text-muted">({{ row.item.used | number }})</sup>
+        </div>
+      </template>
+      <template v-slot:cell(orders_cost)="row">
+        <div class="text-nowrap">{{ row.value | number }} руб.</div>
+      </template>
       <template v-slot:cell(date)="row">
         <template v-if="row.item.date_start && row.item.date_end">
-          c {{ row.item.date_start | datetime }}<br />по {{ row.item.date_end | datetime }}
+          {{ row.item.date_start | date }} ~ {{ row.item.date_end | date }}
         </template>
-        <template v-else-if="row.item.date_start"> c {{ row.item.date_start | datetime }} </template>
-        <template v-else-if="row.item.date_end"> по {{ row.item.date_end | datetime }} </template>
+        <template v-else-if="row.item.date_start"> c {{ row.item.date_start | date }} </template>
+        <template v-else-if="row.item.date_end"> по {{ row.item.date_end | date }} </template>
         <template v-else>∞</template>
       </template>
       <template v-slot:cell(actions)="row">
         <nuxt-link class="btn btn-sm" :to="{name: 'admin-discounts-edit-id', params: {id: row.item.id}}">
           <fa :icon="['fas', 'edit']" />
         </nuxt-link>
-        <button v-if="!row.item.used" class="btn btn-sm text-danger" @click="onDelete(row.item)">
+        <b-button v-if="!row.item.orders_count" size="sm" variant="outline-danger" @click="onDelete(row.item)">
           <fa :icon="['fas', 'times']" />
-        </button>
+        </b-button>
       </template>
     </app-table>
 
@@ -44,13 +53,13 @@ export default {
     return {
       url: 'admin/promos',
       fields: [
-        {key: 'id', label: 'Id', sortable: true},
+        // {key: 'id', label: 'Id', sortable: true},
         {key: 'code', label: 'Код', sortable: false},
         {key: 'discount', label: 'Скидка', sortable: false},
         {key: 'date', label: 'Время действия', sortable: false},
-        {key: 'limit', label: 'Лимит', sortable: false},
         {key: 'orders_count', label: 'Заказы', sortable: true},
-        {key: 'used', label: 'Использован', sortable: true},
+        {key: 'orders_cost', label: 'Сумма', sortable: true},
+        {key: 'limit', label: 'Лимит', sortable: true},
         {key: 'actions', label: 'Действия'},
       ],
       filters: {
@@ -66,9 +75,6 @@ export default {
   methods: {
     refresh() {
       this.$refs.table.refresh()
-    },
-    onEdit(item) {
-      // console.log(item)
     },
     onDelete(item) {
       this.$message.confirm('Вы уверены, что хотите удалить эту запись?', () => {

@@ -4,6 +4,7 @@ namespace App\Processors\Admin;
 
 use App\Model\Promo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 
 class Promos extends \App\ObjectProcessor
 {
@@ -33,7 +34,17 @@ class Promos extends \App\ObjectProcessor
      */
     protected function afterCount($c)
     {
-        $c->withCount('orders');
+        $prefix = $this->container->db->getTablePrefix();
+        //$c->withCount('orders');
+        $c->leftJoin('orders', function(JoinClause $c) {
+            $c->on('orders.promo_id', '=', 'promos.id');
+            $c->where('orders.status', 2); // Paid orders only
+        });
+        $c->groupBy('promos.id');
+
+        $c->select('promos.id', 'code', 'promos.discount', 'percent', 'used', 'date_start', 'date_end', 'promos.limit');
+        $c->selectRaw("SUM({$prefix}orders.cost) as orders_cost");
+        $c->selectRaw("COUNT({$prefix}orders.id) as orders_count");
 
         return $c;
     }
