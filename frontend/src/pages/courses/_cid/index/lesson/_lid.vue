@@ -264,10 +264,7 @@ export default {
           const player = new Player(elem)
           player.on('play', () => {
             this.setTimeout(() => {
-              this.$axios.post('user/progress', {lesson_id: this.record.id}).then((res) => {
-                this.course.progress = res.data
-                this.$root.$emit('app::course' + this.course.id + '::progress', res.data)
-              })
+              this.onProgress()
             }, 3000)
           })
           // player.play()
@@ -282,6 +279,15 @@ export default {
             elem.scrollIntoView()
           }
         }, 200)
+      }
+    },
+    async onProgress() {
+      try {
+        const {data: res} = await this.$axios.post('user/progress', {lesson_id: this.record.id})
+        this.course.progress = res
+        this.$root.$emit('app::course' + this.course.id + '::progress', res)
+      } catch (e) {
+        this.onProgress()
       }
     },
     onLike(action = 'like') {

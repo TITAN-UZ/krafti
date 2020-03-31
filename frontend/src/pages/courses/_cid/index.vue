@@ -604,7 +604,7 @@ export default {
       const progress = this.record.progress
       // Open first lesson in course
       if (item.section === 1) {
-        if (!this.extra && !item.extra) {
+        if (!this.extra && !item.extra && !item.free) {
           this.extra = item.id
 
           return true
@@ -615,6 +615,7 @@ export default {
 
       return (
         item.extra ||
+        item.free ||
         (!progress.section && !progress.rank) ||
         progress.section > item.section ||
         (progress.section === item.section && progress.rank >= item.rank)

@@ -87,6 +87,7 @@ class Lessons extends \App\Processor
                     'rank' => $progress->rank,
                 ],
                 'extra' => $lesson->extra,
+                'free' => $lesson->free,
                 'next' => [],
                 'comments' => [],
                 'homework' => [],
@@ -105,6 +106,7 @@ class Lessons extends \App\Processor
                     'section' => $next->section,
                     'rank' => $next->rank,
                     'extra' => $next->extra,
+                    'free' => $next->free,
                     'description' => $next->description,
                     'preview' => $next->video
                         ? $next->video->preview
@@ -136,6 +138,7 @@ class Lessons extends \App\Processor
                 'section' => $lesson->section,
                 'rank' => $lesson->rank,
                 'extra' => $lesson->extra,
+                'free' => $lesson->free,
                 'views_count' => $lesson->views_count,
                 'likes_count' => $lesson->likes_count,
                 'preview' => $lesson->video
