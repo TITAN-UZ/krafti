@@ -5,10 +5,11 @@ namespace App\Processors\User;
 use App\Model\Course;
 use App\Model\Order;
 use App\Model\Promo;
+use App\Processor;
 use App\Service\Payment\Paypal;
 use App\Service\Payment\Robokassa;
 
-class Payment extends \App\Processor
+class Payment extends Processor
 {
     // Запросы могут слать и гости
     //protected $scope = 'profile';

@@ -20,13 +20,9 @@
                     <label class="text-center">Сменить фото профиля</label>
                   </div>
 
-                  <b-form-group class="mb-3" label="Авторизация через соц.сети" label-for="form-social">
+                  <b-form-group class="mb-3" label="Авторизация через соц.сети">
                     <div class="social-providers flex-wrap profile">
-                      <button
-                        v-if="$auth.user && $auth.user.oauth2.vkontakte === undefined"
-                        class="vkontakte inactive col-12 col-md-6"
-                        @click.prevent="onLink('vkontakte')"
-                      >
+                      <button v-if="$auth.user && $auth.user.oauth2.vkontakte === undefined" class="vkontakte inactive col-12 col-md-6" @click.prevent="onLink('vkontakte')">
                         <fa :icon="['fab', 'vk']" class="mr-2" />
                         <span>Подключить</span>
                       </button>
@@ -36,11 +32,7 @@
                         <fa :icon="['fal', 'times']" class="ml-2" />
                       </button>
 
-                      <button
-                        v-if="$auth.user.oauth2.instagram === undefined"
-                        class="instagram inactive  col-12 col-md-6"
-                        @click.prevent="onLink('instagram')"
-                      >
+                      <button v-if="$auth.user.oauth2.instagram === undefined" class="instagram inactive  col-12 col-md-6" @click.prevent="onLink('instagram')">
                         <fa :icon="['fab', 'instagram']" class="mr-2" />
                         <span>Подключить</span>
                       </button>
@@ -112,11 +104,7 @@ export default {
       const y = screen.height / 2 - 450 / 2
 
       const oauth2 = this.$axios.defaults.baseURL + 'security/oauth2/' + provider
-      const win = window.open(
-        oauth2,
-        'AuthPopup',
-        'width=700,height=450,modal=yes,alwaysRaised=yes,left=' + x + ',top=' + y,
-      )
+      const win = window.open(oauth2, 'AuthPopup', 'width=700,height=450,modal=yes,alwaysRaised=yes,left=' + x + ',top=' + y)
 
       const timer = this.setInterval(() => {
         try {

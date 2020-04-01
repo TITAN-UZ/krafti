@@ -3,14 +3,17 @@
 namespace App\Processors\User;
 
 use App\Model\UserLike;
+use App\Processor;
+use Exception;
+use Slim\Http\Response;
 
-class Like extends \App\Processor
+class Like extends Processor
 {
     protected $scope = 'profile';
 
 
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function get()
     {
@@ -25,7 +28,7 @@ class Like extends \App\Processor
 
 
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function post()
     {
@@ -54,7 +57,7 @@ class Like extends \App\Processor
                 'dislikes_count' => $obj->lesson->dislikes_count,
                 'likes_sum' => $obj->lesson->course->likes_sum,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->failure($e->getMessage());
         }
     }

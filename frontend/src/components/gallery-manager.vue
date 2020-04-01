@@ -26,43 +26,39 @@
     </div>
 
     <draggable v-model="items" @end="onSort">
-      <transition-group tag="div" name="list" class="gallery d-flex flex-wrap">
+      <transition-group tag="div" name="list" class="gallery d-flex flex-wrap justify-content-around">
         <div v-for="item in items" :key="item.id" class="col-auto gallery-manager-item-wrapper">
           <div class="gallery-manager-item">
             <div :class="{image: true, disabled: !item.active}">
               <a :href="item.file" target="_blank" rel="noreferrer">
-                <img :src="[$settings.image_url, item.id, '200x200'].join('/')" />
+                <img :src="$image(item, '200x200', 'resize')" />
               </a>
               <div class="actions">
-                <button v-if="!item.active" class="btn btn-success" title="Включить" @click.prevent="onEnable(item)">
-                  <fa :icon="['fad', 'check-circle']" />
-                </button>
-                <button v-else class="btn btn-warning" title="Отключить" @click.prevent="onDisable(item)">
+                <b-button v-if="!item.active" v-b-tooltip="'Включить'" size="sm" variant="success" @click.prevent="onEnable(item)">
+                  <fa :icon="['fad', 'play']" />
+                </b-button>
+                <b-button v-else v-b-tooltip="'Отключить'" size="sm" variant="warning" @click.prevent="onDisable(item)">
                   <fa :icon="['fad', 'power-off']" />
-                </button>
-                <button class="btn btn-danger" title="Удалить" @click.prevent="onDelete(item)">
-                  <fa :icon="['fad', 'times-circle']" />
-                </button>
+                </b-button>
+                <b-button v-b-tooltip="'Удалить'" size="sm" variant="danger" @click.prevent="onDelete(item)">
+                  <fa :icon="['fad', 'times']" />
+                </b-button>
               </div>
             </div>
-            <div class="title">
-              {{ item.title }}
-            </div>
+            <div class="title">{{ item.title }}</div>
           </div>
         </div>
       </transition-group>
     </draggable>
 
-    <div v-if="items.length > 0" class="container text-center text-muted">
-      {{ items.length }} {{ items.length | noun('картинка|картинки|картинок') }}
-    </div>
+    <div v-if="items.length > 0" class="container text-center text-muted">{{ items.length }} {{ items.length | noun('картинка|картинки|картинок') }}</div>
   </div>
 </template>
 
 <script>
 import Draggable from 'vuedraggable'
 import {icon} from '@fortawesome/fontawesome-svg-core'
-import {faCameraAlt, faTimesCircle, faPowerOff, faCheckCircle} from '@fortawesome/pro-duotone-svg-icons'
+import {faCameraAlt, faTimes, faPowerOff, faPlay} from '@fortawesome/pro-duotone-svg-icons'
 
 export default {
   name: 'GalleryManager',
@@ -84,7 +80,7 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faCameraAlt, faTimesCircle, faPowerOff, faCheckCircle)
+    this.$fa.add(faCameraAlt, faTimes, faPowerOff, faPlay)
     this.loadFiles()
   },
   methods: {
@@ -121,11 +117,9 @@ export default {
       return {abort}
     },
     loadFiles() {
-      this.$axios
-        .get('admin/gallery', {params: {limit: 0, object_id: this.objectId, object_name: this.objectName}})
-        .then((res) => {
-          this.items = res.data.rows
-        })
+      this.$axios.get('admin/gallery', {params: {limit: 0, object_id: this.objectId, object_name: this.objectName}}).then((res) => {
+        this.items = res.data.rows
+      })
     },
     onDelete(item) {
       this.$message.confirm('Вы уверены, что хотите удалить эту запись?', () => {
@@ -181,7 +175,7 @@ export default {
       max-height: 200px;
       border: 1px solid gray;
       background: #000;
-      border-radius: 10px;
+      border-radius: 5px;
       overflow: hidden;
       cursor: pointer;
       display: flex;

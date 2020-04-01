@@ -59,6 +59,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    loadEmpty: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -95,7 +99,9 @@ export default {
     async load(query) {
       if (!query) {
         this.reset()
-        return
+        if (!this.loadEmpty) {
+          return
+        }
       }
       const params = {limit: 10, query: query || ''}
       for (const i in this.filter) {
@@ -106,8 +112,14 @@ export default {
       params.combo = true
 
       try {
-        const {data} = await this.$axios.get(this.url, {params})
-        this.suggestions[0].data = data.rows
+        let {data: items} = await this.$axios.get(this.url, {params})
+        if (this.$listeners.onLoad) {
+          const res = this.$listeners.onLoad(items)
+          if (res && res.rows) {
+            items = res
+          }
+        }
+        this.suggestions[0].data = items.rows
       } catch (e) {
         console.error(e)
       }
@@ -117,6 +129,9 @@ export default {
         this.$emit('input', selected.item[this.fieldId])
       } else {
         this.$emit('input', null)
+      }
+      if (this.$listeners.onSelected) {
+        this.$listeners.onSelected(selected && selected.item ? selected.item : null)
       }
     },
     getValue(suggestion) {

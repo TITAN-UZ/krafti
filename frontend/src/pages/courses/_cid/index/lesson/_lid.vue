@@ -1,14 +1,5 @@
 <template>
-  <b-modal
-    ref="modalVideo"
-    :key="record.id"
-    hide-footer
-    visible
-    size="xl"
-    dialog-class="modal-video"
-    @hidden="onHidden"
-    @shown="onShown"
-  >
+  <b-modal ref="modalVideo" :key="record.id" hide-footer visible size="xl" dialog-class="modal-video" @hidden="onHidden" @shown="onShown">
     <div class="wrapper">
       <div class="embed-responsive embed-responsive-16by9">
         <iframe
@@ -44,17 +35,11 @@
               </div>
               <div v-if="record.extra !== true && !record.title.includes('Домашнее задание')" class="col-lg-5 col-12">
                 <div class="lesson__info--note">
-                  Вы можете поделиться с нами результатом каждого урока. Нам очень интересно, что у вас получилось!
-                  Просто пришлите нам фотографию вашей картины. Лучшие работы мы опубликуем на главной странице сайта!
+                  Вы можете поделиться с нами результатом каждого урока. Нам очень интересно, что у вас получилось! Просто пришлите нам фотографию вашей картины. Лучшие работы мы опубликуем на главной
+                  странице сайта!
                 </div>
 
-                <upload-homework
-                  :lesson-id="record.id"
-                  :course-id="course.id"
-                  :section="0"
-                  :image-id="record.homework.file_id"
-                  :size="150"
-                />
+                <upload-homework :lesson-id="record.id" :course-id="course.id" :section="0" :image-id="record.homework.file_id" :size="150" />
                 <!--<div class="lesson__info&#45;&#45;share">
                   <button class="button">Поделиться работой</button>
                 </div>-->
@@ -67,11 +52,7 @@
             <div class="s-title">Что понадобится</div>
             <div class="needed__list">
               <div v-if="record.products.length" class="needed__list--wrapper d-flex justify-content-between flex-wrap">
-                <div
-                  v-for="product in record.products"
-                  :key="product.id"
-                  class="needed__item d-flex justify-content-between align-items-center"
-                >
+                <div v-for="product in record.products" :key="product.id" class="needed__item d-flex justify-content-between align-items-center">
                   <div class="needed__item--title">{{ product }}</div>
                   <!--<button class="needed__item--cart"><img src="~assets/images/general/ic_cart.svg" alt=""></button>-->
                 </div>
@@ -94,12 +75,7 @@
               </div>
             </div>
 
-            <authors-list
-              :authors="[record.author]"
-              :show-desc="false"
-              row-class="d-flex justify-content-center"
-              item-class="col-9"
-            />
+            <authors-list :authors="[record.author]" :show-desc="false" row-class="d-flex justify-content-center" item-class="col-9" />
 
             <!--<div class="row">
               <div class="col-12">
@@ -164,24 +140,11 @@
                 <div class="nextlessons__content">
                   <div v-for="item in record.next" :key="item.id" class="media mb-2">
                     <div class="media--video mr-2">
-                      <nuxt-link
-                        v-if="isLessonOpen(item)"
-                        :to="{name: 'courses-cid-index-lesson-lid', params: {cid: course.id, lid: item.id}}"
-                        class="video"
-                        @click.native="scrollToTop"
-                      >
-                        <img
-                          class="media--thumb img-responsive"
-                          :src="item.preview[Object.keys(item.preview).shift()]"
-                          alt=""
-                        />
+                      <nuxt-link v-if="isLessonOpen(item)" :to="{name: 'courses-cid-index-lesson-lid', params: {cid: course.id, lid: item.id}}" class="video" @click.native="scrollToTop">
+                        <img class="media--thumb img-responsive" :src="item.preview[Object.keys(item.preview).shift()]" alt="" />
                       </nuxt-link>
                       <div v-else class="disabled">
-                        <img
-                          class="media--thumb img-responsive"
-                          :src="item.preview[Object.keys(item.preview).shift()]"
-                          alt=""
-                        />
+                        <img class="media--thumb img-responsive" :src="item.preview[Object.keys(item.preview).shift()]" alt="" />
                       </div>
                     </div>
                     <div class="media-body">
@@ -221,10 +184,7 @@ export default {
   components: {AuthorsList, Comments},
   async asyncData({app, params, error}) {
     try {
-      const [record, course] = await Promise.all([
-        app.$axios.get('web/course/lessons', {params: {course_id: params.cid, id: params.lid}}),
-        app.$axios.get('web/courses', {params: {id: params.cid}}),
-      ])
+      const [record, course] = await Promise.all([app.$axios.get('web/course/lessons', {params: {course_id: params.cid, id: params.lid}}), app.$axios.get('web/courses', {params: {id: params.cid}})])
       return {
         record: record.data,
         course: course.data,

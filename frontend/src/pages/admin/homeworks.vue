@@ -1,48 +1,27 @@
 <template>
   <div>
-    <table-filter :filters="filters" :table="$options.name" />
-
-    <b-table
-      :id="$options.name"
-      stacked="md"
-      class="mt-3"
-      :items="items"
-      :fields="fields"
-      :current-page="page"
-      :per-page="limit"
-      :sort-by.sync="sort"
-      :sort-direction.sync="dir"
-      :sort-desc="dir == 'desc'"
-      show-empty
-      no-sort-reset
-      no-local-sorting
-      empty-text="Подходящих результатов не найдено"
-      empty-filtered-text="Подходящих результатов не найдено"
-    >
-      <template slot="cell(user)" slot-scope="row">
-        <div class="user-cell">
-          <img v-if="row.value.photo_id" :src="[$settings.image_url, row.value.photo_id, '50x50'].join('/')" />
-          <span v-else></span>
-          {{ row.value.fullname }}
-        </div>
+    <app-table ref="table" :url="url" :fields="fields" :filters="filters">
+      <template v-slot:cell(user)="row">
+        <user-avatar :user="row.value" :truncate="150" />
       </template>
-      <template slot="cell(created_at)" slot-scope="row">
-        {{ row.value | datetime }}
+      <template v-slot:cell(created_at)="row">
+        <small>{{ row.value | datetime }}</small>
       </template>
-      <template slot="cell(course)" slot-scope="row">
+      <template v-slot:cell(course)="row">
         <div>{{ row.item.course.title }}</div>
         <div v-if="row.item.lesson" class="small text-muted">{{ row.item.lesson.title }}</div>
         <div v-else class="small text-muted">Домашняя работа этапа {{ row.item.section }}</div>
       </template>
-      <template slot="cell(file_id)" slot-scope="row">
+      <template v-slot:cell(file)="row">
         <nuxt-link class="btn btn-sm" :to="{name: 'admin-homeworks-edit-id', params: {id: row.item.id}}">
-          <img v-if="row.value" :src="[$settings.image_url, row.value, '100x50'].join('/')" />
+          <b-img-lazy v-if="row.value" :src="$image(row.value, '200x100', 'fit')" :rounded="true" height="50" />
         </nuxt-link>
       </template>
+
       <template slot="row-details" slot-scope="row">
         <blockquote>{{ row.item.comment }}</blockquote>
       </template>
-      <template slot="cell(actions)" slot-scope="row">
+      <template v-slot:cell(actions)="row">
         <nuxt-link class="btn btn-sm" :to="{name: 'admin-homeworks-edit-id', params: {id: row.item.id}}">
           <fa :icon="['fas', 'edit']" />
         </nuxt-link>
@@ -50,11 +29,9 @@
           <fa :icon="['fas', 'align-right']" />
         </button>
       </template>
-    </b-table>
+    </app-table>
 
-    <table-footer :table="$options.name" :total-rows="totalRows" :limit="limit" :page.sync="page"></table-footer>
-
-    <nuxt-child></nuxt-child>
+    <nuxt-child />
   </div>
 </template>
 
@@ -65,23 +42,15 @@ export default {
   name: 'AdminHomeworks',
   data() {
     return {
-      video: false,
-      items: (ctx) => {
-        return this.loadTable(ctx, this, 'admin/homeworks')
-      },
+      url: 'admin/homeworks',
       fields: [
-        {key: 'id', label: 'Id', sortable: true},
-        {key: 'user', label: 'Пользователь', sortable: false},
-        {key: 'course', label: 'Курс', sortable: false},
-        {key: 'file_id', label: 'Изображение', sortable: false},
-        {key: 'created_at', label: 'Отправлена', sortable: true},
-        {key: 'actions', label: 'Действия'},
+        // {key: 'id', label: 'Id'},
+        {key: 'user', label: 'Пользователь'},
+        {key: 'course', label: 'Курс'},
+        {key: 'file', label: 'Изображение'},
+        {key: 'created_at', label: 'Отправлена'},
+        {key: 'actions', label: ''},
       ],
-      page: 1,
-      limit: 20,
-      totalRows: 0,
-      sort: 'id',
-      dir: 'desc',
       filters: {
         query: '',
         date: null,
@@ -92,25 +61,10 @@ export default {
   },
   created() {
     this.$fa.add(faAlignRight, faEdit)
-
-    this.$root.$on('app::' + this.$options.name + '::update', () => {
-      this.refresh()
-    })
-
-    this.$root.$on('app::' + this.$options.name + '::change', () => {
-      this.refresh()
-    })
-
-    this.$root.$on('app::' + this.$options.name + '::query', () => {
-      this.page = 1
-    })
   },
   methods: {
     refresh() {
-      this.$root.$emit('bv::refresh::table', this.$options.name)
-    },
-    onEdit(item) {
-      // console.log(item)
+      this.$refs.table.update()
     },
   },
   head() {

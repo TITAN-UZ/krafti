@@ -27,12 +27,7 @@
 
         <div class="menu-navs">
           <ul class="menu-list">
-            <li
-              v-for="i in $settings.menu.header"
-              v-if="!i.scope || $auth.hasScope(i.scope)"
-              :key="i.to"
-              class="menu-item"
-            >
+            <li v-for="i in computedMenuHeader" :key="i.to" class="menu-item">
               <b-link class="menu-link" :to="i.to" @click="hideMenu()">{{ i.title }}</b-link>
             </li>
           </ul>
@@ -59,13 +54,7 @@
           <div class="header__menu">
             <nav class="menu-wrap">
               <ul class="menu-list d-flex align-items-center">
-                <b-nav-item
-                  v-for="i in $settings.menu.header"
-                  v-if="!i.scope || $auth.hasScope(i.scope)"
-                  :key="i.to"
-                  :to="i.to"
-                  >{{ i.title }}
-                </b-nav-item>
+                <b-nav-item v-for="i in computedMenuHeader" :key="i.to" :to="i.to">{{ i.title }}</b-nav-item>
               </ul>
             </nav>
           </div>
@@ -113,12 +102,10 @@
 <script>
 import {faUserCircle} from '@fortawesome/pro-duotone-svg-icons'
 import {faTimes, faStream} from '@fortawesome/pro-light-svg-icons'
-import auth from './auth-form'
+import AuthForm from './auth-form'
 
 export default {
-  components: {
-    'auth-form': auth,
-  },
+  components: {AuthForm},
   data() {
     return {
       sidebar: false,
@@ -131,6 +118,9 @@ export default {
     },
     loggedIn() {
       return this.$auth.loggedIn
+    },
+    computedMenuHeader() {
+      return this.$settings.menu.header.filter((item) => !item.scope || this.$auth.hasScope(item.scope))
     },
   },
   watch: {

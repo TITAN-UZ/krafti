@@ -1,10 +1,7 @@
 <template>
   <input-complete v-model="myValue" :url="url" field-title="fullname">
     <template slot-scope="{suggestion}">
-      <div class="d-flex align-items-center">
-        {{ suggestion.item.fullname }}
-        <b-avatar v-if="suggestion.item.photo" :src="$image(suggestion.item.photo, '100x100', 'fit')" class="ml-auto" />
-      </div>
+      <user-avatar :user="suggestion.item" :size="40" />
     </template>
   </input-complete>
 </template>

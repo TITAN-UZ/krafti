@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,8 +31,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $long_description
  * @property string $logged_at
  * @property string $reset_at
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property-read UserRole $role
  * @property-read User $referrer
@@ -280,7 +282,7 @@ class User extends Model
 
     /**
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete()
     {

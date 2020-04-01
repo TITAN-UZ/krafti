@@ -3,8 +3,9 @@
 namespace App\Processors\Security;
 
 use App\Model\UserToken;
+use App\Processor;
 
-class Logout extends \App\Processor
+class Logout extends Processor
 {
 
     protected $scope = 'profile';

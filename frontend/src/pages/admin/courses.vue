@@ -2,9 +2,7 @@
   <div>
     <app-table ref="table" :url="url" :fields="fields" :filters="filters" :row-class="rowClass">
       <template slot="actions">
-        <router-link class="btn btn-secondary" :to="{name: 'admin-courses-create'}">
-          <fa icon="plus" /> Добавить
-        </router-link>
+        <router-link class="btn btn-secondary" :to="{name: 'admin-courses-create'}"> <fa icon="plus" /> Добавить </router-link>
       </template>
 
       <template v-slot:cell(title)="row">
@@ -12,7 +10,7 @@
       </template>
       <template v-slot:cell(cover)="row">
         <a v-if="row.value" :href="$image(row.value)" target="_blank" rel="noreferrer">
-          <img v-if="row.value" :src="$image(row.value, '100x50', 'fit')" alt="" />
+          <b-img-lazy v-if="row.value" :src="$image(row.value, '200x100', 'fit')" :rounded="true" height="50" />
         </a>
       </template>
       <template v-slot:cell(actions)="row">
@@ -30,7 +28,7 @@
 </template>
 
 <script>
-import {faEdit, faPlus, faSync, faTimes} from '@fortawesome/pro-solid-svg-icons'
+import {faEdit, faPlus, faTimes} from '@fortawesome/pro-solid-svg-icons'
 
 export default {
   data() {
@@ -51,7 +49,7 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faSync, faEdit, faPlus, faTimes)
+    this.$fa.add(faEdit, faPlus, faTimes)
   },
   methods: {
     refresh() {

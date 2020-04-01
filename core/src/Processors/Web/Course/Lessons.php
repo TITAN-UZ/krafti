@@ -7,8 +7,9 @@ use App\Model\Homework;
 use App\Model\Lesson;
 use App\Model\UserLike;
 use App\Model\UserProgress;
+use App\Processor;
 
-class Lessons extends \App\Processor
+class Lessons extends Processor
 {
     protected $scope = 'lessons';
 

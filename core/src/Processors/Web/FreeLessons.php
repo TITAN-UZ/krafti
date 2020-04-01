@@ -2,15 +2,17 @@
 
 namespace App\Processors\Web;
 
+use App\GetProcessor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Slim\Http\Response;
 
-class FreeLessons extends \App\GetProcessor
+class FreeLessons extends GetProcessor
 {
     protected $class = 'App\Model\Lesson';
 
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function get()
     {

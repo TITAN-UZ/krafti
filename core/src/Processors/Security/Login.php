@@ -3,8 +3,9 @@
 namespace App\Processors\Security;
 
 use App\Model\User;
+use App\Processor;
 
-class Login extends \App\Processor
+class Login extends Processor
 {
 
     public function post()

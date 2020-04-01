@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -51,7 +52,7 @@ class GalleryItem extends Model
 
     /**
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete()
     {

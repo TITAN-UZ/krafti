@@ -19,19 +19,13 @@
                     </div>
                     <ul class="contacts__list">
                       <li class="contact__item">
-                        <a :href="$settings.links.email" class="contact__link" target="_blank" rel="noreferrer"
-                          >Почта</a
-                        >
+                        <a :href="$settings.links.email" class="contact__link" target="_blank" rel="noreferrer">Почта</a>
                       </li>
                       <li class="contact__item">
-                        <a :href="$settings.links.instagram" class="contact__link" target="_blank" rel="noreferrer"
-                          >Instagram</a
-                        >
+                        <a :href="$settings.links.instagram" class="contact__link" target="_blank" rel="noreferrer">Instagram</a>
                       </li>
                       <li class="contact__item">
-                        <a :href="$settings.links.whatsapp" class="contact__link" target="_blank" rel="noreferrer"
-                          >WhatsApp</a
-                        >
+                        <a :href="$settings.links.whatsapp" class="contact__link" target="_blank" rel="noreferrer">WhatsApp</a>
                       </li>
                     </ul>
                   </div>
@@ -44,8 +38,7 @@
                 <div class="col-12">
                   <div class="contacts__text mb-2">
                     <p>
-                      Если у вас возникли проблемы с нашим сайтом, вы можете обратиться непосредственно к специалистам
-                      нашей службы технической поддержки.
+                      Если у вас возникли проблемы с нашим сайтом, вы можете обратиться непосредственно к специалистам нашей службы технической поддержки.
                     </p>
                   </div>
                   <div class="form-row form-body align-items-center">
@@ -57,24 +50,11 @@
                         <input-phone v-model.trim="record.phone" placeholder="Номер телефона" required />
                       </b-form-group>
                       <b-form-group :disabled="loading" class="mb-lg-0">
-                        <b-form-input
-                          v-model.trim="record.email"
-                          type="email"
-                          placeholder="Адрес электронной почты"
-                          required
-                        />
+                        <b-form-input v-model.trim="record.email" type="email" placeholder="Адрес электронной почты" required />
                       </b-form-group>
                     </div>
                     <div class="col-lg-6 col-12 align-self-stretch">
-                      <b-form-textarea
-                        v-model="record.message"
-                        placeholder="Ваше сообщение"
-                        required
-                        no-resize
-                        :disabled="loading"
-                        rows="5"
-                        class="h-100"
-                      ></b-form-textarea>
+                      <b-form-textarea v-model="record.message" placeholder="Ваше сообщение" required no-resize :disabled="loading" rows="5" class="h-100"></b-form-textarea>
                     </div>
                   </div>
                   <div class="form-row form-footer d-flex align-items-center justify-content-center mt-3">

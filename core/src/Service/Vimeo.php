@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Container;
 use App\Model\Video;
+use Exception;
 
 class Vimeo
 {
@@ -95,7 +96,7 @@ class Vimeo
             if (($page * $per_page) < $total) {
                 $data = array_merge($data, $this->loadVideos($page + 1, $per_page));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->container->logger->error($e->getMessage());
         }
 

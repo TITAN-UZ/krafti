@@ -36,9 +36,7 @@
               </nav>-->
               <nav>
                 <ul class="list">
-                  <b-nav-item v-for="i in $settings.menu.footer.right" :key="i.to" :to="i.to"
-                    >{{ i.title }}
-                  </b-nav-item>
+                  <b-nav-item v-for="i in $settings.menu.footer.right" :key="i.to" :to="i.to">{{ i.title }} </b-nav-item>
                 </ul>
               </nav>
             </div>

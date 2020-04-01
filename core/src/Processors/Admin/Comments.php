@@ -2,13 +2,13 @@
 
 namespace App\Processors\Admin;
 
-use App\Model\Comment;
+use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
 
-class Comments extends \App\ObjectProcessor
+class Comments extends ObjectProcessor
 {
     protected $class = '\App\Model\Comment';
-    protected $scope = 'users';
+    protected $scope = 'comments';
 
 
     /**
@@ -18,40 +18,24 @@ class Comments extends \App\ObjectProcessor
      */
     protected function beforeCount($c)
     {
-        if ($query = $this->getProperty('query', '')) {
+        if ($query = trim($this->getProperty('query'))) {
             $c->where('text', 'LIKE', "%{$query}%");
         }
-
-        $active = $this->getProperty('active');
-        if ($active !== null) {
-            $c->where('active', '=', (bool)$active);
-        }
-
-        $c->with('lesson:id,title,course_id');
-        $c->with('user:id,fullname,photo_id');
 
         return $c;
     }
 
-
     /**
-     * @param Comment $object
-     *
-     * @return array|void
+     * @param Builder $c
+     * @return Builder
      */
-    public function prepareRow($object)
+    protected function afterCount($c)
     {
-        $array = $object->toArray();
-        if ($object->user->photo) {
-            $array['user']['photo'] = $object->user->photo->getUrl();
-        }
-        if ($object->lesson->course) {
-            $array['course']['id'] = $object->lesson->course->id;
-            $array['course']['title'] = $object->lesson->course->title;
-        }
-        $array['created_at'] = $object->created_at->toIso8601String();
+        $c->with('lesson:id,title,course_id', 'lesson.course:id,title');
+        $c->with('user:id,fullname,photo_id', 'user.photo:id,updated_at');
+        $c->orderBy('created_at', 'desc');
 
-        return $array;
+        return $c;
     }
 
 }

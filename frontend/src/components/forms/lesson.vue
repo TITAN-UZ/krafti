@@ -1,11 +1,6 @@
 <template>
   <div>
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Укажите название:"
-      description="Название должно быть уникальным"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Укажите название:" description="Название должно быть уникальным">
       <b-form-input v-model="record.title" required />
     </b-form-group>
 
@@ -23,48 +18,23 @@
       </b-form-select>
     </b-form-group>
 
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Видеоурок"
-      description="Выберите основное видео курса"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Видеоурок" description="Выберите основное видео курса">
       <pick-video v-model="record.video_id" required />
     </b-form-group>
 
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Мини-лекция"
-      description="Необязательное бонусное видео курса"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Мини-лекция" description="Необязательное бонусное видео курса">
       <pick-video v-model="record.bonus_id" />
     </b-form-group>
 
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Автор урока"
-      description="Выберите кого-то из авторов или администраторов"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Автор урока" description="Выберите кого-то из авторов или администраторов">
       <pick-user v-model="record.author_id" :role-id="[1, 2]" />
     </b-form-group>
 
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Что понадобится:"
-      description="Набор товаров в произвольной форме, через запятую"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Что понадобится:" description="Набор товаров в произвольной форме, через запятую">
       <input-tags v-model="record.products" separator="" />
     </b-form-group>
 
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Материалы урока"
-      description="Загрузите *.zip или *.pdf файл"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Материалы урока" description="Загрузите *.zip или *.pdf файл">
       <upload-file v-if="!record.id" v-model="record.file" />
       <upload-file v-else v-model="record.new_file" :label="record.file" />
     </b-form-group>

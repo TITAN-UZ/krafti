@@ -29,11 +29,7 @@
                         </div>
                       -->
                     </div>
-                    <div
-                      v-if="record.long_description"
-                      class="teacher__text"
-                      v-html="$md.render(record.long_description)"
-                    ></div>
+                    <div v-if="record.long_description" class="teacher__text" v-html="$md.render(record.long_description)"></div>
                   </div>
                 </div>
               </div>

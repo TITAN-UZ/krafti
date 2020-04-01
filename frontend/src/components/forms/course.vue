@@ -1,11 +1,6 @@
 <template>
   <div>
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Укажите название:"
-      description="Название должно быть уникальным"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Укажите название:" description="Название должно быть уникальным">
       <b-form-input id="input-title" v-model="record.title" required />
     </b-form-group>
 
@@ -18,12 +13,7 @@
       <upload-image v-else v-model="record.new_cover" :label="record.cover" />
     </b-form-group>
 
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Видео превью"
-      description="Выберите видео с рекламой курса"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Видео превью" description="Выберите видео с рекламой курса">
       <pick-video v-model="record.video_id" />
     </b-form-group>
 
@@ -55,21 +45,11 @@
       </b-form-select>
     </b-form-group>
 
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Возраст:"
-      description="Укажите возраст от и до, через дефис"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Возраст:" description="Укажите возраст от и до, через дефис">
       <b-form-input id="input-age" v-model="record.age" placeholder="4-8" required />
     </b-form-group>
 
-    <b-form-group
-      label-cols-lg="3"
-      label-align-lg="right"
-      label="Сертификат"
-      description="Загрузите шаблон сертификата"
-    >
+    <b-form-group label-cols-lg="3" label-align-lg="right" label="Сертификат" description="Загрузите шаблон сертификата">
       <upload-image v-if="!record.id" v-model="record.diploma" />
       <upload-image v-else v-model="record.new_diploma" :label="record.diploma" />
     </b-form-group>

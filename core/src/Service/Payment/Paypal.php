@@ -2,23 +2,32 @@
 
 namespace App\Service\Payment;
 
-use App\Container;
 use App\Model\Order;
+use PayPal\Api\Amount;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Payer;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Transaction;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Rest\ApiContext;
+use Throwable;
 
 class Paypal extends Payment
 {
 
     /**
-     * @return \PayPal\Rest\ApiContext
+     * @return ApiContext
      */
     protected function getApi()
     {
-        $credentials = new \PayPal\Auth\OAuthTokenCredential(
+        $credentials = new OAuthTokenCredential(
             getenv('PAYPAL_TEST') ? getenv('PAYPAL_TEST_ID') : getenv('PAYPAL_ID'),
             getenv('PAYPAL_TEST') ? getenv('PAYPAL_TEST_SECRET') : getenv('PAYPAL_SECRET'),
         );
 
-        $apiContext = new \PayPal\Rest\ApiContext($credentials);
+        $apiContext = new ApiContext($credentials);
         $apiContext->setConfig([
             'mode' => getenv('PAYPAL_TEST') ? 'sandbox' : 'live'
         ]);
@@ -37,14 +46,14 @@ class Paypal extends Payment
         $apiContext = $this->getApi();
         $site_url = getenv('SITE_URL');
 
-        $payer = new \PayPal\Api\Payer();
+        $payer = new Payer();
         $payer->setPaymentMethod('paypal');
 
-        $amount = new \PayPal\Api\Amount();
+        $amount = new Amount();
         $amount->setTotal($order->cost);
         $amount->setCurrency('RUB');
 
-        $item = new \PayPal\Api\Item();
+        $item = new Item();
         $item->setDescription('Оплата за курс занятий');
         $item->setPrice($order->cost);
         $item->setName($order->course->title);
@@ -52,17 +61,17 @@ class Paypal extends Payment
         $item->setUrl($site_url . 'courses/' . $order->course->id);
         $item->setCurrency('RUB');
 
-        $items = new \PayPal\Api\ItemList();
+        $items = new ItemList();
         $items->addItem($item);
 
-        $transaction = new \PayPal\Api\Transaction();
+        $transaction = new Transaction();
         $transaction->setInvoiceNumber($order->id);
         $transaction->setDescription('Оплата за курс занятий "' . $order->course->title . '"');
         $transaction->setAmount($amount);
         $transaction->setNotifyUrl($site_url . 'api/web/payment');
         $transaction->setItemList($items);
 
-        $redirectUrls = new \PayPal\Api\RedirectUrls();
+        $redirectUrls = new RedirectUrls();
         $redirectUrls
             ->setReturnUrl($site_url . 'service/payment/success?InvId=' . $order->id)
             ->setCancelUrl($site_url . 'service/payment/failure?InvId=' . $order->id);
@@ -77,7 +86,7 @@ class Paypal extends Payment
             $payment->create($apiContext);
 
             return $payment->getApprovalLink();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->container->logger->error('Paypal error', ['data' => $e->getMessage()]);
         }
 
@@ -97,7 +106,7 @@ class Paypal extends Payment
     {
         $apiContext = $this->getApi();
         $payment = \PayPal\Api\Payment::get($params['paymentId'], $apiContext);
-        $execution = new \PayPal\Api\PaymentExecution();
+        $execution = new PaymentExecution();
         $execution->setPayerId($params['PayerID']);
 
         try {
@@ -115,7 +124,7 @@ class Paypal extends Payment
             return $state == 'created'
                 ? null
                 : $state == 'approved';
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->container->logger->error('Paypal error', ['data' => $e->getMessage()]);
         }
 

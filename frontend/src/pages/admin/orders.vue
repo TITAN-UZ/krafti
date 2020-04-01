@@ -2,17 +2,12 @@
   <div>
     <app-table ref="table" :url="url" :fields="fields" :filters="filters" :sort="sort" :dir="dir" @onLoad="onLoad">
       <template slot="actions">
-        <router-link class="btn btn-secondary" :to="{name: 'admin-orders-create'}">
-          <fa icon="plus" /> Добавить
-        </router-link>
+        <router-link class="btn btn-secondary" :to="{name: 'admin-orders-create'}"> <fa icon="plus" /> Добавить </router-link>
       </template>
 
-      <template v-slot:cell(user.photo)="row">
-        <b-avatar v-if="row.value" :src="$image(row.value, '100x100', 'fit')" size="50" />
+      <template v-slot:cell(user)="row">
+        <user-avatar :user="row.value" :truncate="150" />
       </template>
-      <!--<template v-slot:cell(created_at)="row">
-        {{ row.value | datetime }}
-      </template>-->
       <template v-slot:cell(period)="row"> {{ row.value }} мес. </template>
       <template v-slot:cell(cost)="row">
         {{ row.value | number }} руб.
@@ -61,14 +56,12 @@ export default {
       url: 'admin/orders',
       fields: [
         {key: 'id', label: 'Id'},
-        {key: 'user.photo', label: 'Фото'},
-        {key: 'user.fullname', label: 'Пользователь'},
+        {key: 'user', label: 'Пользователь'},
         {key: 'course.title', label: 'Курс'},
-        // {key: 'created_at', label: 'Создан', sortable: true},
         {key: 'status', label: 'Статус'},
         {key: 'cost', label: 'Цена'},
-        {key: 'period', label: 'Период'},
-        {key: 'actions', label: 'Действия'},
+        {key: 'period', label: 'Срок'},
+        {key: 'actions', label: ''},
       ],
       filters: {
         query: '',
@@ -110,4 +103,3 @@ export default {
   },
 }
 </script>
-

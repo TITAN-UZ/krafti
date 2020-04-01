@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Service;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Tuupola\Middleware\JwtAuthentication\RuleInterface;
 
-class Jwt implements \Tuupola\Middleware\JwtAuthentication\RuleInterface
+class Jwt implements RuleInterface
 {
     /**
      * Stores all the options passed to the rule

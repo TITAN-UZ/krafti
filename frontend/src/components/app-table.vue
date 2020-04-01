@@ -34,14 +34,7 @@
     </div>
 
     <slot name="footer">
-      <table-footer
-        :busy="busy"
-        :table="name"
-        :total-rows="totalRows"
-        :page.sync="page"
-        :limit.sync="limit"
-        :forms="forms"
-      >
+      <table-footer :busy="busy" :table="name" :total-rows="totalRows" :page.sync="page" :limit.sync="limit" :forms="forms">
         <slot v-for="(_, slotName) in $slots" :slot="slotName" :name="slotName" />
       </table-footer>
     </slot>
@@ -240,9 +233,7 @@ export default {
       try {
         axios.defaults.headers = this.$axios.defaults.headers
         axios.defaults.baseURL = this.$axios.defaults.baseURL
-        let {data: items} = this.hideLoading
-          ? await axios.get(this.url, {params})
-          : await this.$axios.get(this.url, {params})
+        let {data: items} = this.hideLoading ? await axios.get(this.url, {params}) : await this.$axios.get(this.url, {params})
 
         if (this.$listeners.onLoad) {
           const res = this.$listeners.onLoad(items)

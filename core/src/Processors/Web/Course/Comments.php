@@ -5,9 +5,10 @@ namespace App\Processors\Web\Course;
 use App\Model\Comment;
 use App\Model\Course;
 use App\Model\User;
+use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
 
-class Comments extends \App\ObjectProcessor
+class Comments extends ObjectProcessor
 {
 
     protected $scope = 'profile';

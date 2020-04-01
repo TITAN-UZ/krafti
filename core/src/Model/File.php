@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -61,7 +62,7 @@ class File extends Model
             if (is_resource($stream)) {
                 fclose($stream);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -105,7 +106,7 @@ class File extends Model
 
         try {
             $this->filesystem->write($path . '/' . $filename, base64_decode($file[1]));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
         if ($this->file) {
@@ -145,7 +146,7 @@ class File extends Model
     {
         try {
             return $this->filesystem->read($this->path . '/' . $this->file);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -161,7 +162,7 @@ class File extends Model
     {
         try {
             return $this->filesystem->delete($this->path . '/' . $this->file);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -169,7 +170,7 @@ class File extends Model
 
     /**
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete()
     {

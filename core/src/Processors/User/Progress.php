@@ -4,8 +4,9 @@ namespace App\Processors\User;
 
 use App\Model\Course;
 use App\Model\Lesson;
+use App\Processor;
 
-class Progress extends \App\Processor
+class Progress extends Processor
 {
     protected $scope = 'profile';
 

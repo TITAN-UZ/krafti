@@ -2,12 +2,7 @@
   <div v-if="items.length" class="gallery-swiper container">
     <div class="swiper-container gallery-top">
       <div class="swiper-wrapper">
-        <div
-          v-for="item in items"
-          :key="item.id"
-          class="swiper-slide"
-          :style="'background-image:url(' + item.file + ')'"
-        ></div>
+        <div v-for="item in items" :key="item.id" class="swiper-slide" :style="'background-image:url(' + item.file + ')'"></div>
         <!--<div class="swiper-slide" v-for="item in items" :key="item.id">
           <img :src="item.file" class="main-image" :style="{'max-height': 'calc(' + height + 'px - 20% - 25px'}"/>
         </div>-->
@@ -22,12 +17,7 @@
 
     <div class="swiper-container gallery-thumbs">
       <div class="swiper-wrapper">
-        <div
-          v-for="item in items"
-          :key="item.id"
-          class="swiper-slide"
-          :style="'background-image:url(' + item.file + ')'"
-        ></div>
+        <div v-for="item in items" :key="item.id" class="swiper-slide" :style="'background-image:url(' + item.file + ')'"></div>
       </div>
     </div>
   </div>

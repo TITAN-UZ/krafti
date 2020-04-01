@@ -12,7 +12,7 @@ trait UserValidate
         if ($record->email) {
             if (!filter_var($record->email, FILTER_VALIDATE_EMAIL)) {
                 return 'Неправильный адрес электронной почты';
-            } elseif (User::query()->where(['email' => $record->email])->where('id', '!=', $record->id)->count()) {
+            } elseif (User::query()->where('email', $record->email)->where('id', '!=', $record->id)->count()) {
                 return 'Этот email уже есть у нас в базе. Укажите другой адрес, или сделайте сброс пароля.';
             }
         }

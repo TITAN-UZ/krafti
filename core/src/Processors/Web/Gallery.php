@@ -2,10 +2,11 @@
 
 namespace App\Processors\Web;
 
+use App\GetProcessor;
 use App\Model\GalleryItem;
 use Illuminate\Database\Eloquent\Builder;
 
-class Gallery extends \App\GetProcessor
+class Gallery extends GetProcessor
 {
 
     protected $class = '\App\Model\GalleryItem';

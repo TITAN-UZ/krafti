@@ -4,12 +4,11 @@ namespace App\Processors\User;
 
 
 use App\Model\Traits\UserValidate;
-use App\Model\UserChild;
 use App\Model\UserFavorite;
-use App\Model\UserLike;
 use App\Model\UserOauth;
+use App\Processor;
 
-class Profile extends \App\Processor
+class Profile extends Processor
 {
     use UserValidate;
 

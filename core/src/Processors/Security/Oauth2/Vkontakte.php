@@ -2,10 +2,13 @@
 
 namespace App\Processors\Security\Oauth2;
 
-class Vkontakte extends \App\Processors\Security\Oauth2
+use App\Processors\Security\Oauth2;
+use Slim\Http\Response;
+
+class Vkontakte extends Oauth2
 {
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function get()
     {

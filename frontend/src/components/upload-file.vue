@@ -55,9 +55,7 @@ export default {
     placeholder() {
       let message = ''
       if (this.label && Object.keys(this.label).length) {
-        message += `<a href="${[this.$settings.file_url, this.label.id].join('/')}" target="_self">${
-          this.label.title
-        }</a>`
+        message += `<a href="${[this.$settings.file_url, this.label.id].join('/')}" target="_self">${this.label.title}</a>`
       }
       return message + 'Нажмите для загрузки'
     },

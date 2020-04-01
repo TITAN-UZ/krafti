@@ -4,8 +4,10 @@ namespace App\Processors\User;
 
 use App\Model\Course;
 use App\Model\UserFavorite;
+use App\Processor;
+use Exception;
 
-class Favorites extends \App\Processor
+class Favorites extends Processor
 {
 
     protected $scope = 'profile';
@@ -50,7 +52,7 @@ class Favorites extends \App\Processor
                 $obj = new UserFavorite($key);
                 $obj->save();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->failure($e->getMessage());
         }
 
@@ -73,7 +75,7 @@ class Favorites extends \App\Processor
             if ($obj = UserFavorite::query()->where($key)->first()) {
                 $obj->delete();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->failure($e->getMessage());
         }
 

@@ -1,18 +1,16 @@
 <template>
   <div>
-    <vue-autosuggest
-      ref="autosuggest"
-      :suggestions="suggestions"
-      :get-suggestion-value="getSuggestionValue"
-      :input-props="{class: 'form-control', required: required}"
-      @input="load"
-      @selected="onSelected"
-    >
+    <input-complete ref="input" v-model="myValue" :url="url" field-title="title" :required="required" :load-empty="true" @onSelected="onSelected">
       <template slot-scope="{suggestion}">
-        <img v-if="suggestion.item.preview['100x75']" :src="suggestion.item.preview['100x75']" />
-        {{ suggestion.item.title }}
+        <div class="d-flex align-items-center">
+          <b-img v-if="suggestion.item.preview['100x75']" :src="suggestion.item.preview['100x75']" :rounded="true" />
+          <div class="ml-2">
+            {{ suggestion.item.title }}
+            <div class="small text-muted">{{ suggestion.item.duration | duration }}</div>
+          </div>
+        </div>
       </template>
-    </vue-autosuggest>
+    </input-complete>
     <img v-if="img" :src="img" class="mt-2" />
   </div>
 </template>
@@ -21,7 +19,10 @@
 export default {
   name: 'PickVideo',
   props: {
-    required: Boolean,
+    required: {
+      type: Boolean,
+      required: false,
+    },
     value: {
       type: Number,
       required: false,
@@ -30,54 +31,28 @@ export default {
   },
   data() {
     return {
-      suggestions: [
-        {
-          data: [],
-        },
-      ],
-      img: '',
+      url: 'admin/videos?sort=id&dir=desc',
+      img: null,
     }
   },
-  created() {
-    if (this.value > 0) {
-      this.setValue(this.value)
-    } else {
-      this.load()
+  computed: {
+    myValue: {
+      get() {
+        return this.value
+      },
+      set(newValue) {
+        this.$emit('input', newValue)
+      },
+    },
+  },
+  mounted() {
+    if (!this.myValue) {
+      this.$refs.input.load()
     }
   },
   methods: {
-    load(query) {
-      this.$axios
-        .get('admin/videos', {params: {limit: 10, query: query || ''}})
-        .then((res) => {
-          this.suggestions[0].data = res.data.rows
-        })
-        .catch(() => {})
-    },
-    onSelected(selected) {
-      if (selected && selected.item) {
-        this.$emit('input', selected.item.id)
-        this.img = selected.item.preview && selected.item.preview['295x166'] ? selected.item.preview['295x166'] : ''
-      } else {
-        this.$emit('input', null)
-        this.img = ''
-      }
-    },
-    getSuggestionValue(suggestion) {
-      return suggestion.item.title
-    },
-    setValue(id) {
-      this.$axios
-        .get('admin/videos', {params: {id}})
-        .then((res) => {
-          this.suggestions[0].data = [res.data]
-
-          const {listeners, setCurrentIndex, setChangeItem} = this.$refs.autosuggest
-          setCurrentIndex(0)
-          setChangeItem({item: res.data}, true)
-          listeners.selected(true)
-        })
-        .catch(() => {})
+    onSelected(item) {
+      this.img = item && item.preview['295x166'] ? item.preview['295x166'] : null
     },
   },
 }

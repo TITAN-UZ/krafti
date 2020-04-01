@@ -4,9 +4,10 @@ namespace App\Processors\Admin;
 
 use App\Model\Course;
 use App\Model\File;
+use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
 
-class Courses extends \App\ObjectProcessor
+class Courses extends ObjectProcessor
 {
 
     protected $class = '\App\Model\Course';
@@ -79,7 +80,7 @@ class Courses extends \App\ObjectProcessor
 
         if (!$age = trim($this->getProperty('age'))) {
             return 'Вы должны указать возраст аудитории курса';
-        } elseif (!preg_match('#(\d+)\-(\d+)#', $age)) {
+        } elseif (!preg_match('#(\d+)-(\d+)#', $age)) {
             return 'Неверный формат возраста. Укажите 2 числа: от и до, через дефис.';
         }
 

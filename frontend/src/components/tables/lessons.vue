@@ -1,17 +1,7 @@
 <template>
-  <app-table
-    ref="table"
-    :url="`${url}?course_id=${courseId}`"
-    :fields="fields"
-    :filters="filters"
-    :limit="10"
-    :row-class="rowClass"
-    @onLoad="onLoad"
-  >
+  <app-table ref="table" :url="`${url}?course_id=${courseId}`" :fields="fields" :filters="filters" :limit="10" :row-class="rowClass" @onLoad="onLoad">
     <template slot="actions">
-      <router-link class="btn btn-secondary" :to="{name: 'admin-courses-edit-cid-create', params: {cid: courseId}}">
-        <fa :icon="['fas', 'plus']" /> Добавить
-      </router-link>
+      <router-link class="btn btn-secondary" :to="{name: 'admin-courses-edit-cid-create', params: {cid: courseId}}"> <fa :icon="['fas', 'plus']" /> Добавить </router-link>
 
       <b-form-select v-model="filters.section" style="width:120px;" class="ml-auto">
         <option :value="null">Все этапы</option>
@@ -42,12 +32,7 @@
         <b-button v-if="row.item.rank > 0 && filters.section" size="sm" variant="default" @click="moveUp(row.item.id)">
           <fa :icon="['fas', 'arrow-up']" />
         </b-button>
-        <b-button
-          v-if="row.item.rank < totalRows - 1 && filters.section"
-          size="sm"
-          variant="default"
-          @click="moveDown(row.item.id)"
-        >
+        <b-button v-if="row.item.rank < totalRows - 1 && filters.section" size="sm" variant="default" @click="moveDown(row.item.id)">
           <fa :icon="['fas', 'arrow-down']" />
         </b-button>
         <b-button size="sm" variant="outline-danger" @click="onDelete(row.item)">

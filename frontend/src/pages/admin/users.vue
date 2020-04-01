@@ -1,115 +1,90 @@
 <template>
   <div>
-    <table-filter :filters="filters" :table="$options.name">
+    <app-table ref="table" :url="url" :fields="fields" :filters="filters" :row-class="rowClass" :sort="sort" :dir="dir">
       <template slot="actions">
-        <router-link class="btn btn-secondary" to="users/create">
+        <router-link class="btn btn-secondary" :to="{name: 'admin-users-create'}">
           <fa icon="plus" />
           Добавить
         </router-link>
       </template>
-    </table-filter>
 
-    <b-table
-      :id="$options.name"
-      stacked="md"
-      class="mt-5"
-      :items="items"
-      :fields="fields"
-      :current-page="page"
-      :per-page="limit"
-      :sort-by.sync="sort"
-      :sort-direction.sync="dir"
-      :sort-desc="dir == 'desc'"
-      :tbody-tr-class="rowClass"
-      show-empty
-      no-sort-reset
-      no-local-sorting
-      empty-text="Подходящих результатов не найдено"
-      empty-filtered-text="Подходящих результатов не найдено"
-    >
-      <template slot="cell(photo)" slot-scope="row">
-        <img v-if="row.value" :src="[$settings.image_url, row.item.photo_id, '50x50'].join('/')" class="mr-2" />
+      <template v-slot:cell(fullname)="row">
+        <user-avatar :user="row.item" :truncate="150" :add="row.item.role.title" />
       </template>
-      <template slot="cell(email)" slot-scope="row">
-        <strong>{{ row.value }}</strong>
+      <template v-slot:cell(email)="row">
+        <div v-if="row.value">{{ row.value.toLowerCase() }}</div>
+        <div v-if="row.item.instagram">
+          <a :href="`https://www.instagram.com/${row.item.instagram}/`" target="_blank"> @{{ row.item.instagram.toLowerCase() }} </a>
+        </div>
       </template>
-      <template slot="cell(actions)" slot-scope="row">
+      <template v-slot:cell(actions)="row">
         <router-link class="btn btn-sm" :to="'users/edit/' + row.item.id">
           <fa icon="edit" />
         </router-link>
-        <a href="#" class="btn btn-sm text-danger" @click.prevent="onDelete(row.item)">
-          <fa icon="times" />
-        </a>
+        <b-button v-if="row.item.active" size="sm" variant="outline-warning" @click.prevent="onDisable(row.item)">
+          <fa :icon="['fas', 'power-off']" />
+        </b-button>
+        <b-button v-else size="sm" variant="outline-success" @click.prevent="onEnable(row.item)">
+          <fa :icon="['fas', 'play']" />
+        </b-button>
+        <b-button v-if="!row.item.orders_count" size="sm" variant="outline-danger" @click.prevent="onDelete(row.item)">
+          <fa :icon="['fas', 'times']" />
+        </b-button>
       </template>
-    </b-table>
+    </app-table>
 
-    <table-footer
-      :table="$options.name"
-      :total-rows="totalRows"
-      :limit="limit"
-      :page.sync="page"
-      forms="пользователь|пользователя|пользователей"
-    ></table-footer>
-
-    <nuxt-child></nuxt-child>
+    <nuxt-child />
   </div>
 </template>
 
 <script>
-import {faEdit, faKey, faPlus, faSync, faTimes} from '@fortawesome/pro-solid-svg-icons'
+import {faEdit, faPlus, faPowerOff, faPlay, faTimes} from '@fortawesome/pro-solid-svg-icons'
 
 export default {
   name: 'AdminUsers',
   data() {
     return {
-      items: (ctx) => {
-        return this.loadTable(ctx, this, 'admin/users')
-      },
-      loading: false,
-      tag: [],
+      url: 'admin/users',
       fields: [
         {key: 'id', label: 'Id', sortable: true},
-        {key: 'photo', label: 'Фото', sortable: false},
-        {key: 'email', label: 'Email', sortable: true},
         {key: 'fullname', label: 'ФИО', sortable: true},
-        {key: 'role_id', label: 'Группа', formatter: 'renderRole'},
+        {key: 'email', label: 'Связь'},
+        // {key: 'role.title', label: 'Группа'},
+        {key: 'orders_count', label: 'Покупки', sortable: true},
         {key: 'referrals_count', label: 'Рефералы', sortable: true},
         {key: 'actions', label: 'Действия'},
       ],
-      page: 1,
-      limit: 20,
-      totalRows: 0,
-      sort: 'id',
-      dir: 'desc',
       filters: {
         query: '',
         role_id: null,
         active: null,
         confirmed: null,
       },
-      roles: {},
+      sort: 'id',
+      dir: 'desc',
     }
   },
   created() {
-    this.$fa.add(faTimes, faPlus, faEdit, faSync, faKey)
-
-    this.$root.$on('app::' + this.$options.name + '::update', () => {
-      this.refresh()
-    })
-
-    this.$root.$on('app::' + this.$options.name + '::query', () => {
-      this.page = 1
-    })
-
-    this.$axios.get('admin/user-roles', {params: {limit: 0}}).then((res) => {
-      res.data.rows.forEach((v) => {
-        this.roles[v.id] = v
-      })
-    })
+    this.$fa.add(faPlus, faEdit, faPowerOff, faPlay, faTimes)
   },
   methods: {
     refresh() {
-      this.$root.$emit('bv::refresh::table', this.$options.name)
+      this.$refs.table.refresh()
+    },
+    rowClass(item) {
+      return item && !item.active ? 'text-muted' : ''
+    },
+    async onDisable(item) {
+      try {
+        await this.$axios.patch(this.url, {id: item.id, active: false})
+        this.refresh()
+      } catch (e) {}
+    },
+    async onEnable(item) {
+      try {
+        await this.$axios.patch(this.url, {id: item.id, active: true})
+        this.refresh()
+      } catch (e) {}
     },
     onDelete(item) {
       this.$message.confirm('Вы уверены, что хотите удалить эту запись?', () => {
@@ -117,12 +92,6 @@ export default {
           this.refresh()
         })
       })
-    },
-    rowClass(item) {
-      return item && !item.active ? 'text-muted' : ''
-    },
-    renderRole(id) {
-      return this.roles[id] ? this.roles[id].title : ''
     },
   },
   head() {
@@ -132,15 +101,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-#admin-users {
-  td {
-    img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-    }
-  }
-}
-</style>

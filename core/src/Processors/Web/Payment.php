@@ -3,8 +3,9 @@
 namespace App\Processors\Web;
 
 use App\Model\Order;
+use App\Processor;
 
-class Payment extends \App\Processor
+class Payment extends Processor
 {
 
     public function post()

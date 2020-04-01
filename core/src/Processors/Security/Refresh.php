@@ -2,9 +2,9 @@
 
 namespace App\Processors\Security;
 
-use App\Model\User;
+use App\Processor;
 
-class Refresh extends \App\Processor
+class Refresh extends Processor
 {
     public function get()
     {

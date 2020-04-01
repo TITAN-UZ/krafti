@@ -1,13 +1,6 @@
 <template>
   <b-row no-gutters class="b-table-pagination justify-content-center justify-content-md-start mt-5 align-items-center">
-    <b-pagination
-      v-if="totalRows > limit"
-      v-model="currentPage"
-      class="m-0"
-      :total-rows="totalRows"
-      :per-page="limit"
-      :limit="pageLimit"
-    />
+    <b-pagination v-if="totalRows > limit" v-model="currentPage" class="m-0" :total-rows="totalRows" :per-page="limit" :limit="pageLimit" />
 
     <b-button class="ml-2" @click.prevent="refresh">
       <b-spinner v-if="busy" small />

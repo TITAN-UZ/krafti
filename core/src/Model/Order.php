@@ -3,6 +3,10 @@
 namespace App\Model;
 
 use App\Container;
+use App\Service\Payment\Payment;
+use App\Service\Payment\Paypal;
+use App\Service\Payment\Robokassa;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,10 +21,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $status
  * @property int $period
  * @property bool $manual
- * @property \Carbon\Carbon $paid_at
- * @property \Carbon\Carbon $paid_till
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property Carbon $paid_at
+ * @property Carbon $paid_till
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property-read User $user
  * @property-read Course $course
@@ -69,17 +73,17 @@ class Order extends Model
     /**
      * @param Container $container
      *
-     * @return \App\Service\Payment\Payment|bool
+     * @return Payment|bool
      */
     public function getPaymentHandler(Container $container)
     {
         $service = false;
         switch ($this->service) {
             case 'paypal':
-                $service = new \App\Service\Payment\Paypal($container);
+                $service = new Paypal($container);
                 break;
             case 'robokassa':
-                $service = new \App\Service\Payment\Robokassa($container);
+                $service = new Robokassa($container);
                 break;
         }
 

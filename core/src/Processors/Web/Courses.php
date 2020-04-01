@@ -2,13 +2,13 @@
 
 namespace App\Processors\Web;
 
+use App\GetProcessor;
 use App\Model\Course;
-use App\Model\Lesson;
 use App\Model\Order;
 use App\Model\UserProgress;
 use Illuminate\Database\Eloquent\Builder;
 
-class Courses extends \App\GetProcessor
+class Courses extends GetProcessor
 {
 
     protected $class = '\App\Model\Course';

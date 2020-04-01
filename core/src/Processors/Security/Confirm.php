@@ -3,8 +3,9 @@
 namespace App\Processors\Security;
 
 use App\Model\User;
+use App\Processor;
 
-class Confirm extends \App\Processor
+class Confirm extends Processor
 {
 
     public function get()

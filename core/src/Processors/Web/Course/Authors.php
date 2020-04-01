@@ -5,8 +5,9 @@ namespace App\Processors\Web\Course;
 use App\Model\Course;
 use App\Model\Lesson;
 use App\Model\User;
+use App\Processor;
 
-class Authors extends \App\Processor
+class Authors extends Processor
 {
     protected $class = '\App\Model\User';
 

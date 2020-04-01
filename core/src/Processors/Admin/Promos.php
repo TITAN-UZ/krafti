@@ -3,10 +3,12 @@
 namespace App\Processors\Admin;
 
 use App\Model\Promo;
+use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
+use Slim\Http\Response;
 
-class Promos extends \App\ObjectProcessor
+class Promos extends ObjectProcessor
 {
 
     protected $class = '\App\Model\Promo';
@@ -20,7 +22,7 @@ class Promos extends \App\ObjectProcessor
      */
     protected function beforeCount($c)
     {
-        if ($query = trim($this->getProperty('query', ''))) {
+        if ($query = trim($this->getProperty('query'))) {
             $c->where('code', 'LIKE', "%$query%");
             $c->orWhere('title', 'LIKE', "%$query%");
         }
@@ -65,7 +67,7 @@ class Promos extends \App\ObjectProcessor
     /**
      * @param Promo $record
      *
-     * @return bool|\Slim\Http\Response
+     * @return bool|Response
      */
     public function beforeDelete($record)
     {

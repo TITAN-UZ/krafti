@@ -7,10 +7,7 @@
           <div class="row course__content--header">
             <div class="col-lg-7 col-12">
               <div v-if="record.video" class="course-video">
-                <div
-                  class="video-link"
-                  :style="{'background-image': record.cover ? 'url(' + record.cover + ')' : false}"
-                ></div>
+                <div class="video-link" :style="{'background-image': record.cover ? 'url(' + record.cover + ')' : false}"></div>
                 <span class="play-button course" @click.prevent="$refs.mainVideo.show()">
                   <fa :icon="['fad', 'circle']" />
                   <fa :icon="['fas', 'play']" />
@@ -18,23 +15,15 @@
                 <vimeo ref="mainVideo" :video="record.video.remote_key" />
               </div>
               <div v-else class="course-video">
-                <div
-                  class="video-link disabled"
-                  :style="{'background-image': record.cover ? 'url(' + record.cover + ')' : false}"
-                ></div>
+                <div class="video-link disabled" :style="{'background-image': record.cover ? 'url(' + record.cover + ')' : false}"></div>
               </div>
             </div>
             <div class="col-lg-5 col-12">
               <div class="course__info d-flex flex-column">
-                <div
-                  class="course__info--top d-flex justify-content-lg-end justify-content-between align-items-center mb-2"
-                >
+                <div class="course__info--top d-flex justify-content-lg-end justify-content-between align-items-center mb-2">
                   <button class="btn btn-default">
                     <b-spinner v-if="loading == 'favorite:' + record.id" type="grow" class="text-primary" />
-                    <a
-                      v-else-if="$auth.user && !$auth.user.favorites.includes(record.id)"
-                      @click.prevent="addFavorite(record.id)"
-                    >
+                    <a v-else-if="$auth.user && !$auth.user.favorites.includes(record.id)" @click.prevent="addFavorite(record.id)">
                       <fa :icon="['fal', 'heart']" size="2x" />
                     </a>
                     <a v-else-if="$auth.user" @click.prevent="deleteFavorite(record.id)">
@@ -107,11 +96,7 @@
                       Готовится к публикации
                     </button>
                     <nuxt-link
-                      v-else-if="
-                        record.bought === true &&
-                          lessons[record.progress.section] &&
-                          lessons[record.progress.section][record.progress.rank]
-                      "
+                      v-else-if="record.bought === true && lessons[record.progress.section] && lessons[record.progress.section][record.progress.rank]"
                       class="btn btn-default btn__play"
                       :to="{
                         name: 'courses-cid-index-lesson-lid',
@@ -132,19 +117,13 @@
                       <span>Начать просмотр</span>
                     </nuxt-link>
                     <template v-else-if="record.bought === false">
-                      <nuxt-link
-                        class="btn btn-default btn__buy"
-                        :to="{name: 'courses-cid-index-buy', params: $route.params}"
-                      >
+                      <nuxt-link class="btn btn-default btn__buy" :to="{name: 'courses-cid-index-buy', params: $route.params}">
                         Купить от
                         <span class="price ml-2">{{ record.price[3] | price(record.discount) | number }} р</span>
                       </nuxt-link>
                       <template v-if="record.free_lesson">
                         <div class="flex-grow-1 text-center p-2">или</div>
-                        <nuxt-link
-                          class="btn btn-default btn__play"
-                          :to="{name: 'courses-cid-index-free', params: {cid: record.id, id: record.free_lesson.id}}"
-                        >
+                        <nuxt-link class="btn btn-default btn__play" :to="{name: 'courses-cid-index-free', params: {cid: record.id, id: record.free_lesson.id}}">
                           Попробовать бесплатно!
                         </nuxt-link>
                       </template>
@@ -208,41 +187,18 @@
                     </b-tab>
                     <b-tab v-if="Object.keys(lessons).length" title="Уроки" active>
                       <div v-if="Object.keys(lessons).length > 1" class="row palitra">
-                        <div
-                          class="col-lg-8 col-12 palitra__info d-flex justify-content-center align-items-center flex-column"
-                        >
+                        <div class="col-lg-8 col-12 palitra__info d-flex justify-content-center align-items-center flex-column">
                           <div class="palitra__info--title">Палитра прогресса</div>
-                          <div class="palitra__info--count">
-                            +{{ palette_bonus }} {{ palette_bonus | noun('крафтик|крафтика|крафтиков') }}
-                          </div>
+                          <div class="palitra__info--count">+{{ palette_bonus }} {{ palette_bonus | noun('крафтик|крафтика|крафтиков') }}</div>
                           <div class="palitra__info--text">
-                            Это ваша персональная палитра прогресса. Смотрите уроки, отправляйте домашние задания, и
-                            ваша палитра будет заполняться цветами. За полную палитру вы получаете крафтики.
+                            Это ваша персональная палитра прогресса. Смотрите уроки, отправляйте домашние задания, и ваша палитра будет заполняться цветами. За полную палитру вы получаете крафтики.
                           </div>
                         </div>
-                        <div
-                          class="col-lg-4 col-12 col-md-6 palitra__img d-flex align-content-center justify-content-center"
-                        >
-                          <img
-                            v-if="record.progress.section == 1"
-                            class="img-responsive"
-                            src="~assets/images/palette/palette-1.svg"
-                          />
-                          <img
-                            v-if="record.progress.section == 2"
-                            class="img-responsive"
-                            src="~assets/images/palette/palette-3.svg"
-                          />
-                          <img
-                            v-if="record.progress.section == 3"
-                            class="img-responsive"
-                            src="~assets/images/palette/palette-6.svg"
-                          />
-                          <img
-                            v-if="record.progress.section == 0"
-                            class="img-responsive"
-                            src="~assets/images/palette/palette-7.svg"
-                          />
+                        <div class="col-lg-4 col-12 col-md-6 palitra__img d-flex align-content-center justify-content-center">
+                          <img v-if="record.progress.section == 1" class="img-responsive" src="~assets/images/palette/palette-1.svg" />
+                          <img v-if="record.progress.section == 2" class="img-responsive" src="~assets/images/palette/palette-3.svg" />
+                          <img v-if="record.progress.section == 3" class="img-responsive" src="~assets/images/palette/palette-6.svg" />
+                          <img v-if="record.progress.section == 0" class="img-responsive" src="~assets/images/palette/palette-7.svg" />
                         </div>
                       </div>
 
@@ -273,18 +229,10 @@
                                           }"
                                           class="video"
                                         >
-                                          <img
-                                            v-if="item.preview['295x166']"
-                                            class="img-responsive lesson__video--thumb"
-                                            :src="item.preview['295x166']"
-                                            alt=""
-                                          />
+                                          <img v-if="item.preview['295x166']" class="img-responsive lesson__video--thumb" :src="item.preview['295x166']" alt="" />
                                         </nuxt-link>
                                         <div v-else class="disabled">
-                                          <img
-                                            class="img-responsive bonus__lesson--thumb"
-                                            :src="item.preview['295x166']"
-                                          />
+                                          <img class="img-responsive bonus__lesson--thumb" :src="item.preview['295x166']" />
                                         </div>
                                       </div>
                                       <div class="lesson__item--info d-flex align-items-center justify-content-center">
@@ -303,12 +251,7 @@
                                       Отправьте нам фотографию того, что у вас получилось
                                     </div>
                                     <client-only>
-                                      <upload-homework
-                                        :course-id="record.id"
-                                        :section="Number(section)"
-                                        :image-id="homeworks[section] ? homeworks[section].file_id : 0"
-                                        :size="500"
-                                      />
+                                      <upload-homework :course-id="record.id" :section="Number(section)" :image-id="homeworks[section] ? homeworks[section].file_id : 0" :size="500" />
                                     </client-only>
                                   </div>
                                 </div>
@@ -323,10 +266,7 @@
                           <div class="bonus__lesson--thumb">
                             <span class="ic__star-gold"></span>
                           </div>
-                          <div class="bonus__lesson--title">
-                            <span :class="{'mr-2': true, 'ic__locked--gray': record.progress.section != 0}"> </span
-                            >Бонусный урок
-                          </div>
+                          <div class="bonus__lesson--title"><span :class="{'mr-2': true, 'ic__locked--gray': record.progress.section != 0}"> </span>Бонусный урок</div>
                           <div class="bonus__lesson--text text-center">
                             <p>
                               <strong>{{ lessons[0][0].title }}</strong>
@@ -335,10 +275,7 @@
                           </div>
                           <div class="bonus__lesson--video">
                             <div v-if="record.progress.section != 0" class="disabled">
-                              <img
-                                class="img-responsive bonus__lesson--thumb"
-                                :src="lessons[0][0].preview['295x166']"
-                              />
+                              <img class="img-responsive bonus__lesson--thumb" :src="lessons[0][0].preview['295x166']" />
                             </div>
                             <nuxt-link
                               v-else
@@ -348,17 +285,11 @@
                               }"
                               class="video"
                             >
-                              <img
-                                class="img-responsive bonus__lesson--thumb"
-                                :src="lessons[0][0].preview['295x166']"
-                              />
+                              <img class="img-responsive bonus__lesson--thumb" :src="lessons[0][0].preview['295x166']" />
                             </nuxt-link>
                           </div>
                           <div v-if="record.progress.section != 0" class="bonus__btn">
-                            <nuxt-link
-                              class="btn btn-default btn__buy"
-                              :to="{name: 'courses-cid-index-buy-bonus', cid: record.id}"
-                            >
+                            <nuxt-link class="btn btn-default btn__buy" :to="{name: 'courses-cid-index-buy-bonus', cid: record.id}">
                               <span class="ic__star mr-2"></span>Купить за {{ bonus_cost | number }}
                               {{ bonus_cost | noun('крафтик|крафтика|крафтиков') }}
                             </nuxt-link>
@@ -613,13 +544,7 @@ export default {
         }
       }
 
-      return (
-        item.extra ||
-        item.free ||
-        (!progress.section && !progress.rank) ||
-        progress.section > item.section ||
-        (progress.section === item.section && progress.rank >= item.rank)
-      )
+      return item.extra || item.free || (!progress.section && !progress.rank) || progress.section > item.section || (progress.section === item.section && progress.rank >= item.rank)
     },
     async loadLessons() {
       const res = await this.$axios.get('web/courses', {params: {id: this.record.id}})

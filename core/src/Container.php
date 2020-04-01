@@ -4,11 +4,23 @@ namespace App;
 
 use App\Model\User;
 use App\Model\UserToken;
+use App\Service\Mail;
+use Exception;
+use Fenom;
+use Fenom\Provider;
 use Firebase\JWT\JWT;
+use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Events\Dispatcher;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\EchoHandler;
+use Monolog\Logger;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Symfony\Component\Dotenv\Dotenv;
+use Throwable;
+use Tuupola\Middleware\JwtAuthentication;
+use Vimeo\Vimeo;
 
 if (!defined('BASE_DIR')) {
     define('BASE_DIR', dirname(dirname(__DIR__)));
@@ -19,13 +31,13 @@ if (!defined('BASE_DIR')) {
  *
  * @property Request $request
  * @property Response $response
- * @property-read \Fenom $view
- * @property-read \Monolog\Logger logger
- * @property-read \Tuupola\Middleware\JwtAuthentication jwt
- * @property-read \Illuminate\Database\Capsule\Manager capsule
- * @property-read \Illuminate\Database\DatabaseManager db
- * @property-read \App\Service\Mail $mail
- * @property-read \Vimeo\Vimeo $vimeo
+ * @property-read Fenom $view
+ * @property-read Logger logger
+ * @property-read JwtAuthentication jwt
+ * @property-read Manager capsule
+ * @property-read DatabaseManager db
+ * @property-read Mail $mail
+ * @property-read Vimeo $vimeo
  */
 class Container extends \Slim\Container
 {
@@ -44,12 +56,12 @@ class Container extends \Slim\Container
         try {
             $dotenv = new Dotenv(true);
             $dotenv->load(BASE_DIR . '/core/' . (get_current_user() == 's4000' ? '.prod' : '.dev') . '.env');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             exit($e->getMessage());
         }
 
         $this['view'] = function () {
-            $fenom = new \Fenom(new \Fenom\Provider(BASE_DIR . '/core/templates/'));
+            $fenom = new Fenom(new Provider(BASE_DIR . '/core/templates/'));
             $fenom->setCompileDir(BASE_DIR . '/tmp/');
             $fenom->setOptions([
                 'disable_native_funcs' => true,
@@ -64,7 +76,7 @@ class Container extends \Slim\Container
         };
 
         $this['capsule'] = function () {
-            $capsule = new \Illuminate\Database\Capsule\Manager;
+            $capsule = new Manager;
             $capsule->addConnection([
                 'driver' => getenv('DB_DRIVER'),
                 'host' => getenv('DB_HOST'),
@@ -88,64 +100,24 @@ class Container extends \Slim\Container
         };
 
         $this['logger'] = function () {
-            $logger = new \Monolog\Logger('logger');
+            $logger = new Logger('logger');
             if (PHP_SAPI == 'cli') {
-                $handler = new \Monolog\Handler\EchoHandler(\Monolog\Logger::INFO);
-                $handler->setFormatter(new \Monolog\Formatter\LineFormatter(null, null, false, true));
+                $handler = new EchoHandler(Logger::INFO);
+                $handler->setFormatter(new LineFormatter(null, null, false, true));
             } else {
-                $handler = new Service\Logger(\Monolog\Logger::ERROR);
+                $handler = new Service\Logger(Logger::ERROR);
             }
             $logger->pushHandler($handler);
 
             return $logger;
         };
 
-        /*$this['jwt'] = function () {
-            $container = $this;
-
-            $jwt = new \Tuupola\Middleware\JwtAuthentication([
-                'rules' => [
-                    new \Tuupola\Middleware\JwtAuthentication\RequestMethodRule([
-                        'ignore' => ['OPTIONS'],
-                    ]),
-                    new Service\Jwt([
-                        'path' => '/api',
-                        'force' => ['/api/web/course/lessons', '/api/web/course/comments'],
-                        'ignore' => [
-                            '/api/security/',
-                            '/api/web/',
-                        ],
-                    ]),
-                ],
-                'cookie' => 'auth._token.local',
-                'secure' => false, // Dev
-                //'logger' => $this->logger,
-                'secret' => getenv('JWT_SECRET'),
-                'error' => function () use ($container) {
-                    return (new Processor($container))->failure('Требуется авторизация', 401);
-                },
-                'before' => function (Request $request) use ($container) {
-                    $container->user = User::query()->where([
-                        'id' => $request->getAttribute('token')['id'],
-                        'active' => true,
-                    ])->first();
-                },
-                'after' => function (Response $response) use ($container) {
-                    return !$container->user
-                        ? (new Processor($container))->failure('Требуется авторизация', 401)
-                        : $response;
-                },
-            ]);
-
-            return $jwt;
-        };*/
-
         $this['vimeo'] = function () {
-            return new \Vimeo\Vimeo(getenv('VIMEO_ID'), getenv('VIMEO_SECRET'), getenv('VIMEO_TOKEN'));
+            return new Vimeo(getenv('VIMEO_ID'), getenv('VIMEO_SECRET'), getenv('VIMEO_TOKEN'));
         };
 
         $this['mail'] = function () {
-            return new \App\Service\Mail($this);
+            return new Mail($this);
         };
     }
 
@@ -244,7 +216,7 @@ class Container extends \Slim\Container
                 $token = preg_match($pcre, $cookies['auth._token.local'], $matches)
                     ? $matches[1]
                     : $cookies['auth._token.local'];
-            };
+            }
         }
 
         if ($token) {
@@ -254,7 +226,7 @@ class Container extends \Slim\Container
                 $this->request = $this->request->withAttribute('token', $token);
 
                 return $decoded;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 return null;
             }
         }

@@ -2,9 +2,10 @@
 
 namespace App\Processors\Web\Course;
 
+use App\Processors\Web\Courses;
 use Illuminate\Database\Eloquent\Builder;
 
-class Similar extends \App\Processors\Web\Courses
+class Similar extends Courses
 {
 
     protected $class = '\App\Model\Course';

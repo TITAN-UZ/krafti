@@ -3,44 +3,22 @@
     <form :disabled="loading" class="mt-4 text-center payment-form" @submit.prevent="onSubmit">
       <div class="period">
         <h4>Выберите вариант покупки:</h4>
-        <b-button
-          :size="payment.period == 3 ? 'lg' : ''"
-          :variant="payment.period == 3 ? 'primary' : 'outline-secondary'"
-          :disabled="loading"
-          @click="payment.period = 3"
+        <b-button :size="payment.period == 3 ? 'lg' : ''" :variant="payment.period == 3 ? 'primary' : 'outline-secondary'" :disabled="loading" @click="payment.period = 3"
           >Доступ на<br />3 месяца<br />за {{ record.price['3'] | price(record.discount) | number }} р
         </b-button>
-        <b-button
-          :size="payment.period == 6 ? 'lg' : ''"
-          :variant="payment.period == 6 ? 'primary' : 'outline-secondary'"
-          :disabled="loading"
-          @click="payment.period = 6"
+        <b-button :size="payment.period == 6 ? 'lg' : ''" :variant="payment.period == 6 ? 'primary' : 'outline-secondary'" :disabled="loading" @click="payment.period = 6"
           >Доступ на<br />6 месяцев<br />за {{ record.price['6'] | price(record.discount) | number }} р
         </b-button>
-        <b-button
-          :size="payment.period == 12 ? 'lg' : ''"
-          :variant="payment.period == 12 ? 'primary' : 'outline-secondary'"
-          :disabled="loading"
-          @click="payment.period = 12"
+        <b-button :size="payment.period == 12 ? 'lg' : ''" :variant="payment.period == 12 ? 'primary' : 'outline-secondary'" :disabled="loading" @click="payment.period = 12"
           >Доступ на<br />1 год<br />за {{ record.price['12'] | price(record.discount) | number }} р
         </b-button>
       </div>
       <div class="mt-5 payment">
         <h4>Выберите платёжную систему:</h4>
-        <b-button
-          variant="default"
-          :class="{active: payment.service == 'robokassa'}"
-          :disabled="loading"
-          @click="payment.service = 'robokassa'"
-        >
+        <b-button variant="default" :class="{active: payment.service == 'robokassa'}" :disabled="loading" @click="payment.service = 'robokassa'">
           <img :src="rbLogo" class="robokassa" />
         </b-button>
-        <b-button
-          variant="default"
-          :class="{active: payment.service == 'paypal'}"
-          :disabled="loading"
-          @click="payment.service = 'paypal'"
-        >
+        <b-button variant="default" :class="{active: payment.service == 'paypal'}" :disabled="loading" @click="payment.service = 'paypal'">
           <img :src="ppLogo" class="paypal" />
         </b-button>
       </div>
@@ -57,9 +35,7 @@
 
       <div class="mt-4 text-center">
         <div class="auth-form">
-          <b-form-group
-            description="Если у вас есть промокод - укажите его здесь. Скидки не суммируются, выбирается максимальная."
-          >
+          <b-form-group description="Если у вас есть промокод - укажите его здесь. Скидки не суммируются, выбирается максимальная.">
             <b-form-input v-model.trim="payment.code" placeholder="Промокод" :state="discount_code" />
           </b-form-group>
         </div>

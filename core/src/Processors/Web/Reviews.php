@@ -2,10 +2,11 @@
 
 namespace App\Processors\Web;
 
+use App\GetProcessor;
 use App\Model\Comment;
 use Illuminate\Database\Eloquent\Builder;
 
-class Reviews extends \App\GetProcessor
+class Reviews extends GetProcessor
 {
 
     protected $class = '\App\Model\Comment';

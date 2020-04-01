@@ -2,13 +2,7 @@
 
 namespace App\Processors\User;
 
-use App\GetProcessor;
-use App\Model\Course;
-use App\Model\File;
-use App\Model\Homework;
-use App\Model\UserProgress;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\JoinClause;
 
 class Courses extends \App\Processors\Web\Courses

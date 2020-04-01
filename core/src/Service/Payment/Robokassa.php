@@ -2,7 +2,6 @@
 
 namespace App\Service\Payment;
 
-use App\Container;
 use App\Model\Order;
 
 class Robokassa extends Payment

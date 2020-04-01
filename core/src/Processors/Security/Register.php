@@ -4,8 +4,10 @@ namespace App\Processors\Security;
 
 use App\Model\Traits\UserValidate;
 use App\Model\User;
+use App\Processor;
+use Exception;
 
-class Register extends \App\Processor
+class Register extends Processor
 {
 
     use UserValidate;
@@ -80,7 +82,7 @@ class Register extends \App\Processor
                 $mail->tpls['register'],
                 $data
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->container->logger->error('Could not fetch email template: ' . $e->getMessage());
 
             return false;

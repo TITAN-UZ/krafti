@@ -2,10 +2,15 @@
 
 namespace App\Controllers;
 
+use App\Container;
+use App\Processor;
+use Slim\Http\Request;
+use Slim\Http\Response;
+
 class Api
 {
 
-    /** @var \App\Container */
+    /** @var Container */
     protected $container;
 
 
@@ -16,11 +21,11 @@ class Api
 
 
     /**
-     * @param \Slim\Http\Request $request
-     * @param \Slim\Http\Response $response
+     * @param Request $request
+     * @param Response $response
      * @param array $args
      *
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function process($request, $response, $args = [])
     {
@@ -29,11 +34,11 @@ class Api
         }, $args['name']);
         $class = '\App\Processors\\' . implode('\\', array_map('ucfirst', explode('/', $name)));
         if (!class_exists($class)) {
-            return (new \App\Processor($this->container))->failure('Запрошен неизвестный метод "' . $args['name'] . '"');
+            return (new Processor($this->container))->failure('Запрошен неизвестный метод "' . $args['name'] . '"');
         }
 
         $this->container->loadUser();
-        /** @var \App\Processor $processor */
+        /** @var Processor $processor */
         $processor = new $class($this->container);
 
         return $processor->process();

@@ -9,6 +9,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Constraint;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Throwable;
 
 class Image
 {
@@ -107,7 +108,7 @@ class Image
                         $image->interlace()->encode(str_replace('image/', '', $file->type), 90);
                     });
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 if ($e->getCode() === 0 && getenv('ENV') === 'dev') {
                     return $response->withStatus(302)->withRedirect('https://krafti.ru/image/' . implode('/', $args));
                 }

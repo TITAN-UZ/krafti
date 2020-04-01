@@ -3,8 +3,9 @@
 namespace App\Processors\Web;
 
 use App\Model\Subscriber;
+use App\Processor;
 
-class Subscribe extends \App\Processor
+class Subscribe extends Processor
 {
 
     public function put()

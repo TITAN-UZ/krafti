@@ -4,16 +4,18 @@ namespace App\Processors\Admin;
 
 use App\Model\File;
 use App\Model\Lesson;
+use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
+use Slim\Http\Response;
 
-class Lessons extends \App\ObjectProcessor
+class Lessons extends ObjectProcessor
 {
 
     protected $class = '\App\Model\Lesson';
     protected $scope = 'lessons';
 
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function post()
     {

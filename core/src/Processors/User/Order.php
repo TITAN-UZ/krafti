@@ -2,15 +2,17 @@
 
 namespace App\Processors\User;
 
+use App\GetProcessor;
 use Illuminate\Database\Eloquent\Builder;
+use Slim\Http\Response;
 
-class Order extends \App\GetProcessor
+class Order extends GetProcessor
 {
     protected $class = 'App\Model\Order';
 
 
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function post()
     {

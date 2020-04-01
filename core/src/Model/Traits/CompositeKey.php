@@ -2,6 +2,7 @@
 
 namespace App\Model\Traits;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -28,7 +29,7 @@ trait CompositeKey
      * @param Builder $query
      *
      * @return Builder
-     * @throws \Exception
+     * @throws Exception
      */
     protected function setKeysForSaveQuery(Builder $query)
     {
@@ -36,7 +37,7 @@ trait CompositeKey
             if (isset($this->$key)) {
                 $query->where($key, '=', $this->$key);
             } else {
-                throw new \Exception(__METHOD__ . 'Missing part of the primary key: ' . $key);
+                throw new Exception(__METHOD__ . 'Missing part of the primary key: ' . $key);
             }
         }
 

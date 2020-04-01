@@ -14,9 +14,7 @@
                 <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="" />
               </div>
             </a>
-            <div v-if="item.comment" class="mt-2 text-center">
-              <strong>Отзыв от Krafti:</strong><br />{{ item.comment }}
-            </div>
+            <div v-if="item.comment" class="mt-2 text-center"><strong>Отзыв от Krafti:</strong><br />{{ item.comment }}</div>
           </div>
           <!--<div class="col-lg-3 col-md-4 col-6 m-width-80"><a class="work__item consideration" href="">
             <div class="work__item&#45;&#45;img"><img class="conside__img img-responsive" src="~assets/images/content/consideration-2.jpg" alt="">
@@ -30,9 +28,7 @@
         <h2 class="worksList--title">Выполненные уроки</h2>
         <div class="row item__wrap worksList align-items-center flex-wrap">
           <div v-for="item in lessonworks" :key="item.id" class="col-lg-3 col-md-4 col-6 m-width-80">
-            <div class="mt-2 text-center text-muted">
-              {{ item.course.title }} / {{ item.lesson.title }} {{ item.comment }}
-            </div>
+            <div class="mt-2 text-center text-muted">{{ item.course.title }} / {{ item.lesson.title }} {{ item.comment }}</div>
             <a :href="item.file" target="_blank" rel="noreferrer" class="work__item">
               <div class="work__item">
                 <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="" />

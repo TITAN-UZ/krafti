@@ -11,9 +11,13 @@ import FormPromo from '../../../../components/forms/promo'
 
 export default {
   components: {FormPromo},
-  async asyncData({app, params}) {
-    const {data: record} = await app.$axios.get('admin/promos', {params})
-    return {record}
+  async asyncData({app, params, error}) {
+    try {
+      const {data: record} = await app.$axios.get('admin/promos', {params})
+      return {record}
+    } catch (e) {
+      error({statusCode: e.statusCode, message: e.data})
+    }
   },
   validate({params}) {
     return /^\d+$/.test(params.id)

@@ -2,10 +2,11 @@
 
 namespace App\Processors\Web;
 
+use App\GetProcessor;
 use App\Model\User;
 use Illuminate\Database\Eloquent\Builder;
 
-class Authors extends \App\GetProcessor
+class Authors extends GetProcessor
 {
 
     protected $class = '\App\Model\User';

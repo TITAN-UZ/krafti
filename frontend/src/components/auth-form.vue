@@ -66,11 +66,7 @@
           <b-input v-model="register.password" type="password" placeholder="Пароль" trim required />
         </b-form-group>
 
-        <b-form-group
-          v-show="false"
-          class="mb-2"
-          description="Вы получите скидку на первую покупку, а ваш друг - крафтики"
-        >
+        <b-form-group v-show="false" class="mb-2" description="Вы получите скидку на первую покупку, а ваш друг - крафтики">
           <b-input v-model="register.promo" placeholder="Реферальный код вашего друга" trim />
         </b-form-group>
 
@@ -79,9 +75,7 @@
         </b-form-group>
 
         <b-form-group>
-          <b-form-checkbox v-model="register.agree" class="mt-3">
-            Я соглашаюсь на обработку <a href="/info/privacy" target="_blank" rel="noreferrer">персональных данных</a>
-          </b-form-checkbox>
+          <b-form-checkbox v-model="register.agree" class="mt-3"> Я соглашаюсь на обработку <a href="/info/privacy" target="_blank" rel="noreferrer">персональных данных</a> </b-form-checkbox>
         </b-form-group>
 
         <div v-if="error.register != ''" class="alert alert-danger">
@@ -276,11 +270,7 @@ export default {
       if (localStorage.promo !== undefined) {
         oauth2 += '?promo=' + localStorage.promo
       }
-      const win = window.open(
-        oauth2,
-        'AuthPopup',
-        'width=700,height=450,modal=yes,alwaysRaised=yes,left=' + x + ',top=' + y,
-      )
+      const win = window.open(oauth2, 'AuthPopup', 'width=700,height=450,modal=yes,alwaysRaised=yes,left=' + x + ',top=' + y)
 
       const timer = this.setInterval(() => {
         try {

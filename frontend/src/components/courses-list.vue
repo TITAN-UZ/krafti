@@ -1,10 +1,7 @@
 <template>
   <div class="row">
     <div v-for="course in courses" :key="course.id" :class="'mb-3 course ' + (courses.length == 1 ? 'big' : 'small')">
-      <nuxt-link
-        :to="{name: 'courses-cid', params: {cid: course.id}}"
-        :style="{'background-image': course.cover ? 'url(' + course.cover + ')' : false}"
-      >
+      <nuxt-link :to="{name: 'courses-cid', params: {cid: course.id}}" :style="{'background-image': course.cover ? 'url(' + course.cover + ')' : false}">
         <div class="d-flex flex-column justify-content-between h-100">
           <div class="mt-3">
             <div class="title">
@@ -15,17 +12,11 @@
           <div class="d-flex justify-content-between align-items-center">
             <div class="price">
               <!--<span v-if="!course.lessons_count">Готовится к публикации</span>-->
-              <span v-if="course.lessons_count && !course.bought"
-                >от {{ course.price['3'] | price(course.discount) | number }} р.</span
-              >
+              <span v-if="course.lessons_count && !course.bought">от {{ course.price['3'] | price(course.discount) | number }} р.</span>
               <span v-else-if="course.paid_till">Оплачен до {{ course.paid_till | date }}</span>
             </div>
             <b-spinner v-if="loading == course.id" small type="grow" />
-            <fa
-              v-else-if="$auth.user && !$auth.user.favorites.includes(course.id)"
-              :icon="['fal', 'heart']"
-              @click.prevent="addFavorite(course.id)"
-            />
+            <fa v-else-if="$auth.user && !$auth.user.favorites.includes(course.id)" :icon="['fal', 'heart']" @click.prevent="addFavorite(course.id)" />
             <fa v-else-if="$auth.user" :icon="['fas', 'heart']" @click.prevent="deleteFavorite(course.id)" />
           </div>
         </div>

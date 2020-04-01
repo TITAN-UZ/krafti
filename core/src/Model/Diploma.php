@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -11,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $course_id
  * @property int $child_id
  * @property int $file_id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property-read User $user
  * @property-read Course $course
@@ -62,7 +64,7 @@ class Diploma extends Model
 
     /**
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete()
     {

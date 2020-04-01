@@ -3,8 +3,10 @@
 namespace App\Processors\Security;
 
 use App\Model\User;
+use App\Processor;
+use Exception;
 
-class Reset extends \App\Processor
+class Reset extends Processor
 {
 
     const time = 5 * 60; // 5 minutes
@@ -57,7 +59,7 @@ class Reset extends \App\Processor
                 $mail->tpls['reset'],
                 $data
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->container->logger->error('Could not fetch email template: ' . $e->getMessage());
 
             return false;

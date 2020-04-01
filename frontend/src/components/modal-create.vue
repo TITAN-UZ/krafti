@@ -1,14 +1,5 @@
 <template>
-  <b-modal
-    ref="modal"
-    :title="title"
-    :size="size"
-    hide-footer
-    :no-close-on-esc="escNoClose"
-    visible
-    static
-    @hidden="onHidden"
-  >
+  <b-modal ref="modal" :title="title" :size="size" hide-footer :no-close-on-esc="escNoClose" visible static @hidden="onHidden">
     <template v-if="Object.keys($slots).includes('tabs')">
       <b-tabs v-model="tab" content-class="mt-2">
         <b-tab :title="tabTitle">

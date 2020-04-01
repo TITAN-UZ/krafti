@@ -75,9 +75,7 @@ export default {
       },
     },
     placeholder() {
-      return this.label && Object.keys(this.label).length
-        ? this.$image(this.label, '400x400', 'resize')
-        : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+      return this.label && Object.keys(this.label).length ? this.$image(this.label, '400x400', 'resize') : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
     },
   },
   methods: {

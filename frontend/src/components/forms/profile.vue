@@ -1,43 +1,38 @@
 <template>
   <div>
-    <b-form-group class="mb-3" label="Имя / Фамилия" label-for="form-fullname">
+    <b-form-group class="mb-3" label="Имя / Фамилия">
       <b-input v-model="record.fullname" trim required />
     </b-form-group>
 
-    <b-form-group class="mb-3" label="Дата рождения" label-for="form-dob">
+    <b-form-group class="mb-3" label="Дата рождения">
       <input-date v-model="record.dob" :required="true" :hide-buttons="true" />
     </b-form-group>
 
-    <b-form-group class="mb-3" label="Адрес электронной почты" label-for="form-email">
+    <b-form-group class="mb-3" label="Адрес электронной почты">
       <b-input v-model="record.email" type="email" trim required autocomplete="new-password" />
     </b-form-group>
 
-    <b-form-group class="mb-3" label="Пароль" label-for="form-password">
+    <b-form-group class="mb-3" label="Пароль">
       <b-input v-model="record.password" type="password" trim autocomplete="new-password" />
     </b-form-group>
 
-    <b-form-group class="mb-3" label="Номер телефона" label-for="form-phone">
+    <b-form-group class="mb-3" label="Номер телефона">
       <input-phone v-model="record.phone" />
     </b-form-group>
 
-    <b-form-group class="mb-3" label="Аккаунт Instagram" label-for="form-instagram">
+    <b-form-group class="mb-3" label="Аккаунт Instagram">
       <b-input v-model="record.instagram" trim placeholder="@" />
     </b-form-group>
 
-    <!--<b-form-group class="mb-3" label="Компания" label-for="form-company">
+    <!--<b-form-group class="mb-3" label="Компания">
       <b-input v-model="record.company" trim/>
     </b-form-group>
 
-    <b-form-group class="mb-3" label="О себе" label-for="form-company">
+    <b-form-group class="mb-3" label="О себе">
       <b-textarea v-model="record.description" rows="5" trim no-resize/>
     </b-form-group>-->
 
-    <b-form-group
-      class="mb-3"
-      label="Ваш реферальный код"
-      label-for="form-promo"
-      description="Если ваш друг использует этот код при регистрации, он получит скидку на первую покупку, а вы - крафтики!"
-    >
+    <b-form-group class="mb-3" label="Ваш реферальный код" description="Если ваш друг использует этот код при регистрации, он получит скидку на первую покупку, а вы - крафтики!">
       <b-input-group>
         <b-form-input :value="record.promo" readonly style="background: transparent" />
         <b-input-group-append>
@@ -55,14 +50,7 @@
       </small>
 
       <div v-if="record.children.length" class="row mt-3 mb-3 justify-content-center">
-        <b-badge
-          v-for="(childItem, idx) in record.children"
-          :key="idx"
-          pill
-          variant="primary"
-          class="ml-3 mb-2 child-badge"
-          @click="deleteChild(idx)"
-        >
+        <b-badge v-for="(childItem, idx) in record.children" :key="idx" pill variant="primary" class="ml-3 mb-2 child-badge" @click="deleteChild(idx)">
           <fa v-if="childItem.gender > 0" :icon="['fad', 'female']" class="mr-2" />
           <fa v-else :icon="['fad', 'male']" class="mr-2" />
           {{ childItem.name }}, {{ childItem.dob | years }}
@@ -86,12 +74,8 @@
         </b-form-group>
 
         <div class="d-flex justify-content-between">
-          <b-button variant="default" class="d-flex align-items-center" type="submit">
-            <fa :icon="['fad', 'check-circle']" class="mr-2" /> Ок
-          </b-button>
-          <b-button variant="default" class="d-flex align-items-center" @click="closeChildForm">
-            Отмена <fa :icon="['fad', 'times-circle']" class="ml-2" />
-          </b-button>
+          <b-button variant="default" class="d-flex align-items-center" type="submit"> <fa :icon="['fad', 'check-circle']" class="mr-2" /> Ок </b-button>
+          <b-button variant="default" class="d-flex align-items-center" @click="closeChildForm"> Отмена <fa :icon="['fad', 'times-circle']" class="ml-2" /> </b-button>
         </div>
       </form>
 

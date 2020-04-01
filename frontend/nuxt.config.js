@@ -50,7 +50,7 @@ export default {
     '~/plugins/axios.js',
     '~/plugins/fontawesome.js',
     '~/plugins/filters.js',
-    '~/plugins/vimeo.js',
+    '~/plugins/components.js',
     '~/plugins/metrika.js',
     {src: '~/plugins/mixins.js', mode: 'client'},
     {src: '~/plugins/alertify.js', mode: 'client'},
@@ -59,17 +59,7 @@ export default {
     {src: '~/plugins/modals.js', mode: 'client'},
     {src: '~/plugins/filepond.js', mode: 'client'},
   ],
-  modules: [
-    'bootstrap-vue/nuxt',
-    'nuxt-izitoast',
-    '@nuxtjs/axios',
-    '@nuxtjs/auth',
-    '@nuxtjs/pwa',
-    '@nuxtjs/moment',
-    '@nuxtjs/markdownit',
-    '@nuxtjs/dotenv',
-    '@nuxtjs/sitemap',
-  ],
+  modules: ['bootstrap-vue/nuxt', 'nuxt-izitoast', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/pwa', '@nuxtjs/moment', '@nuxtjs/markdownit', '@nuxtjs/dotenv', '@nuxtjs/sitemap'],
   bootstrapVue: {
     css: false,
     bvCSS: false,
@@ -82,15 +72,7 @@ export default {
   dotenv: {
     path: '../core/',
     filename: '.' + (process.env.USER === 's4000' ? 'prod' : 'dev') + '.env',
-    only: [
-      'SITE_URL',
-      'COINS_PROMO',
-      'COINS_BUY_BONUS',
-      'COINS_SUBSCRIBE',
-      'COINS_HOMEWORK',
-      'COINS_PALETTE',
-      'CHILDREN_MAX',
-    ],
+    only: ['SITE_URL', 'COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE', 'CHILDREN_MAX'],
   },
   markdownit: {
     html: true,
@@ -147,9 +129,7 @@ export default {
     extend(config) {
       // here I tell webpack not to include jpgs and pngs
       // as base64 as an inline image
-      config.module.rules.find(
-        (rule) => rule.use && rule.use[0].loader === 'url-loader',
-      ).exclude = /background\/.*?\.(jpe?g|png)$/i
+      config.module.rules.find((rule) => rule.use && rule.use[0].loader === 'url-loader').exclude = /background\/.*?\.(jpe?g|png)$/i
 
       // now i configure the responsive-loader
       config.module.rules.push({
@@ -192,8 +172,5 @@ export default {
     gzip: false,
     exclude: ['/admin', '/admin/**', '/office', '/office/**', '/profile', '/profile/**', '/service', '/service/**'],
   },
-  server:
-    process.env.NODE_ENV === 'production'
-      ? {socket: '../tmp/nuxt.socket', timing: {total: true}}
-      : {host: 'localhost', port: 3876},
+  server: process.env.NODE_ENV === 'production' ? {socket: '../tmp/nuxt.socket', timing: {total: true}} : {host: 'localhost', port: 3876},
 }

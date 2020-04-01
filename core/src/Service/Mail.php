@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Container;
+use Pelago\Emogrifier;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -36,7 +37,7 @@ class Mail
 
         $mail = new PHPMailer(true);
         try {
-            $emogrifier = new \Pelago\Emogrifier($body);
+            $emogrifier = new Emogrifier($body);
             $body = $emogrifier->emogrify();
 
             $mail->CharSet = 'UTF-8';

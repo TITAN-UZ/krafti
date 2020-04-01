@@ -2,19 +2,22 @@
 
 namespace App\Service;
 
+use App\Container;
+use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Schema\Builder;
 use Phinx\Migration\AbstractMigration;
 
 class Migration extends AbstractMigration
 {
-    /** @var \Illuminate\Database\Capsule\Manager $capsule */
+    /** @var Manager $capsule */
     public $capsule;
-    /** @var \Illuminate\Database\Schema\Builder $capsule */
+    /** @var Builder $capsule */
     public $schema;
 
 
     public function init()
     {
-        $container = new \App\Container();
+        $container = new Container();
         $this->capsule = $container->capsule;
         $this->schema = $container->capsule->schema();
     }

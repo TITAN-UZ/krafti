@@ -23,9 +23,7 @@
         <div class="text-nowrap">{{ row.value | number }} руб.</div>
       </template>
       <template v-slot:cell(date)="row">
-        <template v-if="row.item.date_start && row.item.date_end">
-          {{ row.item.date_start | date }} ~ {{ row.item.date_end | date }}
-        </template>
+        <template v-if="row.item.date_start && row.item.date_end"> {{ row.item.date_start | date }} ~ {{ row.item.date_end | date }} </template>
         <template v-else-if="row.item.date_start"> c {{ row.item.date_start | date }} </template>
         <template v-else-if="row.item.date_end"> по {{ row.item.date_end | date }} </template>
         <template v-else>∞</template>

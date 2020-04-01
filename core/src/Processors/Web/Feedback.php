@@ -2,7 +2,10 @@
 
 namespace App\Processors\Web;
 
-class Feedback extends \App\Processor {
+use App\Processor;
+use App\Service\Mail;
+
+class Feedback extends Processor {
 
     public function post() {
         if (!$name = trim($this->getProperty('name'))) {
@@ -23,7 +26,7 @@ class Feedback extends \App\Processor {
             return $this->failure('Вы забыли написать сообщение');
         }
 
-        $mail = new \App\Service\Mail($this->container);
+        $mail = new Mail($this->container);
         $body = $this->container->view->fetch($mail->tpls['feedback'], [
             'name' => $name,
             'email' => $email,

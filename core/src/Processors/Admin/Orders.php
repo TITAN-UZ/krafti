@@ -5,10 +5,11 @@ namespace App\Processors\Admin;
 use App\Model\Course;
 use App\Model\Order;
 use App\Model\User;
+use App\ObjectProcessor;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
-class Orders extends \App\ObjectProcessor
+class Orders extends ObjectProcessor
 {
 
     protected $class = '\App\Model\Order';

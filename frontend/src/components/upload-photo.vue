@@ -21,12 +21,7 @@
       style-button-process-item-position="center bottom"
       style-button-remove-item-position="center bottom"
     />
-    <img
-      class="avatar"
-      alt=""
-      :style="{width: size + 'px', height: size + 'px'}"
-      :src="photo || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='"
-    />
+    <img class="avatar" alt="" :style="{width: size + 'px', height: size + 'px'}" :src="photo || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='" />
   </div>
 </template>
 

@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -26,8 +28,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $lessons_count
  * @property int $videos_count
  * @property bool $active
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property-read File $cover
  * @property-read Video $video
@@ -113,7 +115,7 @@ class Course extends Model
 
     /**
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete()
     {
@@ -218,8 +220,6 @@ class Course extends Model
 
     /**
      * @param bool $save
-     *
-     * @return int
      */
     public function updateLessonsCount($save = true)
     {
@@ -242,16 +242,6 @@ class Course extends Model
                 $this->save();
             }
         }
-
-        /*$count = $this->lessons()->where(['active' => true])->count();
-        if ($this->lessons_count != $count) {
-            $this->lessons_count = $count;
-            if ($save) {
-                $this->save();
-            }
-        }*/
-
-        return $count;
     }
 
 }

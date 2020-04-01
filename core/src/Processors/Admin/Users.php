@@ -5,9 +5,11 @@ namespace App\Processors\Admin;
 use App\Model\File;
 use App\Model\Traits\UserValidate;
 use App\Model\User;
+use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
+use Slim\Http\Response;
 
-class Users extends \App\ObjectProcessor
+class Users extends ObjectProcessor
 {
     use UserValidate;
     protected $class = '\App\Model\User';
@@ -15,111 +17,7 @@ class Users extends \App\ObjectProcessor
 
 
     /**
-     * @return \Slim\Http\Response
-     */
-    public function post()
-    {
-        if (!$user_id = (int)$this->getProperty('user_id')) {
-            return $this->failure('Вы должны указать id пользователя');
-        }
-
-        /** @var User $user */
-        if (!$user = User::query()->find($user_id)) {
-            return $this->failure('Не могу загрузить указанного пользователя');
-        }
-
-        if (!$file = $user->photo) {
-            $file = new File();
-        }
-        if ($id = $file->uploadFile($_FILES['file'], json_decode($_POST['metadata'], true))) {
-            $user->photo_id = $id;
-            $user->save();
-        } else {
-            return $this->failure('Не могу загрузить файл');
-        }
-        $user = User::query()->find($user->id);
-
-        return $this->success([
-            'photo' => $user->photo->getUrl(),
-        ]);
-    }
-
-
-    /**
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    protected function beforeCount($c)
-    {
-        if ($query = $this->getProperty('query', '')) {
-            $c->where(function (Builder $c) use ($query) {
-                $c->where('email', 'LIKE', "%$query%");
-                $c->orWhere('fullname', 'LIKE', "%$query%");
-                $c->orWhere('instagram', 'LIKE', "%$query%");
-            });
-        }
-
-        $c->where('id', '>', 1);
-        if ($role_id = $this->getProperty('role_id')) {
-            if (is_array($role_id)) {
-                $c->whereIn('role_id', $role_id);
-            } else {
-                $c->where(['role_id' => $role_id]);
-            }
-        }
-
-        $active = $this->getProperty('active');
-        if ($active !== null) {
-            $c->where('active', '=', (bool)$active);
-        }
-
-        $confirmed = $this->getProperty('confirmed');
-        if ($confirmed !== null) {
-            $c->where('confirmed', '=', (bool)$confirmed);
-        }
-
-
-        return $c;
-    }
-
-
-    /*
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    public function afterCount($c)
-    {
-        $c->withCount('referrals');
-
-        if ($this->getProperty('sort') == 'referrals_count') {
-            $c->orderByRaw($this->container->db->raw('referrals_count ' . $this->getProperty('dir')));
-        }
-
-        return $c;
-    }
-
-
-    /**
-     * @param User $object
-     *
-     * @return array|void
-     */
-    public function prepareRow($object)
-    {
-        $array = $object->toArray();
-
-        $array['photo'] = $object->photo
-            ? $object->photo->getUrl()
-            : null;
-
-        return $array;
-    }
-
-
-    /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function patch()
     {
@@ -138,29 +36,104 @@ class Users extends \App\ObjectProcessor
      */
     protected function beforeSave($record)
     {
-        if (!$this->getProperty('role_id')) {
-            $record->role_id = 3;
+        $validate = $this->validate($record);
+        if ($validate !== true) {
+            return $validate;
         }
 
-        return $this->validate($record);
+        if ($record->id == $this->container->user->id && !$record->active) {
+            return 'Вы не можете отключить свой аккаунт';
+        }
+
+        if ($photo = $this->getProperty('new_photo', $this->getProperty('photo'))) {
+            if (is_array($photo) && !empty($photo['file'])) {
+                if (!$file = $record->photo) {
+                    $file = new File();
+                }
+
+                if ($id = $file->uploadBase64($photo['file'], $photo['metadata'])) {
+                    $record->photo_id = $id;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Builder $c
+     *
+     * @return Builder
+     */
+    protected function beforeCount($c)
+    {
+        if ($query = trim($this->getProperty('query'))) {
+            $c->where(function (Builder $c) use ($query) {
+                $c->where('email', 'LIKE', "%$query%");
+                $c->orWhere('fullname', 'LIKE', "%$query%");
+                $c->orWhere('instagram', 'LIKE', "%$query%");
+            });
+        }
+
+        if ($role_id = $this->getProperty('role_id')) {
+            if (is_array($role_id)) {
+                $c->whereIn('role_id', $role_id);
+            } else {
+                $c->where('role_id', $role_id);
+            }
+        }
+
+        $active = $this->getProperty('active');
+        if ($active !== null) {
+            $c->where('active', '=', (bool)$active);
+        }
+
+        $confirmed = $this->getProperty('confirmed');
+        if ($confirmed !== null) {
+            $c->where('confirmed', '=', (bool)$confirmed);
+        }
+
+        if ($this->getProperty('combo')) {
+            $c->select('id', 'fullname', 'photo_id');
+        }
+
+        return $c;
+    }
+
+
+    /*
+     * @param Builder $c
+     *
+     * @return Builder
+     */
+    public function afterCount($c)
+    {
+        $c->with('photo:id,updated_at');
+        if (!$this->getProperty('combo')) {
+            $c->withCount('referrals');
+            $c->withCount(['orders as orders_count' => function (Builder $c) {
+                $c->where('status', 2);
+                $c->where('service', '!=', 'internal');
+            }]);
+            $c->with('role:id,title');
+        }
+
+        return $c;
     }
 
 
     /**
-     * @return bool|\Slim\Http\Response
+     * @param User $record
+     * @return bool|string
      */
-    public function delete()
+    protected function beforeDelete($record)
     {
-        if (!$id = $this->getProperty($this->primaryKey)) {
-            return $this->failure('Не указан id записи');
+        if ($record->orders()->where('status', 2)->where('service', '!=', 'internal')->count()) {
+            return 'Нельзя удалять пользователя с оплаченными заказами';
         }
-
-        /** @var User $record */
-        if (!$record = User::query()->find($id)) {
-            return $this->failure('Не могу найти запись');
+        if ($record->id == $this->container->user->id) {
+            return 'Вы не можете удалить себя';
         }
-        $record->active = false;
-        $record->save();
 
         return true;
     }

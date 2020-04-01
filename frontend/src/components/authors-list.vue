@@ -3,11 +3,7 @@
     <div v-for="item in authors" :key="item.id" :class="itemClass">
       <div class="teacher__item d-flex flex-column justify-content-center align-items-center">
         <nuxt-link class="teacher__info--photo teacher__item--photo " :to="{name: 'team-id', params: {id: item.id}}">
-          <img
-            class="teacher-photo rounded-circle"
-            :src="typeof item.photo === 'string' ? item.photo : $image(item.photo, '300x300', 'fit')"
-            alt=""
-          />
+          <img class="teacher-photo rounded-circle" :src="typeof item.photo === 'string' ? item.photo : $image(item.photo, '300x300', 'fit')" alt="" />
           <!--<span class="label__shape"></span>-->
         </nuxt-link>
         <h2 class="teacher__item--name text-center">{{ item.fullname }}</h2>

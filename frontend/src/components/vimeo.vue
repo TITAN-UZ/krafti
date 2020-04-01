@@ -3,23 +3,9 @@
     <div @click="isOpen = true">
       <slot name="button"></slot>
     </div>
-    <b-modal
-      ref="modalWindow"
-      dialog-class="modal-vimeo"
-      :size="size"
-      :visible="isOpen"
-      hide-footer
-      @shown="onShown"
-      @hidden="onHidden"
-    >
+    <b-modal ref="modalWindow" dialog-class="modal-vimeo" :size="size" :visible="isOpen" hide-footer @shown="onShown" @hidden="onHidden">
       <div class="embed-responsive embed-responsive-16by9">
-        <iframe
-          id="vimeo-iframe"
-          class="embed-responsive-item"
-          :src="'https://player.vimeo.com/video/' + video"
-          allowfullscreen
-          allow="autoplay; fullscreen"
-        ></iframe>
+        <iframe id="vimeo-iframe" class="embed-responsive-item" :src="'https://player.vimeo.com/video/' + video" allowfullscreen allow="autoplay; fullscreen"></iframe>
       </div>
       <template slot="modal-header">
         <button class="close" type="button" aria-label="Close" @click="hide">

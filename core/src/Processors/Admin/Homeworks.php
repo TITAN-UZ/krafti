@@ -2,27 +2,39 @@
 
 namespace App\Processors\Admin;
 
-use App\Model\Homework;
+use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
+use Slim\Http\Response;
 
-class Homeworks extends \App\ObjectProcessor
+class Homeworks extends ObjectProcessor
 {
 
     protected $class = '\App\Model\Homework';
     protected $scope = 'homeworks';
 
 
+    /**
+     * @return Response
+     */
     public function put()
     {
         return $this->failure('Домашние работы создают пользователи');
     }
 
 
-    public function delete()
+    /**
+     * @param Builder $c
+     * @return Builder|mixed
+     */
+    protected function beforeGet($c)
     {
-        return $this->failure('Домашние работы нельзя удалять');
-    }
+        $c->with('file:id,updated_at');
+        $c->with('user:id,fullname');
+        $c->with('course:id,title');
+        $c->with('lesson:id,title');
 
+        return $c;
+    }
 
     /**
      * @param Builder $c
@@ -31,7 +43,7 @@ class Homeworks extends \App\ObjectProcessor
      */
     protected function beforeCount($c)
     {
-        if ($query = trim($this->getProperty('query', ''))) {
+        if ($query = trim($this->getProperty('query'))) {
             $c->where(function (Builder $c) use ($query) {
                 $c->whereHas('lesson', function (Builder $c) use ($query) {
                     $c->where('title', 'LIKE', "%$query%");
@@ -43,7 +55,7 @@ class Homeworks extends \App\ObjectProcessor
             });
         }
         if ($course_id = $this->getProperty('course_id')) {
-            $c->where(['course_id' => $course_id]);
+            $c->where('course_id', $course_id);
         }
         if ($work_type = $this->getProperty('work_type')) {
             switch ($work_type) {
@@ -56,29 +68,32 @@ class Homeworks extends \App\ObjectProcessor
             }
         }
         if ($date = $this->getProperty('date')) {
-            $c->whereBetween('created_at', $date);
+            $c->whereBetween('created_at', [$date[0] . ' 00:00:00', $date[1] . ' 23:59:59']);
         }
-
-        $c->with('user:id,fullname,photo_id');
-        $c->with('course:id,title');
-        $c->with('lesson:id,title');
 
         return $c;
     }
 
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function afterCount($c)
+    {
+        $c->with('user:id,fullname,photo_id', 'user.photo:id,updated_at');
+        $c->with('file:id,updated_at');
+        $c->with('course:id,title');
+        $c->with('lesson:id,title');
+        $c->orderBy('created_at', 'desc');
+
+        return $c;
+    }
 
     /**
-     * @param Homework $object
-     *
-     * @return array
+     * @return Response
      */
-    public function prepareRow($object)
+    public function delete()
     {
-        $array = $object->toArray();
-        $array['created_at'] = $object->created_at->toIso8601String();
-        $array['file'] = $object->file->getUrl();
-        unset($array['updated_at']);
-
-        return $array;
+        return $this->failure('Домашние работы нельзя удалять');
     }
 }

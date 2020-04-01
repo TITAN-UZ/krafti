@@ -2,21 +2,14 @@
   <div class="container__940">
     <div class="row messages__wrap">
       <div class="col-lg-7 col-12">
-        <div
-          v-for="message in messages"
-          :key="message.id"
-          :class="{media: true, message__item: true, cursor: message.type == 'reply'}"
-          @click="onClick(message)"
-        >
+        <div v-for="message in messages" :key="message.id" :class="{media: true, message__item: true, cursor: message.type == 'reply'}" @click="onClick(message)">
           <div class="wrap mr-2">
             <img v-if="!message.sender" class="message__item--photo rounded-circle" :src="logo" alt="" />
             <img v-else class="message__item--photo rounded-circle" :src="message.sender.photo" alt="" />
           </div>
           <div class="media-body">
             <div class="media-body-top d-flex align-items-center justify-content-between">
-              <h4 v-if="!message.sender" class="message__item--title mt-0">
-                Администрация Krafti <span class="label__shape"></span>
-              </h4>
+              <h4 v-if="!message.sender" class="message__item--title mt-0">Администрация Krafti <span class="label__shape"></span></h4>
               <h4 v-else class="message__item--title mt-0">{{ message.sender.fullname }}</h4>
               <span class="days_ago">{{ message.created_at | dateago }}</span>
             </div>

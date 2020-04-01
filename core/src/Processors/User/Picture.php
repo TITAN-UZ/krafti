@@ -4,8 +4,9 @@ namespace App\Processors\User;
 
 use App\Model\File;
 use App\Model\User;
+use App\Processor;
 
-class Picture extends \App\Processor
+class Picture extends Processor
 {
 
     protected $scope = 'profile';

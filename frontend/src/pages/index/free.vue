@@ -37,11 +37,7 @@
             <div class="s-title">Что понадобится</div>
             <div class="needed__list">
               <div v-if="record.products.length" class="needed__list--wrapper d-flex justify-content-between flex-wrap">
-                <div
-                  v-for="product in record.products"
-                  :key="product.id"
-                  class="needed__item d-flex justify-content-between align-items-center"
-                >
+                <div v-for="product in record.products" :key="product.id" class="needed__item d-flex justify-content-between align-items-center">
                   <div class="needed__item--title">{{ product }}</div>
                 </div>
               </div>
@@ -62,12 +58,7 @@
                 <div class="s-title">Преподаватель</div>
               </div>
             </div>
-            <authors-list
-              :authors="[record.author]"
-              :show-desc="false"
-              row-class="d-flex justify-content-center"
-              item-class="col-9"
-            />
+            <authors-list :authors="[record.author]" :show-desc="false" row-class="d-flex justify-content-center" item-class="col-9" />
           </div>
         </section>
 

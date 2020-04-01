@@ -5,14 +5,17 @@ namespace App\Processors\Security;
 use App\Model\File;
 use App\Model\User;
 use App\Model\UserOauth;
+use App\Processor;
 use Hybridauth\Adapter\OAuth2 as Provider;
 use Hybridauth\User\Profile;
 use Intervention\Image\ImageManager;
+use Slim\Http\Response;
+use Throwable;
 
-class Oauth2 extends \App\Processor
+class Oauth2 extends Processor
 {
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function get()
     {
@@ -138,7 +141,7 @@ class Oauth2 extends \App\Processor
             return $this->success([
                 'token' => $this->container->makeToken($user->id),
             ]);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $message = $e->getMessage();
             if (stripos($message, 'denied')) {
                 $message = 'Вы отказались давать доступ к своему профилю';
@@ -152,7 +155,7 @@ class Oauth2 extends \App\Processor
 
 
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function delete()
     {
@@ -169,7 +172,7 @@ class Oauth2 extends \App\Processor
         if ($oauth = $this->container->user->oauths()->where(['provider' => $provider])->first()) {
             try {
                 $oauth->delete();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 return $this->failure($e->getMessage());
             }
         }

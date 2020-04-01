@@ -18,9 +18,7 @@
 
     <b-form-group label="Выберите период и стоимость:">
       <b-form-select v-model="record.period" :disabled="!Object.keys(price).length">
-        <option v-for="(cost, period) in price" :key="period" :value="period">
-          {{ cost | number }} руб. за {{ period }} {{ period | noun('месяц|месяца|месяцев') }}
-        </option>
+        <option v-for="(cost, period) in price" :key="period" :value="period"> {{ cost | number }} руб. за {{ period }} {{ period | noun('месяц|месяца|месяцев') }} </option>
       </b-form-select>
     </b-form-group>
 

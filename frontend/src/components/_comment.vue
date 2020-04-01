@@ -12,13 +12,7 @@
       >
         <div class="wrap mr-2">
           <img v-if="comment.user.photo" class="message__item--photo rounded-circle" :src="comment.user.photo" />
-          <fa
-            v-else
-            :icon="['fad', 'user-circle']"
-            size="3x"
-            style="--fa-primary-color: #fff"
-            class="message__item--photo"
-          />
+          <fa v-else :icon="['fad', 'user-circle']" size="3x" style="--fa-primary-color: #fff" class="message__item--photo" />
         </div>
         <div class="media-body">
           <div class="media-body-top d-flex align-items-center justify-content-between">
@@ -31,35 +25,13 @@
         </div>
       </div>
       <div class="d-flex align-items-center">
-        <a v-if="parent != comment.id && comment.deleted !== true" class="btn__answer" @click="onReply(comment.id)"
-          >Ответить</a
-        >
+        <a v-if="parent != comment.id && comment.deleted !== true" class="btn__answer" @click="onReply(comment.id)">Ответить</a>
         <span v-if="parent != comment.id && $auth.user.scope.includes('comments')" class="ml-auto comment-admin">
-          <fa
-            v-if="comment.deleted === false && comment.review === false"
-            :icon="['fal', 'star']"
-            class="text-success"
-            @click="onReview(comment)"
-          />
-          <fa
-            v-if="comment.deleted === false && comment.review === true"
-            :icon="['fad', 'star']"
-            class="text-success"
-            @click="unReview(comment)"
-          />
+          <fa v-if="comment.deleted === false && comment.review === false" :icon="['fal', 'star']" class="text-success" @click="onReview(comment)" />
+          <fa v-if="comment.deleted === false && comment.review === true" :icon="['fad', 'star']" class="text-success" @click="unReview(comment)" />
           &nbsp;
-          <fa
-            v-if="comment.deleted === false"
-            :icon="['fad', 'times']"
-            class="text-danger"
-            @click="onDelete(comment)"
-          />
-          <fa
-            v-if="comment.deleted === true"
-            :icon="['fad', 'redo']"
-            class="text-success"
-            @click="onRestore(comment)"
-          />
+          <fa v-if="comment.deleted === false" :icon="['fad', 'times']" class="text-danger" @click="onDelete(comment)" />
+          <fa v-if="comment.deleted === true" :icon="['fad', 'redo']" class="text-success" @click="onRestore(comment)" />
         </span>
       </div>
     </div>
@@ -69,12 +41,7 @@
           <img v-if="$auth.user.photo" class="message__item--photo rounded-circle" :src="$auth.user.photo" />
         </div>
         <div class="w-100 d-flex align-items-center justify-content-between comment-form">
-          <b-textarea
-            v-model="text"
-            class="message__item--info"
-            placeholder="Оставьте комментарий"
-            autofocus
-          ></b-textarea>
+          <b-textarea v-model="text" class="message__item--info" placeholder="Оставьте комментарий" autofocus></b-textarea>
           <div class="comment-buttons">
             <fa :icon="['fad', 'times-circle']" class="cancel" @click="onCancel" />
             <fa :icon="['fad', 'paper-plane']" class="send" @click="onSubmit" />
@@ -101,14 +68,7 @@
 
 <script>
 import {faStar} from '@fortawesome/pro-light-svg-icons'
-import {
-  faPaperPlane,
-  faTimesCircle,
-  faRedo,
-  faTimes,
-  faStar as faReview,
-  faUserCircle,
-} from '@fortawesome/pro-duotone-svg-icons'
+import {faPaperPlane, faTimesCircle, faRedo, faTimes, faStar as faReview, faUserCircle} from '@fortawesome/pro-duotone-svg-icons'
 
 export default {
   name: 'Comment',

@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Container;
 use App\Model\Log;
 use Monolog\Handler\AbstractProcessingHandler;
 

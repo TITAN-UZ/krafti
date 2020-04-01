@@ -174,9 +174,7 @@ export default {
       if (!value || value.includes('0000-00-00')) {
         return null
       }
-      return toInternal
-        ? this.$moment(value, this.externalFormat).format(this.internalFormat)
-        : this.$moment(value, this.internalFormat).format(this.externalFormat)
+      return toInternal ? this.$moment(value, this.externalFormat).format(this.internalFormat) : this.$moment(value, this.internalFormat).format(this.externalFormat)
     },
   },
 }

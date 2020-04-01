@@ -4,9 +4,12 @@ namespace App\Processors\Admin;
 
 use App\Model\File;
 use App\Model\GalleryItem;
+use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
+use Slim\Http\Response;
+use Throwable;
 
-class Gallery extends \App\ObjectProcessor
+class Gallery extends ObjectProcessor
 {
 
     protected $class = '\App\Model\GalleryItem';
@@ -16,7 +19,7 @@ class Gallery extends \App\ObjectProcessor
     /**
      * Upload file
      *
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function post()
     {
@@ -54,7 +57,7 @@ class Gallery extends \App\ObjectProcessor
                 $record = GalleryItem::query()->find($id);
 
                 return $this->success($this->prepareRow($record));
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 return $this->failure($e->getMessage());
             }
         }

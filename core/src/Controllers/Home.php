@@ -2,9 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Container;
+use Slim\Http\Response;
+
 class Home
 {
-    /** @var \App\Container */
+    /** @var Container */
     protected $container;
 
 
@@ -17,7 +20,7 @@ class Home
     /**
      * @param array $args
      *
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function process($args = [])
     {

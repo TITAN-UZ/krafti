@@ -47,6 +47,11 @@ export default {
     min-height: 300px;
     overflow-x: auto;
   }
+  .b-table {
+    .svg-inline--fa {
+      width: 16px;
+    }
+  }
 
   .form-control,
   .custom-select,

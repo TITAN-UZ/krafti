@@ -3,10 +3,11 @@
 
 namespace App\Processors\User;
 
+use App\GetProcessor;
 use App\Model\Message;
 use Illuminate\Database\Eloquent\Builder;
 
-class Messages extends \App\GetProcessor
+class Messages extends GetProcessor
 {
     protected $class = 'App\Model\Message';
 

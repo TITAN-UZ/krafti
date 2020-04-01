@@ -4,14 +4,7 @@
       <!--eslint-disable-next-line vue/no-template-shadow-->
       <template v-slot="{tags, disabled, size, removeTag, inputAttrs}">
         <ul class="list-unstyled mt-n1 mb-0 d-flex flex-wrap align-items-center" @click="$refs.input.focus()">
-          <b-form-tag
-            v-for="tag in tags"
-            :key="tag"
-            :variant="variantSelected"
-            tag="li"
-            class="mt-1 mr-1"
-            @remove="removeTag(tag)"
-          >
+          <b-form-tag v-for="tag in tags" :key="tag" :variant="variantSelected" tag="li" class="mt-1 mr-1" @remove="removeTag(tag)">
             {{ renderTag(tag) }}
           </b-form-tag>
           <li aria-live="off" class="d-inline-flex flex-grow-1 mt-1">
@@ -33,15 +26,7 @@
       </template>
     </b-form-tags>
     <div class="mt-1 d-flex flex-wrap">
-      <b-button
-        v-for="tag in options"
-        :key="tag.id"
-        size="sm"
-        class="mt-1 mr-1"
-        :variant="variantSuggest"
-        tabindex="-1"
-        @click.prevent="addTag(tag[valueField])"
-      >
+      <b-button v-for="tag in options" :key="tag.id" size="sm" class="mt-1 mr-1" :variant="variantSuggest" tabindex="-1" @click.prevent="addTag(tag[valueField])">
         {{ tag[textField] }}
       </b-button>
     </div>
@@ -123,11 +108,7 @@ export default {
     },
     options() {
       return this.tags.filter((item) => {
-        return (
-          !this.value.includes(item[this.valueField]) &&
-          this.entered.length &&
-          item[this.textField].toLowerCase().includes(this.entered.toLowerCase())
-        )
+        return !this.value.includes(item[this.valueField]) && this.entered.length && item[this.textField].toLowerCase().includes(this.entered.toLowerCase())
       })
     },
   },

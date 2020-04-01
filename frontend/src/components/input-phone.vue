@@ -1,24 +1,6 @@
 <template>
-  <b-form-textarea
-    v-if="multiple"
-    v-model="myValue"
-    v-bind="$attrs"
-    rows="2"
-    max-rows="10"
-    inputmode="numeric"
-    @keydown="onKeyDown"
-    @keyup="onChange"
-    @change="onChange"
-  />
-  <b-form-input
-    v-else
-    v-model="myValue"
-    v-bind="$attrs"
-    inputmode="numeric"
-    @keydown="onKeyDown"
-    @keyup="onChange"
-    @change="onChange"
-  />
+  <b-form-textarea v-if="multiple" v-model="myValue" v-bind="$attrs" rows="2" max-rows="10" inputmode="numeric" @keydown="onKeyDown" @keyup="onChange" @change="onChange" />
+  <b-form-input v-else v-model="myValue" v-bind="$attrs" inputmode="numeric" @keydown="onKeyDown" @keyup="onChange" @change="onChange" />
 </template>
 
 <script>
@@ -45,12 +27,7 @@ export default {
         keys.push('Enter')
       }
 
-      const allow =
-        keys.includes(e.key) ||
-        e.altKey ||
-        e.ctrlKey ||
-        e.metaKey ||
-        (/\d+/.test(e.key) && (this.multiple || !this.myValue || this.myValue.length < 10))
+      const allow = keys.includes(e.key) || e.altKey || e.ctrlKey || e.metaKey || (/\d+/.test(e.key) && (this.multiple || !this.myValue || this.myValue.length < 10))
       if (!allow) {
         e.preventDefault()
       }
