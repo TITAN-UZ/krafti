@@ -3,8 +3,8 @@
     <div class="gallery-lightbox-items">
       <div class="swiper-container">
         <div class="swiper-wrapper">
-          <a v-for="item in items" :key="item.id" :href="[$settings.image_url, item.id, '0x1000'].join('/')" class="swiper-slide">
-            <img :src="[$settings.image_url, item.id, '200x0'].join('/')" />
+          <a v-for="item in items" :key="item.id" :href="$image(item, '1000x1000', 'fit')" class="swiper-slide">
+            <img :src="$image(item, '200x200', 'fit')" />
           </a>
         </div>
       </div>

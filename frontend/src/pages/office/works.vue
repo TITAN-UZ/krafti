@@ -11,7 +11,7 @@
             <div class="mt-2 text-center text-muted">{{ item.course.title }}, этап {{ item.section }}</div>
             <a :href="item.file" target="_blank" rel="noreferrer" class="work__item">
               <div class="work__item">
-                <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="" />
+                <img class="img-responsive" :src="$image({id: item.file_id}, '300x300', 'fit')" alt="" />
               </div>
             </a>
             <div v-if="item.comment" class="mt-2 text-center"><strong>Отзыв от Krafti:</strong><br />{{ item.comment }}</div>
@@ -31,7 +31,7 @@
             <div class="mt-2 text-center text-muted">{{ item.course.title }} / {{ item.lesson.title }} {{ item.comment }}</div>
             <a :href="item.file" target="_blank" rel="noreferrer" class="work__item">
               <div class="work__item">
-                <img class="img-responsive" :src="[$settings.image_url, item.file_id, '300x300'].join('/')" alt="" />
+                <img class="img-responsive" :src="$image({id: item.file_id}, '300x300', 'fit')" alt="" />
               </div>
             </a>
             <div v-if="item.comment" class="mt-2 text-center"><strong>Отзыв от Krafti:</strong> {{ item.comment }}</div>

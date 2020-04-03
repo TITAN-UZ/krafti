@@ -21,7 +21,8 @@
       style-button-process-item-position="center bottom"
       style-button-remove-item-position="center bottom"
     />
-    <img class="avatar" alt="" :style="{width: size + 'px', height: size + 'px'}" :src="photo || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='" />
+    <img class="avatar" :style="`width: ${size}px; height: ${size}px`" :src="myValue || placeholder" />
+    <!--<img class="avatar" alt="" :style="{width: size + 'px', height: size + 'px'}" :src="photo || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='" />-->
   </div>
 </template>
 
@@ -48,10 +49,10 @@ export default {
       default: null,
     },
     value: {
-      type: String,
+      type: Object,
       required: false,
       default() {
-        return this.$auth.user.photo
+        return {}
       },
     },
   },
@@ -61,13 +62,18 @@ export default {
     }
   },
   computed: {
-    photo: {
+    myValue: {
       get() {
-        return !this.userId ? this.$auth.user.photo : this.value
+        return Object.keys(this.value).length ? this.value : null
       },
       set(newValue) {
         this.$emit('input', newValue)
       },
+    },
+    placeholder() {
+      return this.$auth.user && this.$auth.user.photo
+        ? this.$image(this.$auth.user.photo, `${this.size}x${this.size}`, 'resize')
+        : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
     },
   },
   methods: {

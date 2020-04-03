@@ -94,6 +94,18 @@
             </div>
           </div>
         </section>
+        <section class="lesson__content--bottom container__940 mt-5">
+          <div class="container">
+            <client-only>
+              <comments-list :course-id="record.course_id" :lesson-id="record.id" :url="urlComments" :read-only="true" />
+            </client-only>
+          </div>
+        </section>
+
+        <div class="alert alert-info mt-4 ml-4 mr-4 mb-0 d-flex align-items-center">
+          Этот урок является лишь частью курса, который вы можете
+          <nuxt-link :to="{name: 'courses-cid', params: {cid: record.course.id}}" class="btn btn-info ml-2">приобрести прямо сейчас</nuxt-link>
+        </div>
       </div>
     </div>
     <template slot="modal-header">
@@ -108,14 +120,15 @@
 import {faTimes} from '@fortawesome/pro-light-svg-icons'
 import {faThumbsUp, faThumbsDown, faEye} from '@fortawesome/pro-duotone-svg-icons'
 import AuthorsList from '../../components/authors-list'
+import CommentsList from '../../components/comments/list'
 
 export default {
-  components: {AuthorsList},
+  components: {CommentsList, AuthorsList},
   async asyncData({app, params, error}) {
     try {
       const id = params.id || -1
       const courseId = params.course_id || null
-      const {data: record} = await app.$axios.get('web/free-lessons', {params: {id, course_id: courseId}})
+      const {data: record} = await app.$axios.get('web/free/lessons', {params: {id, course_id: courseId}})
       return {record}
     } catch (e) {
       error({statusCode: e.statusCode, message: e.data})
@@ -123,6 +136,7 @@ export default {
   },
   data() {
     return {
+      urlComments: 'web/free/comments',
       record: {},
     }
   },

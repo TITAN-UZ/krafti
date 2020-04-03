@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper__bg-shadow" :style="{'background-image': 'url(' + ($auth.user.background || bg) + ')'}">
+  <div class="wrapper__bg-shadow" :style="`background-image: url('${placeholder}')`">
     <file-pond
       ref="filepond"
       accepted-file-types="image/jpeg, image/png"
@@ -34,14 +34,30 @@ export default {
   name: 'UploadBg',
   data() {
     return {
-      bg,
       faCameraAlt: icon(faCameraAlt, {transform: {size: 36}}).html[0],
+      size: 500,
     }
+  },
+  computed: {
+    myValue: {
+      get() {
+        return Object.keys(this.value).length ? this.value : null
+      },
+      set(newValue) {
+        this.$emit('input', newValue)
+      },
+    },
+    placeholder() {
+      return this.$auth.user && this.$auth.user.background
+        ? this.$image(this.$auth.user.background, `${this.size * 2}x${this.size}`, 'fit')
+        : bg
+    },
   },
   mounted() {
     this.setTimeout(() => {
-      document.getElementsByClassName('upload-bg')[0].style.height = '500px'
+      document.getElementsByClassName('upload-bg')[0].style.height = `${this.size}px`
     }, 10)
+    console.log(this.placeholder)
   },
   methods: {
     handleUpload(fieldName, file, metadata, load, error, progress, abort) {

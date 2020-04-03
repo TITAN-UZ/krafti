@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import smartTruncate from 'smart-truncate'
 import {noun, verb} from 'plural-ru'
 
 export default ({app}, inject) => {
@@ -44,6 +45,10 @@ export default ({app}, inject) => {
     const tmp = forms.split('|')
 
     return verb(num, tmp[0], tmp[1], tmp[2])
+  })
+
+  Vue.filter('truncate', (value, chars = 30, options = {}) => {
+    return smartTruncate(value.replace(/<.*?>/g, ''), chars, options)
   })
 
   Vue.filter('date', (value, format = 'DD.MM.YYYY') => {

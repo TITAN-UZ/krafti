@@ -9,7 +9,7 @@
       </template>
 
       <template v-slot:cell(fullname)="row">
-        <user-avatar :user="row.item" :truncate="150" :add="row.item.role.title" />
+        <user-avatar :user="row.item" :truncate="150" :add="row.item.role.title" :show-name="true" />
       </template>
       <template v-slot:cell(email)="row">
         <div v-if="row.value">{{ row.value.toLowerCase() }}</div>

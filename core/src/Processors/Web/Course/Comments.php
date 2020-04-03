@@ -7,6 +7,7 @@ use App\Model\Course;
 use App\Model\User;
 use App\ObjectProcessor;
 use Illuminate\Database\Eloquent\Builder;
+use Slim\Http\Response;
 
 class Comments extends ObjectProcessor
 {
@@ -37,69 +38,9 @@ class Comments extends ObjectProcessor
         return parent::checkScope();
     }
 
-
     /**
-     * @param Builder $c
-     *
-     * @return Builder
+     * @return Response
      */
-    protected function beforeGet($c)
-    {
-        $c->where(['lesson_id' => (int)$this->getProperty('lesson_id')]);
-        if ($this->container->user->role_id > 2) {
-            $c->where(['deleted' => false]);
-        }
-
-        return $c;
-    }
-
-
-    /**
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    protected function beforeCount($c)
-    {
-        $c->with('user');
-        $c->where(['lesson_id' => (int)$this->getProperty('lesson_id')]);
-        if ($this->container->user->role_id > 2) {
-            $c->where(['deleted' => false]);
-        }
-
-        return $c;
-    }
-
-
-    /**
-     * @param Comment $object
-     *
-     * @return array
-     */
-    public function prepareRow($object)
-    {
-        $array = [
-            'id' => $object->id,
-            'parent_id' => $object->parent_id,
-            'text' => $object->text,
-            'created_at' => $object->created_at->toIso8601String(),
-            'user' => [
-                'id' => $object->user_id,
-                'fullname' => $object->user->fullname,
-                'photo' => $object->user->photo
-                    ? $object->user->photo->getUrl()
-                    : null,
-            ],
-        ];
-        if ($this->container->user->role_id < 3) {
-            $array['deleted'] = $object->deleted;
-            $array['review'] = $object->review;
-        }
-
-        return $array;
-    }
-
-
     public function put()
     {
         $this->setProperty('user_id', $this->container->user->id);
@@ -130,7 +71,9 @@ class Comments extends ObjectProcessor
         return $put;
     }
 
-
+    /**
+     * @return Response
+     */
     public function patch()
     {
         if ($this->container->user->role_id > 2) {
@@ -141,6 +84,50 @@ class Comments extends ObjectProcessor
     }
 
 
+    /**
+     * @param Builder $c
+     *
+     * @return Builder
+     */
+    protected function beforeGet($c)
+    {
+        return $this->beforeCount($c);
+    }
+
+
+    /**
+     * @param Builder $c
+     *
+     * @return Builder
+     */
+    protected function beforeCount($c)
+    {
+        $c->where('lesson_id', (int)$this->getProperty('lesson_id'));
+        if (!$this->container->user->hasScope('comments')) {
+            $c->where('deleted', false);
+        }
+
+        return $c;
+    }
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function afterCount($c)
+    {
+        $c->select('id', 'parent_id', 'text', 'created_at', 'user_id');
+        if ($this->container->user->hasScope('comments')) {
+            $c->addSelect('deleted', 'review');
+        }
+        $c->with('user:id,fullname,photo_id', 'user.photo:id,updated_at');
+
+        return $c;
+    }
+
+    /**
+     * @return Response
+     */
     public function delete()
     {
         return $this->failure('Указан несуществующий метод процессора', 404);

@@ -123,7 +123,7 @@
                     <b-link v-if="reviews.total > 3" :to="{name: 'reviews'}" class="link__more">См. все</b-link>
                   </div>
                 </div>
-                <reviews-list :reviews="reviews.rows" row-class="row mob_container item__wrap d-flex" />
+                <user-reviews :reviews="reviews.rows" row-class="row mob_container item__wrap d-flex" item-class="col-12 col-lg-4 m-width-80" :max-length="50" />
               </div>
             </div>
           </div>
@@ -166,7 +166,7 @@
 import {faPaperPlane, faCircle} from '@fortawesome/pro-duotone-svg-icons'
 import {faPlay} from '@fortawesome/pro-solid-svg-icons'
 import CoursesList from '../components/courses-list'
-import ReviewsList from '../components/reviews-list'
+import UserReviews from '../components/user/reviews'
 // import Swiper from 'swiper'
 import HeaderBg from '../components/header-bg'
 
@@ -176,12 +176,12 @@ import slide3 from '../assets/images/slider/slider-3.jpg'
 
 export default {
   auth: false,
-  components: {CoursesList, ReviewsList, HeaderBg},
+  components: {CoursesList, UserReviews, HeaderBg},
   async asyncData({app, env}) {
     const [{data: courses}, {data: reviews}, {data: free}] = await Promise.all([
       app.$axios.get('web/courses', {params: {limit: 2}}),
       app.$axios.get('web/reviews', {params: {limit: 3}}),
-      app.$axios.get('web/free-lessons', {params: {limit: 2}}),
+      app.$axios.get('web/free/lessons', {params: {limit: 2}}),
     ])
 
     return {

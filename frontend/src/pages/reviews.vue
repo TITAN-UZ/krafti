@@ -11,7 +11,7 @@
                   <h2 class="section__title">Отзывы</h2>
                 </div>
                 <div class="container__940">
-                  <reviews-list :reviews="reviews" />
+                  <user-reviews :reviews="reviews" />
                 </div>
               </section>
             </div>
@@ -24,11 +24,11 @@
 
 <script>
 import HeaderBg from '../components/header-bg'
-import ReviewsList from '../components/reviews-list'
+import UserReviews from '../components/user/reviews'
 
 export default {
   auth: false,
-  components: {HeaderBg, ReviewsList},
+  components: {HeaderBg, UserReviews},
   async asyncData({app}) {
     const reviews = await app.$axios.get('web/reviews', {params: {limit: 100}})
 

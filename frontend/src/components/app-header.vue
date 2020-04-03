@@ -6,8 +6,7 @@
         <div class="menu-header">
           <div v-if="$auth.loggedIn" class="login">
             <b-link :to="$settings.links.profile" @click="hideMenu()">
-              <img v-if="user && user.photo" :src="user.photo" class="avatar" />
-              <fa v-else :icon="['fad', 'user-circle']" class="avatar" />
+              <user-avatar :user="user" :size="50" class="mr-2" />
             </b-link>
             <div>
               <div class="title">{{ user.fullname }}</div>
@@ -16,7 +15,7 @@
           </div>
           <div v-else-if="$route.name != 'login'" class="login">
             <a class="login-link title" aria-label="Login" @click.prevent="showModal()">
-              <fa :icon="['fad', 'user-circle']" class="avatar" />
+              <user-avatar :user="{}" :size="50" class="mr-2" />
               Вход
             </a>
           </div>
@@ -65,8 +64,7 @@
               <a class="logout-link text-right" @click.prevent="onLogout">Выход</a>
             </div>
             <b-link :to="{name: user && user.unread > 0 ? 'office-messages' : 'profile-update'}">
-              <img v-if="user && user.photo" :src="user.photo" class="avatar" />
-              <fa v-else :icon="['fad', 'user-circle']" class="avatar" />
+              <user-avatar :user="user" :size="50" class="ml-2" />
               <span v-if="user.unread > 0" class="label">{{ user.unread }}</span>
             </b-link>
           </div>
@@ -74,7 +72,7 @@
             <div v-if="$route.name != 'login'">
               <a class="login-link" aria-label="Login" @click.prevent="showModal()">
                 <span class="title">Вход</span>
-                <fa :icon="['fad', 'user-circle']" class="avatar" />
+                <user-avatar :user="{}" :size="50" class="ml-2" />
               </a>
             </div>
           </div>

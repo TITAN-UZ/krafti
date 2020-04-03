@@ -145,7 +145,7 @@
                       </div>
                     </b-tab>
                     <b-tab v-if="reviews.length" title="Отзывы">
-                      <reviews-list :reviews="reviews" row-class="row reviews__wrap" />
+                      <user-reviews :reviews="reviews" row-class="row reviews__wrap" />
                       <!--<div class="row reviews__wrap">
                         <div class="col-lg-7 col-12 review__item&#45;&#45;list">
                           <div class="media review__item">
@@ -400,7 +400,7 @@ import {faFacebook, faPinterest, faVk, faTwitter} from '@fortawesome/free-brands
 import {faUser, faThumbsUp, faEye, faShare, faCircle} from '@fortawesome/pro-duotone-svg-icons'
 import SocialSharing from 'vue-social-sharing'
 import CoursesList from '../../../components/courses-list'
-import ReviewsList from '../../../components/reviews-list'
+import UserReviews from '../../../components/user/reviews'
 import HeaderBg from '../../../components/header-bg'
 import GalleryLightbox from '../../../components/gallery-lightbox'
 import AuthorsList from '../../../components/authors-list'
@@ -409,7 +409,7 @@ import bg from '../../../assets/images/general/headline_course.png'
 
 export default {
   auth: false,
-  components: {AuthorsList, CoursesList, ReviewsList, HeaderBg, GalleryLightbox, 'social-sharing': SocialSharing},
+  components: {AuthorsList, CoursesList, UserReviews, HeaderBg, GalleryLightbox, 'social-sharing': SocialSharing},
   async asyncData({app, params, error, env}) {
     const data = {
       palette_bonus: env.COINS_PALETTE,
@@ -425,7 +425,7 @@ export default {
     const [similar, authors, reviews, lessons, homeworks] = await Promise.all([
       app.$axios.get('web/course/similar', {params: {course_id: params.cid, limit: 4}}),
       app.$axios.get('web/course/authors', {params: {course_id: params.cid, limit: 10}}),
-      app.$axios.get('web/course/reviews', {params: {course_id: params.cid, limit: 10}}),
+      app.$axios.get('web/course/reviews', {params: {course_id: params.cid, limit: 100}}),
       data.record.bought ? app.$axios.get('web/course/lessons', {params: {course_id: params.cid}}) : null,
       data.record.bought ? app.$axios.get('user/homeworks', {params: {course_id: params.cid}}) : null,
     ])

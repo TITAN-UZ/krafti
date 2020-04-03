@@ -19,10 +19,9 @@ class Reviews extends GetProcessor
      */
     public function beforeGet($c)
     {
-        $c->where(['review' => true, 'deleted' => false]);
-        $c->with('user');
+        $c = $this->beforeCount($c);
 
-        return $c;
+        return $this->afterCount($c);
     }
 
 
@@ -35,36 +34,23 @@ class Reviews extends GetProcessor
     {
         $c->groupBy('user_id');
         $c->where(['review' => true, 'deleted' => false]);
-        $c->with('user:id,fullname,company,photo_id');
+
+        return $c;
+    }
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function afterCount($c)
+    {
+        $c->select('id', 'text', 'user_id');
+        $c->with('user:id,fullname,company,photo_id', 'user.photo:id,updated_at');
         if ($this->getProperty('limit') < 20) {
             $c->orderByRaw('RAND()');
         }
 
         return $c;
-    }
-
-
-    /**
-     * @param Comment $object
-     *
-     * @return array
-     */
-    public function prepareRow($object)
-    {
-        $array = [
-            'id' => $object->id,
-            'text' => $object->text,
-            'user' => [
-                'id' => $object->user->id,
-                'fullname' => $object->user->fullname,
-                'company' => $object->user->company,
-                'photo' => $object->user->photo
-                    ? $object->user->photo->getUrl()
-                    : null,
-            ],
-        ];
-
-        return $array;
     }
 
 }

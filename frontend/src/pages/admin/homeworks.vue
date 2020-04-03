@@ -2,7 +2,7 @@
   <div>
     <app-table ref="table" :url="url" :fields="fields" :filters="filters">
       <template v-slot:cell(user)="row">
-        <user-avatar :user="row.value" :truncate="150" />
+        <user-avatar :user="row.value" :truncate="150" :show-name="true" />
       </template>
       <template v-slot:cell(created_at)="row">
         <small>{{ row.value | datetime }}</small>

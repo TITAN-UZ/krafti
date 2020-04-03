@@ -42,9 +42,7 @@ export default ({app, store}, inject) => {
     }
 
     let url = params.join('/')
-    if (data.updated_at) {
-      url += '?t=' + new Date(data.updated_at).getTime()
-    }
+    url += '?t=' + (data.updated_at ? new Date(data.updated_at) : new Date()).getTime()
 
     return url
   })

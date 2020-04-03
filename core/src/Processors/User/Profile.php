@@ -41,19 +41,23 @@ class Profile extends Processor
             'phone' => '+' . $user->phone,
             'scope' => $user->role->scope,
             'photo' => $user->photo
-                ? $user->photo->getUrl()
+                ? [
+                    'id' => $user->photo->id,
+                    'updated_at' => $user->photo->updated_at,
+                ]
                 : null,
             'background' => $user->background
-                ? $user->background->getUrl()
+                ? [
+                    'id' => $user->background->id,
+                    'updated_at' => $user->background->updated_at,
+                ]
                 : null,
             'promo' => $user->promo,
             'favorites' => $favorites,
             'oauth2' => $oauth2,
             'children' => $user->children()->get(['id', 'name', 'dob', 'gender'])->toArray(),
+            'unread' => $user->messages()->where('read', false)->count(),
         ];
-
-        $data['unread'] = $user->messages()->where(['read' => false])->count();
-
         $this->container->user->logged_at = date('Y-m-d H:i:m');
         $this->container->user->save();
 

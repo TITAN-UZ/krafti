@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Processors\Web;
+namespace App\Processors\Web\Free;
 
 use App\GetProcessor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Slim\Http\Response;
 
-class FreeLessons extends GetProcessor
+class Lessons extends GetProcessor
 {
     protected $class = 'App\Model\Lesson';
 
@@ -23,6 +23,7 @@ class FreeLessons extends GetProcessor
             $c = $class->query();
 
             $c->where(['active' => true, 'free' => true]);
+            $c->with('course:id,title,price');
             $c->with('video:id,title,remote_key');
             $c->with('bonus:id,title,remote_key');
             $c->with('author:id,fullname,photo_id', 'author.photo:id,updated_at');

@@ -39,7 +39,7 @@
                   странице сайта!
                 </div>
 
-                <upload-homework :lesson-id="record.id" :course-id="course.id" :section="0" :image-id="record.homework.file_id" :size="150" />
+                <upload-homework :lesson-id="record.id" :course-id="course.id" :section="0" :image-id="record.homework.file_id" :size="300" />
                 <!--<div class="lesson__info&#45;&#45;share">
                   <button class="button">Поделиться работой</button>
                 </div>-->
@@ -132,7 +132,7 @@
             <div class="row">
               <div :class="{'col-12': true, 'col-lg-7': record.next.length > 0}">
                 <client-only>
-                  <comments :course-id="course.id" :lesson-id="record.id" />
+                  <comments-list :course-id="course.id" :lesson-id="record.id" />
                 </client-only>
               </div>
               <div v-if="record.next.length" class="col-lg-5 col-12">
@@ -173,7 +173,7 @@
 import {faTimes} from '@fortawesome/pro-light-svg-icons'
 import {faThumbsUp, faThumbsDown} from '@fortawesome/pro-duotone-svg-icons'
 import Player from '@vimeo/player'
-import Comments from '../../../../../components/comments'
+import CommentsList from '../../../../../components/comments/list'
 import AuthorsList from '../../../../../components/authors-list'
 
 export default {
@@ -181,7 +181,7 @@ export default {
   validate({params}) {
     return /^\d+$/.test(params.cid) && /^\d+$/.test(params.lid)
   },
-  components: {AuthorsList, Comments},
+  components: {AuthorsList, CommentsList},
   async asyncData({app, params, error}) {
     try {
       const [record, course] = await Promise.all([app.$axios.get('web/course/lessons', {params: {course_id: params.cid, id: params.lid}}), app.$axios.get('web/courses', {params: {id: params.cid}})])

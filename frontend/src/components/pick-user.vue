@@ -1,7 +1,7 @@
 <template>
   <input-complete v-model="myValue" :url="url" field-title="fullname">
     <template slot-scope="{suggestion}">
-      <user-avatar :user="suggestion.item" :size="40" />
+      <user-avatar :user="suggestion.item" :size="40" :show-name="true" />
     </template>
   </input-complete>
 </template>
