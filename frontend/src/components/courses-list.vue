@@ -12,12 +12,12 @@
           <div class="d-flex justify-content-between align-items-center">
             <div class="price">
               <!--<span v-if="!course.lessons_count">Готовится к публикации</span>-->
-              <span v-if="course.lessons_count && !course.bought">от {{ course.price['3'] | price(course.discount) | number }} р.</span>
+              <span v-if="course.lessons_count && !course.bought">от {{ course.price[[Object.keys(course.price)[0]]] | price(course.discount) | number }} р.</span>
               <span v-else-if="course.paid_till">Оплачен до {{ course.paid_till | date }}</span>
             </div>
             <b-spinner v-if="loading == course.id" small type="grow" />
-            <fa v-else-if="$auth.user && !$auth.user.favorites.includes(course.id)" :icon="['fal', 'heart']" @click.prevent="addFavorite(course.id)" />
-            <fa v-else-if="$auth.user" :icon="['fas', 'heart']" @click.prevent="deleteFavorite(course.id)" />
+            <fa v-else-if="$auth.loggedIn && !$auth.user.favorites.includes(course.id)" :icon="['fal', 'heart']" @click.prevent="addFavorite(course.id)" />
+            <fa v-else-if="$auth.loggedIn" :icon="['fas', 'heart']" @click.prevent="deleteFavorite(course.id)" />
           </div>
         </div>
       </nuxt-link>

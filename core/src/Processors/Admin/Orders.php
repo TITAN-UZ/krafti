@@ -137,7 +137,7 @@ class Orders extends ObjectProcessor
      */
     public function beforeDelete($record)
     {
-        if ($record->status !== 1) {
+        if ($record->status === 2 && $record->service !== 'internal') {
             return 'Оплаченные заказы удалять нелья';
         }
 

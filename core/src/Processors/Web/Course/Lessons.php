@@ -19,7 +19,7 @@ class Lessons extends Processor
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
             return $this->failure('Не могу загрузить курс');
-        } elseif (!$course->wasBought($this->container->user->id)) {
+        } elseif (!$course->wasBought($this->container->user)) {
             return $this->failure('Вы забыли оплатить этот курс');
         }
 

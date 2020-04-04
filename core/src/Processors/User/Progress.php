@@ -20,7 +20,7 @@ class Progress extends Processor
         }
         /** @var Course $course */
         $course = $lesson->course;
-        if (!$course->wasBought($this->container->user->id)) {
+        if (!$course->wasBought($this->container->user)) {
             return $this->failure('Вы забыли оплатить этот курс');
         }
 

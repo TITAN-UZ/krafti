@@ -4,13 +4,13 @@
       <div class="period">
         <h4>Выберите вариант покупки:</h4>
         <b-button :size="payment.period == 3 ? 'lg' : ''" :variant="payment.period == 3 ? 'primary' : 'outline-secondary'" :disabled="loading" @click="payment.period = 3"
-          >Доступ на<br />3 месяца<br />за {{ record.price['3'] | price(record.discount) | number }} р
+          >Доступ на<br />3 месяца<br />за {{ record.price['3'] | price(discount) | number }} р
         </b-button>
         <b-button :size="payment.period == 6 ? 'lg' : ''" :variant="payment.period == 6 ? 'primary' : 'outline-secondary'" :disabled="loading" @click="payment.period = 6"
-          >Доступ на<br />6 месяцев<br />за {{ record.price['6'] | price(record.discount) | number }} р
+          >Доступ на<br />6 месяцев<br />за {{ record.price['6'] | price(discount) | number }} р
         </b-button>
         <b-button :size="payment.period == 12 ? 'lg' : ''" :variant="payment.period == 12 ? 'primary' : 'outline-secondary'" :disabled="loading" @click="payment.period = 12"
-          >Доступ на<br />1 год<br />за {{ record.price['12'] | price(record.discount) | number }} р
+          >Доступ на<br />1 год<br />за {{ record.price['12'] | price(discount) | number }} р
         </b-button>
       </div>
       <div class="mt-5 payment">
@@ -23,13 +23,16 @@
         </b-button>
       </div>
 
-      <div v-if="record.discount" class="alert alert-info mt-5">
-        <template v-if="record.discount_type == 'order'">
-          Вы уже покупали этот курс, и получаете скидку <strong>{{ record.discount }}</strong> на продление.
+      <div v-if="discount" class="alert alert-info mt-5">
+        <template v-if="discount.type == 'promo'">
+          Вы указали правильный промокод и получаете скидку <strong>{{ discount.discount }}</strong>
         </template>
-        <template v-else>
+        <template v-if="discount.type == 'order'">
+          Вы уже покупали этот курс, и получаете скидку <strong>{{ discount.discount }}</strong> на продление.
+        </template>
+        <template v-else-if="discount.type == 'referrer'">
           Благодаря тому, что вы зарегистрировались по реферальной ссылке, у вас есть скидка
-          <strong>{{ record.discount | number }} р.</strong> на первую покупку.
+          <strong>{{ discount.discount | number }} р.</strong> на первую покупку.
         </template>
       </div>
 
@@ -42,7 +45,7 @@
       </div>
 
       <div v-if="$auth.loggedIn" class="mt-5 d-flex justify-content-center">
-        <button class="button d-flex align-items-center" type="submit" aria-label="submit" :disabled="loading">
+        <button class="button d-flex align-items-center" type="submit" aria-label="submit" :disabled="loading || discount_code === false">
           <b-spinner v-if="loading" class="mr-2" small />
           Оплатить
         </button>
@@ -85,10 +88,12 @@ export default {
   components: {
     'auth-form': AuthForm,
   },
-  asyncData({app, params}) {
-    return app.$axios.get('web/courses', {params: {id: params.cid}}).then((res) => {
-      return {record: res.data}
-    })
+  async asyncData({app, params}) {
+    const {data: record} = await app.$axios.get('web/courses', {params: {id: params.cid}})
+    return {
+      record,
+      discount: record.discount,
+    }
   },
   data() {
     return {
@@ -100,6 +105,7 @@ export default {
         course_id: this.$route.params.cid,
         code: null,
       },
+      discount: null,
       discount_code: null,
       ppLogo,
       rbLogo,
@@ -109,16 +115,6 @@ export default {
     loggedIn() {
       return this.$auth.loggedIn
     },
-    /* checkCode() {
-                if (this.payment.code === '') {
-                    return null
-                }
-
-                this.$axios.get('user/payment', {params: {code: this.payment.code}})
-                    .then(() => {
-                        this.discount_code = true;
-                    })
-            } */
   },
   watch: {
     loggedIn(newValue) {
@@ -126,19 +122,23 @@ export default {
         this.onSubmit()
       }
     },
-    'payment.code'(val) {
+    async 'payment.code'(val) {
       if (val === '') {
         this.discount_code = null
+        this.discount = this.record.discount
       } else {
-        this.$axios.get('user/payment', {params: {code: val, course_id: this.$route.params.cid}}).then((res) => {
-          if (!res.data.success && res.data.message) {
-            this.$notify.info({message: res.data.message})
-            this.payment.code = ''
-            this.discount_code = null
+        try {
+          const {data: res} = await this.$axios.get('user/payment', {params: {code: val, course_id: this.$route.params.cid}})
+          this.discount_code = res.success === true
+          if (!res.success) {
+            this.discount = this.record.discount
+            if (res.message) {
+              this.$notify.info({message: res.message})
+            }
           } else {
-            this.discount_code = res.data.success
+            this.discount = res.discount
           }
-        })
+        } catch (e) {}
       }
     },
   },
@@ -157,22 +157,20 @@ export default {
     onHidden() {
       this.$router.push({name: 'courses-cid', params: this.$route.params})
     },
-    onSubmit() {
+    async onSubmit() {
       this.loading = true
-      this.$axios
-        .post('user/payment', this.payment)
-        .then((res) => {
-          if (res.data.redirect) {
-            document.location.replace(res.data.redirect)
-          } else {
-            this.$notify.info({message: res.data})
-          }
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.loading = false
-          this.hideModal()
-        })
+      try {
+        const {data: res} = await this.$axios.post('user/payment', this.payment)
+        this.hideModal()
+        if (res.redirect) {
+          document.location.replace(res.redirect)
+        } else {
+          this.$notify.info({message: res})
+        }
+      } catch (e) {
+      } finally {
+        this.loading = false
+      }
     },
   },
 }

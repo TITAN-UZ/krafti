@@ -1,7 +1,7 @@
 <template>
   <modal-create v-model="record" :url="url" title="Новый заказ">
     <template slot="fields">
-      <form-order :record="record" />
+      <form-order :record="record" :price.sync="price" />
     </template>
   </modal-create>
 </template>
@@ -20,6 +20,7 @@ export default {
         paid_till: null,
         status: 2,
       },
+      price: {},
     }
   },
 }

@@ -34,23 +34,21 @@ export default {
     'courses-list': CoursesList,
     'header-bg': HeaderBg,
   },
-  asyncData({app}) {
-    const data = {
-      courses: {},
-    }
-    return app.$axios('web/courses', {params: {limit: 0}}).then((res) => {
-      res.data.rows.forEach((item) => {
-        if (!data.courses[item.category]) {
-          data.courses[item.category] = []
-        }
-        data.courses[item.category].push(item)
-      })
-
-      return data
+  async asyncData({app}) {
+    const courses = {}
+    const {data: res} = await app.$axios('web/courses', {params: {limit: 0}})
+    res.rows.forEach((item) => {
+      if (!courses[item.category]) {
+        courses[item.category] = []
+      }
+      courses[item.category].push(item)
     })
+    return {courses}
   },
   data() {
-    return {}
+    return {
+      courses: {},
+    }
   },
   scrollToTop: true,
   created() {

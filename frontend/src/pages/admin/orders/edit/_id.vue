@@ -1,7 +1,7 @@
 <template>
   <modal-update v-model="record" :url="url" :title="`Заказ № ${record.id}`">
     <template slot="fields">
-      <form-order :record="record" :price="price" />
+      <form-order :record="record" :price.sync="price" />
     </template>
   </modal-update>
 </template>

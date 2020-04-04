@@ -31,7 +31,7 @@ class Comments extends ObjectProcessor
         /** @var Course $course */
         if (!$course = Course::query()->where(['active' => true])->find($course_id)) {
             return 'Не могу загрузить указанный курс';
-        } elseif (!$this->container->user || !$course->wasBought($this->container->user->id)) {
+        } elseif (!$this->container->user || !$course->wasBought($this->container->user)) {
             return 'У вас нет доступа к этому курсу';
         }
 

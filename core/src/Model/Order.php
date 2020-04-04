@@ -16,7 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $course_id
  * @property string $service
  * @property int $cost
- * @property int $discount
+ * @property string $discount
+ * @property string $discount_type
  * @property int $promo_id
  * @property int $status
  * @property int $period
@@ -33,10 +34,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Order extends Model
 {
     protected $fillable = [
-        'user_id', 'course_id', 'service', 'cost', 'discount', 'promo_id', 'status', 'period', 'paid_at', 'paid_till', 'manual',
+        'user_id',
+        'course_id',
+        'service',
+        'cost',
+        'discount',
+        'discount_type',
+        'promo_id',
+        'status',
+        'period',
+        'paid_at',
+        'paid_till',
+        'manual',
     ];
     protected $dates = [
-        'paid_at', 'paid_till',
+        'paid_at',
+        'paid_till',
     ];
     protected $casts = [
         'manual' => 'boolean',
@@ -102,10 +115,10 @@ class Order extends Model
             if ($status == 2) {
                 $this->status = 2;
                 $this->paid_at = date('Y-m-d H:i:s');
-                $this->paid_till = date('Y-m-d H:i:s', strtotime("+$this->period month"));
+                $this->paid_till = Carbon::now()->addMonths($this->period);
                 $this->save();
 
-                if ($this->discount) {
+                if ($this->discount_type === 'referrer') {
                     $user = $this->user;
                     if ($user->referrer) {
                         $user->referrer->makeTransaction(getenv('COINS_PROMO'), 'purchase', [

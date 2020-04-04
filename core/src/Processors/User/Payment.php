@@ -16,12 +16,13 @@ class Payment extends Processor
 
     public function get()
     {
-        $code = trim($this->getProperty('code'));
-        $course_id = (int)$this->getProperty('course_id');
-
         /** @var Promo $promo */
-        if ($code && $promo = Promo::query()->where(['code' => $code])->first()) {
-            $check = $promo->check($course_id);
+        $promo = Promo::query()->where('code', trim($this->getProperty('code')))->first();
+        /** @var Course $course */
+        $course = Course::query()->find((int)$this->getProperty('course_id'))->first();
+
+        if ($promo && $course) {
+            $check = $promo->check($course->id);
             if ($check !== true) {
                 return $this->success([
                     'success' => false,
@@ -29,9 +30,12 @@ class Payment extends Processor
                 ]);
             }
 
-            return $this->success([
-                'success' => true,
-            ]);
+            if ($discount = $course->getDiscount($this->container->user, $promo)) {
+                return $this->success([
+                    'success' => true,
+                    'discount' => $discount,
+                ]);
+            }
         }
 
         return $this->success([
@@ -73,8 +77,8 @@ class Payment extends Processor
             return $this->failure('Указан неизвестный способ оплаты');
         }
 
-        /** @var Order $order */
-        if ($course->wasBought($this->container->user->id)) {
+
+        if ($course->wasBought($this->container->user)) {
             return $this->success('Вы уже оплатили этот курс!');
         }
 
@@ -83,26 +87,21 @@ class Payment extends Processor
             return $this->failure('Не указана стоимость курса');
         }
         $cost = $course->price[$period];
-        $discount = 0;
-        if ($tmp = $course->getDiscount($this->container->user->id)) {
-            $discount = $tmp['discount'];
-            if ($discount && substr($discount, -1) == '%') {
-                $discount = $cost * (rtrim($discount, '%') / 100);
-            }
-        }
 
+        // Создаём новый заказ
         $key = [
             'course_id' => $course->id,
             'user_id' => $this->container->user->id,
         ];
-        if (!$order = Order::query()->where($key)->where(['status' => 1])->first()) {
+        /** @var Order $order */
+        if (!$order = Order::query()->where($key)->where('status', 1)->first()) {
             $order = new Order($key);
         } else {
             $order->discount = 0;
             $order->promo_id = null;
         }
 
-        // Check promo code
+        // Проверяем возможные скидки
         $code = $this->getProperty('code');
         /** @var Promo $promo */
         if ($code && $promo = Promo::query()->where(['code' => $code])->first()) {
@@ -110,15 +109,24 @@ class Payment extends Processor
             if ($check !== true) {
                 return $this->failure($check);
             }
-
-            $tmp = $promo->percent
-                ? $cost * ($promo->discount / 100)
-                : $promo->discount;
-            if ($tmp > $discount) {
-                $discount = $tmp;
+            if ($discount = $course->getDiscount($this->container->user, $promo)) {
                 $order->promo_id = $promo->id;
                 $promo->used += 1;
                 $promo->save();
+            }
+        } else {
+            $discount = $course->getDiscount($this->container->user);
+        }
+
+        if ($discount) {
+            $order->discount = $discount['discount'];
+            $order->discount_type = $discount['type'];
+
+            $cost -= (substr($discount['discount'], -1) == '%')
+                ? $cost * (rtrim($discount['discount'], '%') / 100)
+                : $discount['discount'];
+            if ($cost < 0) {
+                $cost = 0;
             }
         }
 
@@ -127,8 +135,7 @@ class Payment extends Processor
         $order->period = $period;
         $order->paid_at = null;
         $order->paid_till = null;
-        $order->cost = $cost - $discount;
-        $order->discount = $discount;
+        $order->cost = $cost;
         $order->save();
 
         $link = false;

@@ -33,7 +33,6 @@ if (!defined('BASE_DIR')) {
  * @property Response $response
  * @property-read Fenom $view
  * @property-read Logger logger
- * @property-read JwtAuthentication jwt
  * @property-read Manager capsule
  * @property-read DatabaseManager db
  * @property-read Mail $mail

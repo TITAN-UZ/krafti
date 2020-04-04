@@ -41,8 +41,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Course extends Model
 {
-    protected $fillable = ['title', 'tagline', 'description', 'price', 'category', 'properties', 'age',
-        'cover_id', 'video_id', 'diploma_id', 'active'];
+    protected $fillable = [
+        'title',
+        'tagline',
+        'description',
+        'price',
+        'category',
+        'properties',
+        'age',
+        'cover_id',
+        'video_id',
+        'diploma_id',
+        'active',
+    ];
     protected $casts = [
         'properties' => 'array',
         'price' => 'array',
@@ -128,20 +139,20 @@ class Course extends Model
 
 
     /**
-     * @param $user_id
+     * @param User $user
      *
      * @return bool
      */
-    public function wasBought($user_id)
+    public function wasBought($user)
     {
         /** @var User $user */
-        if ($user = User::query()->find($user_id)) {
-            if ($user->role_id < 3) {
+        if ($user) {
+            if ($user->hasScope('courses')) {
                 return true;
             }
             /** @var Order $order */
             $order = $this->orders()
-                ->where(['user_id' => $user_id, 'status' => 2])
+                ->where(['user_id' => $user->id, 'status' => 2])
                 ->orderBy('paid_till', 'desc')
                 ->first();
 
@@ -151,31 +162,98 @@ class Course extends Model
         return false;
     }
 
-
     /**
-     * @param $user_id
+     * @param User $user
+     * @param Promo $promo
      *
      * @return array|false
      */
-    public function getDiscount($user_id)
+    public function getDiscount($user, $promo = null)
     {
-        $res = false;
-        /** @var User $user */
-        if ($user = User::query()->find($user_id)) {
-            if ($this->orders()->where(['user_id' => $user_id, 'status' => 2])->where('paid_till', '<', date('Y-m-d H:i:s'))->count()) {
-                $res = [
+        $user_discount = $promo_discount = [];
+
+        // Определяем скидку для указанного юзера
+        if ($user) {
+            if ($this->orders()->where(['user_id' => $user->id, 'status' => 2])->where('paid_till', '<', date('Y-m-d H:i:s'))->count()) {
+                $user_discount = [
                     'discount' => getenv('COURSE_PROLONG_DISCOUNT'),
-                    'type' => 'order'
+                    'type' => 'order',
                 ];
-            } elseif ($user->referrer_id && !$this->orders()->where(['user_id' => $user_id, 'status' => 2])->count()) {
-                $res = [
+            } elseif ($user->referrer_id && !$this->orders()->where(['user_id' => $user->id, 'status' => 2])->count()) {
+                $user_discount = [
                     'discount' => getenv('COURSE_DISCOUNT'),
-                    'type' => 'referrer'
+                    'type' => 'referrer',
                 ];
             }
         }
 
-        return $res;
+        // Определяем скидку для указанного промо-кода
+        if ($promo) {
+            $check = $promo->check($this->id);
+            if ($check === true) {
+                $promo_discount = [
+                    'discount' => $promo->discount,
+                    'type' => 'promo',
+                ];
+                if ($promo->percent) {
+                    $promo_discount['discount'] .= '%';
+                }
+            }
+        }
+
+        $test_price = $user_price = $promo_price = $this->price[array_keys($this->price)[0]];
+        // Определяем итоговую стоимость со скидкой юзера
+        if ($user_discount) {
+            if (substr($user_discount['discount'], -1) === '%') {
+                $user_price = $test_price * (rtrim($user_discount['discount'], '%') / 100);
+            } else {
+                $user_price = $test_price - $user_discount['discount'];
+            }
+            $user_price = $test_price - $user_price;
+        }
+        // Определяем итоговую стоимость со промо-кода
+        if ($promo_discount) {
+            if (substr($promo_discount['discount'], -1) === '%') {
+                $promo_price = $test_price * (rtrim($promo_discount['discount'], '%') / 100);
+            } else {
+                $promo_price = $test_price - $promo_discount['discount'];
+            }
+            $promo_price = $test_price - $promo_price;
+        }
+
+        $discount = false;
+        // Сравниваем итоговые цены и выбираем наибольшую скидку
+        if ($user_price < $test_price) {
+            $discount = $user_discount;
+        }
+        if ($promo_price < $user_price) {
+            $discount = $promo_discount;
+        }
+
+        return $discount;
+    }
+
+    /**
+     * @param array|null $discount
+     * @return array
+     */
+    public function getPrice($discount = null)
+    {
+        $price = $this->price;
+        if ($discount) {
+            array_walk($price, function (&$v) use ($discount) {
+                if (substr($discount['discount'], -1) === '%') {
+                    $v -= $v * (rtrim($discount['discount'], '%') / 100);
+                } else {
+                    $v -= $v - $discount['discount'];
+                }
+                if ($v < 0) {
+                    $v = 0;
+                }
+            });
+        }
+
+        return $price;
     }
 
 

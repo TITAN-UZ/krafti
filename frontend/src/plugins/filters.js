@@ -18,11 +18,16 @@ export default ({app}, inject) => {
   })
 
   Vue.filter('price', (price, discount = 0) => {
+    if (typeof discount === 'object') {
+      if (discount.discount) {
+        discount = discount.discount
+      } else {
+        return price
+      }
+    }
     if (typeof discount === 'string') {
-      const x = discount.length - 1
-      if (discount[x] === '%') {
-        discount = discount.slice(0, x)
-        discount = price * (discount / 100)
+      if (discount[discount.length - 1] === '%') {
+        discount = price * (discount.slice(0, -1) / 100)
       }
     }
     if (discount > 0) {

@@ -11,7 +11,10 @@
       <template v-slot:cell(period)="row"> {{ row.value }} мес. </template>
       <template v-slot:cell(cost)="row">
         {{ row.value | number }} руб.
-        <div v-if="row.item.discount" class="small text-muted">скидка {{ row.item.discount }} руб.</div>
+        <div v-if="row.item.discount" v-b-tooltip="row.item.discount_type ? discount_types[row.item.discount_type] : null" class="small text-muted">
+          - {{ row.item.discount }}
+          <template v-if="row.item.discount.slice(-1) !== '%'">руб.</template>
+        </div>
       </template>
       <template v-slot:cell(status)="row">
         <div v-if="row.value == 1">
@@ -69,6 +72,11 @@ export default {
         service: null,
         status: null,
         course_id: null,
+      },
+      discount_types: {
+        promo: 'Промокод',
+        order: 'Повторный заказ',
+        referrer: 'Реферальный код',
       },
       sort: 'id',
       dir: 'desc',

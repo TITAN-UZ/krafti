@@ -17,8 +17,8 @@
     </b-form-group>
 
     <b-form-group label="Выберите период и стоимость:">
-      <b-form-select v-model="record.period" :disabled="!Object.keys(price).length">
-        <option v-for="(cost, period) in price" :key="period" :value="period"> {{ cost | number }} руб. за {{ period }} {{ period | noun('месяц|месяца|месяцев') }} </option>
+      <b-form-select v-model="record.period" :disabled="!Object.keys(myPrice).length">
+        <option v-for="(cost, period) in myPrice" :key="period" :value="period">{{ cost | number }} руб. за {{ period }} {{ period | noun('месяц|месяца|месяцев') }}</option>
       </b-form-select>
     </b-form-group>
 
@@ -52,10 +52,20 @@ export default {
       ],
     }
   },
+  computed: {
+    myPrice: {
+      get() {
+        return this.price
+      },
+      set(newValue) {
+        this.$emit('update:price', newValue)
+      },
+    },
+  },
   watch: {
     'record.course_id'(newValue) {
       const filtered = this.courses.filter((item) => item.id === newValue)
-      this.price = filtered[0].price
+      this.myPrice = filtered[0].price
       this.record.period = Object.keys(filtered[0].price)[0]
     },
     'record.period'(newValue) {

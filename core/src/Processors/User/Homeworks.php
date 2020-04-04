@@ -81,7 +81,7 @@ class Homeworks extends GetProcessor
             return $this->failure('Вы должны указать id курса');
         } elseif (!$course = Course::query()->find($course_id)) {
             return $this->failure('Не могу загрузить указанный курс');
-        } elseif (!$course->wasBought($this->container->user->id)) {
+        } elseif (!$course->wasBought($this->container->user)) {
             return $this->failure('Вы должны купить этот курс перед отправкой своей работы');
         }
 
