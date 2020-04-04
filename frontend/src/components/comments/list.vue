@@ -7,7 +7,6 @@
 
       <!-- Thread -->
       <comments-item v-for="comment in comments" :key="comment.id" :comment="comment" :parent-id.sync="parentId" @delete="onDelete" @restore="onRestore" @review="onReview" @unreview="unReview">
-
         <template v-slot:actions="{comment: child}">
           <div v-if="!readOnly && isUser && parentId !== child.id" class="d-flex align-items-center mt-1">
             <a v-if="child.deleted !== true" class="btn__answer" @click="onReply(child.id)">Ответить</a>
@@ -23,7 +22,7 @@
         </template>
 
         <template v-if="$auth.loggedIn" v-slot:form="{comment: child}">
-          <comments-form v-if="parentId == child.id" v-model="text" class="ml-md-5 ml-2" @onCancel="onCancel" @onSubmit="onSubmit" />
+          <comments-form v-if="parentId == child.id" v-model="text" :autofocus="true" class="ml-md-5 ml-2" @onCancel="onCancel" @onSubmit="onSubmit" />
         </template>
       </comments-item>
     </div>

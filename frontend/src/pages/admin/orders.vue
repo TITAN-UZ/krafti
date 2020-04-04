@@ -11,7 +11,7 @@
       <template v-slot:cell(period)="row"> {{ row.value }} мес. </template>
       <template v-slot:cell(cost)="row">
         {{ row.value | number }} руб.
-        <div v-if="row.item.discount" v-b-tooltip="row.item.discount_type ? discount_types[row.item.discount_type] : null" class="small text-muted">
+        <div v-if="row.item.discount && row.item.discount !== '0'" v-b-tooltip="row.item.discount_type ? discount_types[row.item.discount_type] : null" class="small text-muted">
           - {{ row.item.discount }}
           <template v-if="row.item.discount.slice(-1) !== '%'">руб.</template>
         </div>

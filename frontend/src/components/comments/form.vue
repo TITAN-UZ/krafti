@@ -5,7 +5,7 @@
         <user-avatar :user="$auth.user" :size="50" />
       </div>
       <div class="w-100 d-flex align-items-center justify-content-between comment-form">
-        <b-textarea v-model="myValue" class="message__item--info" placeholder="Оставьте комментарий" autofocus />
+        <b-textarea v-model="myValue" class="message__item--info" placeholder="Оставьте комментарий" :autofocus="autofocus" />
         <div class="comment-buttons">
           <fa v-if="showCancel" :icon="['fad', 'times-circle']" class="cancel" @click="onCancel" />
           <fa :icon="['fad', 'paper-plane']" class="send" @click="onSubmit" />
@@ -24,6 +24,10 @@ export default {
     value: {
       type: String,
       required: true,
+    },
+    autofocus: {
+      type: Boolean,
+      default: false,
     },
     showCancel: {
       type: Boolean,
