@@ -1,5 +1,7 @@
 <template>
   <div>
+    <chart-orders />
+
     <app-table ref="table" :url="url" :fields="fields" :filters="filters" :sort="sort" :dir="dir" @onLoad="onLoad">
       <template slot="actions">
         <router-link class="btn btn-secondary" :to="{name: 'admin-orders-create'}"> <fa icon="plus" /> Добавить </router-link>
@@ -51,9 +53,11 @@
 
 <script>
 import {faPlus, faTimes, faEdit} from '@fortawesome/pro-solid-svg-icons'
+import ChartOrders from '../../components/charts/orders'
 
 export default {
   name: 'AdminOrders',
+  components: {ChartOrders},
   data() {
     return {
       url: 'admin/orders',

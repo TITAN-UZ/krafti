@@ -58,6 +58,7 @@ export default {
     {src: '~/plugins/inputs.js', mode: 'client'},
     {src: '~/plugins/modals.js', mode: 'client'},
     {src: '~/plugins/filepond.js', mode: 'client'},
+    {src: '~/plugins/charts.js', mode: 'client'},
   ],
   modules: ['bootstrap-vue/nuxt', 'nuxt-izitoast', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/pwa', '@nuxtjs/moment', '@nuxtjs/markdownit', '@nuxtjs/dotenv', '@nuxtjs/sitemap'],
   bootstrapVue: {
@@ -112,7 +113,7 @@ export default {
       for (const i in routes) {
         if (Object.prototype.hasOwnProperty.call(routes, i)) {
           if (routes[i].name === 'admin') {
-            routes[i].redirect = {name: 'admin-courses'}
+            routes[i].redirect = {name: 'admin-orders'}
           } else if (routes[i].name === 'office') {
             routes[i].redirect = {name: 'office-courses'}
           }

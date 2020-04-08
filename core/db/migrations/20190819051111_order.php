@@ -22,6 +22,7 @@ class Order extends Migration
             $table->timestamps();
 
             $table->index(['course_id', 'user_id', 'status']);
+            $table->index('created_at');
 
             $table->foreign('user_id')
                 ->references('id')->on('users')

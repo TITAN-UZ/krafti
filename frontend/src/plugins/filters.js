@@ -76,6 +76,13 @@ export default ({app}, inject) => {
     return value.replace(/^(\d{3})(\d{3})(\d{4})$/g, '$1 $2 $3')
   })
 
+  Vue.filter('ucfirst', (value) => {
+    if (value.length) {
+      value = value.charAt(0).toUpperCase() + value.toLowerCase().slice(1)
+    }
+    return value
+  })
+
   Vue.filter('duration', (value) => {
     const duration = app.$moment.duration(value, 'seconds')
 
