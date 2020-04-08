@@ -28,7 +28,7 @@
 <script>
 import {icon} from '@fortawesome/fontawesome-svg-core'
 import {faCameraAlt} from '@fortawesome/pro-duotone-svg-icons'
-import bg from '../assets/images/general/headline_photo.png'
+import bg from '../../assets/images/general/headline_photo.png'
 
 export default {
   name: 'UploadBg',
