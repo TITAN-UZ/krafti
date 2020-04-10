@@ -16,7 +16,9 @@
         <fa v-else :icon="['fas', 'sync']" />
       </b-button>
     </div>
-    <apexchart type="area" :series="series" :options="options" :height="height" :style="{opacity: loading ? 0.5 : 1}" />
+    <div style="width: 100%; overflow-x: auto;">
+      <apexchart type="area" :series="series" :options="options" :height="height" :width="width" :style="{opacity: loading ? 0.5 : 1, 'min-width': '600px'}" />
+    </div>
   </div>
 </template>
 
@@ -29,6 +31,10 @@ export default {
     height: {
       type: [String, Number],
       default: 400,
+    },
+    width: {
+      type: [String, Number],
+      default: '100%',
     },
     chartStart: {
       type: String,

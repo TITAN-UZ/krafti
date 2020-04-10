@@ -48,9 +48,7 @@ export default {
       },
     },
     placeholder() {
-      return this.$auth.user && this.$auth.user.background
-        ? this.$image(this.$auth.user.background, `${this.size * 2}x${this.size}`, 'fit')
-        : bg
+      return this.$auth.user && this.$auth.user.background ? this.$image(this.$auth.user.background, `${this.size * 2}x${this.size}`, 'fit') : bg
     },
   },
   mounted() {
