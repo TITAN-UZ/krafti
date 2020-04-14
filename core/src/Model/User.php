@@ -292,6 +292,7 @@ class User extends Model
         if ($this->background) {
             $this->background->delete();
         }
+        $this->orders()->where('status', '!=', 2)->delete();
 
         return parent::delete();
     }

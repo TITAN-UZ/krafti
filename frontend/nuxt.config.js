@@ -4,9 +4,6 @@ export default {
   mode: 'universal',
   srcDir: './src/',
   buildDir: './.nuxt/',
-  generate: {
-    dir: 'dist/',
-  },
   head: {
     title: 'Крафти',
     meta: [
@@ -45,22 +42,27 @@ export default {
   },
   css: ['~assets/scss/styles.scss'],
   plugins: [
-    '~/plugins/app.js',
-    '~/plugins/settings.js',
-    '~/plugins/axios.js',
-    '~/plugins/fontawesome.js',
-    '~/plugins/filters.js',
-    '~/plugins/components.js',
-    '~/plugins/metrika.js',
-    {src: '~/plugins/mixins.js', mode: 'client'},
-    {src: '~/plugins/alertify.js', mode: 'client'},
-    {src: '~/plugins/tables.js', mode: 'client'},
-    {src: '~/plugins/inputs.js', mode: 'client'},
-    {src: '~/plugins/modals.js', mode: 'client'},
-    {src: '~/plugins/filepond.js', mode: 'client'},
-    {src: '~/plugins/charts.js', mode: 'client'},
+    '../_common/plugins/app.js',
+    '../_common/plugins/settings.js',
+    '../_common/plugins/axios.js',
+    '../_common/plugins/fontawesome.js',
+    '../_common/plugins/filters.js',
+    '../_common/plugins/components.js',
+    {src: '../_common/plugins/mixins.js', mode: 'client'},
+    {src: '../_common/plugins/tables.js', mode: 'client'},
+    {src: '../_common/plugins/inputs.js', mode: 'client'},
+    {src: '../_common/plugins/modals.js', mode: 'client'},
+    {src: '../_common/plugins/filepond.js', mode: 'client'},
   ],
-  modules: ['bootstrap-vue/nuxt', 'nuxt-izitoast', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/pwa', '@nuxtjs/moment', '@nuxtjs/markdownit', '@nuxtjs/dotenv', '@nuxtjs/sitemap'],
+  modules: [
+    'bootstrap-vue/nuxt',
+    'nuxt-izitoast',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    '@nuxtjs/pwa',
+    '@nuxtjs/moment',
+    '@nuxtjs/dotenv',
+  ],
   bootstrapVue: {
     css: false,
     bvCSS: false,
@@ -73,14 +75,15 @@ export default {
   dotenv: {
     path: '../core/',
     filename: '.' + (process.env.USER === 's4000' ? 'prod' : 'dev') + '.env',
-    only: ['SITE_URL', 'COINS_PROMO', 'COINS_BUY_BONUS', 'COINS_SUBSCRIBE', 'COINS_HOMEWORK', 'COINS_PALETTE', 'CHILDREN_MAX'],
-  },
-  markdownit: {
-    html: true,
-    linkify: true,
-    typographer: true,
-    breaks: true,
-    injected: true,
+    only: [
+      'SITE_URL',
+      'COINS_PROMO',
+      'COINS_BUY_BONUS',
+      'COINS_SUBSCRIBE',
+      'COINS_HOMEWORK',
+      'COINS_PALETTE',
+      'CHILDREN_MAX',
+    ],
   },
   axios: {
     baseURL: process.env.SITE_URL + 'api/',
@@ -89,11 +92,6 @@ export default {
     credentials: false,
   },
   auth: {
-    redirect: {
-      home: '/',
-      login: '/service/auth',
-      logout: '/',
-    },
     watchLoggedIn: true,
     resetOnError: true,
     strategies: {
@@ -106,72 +104,15 @@ export default {
       },
     },
   },
-  router: {
-    linkActiveClass: 'active',
-    middleware: ['auth'],
-    extendRoutes(routes) {
-      for (const i in routes) {
-        if (Object.prototype.hasOwnProperty.call(routes, i)) {
-          if (routes[i].name === 'admin') {
-            routes[i].redirect = {name: 'admin-orders'}
-          } else if (routes[i].name === 'office') {
-            routes[i].redirect = {name: 'office-courses'}
-          }
-        }
-      }
-    },
-  },
   izitoast: {
     position: 'bottomRight',
     transitionIn: 'bounceInLeft',
     transitionOut: 'fadeOutRight',
   },
-  build: {
-    extend(config) {
-      // here I tell webpack not to include jpgs and pngs
-      // as base64 as an inline image
-      config.module.rules.find((rule) => rule.use && rule.use[0].loader === 'url-loader').exclude = /background\/.*?\.(jpe?g|png)$/i
-
-      // now i configure the responsive-loader
-      config.module.rules.push({
-        test: /background\/.*?\.(jpe?g|png)$/i,
-        loader: 'responsive-loader',
-        options: {
-          // min: 720,
-          // max: 3000,
-          // step: 10,
-          sizes: [2560, 1440, 960, 640],
-          placeholder: false,
-          quality: 85,
-          adapter: require('responsive-loader/sharp'),
-        },
-      })
-    },
-  },
-  // buildModules: ['@nuxtjs/eslint-module'],
-  /* generate: {
-    async routes() {
-      const [authors, courses] = await Promise.all([
-        axios.get(process.env.SITE_URL + 'api/web/authors'),
-        axios.get(process.env.SITE_URL + 'api/web/courses'),
-      ])
-
-      const routes = []
-      authors.data.rows.forEach((v) => {
-        routes.push('/team/' + v.id)
-      })
-      courses.data.rows.forEach((v) => {
-        routes.push('/courses/' + v.id)
-      })
-
-      return routes
-    },
-    exclude: [/^\/(admin|office|profile|p|service)\//],
-  }, */
-  sitemap: {
-    hostname: process.env.SITE_URL,
-    gzip: false,
-    exclude: ['/admin', '/admin/**', '/office', '/office/**', '/profile', '/profile/**', '/service', '/service/**'],
-  },
-  server: process.env.NODE_ENV === 'production' ? {socket: '../tmp/nuxt.socket', timing: {total: true}} : {host: 'localhost', port: 3876},
+  /*
+  server:
+    process.env.NODE_ENV === 'production'
+      ? {socket: '../tmp/nuxt.socket', timing: {total: true}}
+      : {host: 'localhost', port: 3876},
+  */
 }

@@ -1,0 +1,40 @@
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1440px,
+  xxxl: 1680px,
+) !default;
+
+$container-max-widths: (
+  xs: 540px,
+  sm: 720px,
+  md: 960px,
+  lg: 1080px,
+  xl: 1140px,
+  xxl: 1380px,
+  xxxl: 1620px
+) !default;
+
+$web-font-path: "https://fonts.googleapis.com/css2?family=Neucha&family=Lobster&display=swap";
+$headings-font-family: 'Lobster', cursive;
+$font-size-base: 1rem;
+$font-weight-base: 400;
+
+// The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
+$yiq-contrasted-threshold:  200 !default;
+$black: #000;
+$white: #fff;
+$gray: #3C3C3C;
+$lightestGray: #F6F6F6;
+$lightGray: #C3C3C3;
+$lightPink: #ffb6b6;
+$pink: #ff7474;
+$lightGreen: #84E3C9;
+
+$primary: #be5f5f;
+$link-color: $lightPink;
+
+$modal-header-border-color: transparent;

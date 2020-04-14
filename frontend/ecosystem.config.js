@@ -6,7 +6,7 @@ module.exports = {
       name: 'site',
       exec_mode: 'cluster',
       script: './node_modules/nuxt/bin/nuxt.js',
-      args: prod ? 'start --config-file nuxt.config.js' : '--config-file nuxt.config.js',
+      args: (prod ? 'start ' : '') + '--config-file src/site/nuxt.config.js --unix-socket ../../tmp/nuxt.socket',
       instances: 2,
       autorestart: true,
       max_memory_restart: '1G',

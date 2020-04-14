@@ -1,0 +1,85 @@
+@import '~bootswatch/dist/sketchy/variables';
+@import 'variables';
+@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap-vue/src/index';
+@import '~bootswatch/dist/sketchy/bootswatch';
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#__nuxt, #__layout, #app {
+  height: 100%;
+  *:focus {
+    outline: none !important;
+  }
+}
+
+.page-enter-active,
+.page-leave-active,
+.layout-enter-active,
+.layout-leave-active {
+  transition: opacity .2s
+}
+
+.page-enter,
+.page-leave-active,
+.layout-enter,
+.layout-leave-active {
+  opacity: 0
+}
+
+.modal-open, .ajs-no-overflow {
+  #app {
+    filter: blur(5px) !important;
+  }
+}
+
+// For dev-server
+.nuxt__build_indicator {
+  position: fixed !important;
+  bottom: auto !important;
+  top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.b-table-wrapper {
+  width: 100%;
+  min-height: 300px;
+  overflow-x: auto;
+}
+.b-table {
+  .svg-inline--fa {
+    width: 16px;
+  }
+  td {
+    vertical-align: middle;
+    // Actions column
+    &:last-child {
+      white-space: nowrap;
+    }
+  }
+}
+
+.nav-item {
+  .nav-link {
+    &.active {
+      font-weight: 700;
+    }
+  }
+}
+
+.modal-vimeo {
+  .close {
+    margin-right: 0;
+    svg {
+      display: none;
+    }
+  }
+  .modal-body, iframe {
+    border-radius: 0 !important;
+  }
+}
