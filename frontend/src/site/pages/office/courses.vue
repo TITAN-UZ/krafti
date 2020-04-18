@@ -1,7 +1,7 @@
 <template>
   <div class="container__940">
     <b-alert v-if="!courses.length" variant="info" :show="true">
-      Вы еще ничего не купили
+      У вас нет активных покупок
     </b-alert>
     <div v-else class="CoursesList courses-list">
       <courses-list :courses="courses" />

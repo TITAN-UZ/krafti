@@ -84,7 +84,12 @@
                             </li>
                           </ul>
                           <div class="tab-content">
-                            <course-lessons :record="record" :lessons="currentLessons" :min-thumb-width="295">
+                            <course-lessons
+                              :record="record"
+                              :lessons="currentLessons"
+                              :min-thumb-width="295"
+                              class="step__wrap"
+                            >
                               <template v-if="record.template.course_homeworks" slot="homework">
                                 <div class="home__work d-flex justify-content-center align-items-center flex-column">
                                   <div class="home__work--img">
@@ -96,10 +101,10 @@
                                   </div>
                                   <client-only>
                                     <upload-homework
-                                        :course-id="record.id"
-                                        :section="lessonTab"
-                                        :image="homeworkImage"
-                                        :size="500"
+                                      :course-id="record.id"
+                                      :section="lessonTab"
+                                      :image="homeworkImage"
+                                      :size="500"
                                     />
                                   </client-only>
                                 </div>
@@ -223,7 +228,7 @@ export default {
         lessonTab: record.progress.section || 1,
       }
     } catch (e) {
-      return error(e)
+      return error({statusCode: e.status, message: e.data})
     }
   },
   data() {

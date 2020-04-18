@@ -62,7 +62,7 @@ export default {
         record: record.data,
       }
     } catch (e) {
-      return error(e)
+      return error({statusCode: e.status, message: e.data})
     }
   },
   created() {

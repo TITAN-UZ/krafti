@@ -15,11 +15,9 @@ export default {
     try {
       const text = await require('../../assets/docs/' + params.slug + '.md').default
       // text = text.replace(/<a href="(.*?)">(.*?)<\/a>/, '<nuxt :to="$1">$2</nuxt>')
-      return {
-        text,
-      }
+      return {text}
     } catch (e) {
-      return error(e)
+      return error({statusCode: e.status, message: e.data})
     }
   },
 }

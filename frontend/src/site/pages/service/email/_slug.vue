@@ -26,7 +26,7 @@ export default {
       })
       return res.data
     } catch (e) {
-      return error(e)
+      return error({statusCode: e.status, message: e.data})
     }
   },
   mounted() {

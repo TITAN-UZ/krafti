@@ -40,10 +40,7 @@ class Homeworks extends GetProcessor
         $c->select('id', 'course_id', 'lesson_id', 'file_id', 'section', 'comment');
 
         if ($course_id = (int)$this->getProperty('course_id')) {
-            $c->where([
-                'course_id' => $course_id,
-                'lesson_id' => (int)$this->getProperty('lesson_id') ?: null,
-            ]);
+            $c->where('course_id', $course_id);
         } else {
             $c->with('course:id,title');
             $c->with('lesson:id,title,section,rank');
@@ -98,7 +95,6 @@ class Homeworks extends GetProcessor
             $homework = new Homework($key);
         }
 
-        /** @var File $file */
         if (!$file = $homework->file) {
             $file = new File($key);
         }

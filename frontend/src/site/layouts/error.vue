@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="wrapper__content">
-      <section class="container__940 tabs">
+      <section class="container mt-5">
         <h3 v-if="error.statusCode === 404">
           Страница не найдена
         </h3>
@@ -25,7 +25,7 @@ export default {
     },
   },
   created() {
-    console.error(this.error)
+    // console.error(this.error)
   },
 }
 </script>

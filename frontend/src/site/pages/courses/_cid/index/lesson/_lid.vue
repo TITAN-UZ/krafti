@@ -50,7 +50,7 @@
                   :lesson-id="record.id"
                   :course-id="record.course.id"
                   :section="0"
-                  :image-id="record.homework ? record.homework.file_id : null"
+                  :image="homework && homework.file ? homework.file : {}"
                   :size="300"
                 />
               </div>
@@ -208,7 +208,7 @@ export default {
       const {data: record} = await app.$axios.get('web/course/lessons', {params})
       return {record}
     } catch (e) {
-      return error(e)
+      return error({statusCode: e.status, message: e.data})
     }
   },
   data() {
@@ -223,6 +223,15 @@ export default {
   computed: {
     like() {
       return this.record.like ? this.record.like.value : false
+    },
+    homeworks() {
+      return this.$store.getters['courses/homeworks'](this.record.course.id)
+    },
+    homework() {
+      const filtered = this.homeworks.filter(
+        (item) => item.course_id === this.record.course.id && item.lesson_id === this.record.id,
+      )
+      return filtered.length ? filtered.pop() : null
     },
     nextLessons() {
       return this.lessons.filter((item) => item.rank > this.record.rank)
@@ -318,6 +327,11 @@ div::v-deep {
     iframe {
       border-radius: 15px;
     }
+  }
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 </style>

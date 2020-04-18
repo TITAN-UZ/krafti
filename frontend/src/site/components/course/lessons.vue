@@ -1,5 +1,5 @@
 <template>
-  <div class="step__wrap">
+  <div>
     <div class="row lessons__list align-items-start">
       <div v-for="item in lessons" :key="item.id" :class="wrapperClass">
         <slot v-bind="{open: isLessonOpen, link: lessonLink, thumb: lessonThumb, item}">
@@ -91,6 +91,12 @@ export default {
 
 <style scoped lang="scss">
 .lesson__item--video {
-  min-height: 166px;
+  min-height: 75px;
+  @media (min-width: 576px) {
+    min-height: 166px;
+  }
+  .disabled::before {
+    width: 30px;
+  }
 }
 </style>
