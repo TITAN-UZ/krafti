@@ -1,3 +1,5 @@
+@import '~bootswatch/dist/sketchy/variables';
+
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
@@ -38,3 +40,6 @@ $primary: #be5f5f;
 $link-color: $lightPink;
 
 $modal-header-border-color: transparent;
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";

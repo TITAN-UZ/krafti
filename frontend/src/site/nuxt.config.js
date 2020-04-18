@@ -28,29 +28,27 @@ Config.router = {
   },
 }
 
-Config.build = {
-  extend(config) {
-    // here I tell webpack not to include jpgs and pngs
-    // as base64 as an inline image
-    config.module.rules.find(
-      (rule) => rule.use && rule.use[0].loader === 'url-loader',
-    ).exclude = /background\/.*?\.(jpe?g|png)$/i
+Config.build.extend = (config) => {
+  // here I tell webpack not to include jpgs and pngs
+  // as base64 as an inline image
+  config.module.rules.find(
+    (rule) => rule.use && rule.use[0].loader === 'url-loader',
+  ).exclude = /background\/.*?\.(jpe?g|png)$/i
 
-    // now i configure the responsive-loader
-    config.module.rules.push({
-      test: /background\/.*?\.(jpe?g|png)$/i,
-      loader: 'responsive-loader',
-      options: {
-        // min: 720,
-        // max: 3000,
-        // step: 10,
-        sizes: [2560, 1440, 960, 640],
-        placeholder: false,
-        quality: 85,
-        adapter: require('responsive-loader/sharp'),
-      },
-    })
-  },
+  // now i configure the responsive-loader
+  config.module.rules.push({
+    test: /background\/.*?\.(jpe?g|png)$/i,
+    loader: 'responsive-loader',
+    options: {
+      // min: 720,
+      // max: 3000,
+      // step: 10,
+      sizes: [2560, 1440, 960, 640],
+      placeholder: false,
+      quality: 85,
+      adapter: require('responsive-loader/sharp'),
+    },
+  })
 }
 
 Config.auth.redirect = {
@@ -72,5 +70,10 @@ Config.sitemap = {
   gzip: false,
   exclude: ['/admin', '/admin/**', '/office', '/office/**', '/profile', '/profile/**', '/service', '/service/**'],
 }
+
+Config.server =
+  process.env.NODE_ENV === 'production'
+    ? {socket: '../tmp/nuxt.socket', timing: {total: true}}
+    : {host: '0.0.0.0', port: 4100}
 
 export default Config

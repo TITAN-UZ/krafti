@@ -33,7 +33,6 @@
 import officeHeader from '../components/office-header'
 
 export default {
-  // middleware: 'token',
   auth: true,
   scrollToTop: false,
   components: {

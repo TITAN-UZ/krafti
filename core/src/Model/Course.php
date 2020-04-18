@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $category
  * @property array $properties
  * @property string $age
+ * @property int $template_id
  * @property int $cover_id
  * @property int $video_id
  * @property int $diploma_id
@@ -31,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @property-read Template $template
  * @property-read File $cover
  * @property-read Video $video
  * @property-read Lesson $bonus
@@ -60,69 +62,69 @@ class Course extends Model
         'active' => 'boolean',
     ];
 
+    /**
+     * @return BelongsTo
+     */
+    public function template()
+    {
+        return $this->belongsTo(Template::class);
+    }
 
     /**
      * @return BelongsTo
      */
     public function cover()
     {
-        return $this->belongsTo('App\Model\File');
+        return $this->belongsTo(File::class);
     }
-
 
     /**
      * @return BelongsTo
      */
     public function video()
     {
-        return $this->belongsTo('App\Model\Video');
+        return $this->belongsTo(Video::class);
     }
-
 
     /**
      * @return belongsTo
      */
     public function diploma()
     {
-        return $this->belongsTo('App\Model\File');
+        return $this->belongsTo(File::class);
     }
-
 
     /**
      * @return hasOne
      */
     public function bonus()
     {
-        return $this->hasOne('App\Model\Lesson')->where(['section' => 0]);
+        return $this->hasOne(Lesson::class)->where(['section' => 0]);
     }
-
 
     /**
      * @return HasMany
      */
     public function lessons()
     {
-        return $this->hasMany('App\Model\Lesson');
+        return $this->hasMany(Lesson::class);
     }
-
 
     /**
      * @return HasMany
      */
     public function orders()
     {
-        return $this->hasMany('App\Model\Order');
+        return $this->hasMany(Order::class);
     }
-
 
     /**
      * @return HasMany
      */
     public function progresses()
     {
-        return $this->hasMany('App\Model\UserProgress');
+        return $this->hasMany(UserProgress::class);
     }
-
 
     /**
      * @return bool|null
@@ -136,7 +138,6 @@ class Course extends Model
 
         return parent::delete();
     }
-
 
     /**
      * @param User $user
@@ -174,7 +175,8 @@ class Course extends Model
 
         // Определяем скидку для указанного юзера
         if ($user) {
-            if ($this->orders()->where(['user_id' => $user->id, 'status' => 2])->where('paid_till', '<', date('Y-m-d H:i:s'))->count()) {
+            if ($this->orders()->where(['user_id' => $user->id, 'status' => 2])->where('paid_till', '<',
+                date('Y-m-d H:i:s'))->count()) {
                 $user_discount = [
                     'discount' => getenv('COURSE_PROLONG_DISCOUNT'),
                     'type' => 'order',
@@ -256,7 +258,6 @@ class Course extends Model
         return $price;
     }
 
-
     /**
      * @param bool $save
      *
@@ -274,7 +275,6 @@ class Course extends Model
 
         return $sum;
     }
-
 
     /**
      * @param bool $save
@@ -294,7 +294,6 @@ class Course extends Model
 
         return $sum;
     }
-
 
     /**
      * @param bool $save

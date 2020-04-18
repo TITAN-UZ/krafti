@@ -23,6 +23,7 @@ export default {
         file: {},
         author_id: null,
         course_id: this.$route.params.cid,
+        section: 1,
         active: false,
         extra: false,
         free: false,

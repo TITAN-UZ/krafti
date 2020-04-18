@@ -21,6 +21,7 @@ class Courses extends ObjectProcessor
     {
         $c->with('cover:id,title,updated_at');
         $c->with('diploma:id,title,updated_at');
+        $c->with('template');
 
         return $c;
     }

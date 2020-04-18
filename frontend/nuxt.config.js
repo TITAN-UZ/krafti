@@ -12,6 +12,7 @@ export default {
       {name: 'msapplication-TileColor', content: '#ffffff'},
       {name: 'theme-color', content: '#ffffff'},
       {name: 'apple-mobile-web-app-title', content: 'Крафти'},
+      {'http-equiv': 'X-UA-Compatible', content: 'IE=edge'},
       {hid: 'title', name: 'title', content: 'Крафти'},
       {
         hid: 'description',
@@ -40,7 +41,7 @@ export default {
   loading: {
     color: '#ff7474',
   },
-  css: ['~assets/scss/styles.scss'],
+  css: ['~assets/scss/styles.scss', '@fortawesome/fontawesome-svg-core/styles.css'],
   plugins: [
     '../_common/plugins/app.js',
     '../_common/plugins/settings.js',
@@ -51,12 +52,12 @@ export default {
     {src: '../_common/plugins/mixins.js', mode: 'client'},
     {src: '../_common/plugins/tables.js', mode: 'client'},
     {src: '../_common/plugins/inputs.js', mode: 'client'},
-    {src: '../_common/plugins/modals.js', mode: 'client'},
     {src: '../_common/plugins/filepond.js', mode: 'client'},
   ],
   modules: [
     'bootstrap-vue/nuxt',
     'nuxt-izitoast',
+    // 'nuxt-purgecss',
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/pwa',
@@ -109,10 +110,11 @@ export default {
     transitionIn: 'bounceInLeft',
     transitionOut: 'fadeOutRight',
   },
-  /*
-  server:
-    process.env.NODE_ENV === 'production'
-      ? {socket: '../tmp/nuxt.socket', timing: {total: true}}
-      : {host: 'localhost', port: 3876},
-  */
+  buildModules: ['@nuxtjs/style-resources'],
+  styleResources: {
+    scss: '~assets/scss/_variables.scss',
+  },
+  build: {
+    extractCSS: true,
+  },
 }

@@ -1,16 +1,12 @@
 <template>
   <b-modal ref="modal" :key="record.id" hide-footer visible size="xl" dialog-class="modal-video" @hidden="onHidden">
     <div class="wrapper">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe
-          v-if="record.video && record.video.remote_key"
-          id="lesson-vimeo-iframe"
-          class="embed-responsive-item"
-          :src="'https://player.vimeo.com/video/' + record.video.remote_key"
-          allowfullscreen
-          allow="autoplay; fullscreen"
-        ></iframe>
-      </div>
+      <b-embed
+        :src="`https://player.vimeo.com/video/${record.video.remote_key}`"
+        type="iframe"
+        aspect="16by9"
+        allowfullscreen
+      />
       <div class="wrapper__content pt-3 pt-md-5">
         <div class="lesson__info container__940">
           <div class="container">
@@ -18,7 +14,7 @@
               <div class="lesson__info--description mb-2 mb-md-0">
                 <div class="s-title mb-0">{{ record.title }}</div>
               </div>
-              <div class="d-flex align-items-center ml-md-auto">
+              <b-row class="d-flex align-items-center col-12 col-md-auto ml-md-auto">
                 <div v-b-tooltip="'Понравилось'">
                   <fa :icon="['fad', 'thumbs-up']" class="text-primary" />
                   {{ (record.likes_count - record.dislikes_count) | number }}
@@ -27,7 +23,7 @@
                   <fa :icon="['fad', 'eye']" class="text-primary" />
                   {{ record.views_count | number }}
                 </div>
-              </div>
+              </b-row>
             </div>
             <div v-html="$md.render(record.description)" />
           </div>
@@ -48,7 +44,7 @@
               <div v-if="record.file" class="row">
                 <div class="col-12">
                   <div class="download__materials">
-                    <a class="button" :href="record.file" target="_self">Скачать материалы</a>
+                    <a class="button" :href="$file(record.file)" target="_self">Скачать материалы</a>
                   </div>
                 </div>
               </div>
@@ -103,6 +99,7 @@
             </div>
           </div>
         </section>
+
         <section class="lesson__content--bottom container__940 mt-5">
           <div class="container">
             <client-only>
@@ -170,8 +167,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-#lesson-vimeo-iframe {
+<style scoped lang="scss">
+iframe {
   border-top-left-radius: 28.3099px;
   border-top-right-radius: 28.3099px;
 }

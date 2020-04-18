@@ -1,11 +1,22 @@
 <template>
   <div>
-    <app-table ref="table" :url="url" :fields="fields" :filters="filters" :row-class="rowClass" :sort="sort" :dir="dir">
+    <app-table
+      v-if="['users', 'users-create', 'users-edit-id'].includes($route.name)"
+      ref="table"
+      :url="url"
+      :fields="fields"
+      :filters="filters"
+      :row-class="rowClass"
+      :sort="sort"
+      :dir="dir"
+    >
       <template slot="actions">
-        <nuxt-link class="btn btn-secondary" :to="{name: 'users-create'}">
-          <fa icon="plus" />
-          Добавить
-        </nuxt-link>
+        <b-button variant="secondary" :to="{name: 'users-create'}">
+          <fa :icon="['fas', 'plus']" /> Добавить пользователя
+        </b-button>
+        <b-button variant="info" class="ml-2" :to="{name: 'users-roles'}">
+          Управление группами <fa :icon="['fas', 'arrow-right']" />
+        </b-button>
       </template>
 
       <template v-slot:cell(fullname)="row">
@@ -20,16 +31,16 @@
         </div>
       </template>
       <template v-slot:cell(actions)="row">
-        <nuxt-link class="btn btn-sm btn-secondary" :to="'users/edit/' + row.item.id">
-          <fa icon="edit" />
-        </nuxt-link>
-        <b-button v-if="row.item.active" size="sm" variant="warning" @click.prevent="onDisable(row.item)">
+        <b-button size="sm" variant="outline-secondary" :to="{name: 'users-edit-id', params: {id: row.item.id}}">
+          <fa :icon="['fas', 'edit']" />
+        </b-button>
+        <b-button v-if="row.item.active" size="sm" variant="outline-warning" @click.prevent="onDisable(row.item)">
           <fa :icon="['fas', 'power-off']" />
         </b-button>
-        <b-button v-else size="sm" variant="success" @click.prevent="onEnable(row.item)">
+        <b-button v-else size="sm" variant="outline-success" @click.prevent="onEnable(row.item)">
           <fa :icon="['fas', 'play']" />
         </b-button>
-        <b-button v-if="!row.item.orders_count" size="sm" variant="danger" @click.prevent="onDelete(row.item)">
+        <b-button v-if="!row.item.orders_count" size="sm" variant="outline-danger" @click.prevent="onDelete(row.item)">
           <fa :icon="['fas', 'times']" />
         </b-button>
       </template>
@@ -40,7 +51,7 @@
 </template>
 
 <script>
-import {faEdit, faPlus, faPowerOff, faPlay, faTimes} from '@fortawesome/pro-solid-svg-icons'
+import {faEdit, faPlus, faPowerOff, faPlay, faTimes, faArrowRight} from '@fortawesome/pro-solid-svg-icons'
 
 export default {
   name: 'AdminUsers',
@@ -67,31 +78,28 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faPlus, faEdit, faPowerOff, faPlay, faTimes)
+    this.$fa.add(faPlus, faEdit, faPowerOff, faPlay, faTimes, faArrowRight)
   },
   methods: {
-    refresh() {
-      this.$refs.table.refresh()
-    },
     rowClass(item) {
       return item && !item.active ? 'text-muted' : ''
     },
     async onDisable(item) {
       try {
         await this.$axios.patch(this.url, {id: item.id, active: false})
-        this.refresh()
+        this.$refs.table.refresh()
       } catch (e) {}
     },
     async onEnable(item) {
       try {
         await this.$axios.patch(this.url, {id: item.id, active: true})
-        this.refresh()
+        this.$refs.table.refresh()
       } catch (e) {}
     },
     onDelete(item) {
       this.$confirm('Вы уверены, что хотите удалить эту запись?', async () => {
-        await this.$axios.delete('admin/users', {params: {id: item.id}})
-        this.refresh()
+        await this.$axios.delete(this.url, {params: {id: item.id}})
+        this.$refs.table.refresh()
       })
     },
   },

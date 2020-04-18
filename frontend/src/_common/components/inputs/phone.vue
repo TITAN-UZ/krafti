@@ -32,6 +32,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    maxLength: {
+      type: [String, Number],
+      default: 10,
+    },
   },
   data() {
     return {
@@ -50,7 +54,7 @@ export default {
         e.altKey ||
         e.ctrlKey ||
         e.metaKey ||
-        (/\d+/.test(e.key) && (this.multiple || !this.myValue || this.myValue.length < 10))
+        (/\d+/.test(e.key) && (this.multiple || !this.myValue || this.myValue.length < this.maxLength))
       if (!allow) {
         e.preventDefault()
       }
@@ -61,7 +65,8 @@ export default {
       }
       let value = this.myValue.replace(/\D/g, '')
       if (this.multiple) {
-        value = value.replace(/(\d{10})/g, '$1 ').trim()
+        const regexp = new RegExp('(\\d{' + this.maxLength + '})', 'g')
+        value = value.replace(regexp, '$1 ').trim()
       }
       this.myValue = value
       this.$emit('input', this.multiple ? value.split(' ') : value)

@@ -5,14 +5,23 @@ namespace App\Processors\Web;
 use App\GetProcessor;
 use App\Model\Course;
 use App\Model\Order;
-use App\Model\UserProgress;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Courses extends GetProcessor
 {
+    protected $class = Course::class;
 
-    protected $class = '\App\Model\Course';
+    /**
+     * @param Builder $c
+     * @return Builder|mixed
+     */
+    protected function beforeGet($c)
+    {
+        $c = $this->beforeCount($c);
 
+        return $this->afterCount($c);
+    }
 
     /**
      * @param Builder $c
@@ -21,15 +30,39 @@ class Courses extends GetProcessor
      */
     protected function beforeCount($c)
     {
-        $c->where(['active' => true]);
+        $c->where('active', true);
 
         if ($exclude = $this->getProperty('exclude')) {
             $c->whereNotIn('id', explode(',', $exclude));
         }
 
         if ($category = trim($this->getProperty('category'))) {
-            $c->where(['category' => $category]);
+            $c->where('category', $category);
         }
+
+        return $c;
+    }
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function afterCount($c)
+    {
+        $c->select('id', 'title', 'tagline', 'description', 'category', 'price', 'age',
+            'views_count', 'reviews_count', 'likes_sum', 'lessons_count', 'videos_count',
+            'cover_id', 'video_id', 'template_id');
+        $c->with('cover:id,updated_at');
+        $c->with('video:id,remote_key');
+        $c->with('template');
+        $c->with([
+            'lessons' => function (HasMany $c) {
+                $c->where(['active' => true, 'free' => true])
+                    ->orderByRaw('RAND()')
+                    ->limit(1)
+                    ->select('id', 'course_id');
+            },
+        ]);
 
         return $c;
     }
@@ -42,7 +75,7 @@ class Courses extends GetProcessor
      */
     public function prepareRow($object)
     {
-        $array = [
+        /*$array = [
             'id' => $object->id,
             'title' => $object->title,
             'tagline' => $object->tagline,
@@ -74,7 +107,17 @@ class Courses extends GetProcessor
                 ->orderByRaw('RAND()')
                 ->limit(1)
                 ->first(['id']),
-        ];
+            'template' => $object->template->toArray(),
+        ];*/
+        $array = $object->toArray();
+        $array['bought'] = false;
+        $array['progress'] = [];
+
+        if (isset($array['lessons'])) {
+            $array['free_lesson'] = array_pop($array['lessons']);
+            unset($array['lessons']);
+        }
+        unset($array['template_id'], $array['cover_id'], $array['video_id']);
 
         if ($this->container->user) {
             $array['bought'] = $object->wasBought($this->container->user);
@@ -82,15 +125,13 @@ class Courses extends GetProcessor
                 $array['discount'] = $object->getDiscount($this->container->user);
             } elseif ($order = $this->container->user->orders()->where(['course_id' => $object->id])->first()) {
                 /** @var Order $order */
-                $array['paid_till'] = $order->paid_till->toIso8601String();
+                $array['paid_till'] = $order->paid_till;
             }
-            /** @var UserProgress $progress */
-            if ($progress = $object->progresses()->where(['user_id' => $this->container->user->id])->first()) {
-                $array['progress'] = [
-                    'section' => $progress->section,
-                    'rank' => $progress->rank,
-                ];
-            }
+            $progress = $this->container->user->getProgress($object);
+            $array['progress'] = [
+                'section' => $progress->section,
+                'rank' => $progress->rank,
+            ];
         }
 
         return $array;

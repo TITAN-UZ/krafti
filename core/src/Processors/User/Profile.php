@@ -38,7 +38,7 @@ class Profile extends Processor
             'fullname' => $user->fullname,
             'account' => $user->account,
             'dob' => $user->dob,
-            'phone' => '+' . $user->phone,
+            'phone' => $user->phone,
             'scope' => $user->role->scope,
             'photo' => $user->photo
                 ? [

@@ -61,7 +61,7 @@ export default {
                         type: params.slug,
                     };
                 } catch (e) {
-                    return error({statusCode: 404, message: 'Страница не найдена'})
+                    return error({statusCode: e.status, message: e.data})
                 }
             } else {
                 return error({statusCode: 404, message: 'Страница не найдена'})

@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-form-group label="Промокод:" description="Код должен быть уникален">
-      <b-form-input id="input-code" v-model="record.code" autofocus required />
+      <b-form-input v-model="record.code" autofocus required />
     </b-form-group>
 
     <b-form-group label="Скидка:">
@@ -16,7 +16,7 @@
     </b-form-group>
 
     <b-form-group label="Количество использований:">
-      <b-form-input id="input-limit" v-model="record.limit" type="number" />
+      <b-form-input v-model="record.limit" type="number" />
     </b-form-group>
 
     <b-form-group label="Время действия:" description="С какого и по какое число работает промокод">

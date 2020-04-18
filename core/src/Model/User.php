@@ -430,6 +430,18 @@ class User extends Model
         }
         $progress->section = $section;
         $progress->rank = $rank;
+        if ($progress->section === 1 && !$progress->rank) {
+            /** @var Lesson $first */
+            $first = $course->lessons()
+                ->where(['active' => true, 'section' => $section])
+                ->where('free', '!=', true)
+                ->where('extra', '!=', true)
+                ->orderBy('rank', 'asc')
+                ->first();
+            if ($first) {
+                $progress->rank = $first->rank;
+            }
+        }
         $progress->save();
 
         // Generate diplomas

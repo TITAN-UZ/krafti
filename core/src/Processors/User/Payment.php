@@ -68,7 +68,7 @@ class Payment extends Processor
             }
 
             $this->container->user->makeTransaction($price * -1, 'bonus', ['course_id' => $course->id]);
-            $this->container->user->makeProgress($course, null, true);
+            $this->container->user->makeProgress($course, 0, 0);
 
             return $this->success([
                 'lesson_id' => $course->bonus->id,

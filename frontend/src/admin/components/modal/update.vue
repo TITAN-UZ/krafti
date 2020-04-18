@@ -1,5 +1,5 @@
 <script>
-import ModalCreate from './modal-create'
+import ModalCreate from './create'
 
 export default {
   name: 'ModalUpdate',

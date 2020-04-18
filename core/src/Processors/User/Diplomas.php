@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 class Diplomas extends GetProcessor
 {
     protected $scope = 'profile';
-    protected $class = 'App\Model\Diploma';
+    protected $class = Diploma::class;
 
 
     /**
@@ -19,7 +19,9 @@ class Diplomas extends GetProcessor
      */
     protected function beforeGet($c)
     {
-        return $this->beforeCount($c);
+        $c = $this->beforeCount($c);
+
+        return $this->afterCount($c);
     }
 
 
@@ -30,30 +32,20 @@ class Diplomas extends GetProcessor
      */
     protected function beforeCount($c)
     {
-        $c->where(['user_id' => $this->container->user->id])
-            ->whereNotNull('file_id');
-        $c->with('course:id,title');
-        $c->with('child:id,name,dob');
+        $c->where('user_id', $this->container->user->id);
+        $c->whereNotNull('file_id');
 
         return $c;
     }
 
-
-    /**
-     * @param Diploma $object
-     *
-     * @return array
-     */
-    public function prepareRow($object)
+    protected function afterCount($c)
     {
-        $array = [
-            'id' => $object->id,
-            'file' => $object->file->getUrl(),
-            'child' => $object->child,
-            'course' => $object->course,
-        ];
+        $c->select('id', 'file_id', 'course_id', 'child_id');
+        $c->with('file:id,updated_at');
+        $c->with('course:id,title');
+        $c->with('child:id,name,dob');
 
-        return $array;
+        return $c;
     }
 
 }

@@ -4,7 +4,6 @@
 
 <script>
 export default {
-  // middleware: 'token',
   auth: true,
 }
 </script>

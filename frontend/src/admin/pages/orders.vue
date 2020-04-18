@@ -4,7 +4,7 @@
 
     <app-table ref="table" :url="url" :fields="fields" :filters="filters" :sort="sort" :dir="dir" @onLoad="onLoad">
       <template slot="actions">
-        <nuxt-link class="btn btn-secondary" :to="{name: 'orders-create'}"> <fa icon="plus" /> Добавить </nuxt-link>
+        <b-button variant="secondary" :to="{name: 'orders-create'}"><fa :icon="['fas', 'plus']" /> Добавить</b-button>
       </template>
 
       <template v-slot:cell(user)="row">
@@ -34,11 +34,11 @@
         </div>
       </template>
       <template v-slot:cell(actions)="row">
-        <nuxt-link :to="{name: 'orders-edit-id', params: {id: row.item.id}}" class="btn btn-sm btn-secondary">
+        <b-button size="sm" variant="outline-secondary" :to="{name: 'orders-edit-id', params: {id: row.item.id}}">
           <fa :icon="['fas', 'edit']" />
-        </nuxt-link>
+        </b-button>
         <template v-if="row.item.manual || row.item.status === 1">
-          <b-button size="sm" variant="danger" @click.prevent="onDelete(row.item)">
+          <b-button size="sm" variant="outline-danger" @click.prevent="onDelete(row.item)">
             <fa :icon="['fas', 'times']" />
           </b-button>
         </template>
@@ -96,13 +96,10 @@ export default {
     this.$fa.add(faPlus, faTimes, faEdit)
   },
   methods: {
-    refresh() {
-      this.$refs.table.refresh()
-    },
     onDelete(item) {
       this.$confirm('Вы уверены, что хотите удалить этот заказ?', async () => {
-        await this.$axios.delete('admin/orders', {params: {id: item.id}})
-        this.refresh()
+        await this.$axios.delete(this.url, {params: {id: item.id}})
+        this.$refs.table.refresh()
       })
     },
     onLoad(items) {

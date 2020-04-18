@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  name: 'UserReviews',
+  name: 'CourseReviews',
   props: {
     reviews: {
       type: Array,

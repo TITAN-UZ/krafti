@@ -11,10 +11,6 @@ import FilePondPluginImageResize from 'filepond-plugin-image-resize'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop'
 import FilePondPluginFileEncode from 'filepond-plugin-image-transform'
-import UploadPhoto from '../components/upload/photo'
-import UploadImage from '../components/upload/image'
-import UploadFile from '../components/upload/file'
-import UploadHomework from '../components/upload/homework'
 
 const FilePond = vueFilePond(
   FilePondPluginFileEncode,
@@ -26,7 +22,3 @@ const FilePond = vueFilePond(
   FilePondPluginImageTransform,
 )
 Vue.component('file-pond', FilePond)
-Vue.component('upload-photo', UploadPhoto)
-Vue.component('upload-image', UploadImage)
-Vue.component('upload-file', UploadFile)
-Vue.component('upload-homework', UploadHomework)

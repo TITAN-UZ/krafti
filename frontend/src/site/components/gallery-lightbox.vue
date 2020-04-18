@@ -4,7 +4,7 @@
       <div class="swiper-container">
         <div class="swiper-wrapper">
           <a v-for="item in items" :key="item.id" :href="$image(item, '1000x1000', 'fit')" class="swiper-slide">
-            <img :src="$image(item, '200x200', 'fit')" />
+            <b-img-lazy :src="$image(item, '200x200', 'fit')" alt="" height="200" />
           </a>
         </div>
       </div>

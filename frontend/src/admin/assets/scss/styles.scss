@@ -1,4 +1,3 @@
-@import '~bootswatch/dist/sketchy/variables';
 @import 'variables';
 @import "~bootstrap/scss/bootstrap";
 @import '~bootstrap-vue/src/index';
@@ -33,7 +32,7 @@ html, body {
 
 .modal-open, .ajs-no-overflow {
   #app {
-    filter: blur(5px) !important;
+    filter: blur(2px) !important;
   }
 }
 
@@ -82,4 +81,26 @@ html, body {
   .modal-body, iframe {
     border-radius: 0 !important;
   }
+}
+
+.close {
+  &.b-form-tag-remove {
+    &::before {
+      display: none !important;
+    }
+  }
+}
+
+blockquote {
+  font-weight: 200;
+  padding-left: 20px;
+  border-left: 2px solid gray;
+}
+
+.filepond--root,
+.filepond--list-scroller,
+.filepond--drop-label,
+.pick-video img,
+.upload-image-placeholder img {
+  border-radius: $border-radius-sketchy !important;
 }

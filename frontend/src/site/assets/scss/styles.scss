@@ -1,6 +1,4 @@
 @import "variables";
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
 
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/utilities/sizing";
@@ -30,8 +28,6 @@
 @import "~bootstrap/scss/spinners";
 @import "~bootstrap-vue/dist/bootstrap-vue.min";
 @import "~swiper/src/swiper";
-
-@import "./admin";
 
 $backdrop-opacity: .7;
 $lg-path-fonts: '~lightgallery.js/src/fonts';

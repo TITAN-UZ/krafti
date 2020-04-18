@@ -88,6 +88,7 @@ class Lessons extends ObjectProcessor
     protected function beforeGet($c)
     {
         $c->with('file:id,title,updated_at');
+        $c->with('course:id,template_id', 'course.template');
 
         return $c;
     }

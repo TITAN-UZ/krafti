@@ -10,16 +10,14 @@
     @shown="onShown"
   >
     <div class="wrapper">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe
-          v-if="record.video && record.video.vimeo"
-          id="lesson-vimeo-iframe"
-          class="embed-responsive-item"
-          :src="'https://player.vimeo.com/video/' + record.video.vimeo"
-          allowfullscreen
-          allow="autoplay; fullscreen"
-        ></iframe>
-      </div>
+      <b-embed
+        v-if="record.video && record.video.remote_key"
+        ref="video"
+        :src="`https://player.vimeo.com/video/${record.video.remote_key}`"
+        type="iframe"
+        aspect="16by9"
+        allowfullscreen
+      />
       <div class="wrapper__content pt-3 pt-md-5">
         <div class="lesson__info container__940">
           <div class="container">
@@ -30,14 +28,14 @@
                 </div>
                 <div v-html="$md.render(record.description)" />
                 <div class="lesson__info--like">
-                  <a class="mr-3" @click.prevent="onLike('like')">
-                    <b-spinner v-if="loading == 'like:' + record.id" small type="grow" class="text-primary" />
-                    <fa v-else :icon="['fad', 'thumbs-up']" :class="{'text-primary': record.like == 1}" />
+                  <a @click.prevent="onLike('like')">
+                    <b-spinner v-if="loading === `like:${record.id}`" small type="grow" class="text-primary" />
+                    <fa v-else :icon="['fad', 'thumbs-up']" :class="{'text-primary': like === 1}" />
                     {{ record.likes_count }}
                   </a>
-                  <a @click.prevent="onLike('dislike')">
-                    <b-spinner v-if="loading == 'dislike:' + record.id" small type="grow" class="text-primary" />
-                    <fa v-else :icon="['fad', 'thumbs-down']" :class="{'text-primary': record.like == -1}" />
+                  <a class="ml-3" @click.prevent="onLike('dislike')">
+                    <b-spinner v-if="loading === `dislike:${record.id}`" small type="grow" class="text-primary" />
+                    <fa v-else :icon="['fad', 'thumbs-down']" :class="{'text-primary': like === -1}" />
                     {{ record.dislikes_count }}
                   </a>
                 </div>
@@ -50,14 +48,11 @@
 
                 <upload-homework
                   :lesson-id="record.id"
-                  :course-id="course.id"
+                  :course-id="record.course.id"
                   :section="0"
-                  :image-id="record.homework.file_id"
+                  :image-id="record.homework ? record.homework.file_id : null"
                   :size="300"
                 />
-                <!--<div class="lesson__info&#45;&#45;share">
-                  <button class="button">Поделиться работой</button>
-                </div>-->
               </div>
             </div>
           </div>
@@ -73,13 +68,12 @@
                   class="needed__item d-flex justify-content-between align-items-center"
                 >
                   <div class="needed__item--title">{{ product }}</div>
-                  <!--<button class="needed__item--cart"><img src="~assets/images/general/ic_cart.svg" alt=""></button>-->
                 </div>
               </div>
               <div v-if="record.file" class="row">
                 <div class="col-12">
                   <div class="download__materials">
-                    <a class="button" :href="record.file" target="_self">Скачать материалы</a>
+                    <a class="button" :href="$file(record.file)" target="_self">Скачать материалы</a>
                   </div>
                 </div>
               </div>
@@ -135,16 +129,13 @@
                     {{ record.bonus.description }}
                   </div>
                   <div class="science__content--video d-flex justify-content-center">
-                    <div class="embed-responsive embed-responsive-16by9">
-                      <iframe
-                        v-if="record.bonus && record.bonus.vimeo"
-                        id="bonus-vimeo-iframe"
-                        class="embed-responsive-item"
-                        :src="'https://player.vimeo.com/video/' + record.bonus.vimeo"
-                        allowfullscreen
-                        allow="autoplay; fullscreen"
-                      ></iframe>
-                    </div>
+                    <b-embed
+                      v-if="record.bonus && record.bonus.remote_key"
+                      :src="`https://player.vimeo.com/video/${record.bonus.remote_key}`"
+                      type="iframe"
+                      aspect="16by9"
+                      allowfullscreen
+                    />
                   </div>
                 </div>
               </div>
@@ -154,43 +145,33 @@
         <section class="lesson__content--bottom container__940 mt-5">
           <div class="container">
             <div class="row">
-              <div :class="{'col-12': true, 'col-lg-7': record.next.length > 0}">
+              <div :class="{'col-12': true, 'col-lg-7': nextLessons.length > 0}">
                 <client-only>
-                  <comments-list :course-id="course.id" :lesson-id="record.id" />
+                  <comments-list :course-id="record.course.id" :lesson-id="record.id" />
                 </client-only>
               </div>
-              <div v-if="record.next.length" class="col-lg-5 col-12">
+
+              <div v-if="nextLessons.length" class="col-lg-5 col-12">
                 <div class="s-title">Следующие уроки</div>
                 <div class="nextlessons__content">
-                  <div v-for="item in record.next" :key="item.id" class="media mb-2">
-                    <div class="media--video mr-2">
-                      <nuxt-link
-                        v-if="isLessonOpen(item)"
-                        :to="{name: 'courses-cid-index-lesson-lid', params: {cid: course.id, lid: item.id}}"
-                        class="video"
-                        @click.native="scrollToTop"
-                      >
-                        <img
-                          class="media--thumb img-responsive"
-                          :src="item.preview[Object.keys(item.preview).shift()]"
-                          alt=""
-                        />
-                      </nuxt-link>
-                      <div v-else class="disabled">
-                        <img
-                          class="media--thumb img-responsive"
-                          :src="item.preview[Object.keys(item.preview).shift()]"
-                          alt=""
-                        />
+                  <course-lessons :record="record.course" :lessons="nextLessons" wrapper-class="media mb-2">
+                    <template v-slot="{item, open, link, thumb}">
+                      <div class="media--video mr-2">
+                        <nuxt-link v-if="open(item)" :to="link(item)" class="video">
+                          <b-img-lazy class="media--thumb img-responsive" :src="thumb(item)" alt="" />
+                        </nuxt-link>
+                        <div v-else class="disabled">
+                          <b-img-lazy class="media--thumb img-responsive" :src="thumb(item)" alt="" />
+                        </div>
                       </div>
-                    </div>
-                    <div class="media-body">
-                      <div>
-                        <strong>{{ item.title }}</strong>
+                      <div class="media-body">
+                        <div>
+                          <strong>{{ item.title }}</strong>
+                        </div>
+                        <div>{{ item.description | truncate(50) }}</div>
                       </div>
-                      <div>{{ item.description }}</div>
-                    </div>
-                  </div>
+                    </template>
+                  </course-lessons>
                 </div>
               </div>
             </div>
@@ -198,6 +179,7 @@
         </section>
       </div>
     </div>
+
     <template slot="modal-header">
       <button class="close" type="button" aria-label="Close" @click="hideModal">
         <fa :icon="['fal', 'times']" size="2x" />
@@ -212,43 +194,48 @@ import {faThumbsUp, faThumbsDown} from '@fortawesome/pro-duotone-svg-icons'
 import Player from '@vimeo/player'
 import CommentsList from '../../../../../components/comments/list'
 import AuthorsList from '../../../../../components/authors-list'
+import CourseLessons from '../../../../../components/course/lessons'
 
 export default {
   auth: true,
   validate({params}) {
     return /^\d+$/.test(params.cid) && /^\d+$/.test(params.lid)
   },
-  components: {AuthorsList, CommentsList},
+  components: {CourseLessons, AuthorsList, CommentsList},
   async asyncData({app, params, error}) {
     try {
-      const [record, course] = await Promise.all([
-        app.$axios.get('web/course/lessons', {params: {course_id: params.cid, id: params.lid}}),
-        app.$axios.get('web/courses', {params: {id: params.cid}}),
-      ])
-      return {
-        record: record.data,
-        course: course.data,
-      }
+      params = {course_id: params.cid, id: params.lid}
+      const {data: record} = await app.$axios.get('web/course/lessons', {params})
+      return {record}
     } catch (e) {
-      return error({statusCode: e.status, message: e.data})
+      return error(e)
     }
   },
   data() {
     return {
       loading: false,
+      url: 'web/course/lessons',
+      record: {},
+      lessons: [],
     }
   },
   scrollToTop: false,
+  computed: {
+    like() {
+      return this.record.like ? this.record.like.value : false
+    },
+    nextLessons() {
+      return this.lessons.filter((item) => item.rank > this.record.rank)
+    },
+  },
+  watch: {
+    'record.id'() {
+      this.loadLessons()
+    },
+  },
   created() {
     this.$fa.add(faTimes, faThumbsUp, faThumbsDown)
-    this.$root.$emit('app::course' + this.$route.params.cid + '::progress', this.record.progress)
-
-    this.$root.$on('app::lesson' + this.record.id + '::homework', (res) => {
-      this.record.homework = res
-    })
-  },
-  beforeDestroy() {
-    this.$root.$off('app::lesson' + this.record.id + '::homework')
+    this.loadLessons()
   },
   methods: {
     hideModal() {
@@ -258,7 +245,7 @@ export default {
       this.$router.push({name: 'courses-cid', params: this.$route.params})
     },
     onShown() {
-      const elem = document.getElementById('lesson-vimeo-iframe')
+      const elem = this.$refs.video.firstChild
       if (elem) {
         try {
           const player = new Player(elem)
@@ -272,6 +259,7 @@ export default {
           console.error(e)
         }
       }
+      // Scroll to comment
       if (this.$route.hash) {
         this.setTimeout(() => {
           const elem = document.getElementById(this.$route.hash.replace(/^#/, ''))
@@ -281,60 +269,55 @@ export default {
         }, 200)
       }
     },
+    async onLike(action) {
+      this.loading = action + ':' + this.record.id
+      try {
+        this.record.like = action === 'like' ? 1 : -1
+        const {data: res} = await this.$axios.post('user/like', {lesson_id: this.record.id, action})
+        this.record.likes_count = res.likes_count
+        this.record.dislikes_count = res.dislikes_count
+        this.$store.commit('courses/likes', {id: this.record.course.id, data: res.likes_sum})
+      } catch (e) {
+      } finally {
+        this.loading = false
+      }
+    },
     async onProgress() {
       try {
         const {data: res} = await this.$axios.post('user/progress', {lesson_id: this.record.id})
-        this.course.progress = res
-        this.$root.$emit('app::course' + this.course.id + '::progress', res)
+        this.record.course.progress = res
+        this.$store.commit('courses/progress', {id: this.record.course.id, data: res})
+        // await this.loadLessons()
       } catch (e) {
-        this.onProgress()
+        console.error(e)
+        await this.onProgress()
       }
     },
-    onLike(action = 'like') {
-      this.loading = action + ':' + this.record.id
-      this.record.like = action === 'like' ? 1 : -1
-      this.$axios
-        .post('user/like', {lesson_id: this.record.id, action})
-        .then((res) => {
-          this.record.likes_count = res.data.likes_count
-          this.record.dislikes_count = res.data.dislikes_count
-          this.$root.$emit('app::course' + this.$route.params.cid + '::likes', res.data.likes_sum)
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.loading = false
-        })
-    },
-    isLessonOpen(item) {
-      return this.$parent.isLessonOpen(item)
-    },
-    scrollToTop() {
-      /* const el = document.getElementsByClassName('modal')[0];
-                const scrollToTop = () => {
-                    const c = el.scrollTop;
-                    if (c > 0) {
-                        window.requestAnimationFrame(scrollToTop);
-                        el.scrollTo(0, c - c / 2);
-                    }
-                };
-                scrollToTop(); */
+    async loadLessons() {
+      const params = {course_id: this.record.course.id, section: this.record.section, sort: 'rank', dir: 'asc'}
+      const {data: lessons} = await this.$axios.get(this.url, {params})
+      this.lessons = lessons.rows
     },
   },
   head() {
     return {
-      title: 'Крафти / Курсы / ' + this.course.title + ' / ' + this.record.title,
+      title: ['Крафти', 'Курсы', this.record.course.title, this.record.title].join(' / '),
     }
   },
 }
 </script>
 
-<style lang="scss">
-#lesson-vimeo-iframe {
-  border-top-left-radius: 28.3099px;
-  border-top-right-radius: 28.3099px;
-}
+<style scoped lang="scss">
+div::v-deep {
+  iframe {
+    border-top-left-radius: 28.3099px;
+    border-top-right-radius: 28.3099px;
+  }
 
-#bonus-vimeo-iframe {
-  border-radius: 15px;
+  .wrapper__science {
+    iframe {
+      border-radius: 15px;
+    }
+  }
 }
 </style>

@@ -1,19 +1,20 @@
 <template>
   <app-table
     ref="table"
-    :url="`${url}?course_id=${courseId}`"
+    :url="`${url}?course_id=${record.id}`"
     :fields="fields"
     :filters="filters"
     :limit="10"
     :row-class="rowClass"
+    name="admin-lessons"
     @onLoad="onLoad"
   >
     <template slot="actions">
-      <router-link class="btn btn-secondary" :to="{name: 'courses-edit-cid-create', params: {cid: courseId}}">
+      <b-button variant="secondary" :to="{name: 'courses-edit-cid-create', params: {cid: courseId}}">
         <fa :icon="['fas', 'plus']" /> Добавить
-      </router-link>
+      </b-button>
 
-      <b-form-select v-model="filters.section" style="width:120px;" class="ml-auto">
+      <b-form-select v-if="record.template.course_steps" v-model="filters.section" style="width:120px;" class="ml-auto">
         <option :value="null">Все этапы</option>
         <option :value="1">Этап 1</option>
         <option :value="2">Этап 2</option>
@@ -29,23 +30,35 @@
       </div>
     </template>
     <template v-slot:cell(video.preview)="row">
-      <a :href="row.value[Object.keys(row.value).pop()]" target="_blank" rel="noreferrer">
-        <img :src="row.value[Object.keys(row.value).shift()]" class="mr-2" />
-      </a>
+      <b-button
+        variant="secondary"
+        :to="{name: 'courses-edit-cid-edit-lid', params: {cid: row.item.course_id, lid: row.item.id}}"
+      >
+        <b-img-lazy :src="row.value[Object.keys(row.value).shift()]" height="75" />
+      </b-button>
     </template>
     <template v-slot:cell(title)="row"> {{ row.item.rank + 1 }}. {{ row.value }} </template>
     <template v-slot:cell(actions)="row">
       <div class="text-nowrap text-right">
-        <router-link class="btn btn-sm" :to="$route.params.cid + '/edit/' + row.item.id">
+        <b-button
+          size="sm"
+          variant="outline-secondary"
+          :to="{name: 'courses-edit-cid-edit-lid', params: {cid: row.item.course_id, lid: row.item.id}}"
+        >
           <fa :icon="['fas', 'edit']" />
-        </router-link>
-        <b-button v-if="row.item.rank > 0 && filters.section" size="sm" variant="default" @click="moveUp(row.item.id)">
+        </b-button>
+        <b-button
+          v-if="row.item.rank > 0 && filters.section"
+          size="sm"
+          variant="outline-secondary"
+          @click="moveUp(row.item.id)"
+        >
           <fa :icon="['fas', 'arrow-up']" />
         </b-button>
         <b-button
           v-if="row.item.rank < totalRows - 1 && filters.section"
           size="sm"
-          variant="default"
+          variant="outline-secondary"
           @click="moveDown(row.item.id)"
         >
           <fa :icon="['fas', 'arrow-down']" />
@@ -64,8 +77,8 @@ import {faPlus, faArrowUp, faArrowDown, faTimes} from '@fortawesome/pro-solid-sv
 export default {
   name: 'TableLessons',
   props: {
-    courseId: {
-      type: Number,
+    record: {
+      type: Object,
       required: true,
     },
   },
@@ -74,12 +87,6 @@ export default {
       url: 'admin/lessons',
       sort: 'rank',
       dir: 'asc',
-      fields: [
-        {key: 'section', label: 'Этап', sortable: false},
-        {key: 'video.preview', label: 'Превью', sortable: false},
-        {key: 'title', label: 'Название', sortable: false},
-        {key: 'actions', label: 'Действия'},
-      ],
       filters: {
         query: '',
         section: null,
@@ -87,6 +94,19 @@ export default {
       },
       totalRows: 0,
     }
+  },
+  computed: {
+    fields() {
+      const fields = []
+      if (this.record.template.course_steps) {
+        fields.push({key: 'section', label: 'Этап'})
+      }
+      fields.push({key: 'title', label: 'Название'})
+      fields.push({key: 'video.preview', label: 'Превью'})
+      fields.push({key: 'actions', label: 'Действия'})
+
+      return fields
+    },
   },
   created() {
     this.$fa.add(faPlus, faArrowUp, faArrowDown, faTimes)
@@ -111,16 +131,16 @@ export default {
       return cls.join(' ')
     },
     async moveUp(id) {
-      await this.$axios.post('admin/lessons', {action: 'move_up', id})
+      await this.$axios.post(this.url, {action: 'move_up', id})
       this.refresh()
     },
     async moveDown(id) {
-      await this.$axios.post('admin/lessons', {action: 'move_down', id})
+      await this.$axios.post(this.url, {action: 'move_down', id})
       this.refresh()
     },
     onDelete(item) {
       this.$confirm('Вы уверены, что хотите удалить эту запись?', async () => {
-        await this.$axios.delete('admin/lessons', {params: {id: item.id}})
+        await this.$axios.delete(this.url, {params: {id: item.id}})
         this.refresh()
       })
     },

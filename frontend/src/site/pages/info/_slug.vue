@@ -19,7 +19,7 @@ export default {
         text,
       }
     } catch (e) {
-      return error({statusCode: 404, message: 'Страница не найдена'})
+      return error(e)
     }
   },
 }

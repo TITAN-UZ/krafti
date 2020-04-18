@@ -6,7 +6,7 @@
       </b-navbar-brand>
 
       <b-button v-b-toggle.nav-collapse variant="default" class="menu-toggle d-md-none">
-        <fa :icon="['far', 'bars']" />
+        <fa :icon="['fas', 'bars']" />
       </b-button>
 
       <b-collapse id="nav-collapse" is-nav>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {faBars} from '@fortawesome/pro-regular-svg-icons'
+import {faBars} from '@fortawesome/pro-solid-svg-icons'
 
 export default {
   name: 'AppHeader',

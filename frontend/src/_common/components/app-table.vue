@@ -6,6 +6,8 @@
       </table-filter>
     </slot>
 
+    <slot name="header" />
+
     <div class="b-table-wrapper">
       <b-table
         :id="name"

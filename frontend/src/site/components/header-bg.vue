@@ -1,9 +1,7 @@
 <template>
-  <client-only>
-    <div :class="cssClass" :style="bg">
-      <slot name="content"></slot>
-    </div>
-  </client-only>
+  <div :class="cssClass" :style="bg">
+    <slot name="content" />
+  </div>
 </template>
 
 <script>
@@ -42,6 +40,7 @@ export default {
       if (!process.client) {
         return {'background-image': 'url(' + url + ')'}
       }
+
       const width = window.innerWidth
       const height = window.innerHeight
       if (width <= 500 && height > width) {

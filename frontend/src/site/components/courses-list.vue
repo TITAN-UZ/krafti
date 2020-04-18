@@ -3,7 +3,7 @@
     <div v-for="course in courses" :key="course.id" :class="'mb-3 course ' + (courses.length == 1 ? 'big' : 'small')">
       <nuxt-link
         :to="{name: 'courses-cid', params: {cid: course.id}}"
-        :style="{'background-image': course.cover ? 'url(' + course.cover + ')' : false}"
+        :style="{'background-image': course.cover ? 'url(' + $image(course.cover) + ')' : false}"
       >
         <div class="d-flex flex-column justify-content-between h-100">
           <div class="mt-3">

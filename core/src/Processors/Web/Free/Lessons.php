@@ -26,6 +26,7 @@ class Lessons extends GetProcessor
             $c->with('course:id,title,price');
             $c->with('video:id,title,remote_key');
             $c->with('bonus:id,title,remote_key');
+            $c->with('file:id,updated_at');
             $c->with('author:id,fullname,photo_id', 'author.photo:id,updated_at');
             if ($id == -1) {
                 if ($course_id = $this->getProperty('course_id')) {

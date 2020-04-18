@@ -31,7 +31,7 @@
           <div class="gallery-manager-item">
             <div :class="{image: true, disabled: !item.active}">
               <a :href="item.file" target="_blank" rel="noreferrer">
-                <img :src="$image(item, '200x200', 'resize')" />
+                <b-img-lazy :src="$image(item, '300x200', 'resize')" width="150" height="100" />
               </a>
               <div class="actions">
                 <b-button

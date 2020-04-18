@@ -1,19 +1,18 @@
 <template>
-  <div>
+  <div :style="cssVars">
     <file-pond
       ref="filepond"
       accepted-file-types="image/jpeg, image/png"
-      class-name="upload-image"
       :allow-multiple="false"
       :instant-upload="false"
       :allow-drop="true"
       :image-resize-target-width="maxHeight"
       :image-resize-target-height="maxWidth"
       :image-preview-max-height="300"
-      :image-preview-height="200"
+      :image-preview-height="height"
       :image-resize-upscale="false"
       image-resize-mode="contain"
-      label-idle="Нажмите для загрузки"
+      :label-idle="`${!label || !Object.keys(label).length ? 'Нажмите для загрузки' : ''}`"
       label-file-loading="Подготовка"
       label-file-processing="Загрузка"
       label-tap-to-cancel="Отмена"
@@ -23,9 +22,9 @@
       @removefile="removeFile"
     />
     <div class="upload-image-placeholder">
-      <img alt="" height="200" :src="myValue || placeholder" />
+      <img alt="" :height="height" :src="myValue || placeholder" />
     </div>
-    <div v-if="label && Object.keys(label).length" class="text-center small mt-1">
+    <div v-if="showInfo && label && Object.keys(label).length" class="text-center small mt-1">
       <a :href="$image(label)" target="_blank" rel="noreferrer">
         {{ label.title }}
       </a>
@@ -51,6 +50,10 @@ export default {
         return {}
       },
     },
+    height: {
+      type: [Number, String],
+      default: 200,
+    },
     maxWidth: {
       type: Number,
       required: false,
@@ -60,6 +63,10 @@ export default {
       type: Number,
       required: false,
       default: 1080,
+    },
+    showInfo: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
@@ -76,8 +83,13 @@ export default {
     },
     placeholder() {
       return this.label && Object.keys(this.label).length
-        ? this.$image(this.label, '400x400', 'resize')
+        ? this.$image(this.label, `${this.height * 2}x${this.height * 2}`, 'resize')
         : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+    },
+    cssVars() {
+      return {
+        '--height': `${this.height}px`,
+      }
     },
   },
   methods: {
@@ -99,32 +111,31 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.upload-image {
-  z-index: 1050;
-  min-height: 200px;
-  cursor: pointer;
-
-  .filepond--drop-label {
-    > label {
+<style scoped lang="scss">
+div::v-deep {
+  .filepond--wrapper {
+    .filepond--root {
+      border: $input-border-width solid $input-border-color;
+      border-radius: $input-border-radius;
+    }
+    .filepond--drop-label {
+      height: var(--height);
       cursor: pointer;
-      color: #fff;
+      > label {
+        color: $body-color;
+        font-family: $font-family-base;
+      }
     }
   }
-
-  .filepond--action-process-item {
-    display: none;
-  }
-}
-
-.upload-image-placeholder {
-  z-index: 1040;
-  margin-top: -200px;
-  background: #222;
-
-  img {
-    display: block;
-    margin: auto;
+  .upload-image-placeholder {
+    margin-top: calc(var(--height) * -1);
+    background: $body-bg;
+    img {
+      border-radius: $input-border-radius;
+      max-width: 100%;
+      display: block;
+      margin: auto;
+    }
   }
 }
 </style>

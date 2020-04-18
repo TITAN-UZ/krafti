@@ -12,10 +12,10 @@
         <small>{{ row.value | datetime }}</small>
       </template>
       <template v-slot:cell(actions)="row">
-        <b-button v-if="row.item.deleted" size="sm" variant="success" @click.prevent="onRestore(row.item)">
+        <b-button v-if="row.item.deleted" size="sm" variant="outline-success" @click.prevent="onRestore(row.item)">
           <fa :icon="['fas', 'check']" />
         </b-button>
-        <b-button v-else size="sm" variant="danger" @click.prevent="onDelete(row.item)">
+        <b-button v-else size="sm" variant="outline-danger" @click.prevent="onDelete(row.item)">
           <fa :icon="['fas', 'times']" />
         </b-button>
       </template>
@@ -49,17 +49,14 @@ export default {
     this.$fa.add(faTimes, faCheck)
   },
   methods: {
-    refresh() {
-      this.$refs.table.refresh()
-    },
     onDelete(item) {
       this.$axios.patch('admin/comments', {id: item.id, deleted: true}).then(() => {
-        this.refresh()
+        this.$refs.table.refresh()
       })
     },
     onRestore(item) {
       this.$axios.patch('admin/comments', {id: item.id, deleted: false}).then(() => {
-        this.refresh()
+        this.$refs.table.refresh()
       })
     },
     rowClass(item) {

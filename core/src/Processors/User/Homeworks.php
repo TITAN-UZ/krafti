@@ -7,6 +7,7 @@ use App\Model\Course;
 use App\Model\File;
 use App\Model\Homework;
 use Illuminate\Database\Eloquent\Builder;
+use Slim\Http\Response;
 
 class Homeworks extends GetProcessor
 {
@@ -21,7 +22,8 @@ class Homeworks extends GetProcessor
      */
     public function beforeGet($c)
     {
-        $c->where(['user_id' => $this->container->user->id]);
+        $c->where('user_id', $this->container->user->id);
+        $c->with('file:id,updated_at');
 
         return $c;
     }
@@ -34,19 +36,15 @@ class Homeworks extends GetProcessor
      */
     public function beforeCount($c)
     {
-        $c->where(['user_id' => $this->container->user->id]);
-        $c->select(['id', 'course_id', 'lesson_id', 'file_id', 'section', 'comment']);
+        $c->where('user_id', $this->container->user->id);
+        $c->select('id', 'course_id', 'lesson_id', 'file_id', 'section', 'comment');
 
         if ($course_id = (int)$this->getProperty('course_id')) {
-            $lesson_id = (int)$this->getProperty('lesson_id');
             $c->where([
                 'course_id' => $course_id,
-                'lesson_id' => $lesson_id ?: null,
+                'lesson_id' => (int)$this->getProperty('lesson_id') ?: null,
             ]);
         } else {
-            /*$c->with(['course' => function (Relation $query) {
-                $query->select(['id', 'title']);
-            }]);*/
             $c->with('course:id,title');
             $c->with('lesson:id,title,section,rank');
         }
@@ -54,26 +52,21 @@ class Homeworks extends GetProcessor
         return $c;
     }
 
-
     /**
-     * @param Homework $object
-     *
-     * @return array
+     * @param Builder $c
+     * @return Builder
      */
-    public function prepareRow($object)
+    protected function afterCount($c)
     {
-        $array = $object->toArray();
-        $array['file'] = $object->file
-            ? $object->file->getUrl()
-            : null;
-        /*$array['file_id'] = $object->file
-            ? $object->file->getUrl()
-            : null;*/
+        $c->with('file:id,updated_at');
 
-        return $array;
+        return $c;
     }
 
 
+    /**
+     * @return Response
+     */
     public function post()
     {
         /** @var Course $course */

@@ -1,16 +1,25 @@
 <template>
   <div>
-    <app-table :url="url" :fields="fields" :filters="filters" :sort="sort" :dir="dir">
+    <app-table :url="url" :fields="fields" :filters="filters" :sort="sort" :dir="dir" table-class="mt-4">
       <template slot="actions">
-        <a href="https://vimeo.com/manage/videos" target="_blank" rel="noreferrer" class="btn btn-secondary">
-          <fa :icon="['fas', 'external-link']" />
+        <b-button variant="info" :to="{name: 'courses'}">
+          <fa :icon="['fas', 'arrow-left']" /> Управление курсами
+        </b-button>
+        <a href="https://vimeo.com/manage/videos" target="_blank" rel="noreferrer" class="btn btn-secondary ml-2">
           Перейти на Vimeo
+          <fa :icon="['fas', 'external-link']" />
         </a>
+      </template>
+
+      <template slot="header">
+        <b-alert variant="warning" class="mt-3 mb-0" :show="true">
+          Вся работа с видео проводится на <strong>Vimeo</strong>, изменения выгружаются на сайт примерно раз в час.
+        </b-alert>
       </template>
 
       <template v-slot:cell(preview)="row">
         <vimeo :video="row.item.remote_key" style="cursor: pointer">
-          <div slot="button" class="btn btn-sm btn-secondary">
+          <div slot="button" class="btn btn-sm btn-outline-secondary">
             <img :src="row.value[Object.keys(row.value).shift()]" />
           </div>
         </vimeo>
@@ -27,7 +36,7 @@
       <template v-slot:cell(actions)="row">
         <a
           :href="`https://vimeo.com/manage/${row.item.remote_key}/general`"
-          class="btn btn-sm btn-secondary"
+          class="btn btn-sm btn-outline-secondary"
           target="_blank"
           rel="noreferrer"
         >
@@ -38,17 +47,11 @@
         </b-button>
       </template>
     </app-table>
-
-    <b-alert variant="warning" class="mt-3 mb-0" :show="true">
-      <strong>Внимание!</strong> Вся работа с видео проводится на
-      <a href="https://vimeo.com/manage/videos" target="_blank" rel="noreferrer"><strong>Vimeo</strong></a>
-      , изменения выгружаются на сайт примерно раз в час.
-    </b-alert>
   </div>
 </template>
 
 <script>
-import {faAlignRight, faExternalLink, faInfoCircle} from '@fortawesome/pro-solid-svg-icons'
+import {faAlignRight, faExternalLink, faInfoCircle, faArrowLeft} from '@fortawesome/pro-solid-svg-icons'
 
 export default {
   name: 'AdminVideos',
@@ -72,7 +75,7 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faInfoCircle, faExternalLink, faAlignRight)
+    this.$fa.add(faInfoCircle, faExternalLink, faAlignRight, faArrowLeft)
   },
   head() {
     return {

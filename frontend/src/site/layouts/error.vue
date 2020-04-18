@@ -24,5 +24,8 @@ export default {
       },
     },
   },
+  created() {
+    console.error(this.error)
+  },
 }
 </script>

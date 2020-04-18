@@ -51,10 +51,10 @@
                   <div class="form-row form-body align-items-center">
                     <div class="col-lg-6 col-12">
                       <b-form-group :disabled="loading">
-                        <b-form-input v-model.trim="record.name" placeholder="Имя Фамилия" autofocus required />
+                        <b-form-input v-model="record.name" placeholder="Имя Фамилия" autofocus required />
                       </b-form-group>
                       <b-form-group :disabled="loading">
-                        <input-phone v-model.trim="record.phone" placeholder="Номер телефона" required />
+                        <input-phone v-model="record.phone" placeholder="Номер телефона" required max-length="13" />
                       </b-form-group>
                       <b-form-group :disabled="loading" class="mb-lg-0">
                         <b-form-input

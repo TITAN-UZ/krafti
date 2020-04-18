@@ -62,7 +62,7 @@ export default {
         record: record.data,
       }
     } catch (e) {
-      return error({statusCode: 404, message: 'Страница не найдена'})
+      return error(e)
     }
   },
   created() {

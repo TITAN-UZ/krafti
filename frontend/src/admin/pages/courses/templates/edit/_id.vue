@@ -1,19 +1,19 @@
 <template>
   <modal-update v-model="record" :url="url" :title="record.title">
     <template slot="fields">
-      <form-user-role :record="record" />
+      <form-template :record="record" />
     </template>
   </modal-update>
 </template>
 
 <script>
-import FormUserRole from '../../../components/forms/user-roles'
+import FormTemplate from '../../../../components/forms/template'
 
 export default {
-  components: {FormUserRole},
+  components: {FormTemplate},
   async asyncData({app, params, error}) {
     try {
-      const {data: record} = await app.$axios.get('admin/user-roles', {params})
+      const {data: record} = await app.$axios.get('admin/templates', {params})
       return {record}
     } catch (e) {
       error({statusCode: e.statusCode, message: e.data})
@@ -21,12 +21,9 @@ export default {
   },
   data() {
     return {
-      url: 'admin/user-roles',
+      url: 'admin/templates',
       record: {},
     }
-  },
-  validate({params}) {
-    return /^\d+$/.test(params.id)
   },
 }
 </script>

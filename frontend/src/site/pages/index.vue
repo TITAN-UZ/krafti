@@ -85,17 +85,15 @@
                     <h2 class="section__title">Попробуйте бесплатно!</h2>
                   </div>
                 </div>
-                <div class="d-flex lessons__list align-items-start">
-                  <template v-for="item in free.rows">
-                    <div :key="item.id" class="lesson__item">
-                      <div class="lesson__item--video">
-                        <nuxt-link :to="{name: 'index-free', params: {id: item.id}}" class="video">
-                          <b-img :src="item.video.preview['1280x720']" fluid-grow />
-                        </nuxt-link>
-                      </div>
+                <b-row class="lessons__list align-items-between">
+                  <div v-for="item in free.rows" :key="item.id" :class="{'col-md-6': free.total > 1}">
+                    <div class="lesson__item--video mb-0">
+                      <nuxt-link :to="{name: 'index-free', params: {id: item.id}}" class="video">
+                        <b-img :src="item.video.preview[free.total > 1 ? '640x360' : '960x540']" fluid-grow />
+                      </nuxt-link>
                     </div>
-                  </template>
-                </div>
+                  </div>
+                </b-row>
               </div>
             </div>
           </div>
@@ -126,7 +124,7 @@
                     <b-link v-if="reviews.total > 3" :to="{name: 'reviews'}" class="link__more">См. все</b-link>
                   </div>
                 </div>
-                <user-reviews
+                <course-reviews
                   :reviews="reviews.rows"
                   row-class="row mob_container item__wrap d-flex"
                   item-class="col-12 col-lg-4 m-width-80"
@@ -180,7 +178,7 @@
 import {faPaperPlane, faCircle} from '@fortawesome/pro-duotone-svg-icons'
 import {faPlay} from '@fortawesome/pro-solid-svg-icons'
 import CoursesList from '../components/courses-list'
-import UserReviews from '../components/user/reviews'
+import CourseReviews from '../components/course/reviews'
 // import Swiper from 'swiper'
 import HeaderBg from '../components/header-bg'
 
@@ -190,7 +188,7 @@ import slide3 from '../assets/images/slider/slider-3.jpg'
 
 export default {
   auth: false,
-  components: {CoursesList, UserReviews, HeaderBg},
+  components: {CoursesList, CourseReviews, HeaderBg},
   async asyncData({app, env}) {
     const [{data: courses}, {data: reviews}, {data: free}] = await Promise.all([
       app.$axios.get('web/courses', {params: {limit: 2}}),

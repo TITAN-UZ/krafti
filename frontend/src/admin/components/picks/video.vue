@@ -1,14 +1,6 @@
 <template>
-  <div>
-    <input-complete
-      ref="input"
-      v-model="myValue"
-      :url="url"
-      field-title="title"
-      :required="required"
-      :load-empty="true"
-      @onSelected="onSelected"
-    >
+  <div class="pick-video">
+    <input-complete v-bind="$props" :url="url" :load-empty="true" @onSelected="onSelected">
       <template slot-scope="{suggestion}">
         <div class="d-flex align-items-center">
           <b-img v-if="suggestion.item.preview['100x75']" :src="suggestion.item.preview['100x75']" :rounded="true" />
@@ -19,7 +11,7 @@
         </div>
       </template>
     </input-complete>
-    <img v-if="img" :src="img" class="mt-2" />
+    <b-img v-if="img" :src="img" :rounded="true" class="mt-2" />
   </div>
 </template>
 
@@ -36,26 +28,18 @@ export default {
       required: false,
       default: 0,
     },
+    filter: {
+      type: Object,
+      required: false,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
     return {
       url: 'admin/videos?sort=id&dir=desc',
       img: null,
-    }
-  },
-  computed: {
-    myValue: {
-      get() {
-        return this.value
-      },
-      set(newValue) {
-        this.$emit('input', newValue)
-      },
-    },
-  },
-  mounted() {
-    if (!this.myValue) {
-      this.$refs.input.load()
     }
   },
   methods: {

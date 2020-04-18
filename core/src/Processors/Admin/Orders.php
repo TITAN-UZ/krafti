@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 class Orders extends ObjectProcessor
 {
 
-    protected $class = '\App\Model\Order';
+    protected $class = Order::class;
     protected $scope = 'orders';
     /** @var Builder $conditions */
     protected $conditions;
@@ -47,7 +47,8 @@ class Orders extends ObjectProcessor
             ];
             if (Order::query()->where($key)->where('status', 1)->count()) {
                 return $this->failure('У этого пользователя уже есть неоплаченный заказ, отредактируйте его');
-            } elseif (Order::query()->where($key)->where('status', 2)->where('paid_till', '>', date('Y-m-d H:i:s'))->count()) {
+            } elseif (Order::query()->where($key)->where('status', 2)->where('paid_till', '>',
+                date('Y-m-d H:i:s'))->count()) {
                 return $this->failure('Этот курс у пользователя уже оплачен');
             }
 
@@ -70,15 +71,17 @@ class Orders extends ObjectProcessor
      */
     protected function beforeCount($c)
     {
-        $c->select('orders.*');
-
         if ($query = trim($this->getProperty('query'))) {
-            $c->join('courses', 'courses.id', '=', 'orders.course_id');
-            $c->join('users', 'users.id', '=', 'orders.user_id');
-            $c->where(function (Builder $c) use ($query) {
-                $c->where('courses.title', 'LIKE', "%$query%");
-                $c->orWhere('users.fullname', 'LIKE', "%$query%");
-                $c->orWhere('users.email', 'LIKE', "%$query%");
+            $c->where('id', 'LIKE', "%{$query}%");
+            $c->orWhere(function (Builder $c) use ($query) {
+                $c->whereHas('course', function (Builder $c) use ($query) {
+                    $c->where('title', 'LIKE', "%$query%");
+                });
+                $c->orWhereHas('user', function (Builder $c) use ($query) {
+                    $c->where('fullname', 'LIKE', "%$query%");
+                    $c->orWhere('email', 'LIKE', "%$query%");
+                });
+
             });
         }
 
@@ -119,7 +122,7 @@ class Orders extends ObjectProcessor
     public function prepareList(array $array)
     {
         if ($c = $this->conditions) {
-            $c->where(['status' => 2]);
+            $c->where('status', 2);
             if ($this->getProperty('service') !== 'internal') {
                 $c->where('manual', false);
             }

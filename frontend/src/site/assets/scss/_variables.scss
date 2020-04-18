@@ -41,3 +41,6 @@ $btn-focus-box-shadow: none;
 // Fonts
 $default-font: 'sfprodisplay', sans-serif;
 $box-shadow: 0 .5rem 1rem rgba($black, .15);
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";

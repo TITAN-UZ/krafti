@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import FormUserRole from '../../components/forms/user-roles'
+import FormUserRole from '../../../components/forms/user-roles'
 
 export default {
   components: {FormUserRole},

@@ -19,9 +19,9 @@
       label-tap-to-cancel="Отмена"
       label-file-waiting-for-size="Ожидание размера"
     />
-    <div v-if="imageId" class="uploaded">
+    <div v-if="Object.keys(image).length" class="uploaded">
       <div>Вы уже отправили нам вот эту работу</div>
-      <img :src="$image({id: imageId}, `${size}x${size}`, 'resize')" />
+      <b-img-lazy :src="$image(image, `${size}x${size}`, 'resize')" alt="" />
     </div>
   </div>
 </template>
@@ -46,10 +46,11 @@ export default {
       type: Number,
       required: true,
     },
-    imageId: {
-      type: Number,
-      required: false,
-      default: null,
+    image: {
+      type: Object,
+      default() {
+        return {}
+      },
     },
     size: {
       type: Number,
@@ -63,7 +64,7 @@ export default {
     }
   },
   methods: {
-    handleUpload(fieldName, file, metadata, load, error, progress, abort) {
+    async handleUpload(fieldName, file, metadata, load, error, progress, abort) {
       const formData = new FormData()
       metadata.type = 'photo'
       formData.append('file', file, file.name)
@@ -72,7 +73,7 @@ export default {
       formData.append('lesson_id', this.lessonId)
       formData.append('section', this.section)
 
-      this.$axios({
+      const {data: res} = await this.$axios({
         method: 'POST',
         url: '/user/homeworks',
         data: formData,
@@ -80,28 +81,14 @@ export default {
           progress(e.lengthComputable, e.loaded, e.total)
         },
       })
-        .then((res) => {
-          load(res.data.file)
-          this.$refs.filepond.removeFile()
+      load(res.file)
 
-          this.$notify.success({message: 'Ваша работа успешно загружена!'})
+      this.$refs.filepond.removeFile()
+      this.$store.commit('courses/progress', {id: this.courseId, data: res.progress})
+      this.$store.commit('courses/homeworks', {id: this.courseId, data: res.homeworks})
+      this.$notify.success({message: 'Ваша работа успешно загружена!'})
 
-          if (this.lessonId !== null && this.lessonId > 0) {
-            this.$root.$emit('app::lesson' + this.lessonId + '::homework', res.data.homeworks[0])
-          } else {
-            const homeworks = {}
-            res.data.homeworks.forEach((v) => {
-              homeworks[v.section] = v
-            })
-            this.$root.$emit('app::course' + this.courseId + '::progress', res.data.progress)
-            this.$root.$emit('app::course' + this.courseId + '::homeworks', homeworks)
-          }
-        })
-        .catch(() => {})
-
-      return {
-        abort,
-      }
+      return {abort}
     },
   },
 }

@@ -145,3 +145,39 @@ export default {
   },
 }
 </script>
+
+<style scoped lang="scss">
+div::v-deep {
+  .autosuggest__results-container {
+    position: relative;
+    width: 100%;
+    .autosuggest__results {
+      background: $body-bg;
+      position: absolute;
+      z-index: $zindex-modal + 10;
+      width: 100%;
+      max-height: 400px;
+      overflow-y: scroll;
+      box-shadow: $box-shadow;
+      border: 1px solid $border-color;
+      border-top: 0;
+      border-radius: 0 0 $input-border-radius $input-border-radius;
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        li {
+          padding: 10px;
+          &:not(:last-child) {
+            border-bottom: 1px solid $border-color;
+          }
+        }
+      }
+      &-item--highlighted {
+        background-color: $lightestGray;
+        cursor: pointer;
+      }
+    }
+  }
+}
+</style>

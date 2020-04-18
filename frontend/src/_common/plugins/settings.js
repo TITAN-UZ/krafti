@@ -24,8 +24,6 @@ export default ({app, $axios}, inject) => {
         {to: {name: 'comments'}, title: 'Комментарии', scope: 'comments'},
         {to: {name: 'homeworks'}, title: 'Домашние работы', scope: 'homeworks'},
         {to: {name: 'courses'}, title: 'Курсы', scope: 'courses'},
-        {to: {name: 'videos'}, title: 'Видео', scope: 'videos'},
-        {to: {name: 'user-roles'}, title: 'Группы', scope: 'users'},
       ],
       header: [
         // {to: {name: '/'}, title: 'Главная', scope: false},

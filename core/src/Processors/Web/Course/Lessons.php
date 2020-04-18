@@ -2,155 +2,128 @@
 
 namespace App\Processors\Web\Course;
 
+use App\GetProcessor;
 use App\Model\Course;
-use App\Model\Homework;
 use App\Model\Lesson;
-use App\Model\UserLike;
 use App\Model\UserProgress;
-use App\Processor;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Lessons extends Processor
+class Lessons extends GetProcessor
 {
-    protected $scope = 'lessons';
+    protected $class = Lesson::class;
+    // protected $scope = 'lessons';
+    /** @var Course $course */
+    protected $course;
+    /** @var UserProgress $progress */
+    protected $progress;
 
-
-    protected function get()
+    public function get()
     {
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
+            return $this->failure('Не могу загрузить курс');
+        } elseif (!$course->active) {
             return $this->failure('Не могу загрузить курс');
         } elseif (!$course->wasBought($this->container->user)) {
             return $this->failure('Вы забыли оплатить этот курс');
         }
 
+        $this->setProperty('limit', 0);
+        $this->course = $course;
+        $this->progress = $this->container->user->getProgress($course);
+
         if ($id = (int)$this->getProperty('id')) {
             /** @var Lesson $lesson */
-            if (!$lesson = Lesson::query()->find($id)) {
-                return $this->failure('Не могу загрузить урок');
+            if ($lesson = Lesson::query()->find($id)) {
+                if (!$lesson->checkAccess($this->progress)) {
+                    return $this->failure('Вы еще не открыли этот урок');
+                }
             }
-
-            /** @var UserProgress $progress */
-            $progress = $this->container->user->getProgress($course);
-            if ($progress->section == $lesson->section && $lesson->rank > $progress->rank) {
-                $progress = $this->container->user->makeProgress($course, $lesson->section, $lesson->rank);
-            }
-
-            // Bonus
-            if (!$lesson->section && $progress->section) {
-                return $this->failure('Вы еще не открыли бонусный урок!');
-            }
-
-            /** @var UserLike $like */
-            $like = $this->container->user->likes()->where(['lesson_id' => $id])->select('value')->first();
-
-            $data = [
-                'id' => $lesson->id,
-                'title' => $lesson->title,
-                'description' => $lesson->description,
-                'products' => $lesson->products,
-                'video' => $lesson->video
-                    ? [
-                        'vimeo' => $lesson->video->remote_key,
-                        'title' => $lesson->video->title,
-                        'description' => $lesson->video->description,
-                        'preview' => $lesson->video->preview,
-                    ]
-                    : null,
-                'bonus' => $lesson->bonus
-                    ? [
-                        'vimeo' => $lesson->bonus->remote_key,
-                        'title' => $lesson->bonus->title,
-                        'description' => $lesson->bonus->description,
-                        'preview' => $lesson->bonus->preview,
-                    ]
-                    : null,
-                'file' => $lesson->file
-                    ? $lesson->file->getUrl()
-                    : null,
-                'author' => $lesson->author
-                    ? [
-                        'id' => $lesson->author->id,
-                        'fullname' => $lesson->author->fullname,
-                        'company' => $lesson->author->company,
-                        'description' => $lesson->author->description,
-                        'photo' => $lesson->author->photo
-                            ? $lesson->author->photo->getUrl()
-                            : null,
-                    ]
-                    : null,
-                'likes_count' => $lesson->likes_count,
-                'dislikes_count' => $lesson->dislikes_count,
-                'like' => $like
-                    ? $like->value
-                    : null,
-                'progress' => [
-                    'section' => $progress->section,
-                    'rank' => $progress->rank,
-                ],
-                'extra' => $lesson->extra,
-                'free' => $lesson->free,
-                'next' => [],
-                'comments' => [],
-                'homework' => [],
-            ];
-
-            $next_lessons = $course->lessons()
-                ->where(['section' => $lesson->section])
-                ->where('rank', '>', $lesson->rank)
-                ->orderBy('rank', 'asc')
-                ->get();
-            /** @var Lesson $next */
-            foreach ($next_lessons as $next) {
-                $data['next'][] = [
-                    'id' => $next->id,
-                    'title' => $next->title,
-                    'section' => $next->section,
-                    'rank' => $next->rank,
-                    'extra' => $next->extra,
-                    'free' => $next->free,
-                    'description' => $next->description,
-                    'preview' => $next->video
-                        ? $next->video->preview
-                        : null,
-                ];
-            }
-
-            /** @var Homework $homework */
-            if ($homework = $lesson->homeworks()->where(['user_id' => $this->container->user->id])->first()) {
-                $data['homework'] = [
-                    'id' => $homework->id,
-                    'file_id' => $homework->file_id,
-                    'file' => $homework->file
-                        ? $homework->file->getUrl()
-                        : null,
-                ];
-            }
-
-            return $this->success($data);
         }
 
-        $lessons = [];
-        /** @var Lesson $lesson */
-        foreach ($course->lessons()->where(['active' => true])->orderBy('section', 'asc')->orderBy('rank', 'asc')->get() as $lesson) {
-            $lessons[] = [
-                'id' => $lesson->id,
-                'title' => $lesson->title,
-                'description' => $lesson->description,
-                'section' => $lesson->section,
-                'rank' => $lesson->rank,
-                'extra' => $lesson->extra,
-                'free' => $lesson->free,
-                'views_count' => $lesson->views_count,
-                'likes_count' => $lesson->likes_count,
-                'preview' => $lesson->video
-                    ? $lesson->video->preview
-                    : [],
-            ];
-        }
+        return parent::get();
+    }
 
-        return $this->success([
-            'rows' => $lessons,
-            'total' => count($lessons),
+    public function beforeGet($c)
+    {
+        $c->where(['active' => true, 'course_id' => $this->course->id]);
+        $c->with([
+            'course:id,title,template_id',
+            'course.template',
+            'course.progresses' => function (HasMany $c) {
+                $c->where('user_id', $this->container->user->id);
+                $c->select('course_id', 'section', 'rank');
+            },
         ]);
+        $c->with('video:id,remote_key,title,description,preview');
+        $c->with('bonus:id,remote_key,title,description,preview');
+        $c->with('author:id,fullname,company,description,photo_id', 'author.photo:id,updated_at');
+        $c->with('file:id,updated_at');
+        $c->with([
+            'likes' => function (HasMany $c) {
+                $c->where('user_id', $this->container->user->id);
+                $c->select('lesson_id', 'value');
+            },
+            'homeworks' => function (HasMany $c) {
+                $c->where('user_id', $this->container->user->id);
+                $c->select('id', 'file_id');
+                $c->with('file:id,updated_at');
+            },
+        ]);
+
+        return $c;
+    }
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    public function beforeCount($c)
+    {
+        $c->where(['course_id' => $this->course->id, 'active' => true]);
+        if ($section = (int)$this->getProperty('section')) {
+            $c->where('section', $section);
+        }
+
+        return $c;
+    }
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    public function afterCount($c)
+    {
+        $c->orderBy('section', 'asc')->orderBy('rank', 'asc');
+        $c->select('id', 'title', 'description', 'section', 'rank', 'extra', 'free', 'views_count', 'likes_count',
+            'video_id');
+        $c->with('video:id,preview');
+
+        return $c;
+    }
+
+    /**
+     * @param Lesson $object
+     * @return array
+     */
+    public function prepareRow($object)
+    {
+        $array = $object->toArray();
+        $array['locked'] = !$object->checkAccess($this->progress);
+        if (isset($array['homeworks'])) {
+            $array['homework'] = array_pop($array['homeworks']);
+            unset($array['homeworks']);
+        }
+        if (isset($array['course']['progresses'])) {
+            $array['course']['progress'] = array_pop($array['course']['progresses']);
+            unset($array['course']['progresses']);
+        }
+        if (isset($array['likes'])) {
+            $array['like'] = array_pop($array['likes']);
+            unset($array['likes']);
+        }
+
+        return $array;
     }
 }

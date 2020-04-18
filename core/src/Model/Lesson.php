@@ -193,4 +193,28 @@ class Lesson extends Model
         return $count;
     }
 
+    /**
+     * @param UserProgress $progress
+     * @return bool
+     */
+    public function checkAccess($progress)
+    {
+        if ($this->extra || $this->free || (!$progress->section && !$progress->rank)) {
+            return true;
+        }
+
+        // Bonus lesson
+        if (!$this->section && $progress->section) {
+            return false;
+        }
+        // Regular lessons
+        if ($this->section > $progress->section) {
+            return false;
+        } elseif ($this->section === $progress->section) {
+            return $this->rank <= $progress->rank;
+        }
+
+        return true;
+    }
+
 }

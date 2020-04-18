@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-form-group label="Выберите покупателя:" description="Начните набор для появления подсказки">
-      <pick-user id="input-user" v-model="record.user_id" :role-id="[3]" required />
+      <pick-user v-model="record.user_id" required />
     </b-form-group>
 
     <b-form-group label="Статус заказа:">

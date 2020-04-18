@@ -26,7 +26,9 @@ export default {
         cover: {},
         video_id: null,
         bonus_id: null,
+        template_id: 2,
         active: false,
+        template: {},
       },
     }
   },

@@ -114,9 +114,7 @@ import rbLogo from '../../../../assets/images/general/payment-robokassa.svg'
 
 export default {
   auth: true,
-  components: {
-    'auth-form': AuthForm,
-  },
+  components: {AuthForm},
   async asyncData({app, params}) {
     const {data: record} = await app.$axios.get('web/courses', {params: {id: params.cid}})
     return {
@@ -207,22 +205,19 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.payment-form {
+<style scoped lang="scss">
+.payment-form::v-deep {
   .payment {
     button {
       padding: 15px 20px;
-
       &.active {
         border-color: #ff7474;
-
         &:focus {
           box-shadow: 0 0 0 0.2rem rgba(200, 119, 119, 0.5);
         }
       }
     }
   }
-
   img {
     max-width: 100px;
     //filter: drop-shadow(0 0 5px rgba(255, 255, 255, .7));

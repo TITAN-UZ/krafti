@@ -13,19 +13,19 @@
         <div v-else class="small text-muted">Домашняя работа этапа {{ row.item.section }}</div>
       </template>
       <template v-slot:cell(file)="row">
-        <nuxt-link class="btn btn-sm btn-secondary" :to="{name: 'homeworks-edit-id', params: {id: row.item.id}}">
+        <b-button size="sm" variant="outline-secondary" :to="{name: 'homeworks-edit-id', params: {id: row.item.id}}">
           <b-img-lazy v-if="row.value" :src="$image(row.value, '200x100', 'fit')" height="50" />
-        </nuxt-link>
+        </b-button>
       </template>
 
       <template slot="row-details" slot-scope="row">
         <blockquote>{{ row.item.comment }}</blockquote>
       </template>
       <template v-slot:cell(actions)="row">
-        <nuxt-link class="btn btn-sm btn-secondary" :to="{name: 'homeworks-edit-id', params: {id: row.item.id}}">
+        <b-button size="sm" variant="outline-secondary" :to="{name: 'homeworks-edit-id', params: {id: row.item.id}}">
           <fa :icon="['fas', 'edit']" />
-        </nuxt-link>
-        <button v-if="row.item.comment" class="btn btn-sm btn-secondary" @click="row.toggleDetails">
+        </b-button>
+        <button v-if="row.item.comment" class="btn btn-sm btn-outline-secondary" @click="row.toggleDetails">
           <fa :icon="['fas', 'align-right']" />
         </button>
       </template>

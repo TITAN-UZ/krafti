@@ -4,8 +4,8 @@
       <form-course :record="record" />
     </template>
     <template slot="tabs">
-      <b-tab title="Уроки" active>
-        <table-lessons :course-id="record.id" />
+      <b-tab title="Уроки">
+        <table-lessons :record="record" />
       </b-tab>
       <b-tab title="Галерея">
         <gallery-manager :object-id="record.id" object-name="Course" />

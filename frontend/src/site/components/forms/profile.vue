@@ -17,7 +17,7 @@
     </b-form-group>
 
     <b-form-group class="mb-3" label="Номер телефона">
-      <input-phone v-model="record.phone" />
+      <input-phone v-model="record.phone" max-length="13" />
     </b-form-group>
 
     <b-form-group class="mb-3" label="Аккаунт Instagram">

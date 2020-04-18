@@ -9,6 +9,7 @@ Config.mode = 'spa'
 
 Config.plugins.push('~/plugins/components.js')
 Config.plugins.push('~/plugins/charts.js')
+Config.plugins.push('~/plugins/modals.js')
 
 Config.router = {
   base: '/admin/',
@@ -30,5 +31,10 @@ Config.auth.redirect = {
   login: '/',
   logout: '/',
 }
+
+Config.server =
+  process.env.NODE_ENV === 'production'
+    ? {socket: '../tmp/admin.socket', timing: {total: true}}
+    : {host: '0.0.0.0', port: 4000}
 
 export default Config
