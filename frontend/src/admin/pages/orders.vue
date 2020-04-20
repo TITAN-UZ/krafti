@@ -94,6 +94,10 @@ export default {
   },
   created() {
     this.$fa.add(faPlus, faTimes, faEdit)
+
+    this.setInterval(() => {
+      this.$refs.table.refresh()
+    }, 60000)
   },
   methods: {
     onDelete(item) {

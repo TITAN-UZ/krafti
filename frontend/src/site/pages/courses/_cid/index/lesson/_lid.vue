@@ -281,7 +281,10 @@ export default {
     async onLike(action) {
       this.loading = action + ':' + this.record.id
       try {
-        this.record.like = action === 'like' ? 1 : -1
+        if (!this.record.like) {
+          this.record.like = {}
+        }
+        this.record.like.value = action === 'like' ? 1 : -1
         const {data: res} = await this.$axios.post('user/like', {lesson_id: this.record.id, action})
         this.record.likes_count = res.likes_count
         this.record.dislikes_count = res.dislikes_count

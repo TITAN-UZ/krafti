@@ -78,7 +78,14 @@ export default {
         tooltip: {
           x: {
             formatter(idx) {
-              return that.$options.filters.date(that.xaxis[idx - 1], 'DD MMMM YYYY')
+              const date = that.$moment(that.xaxis[idx - 1])
+              if (that.type === 'year') {
+                return date.format('YYYY')
+              } else if (that.type === 'month') {
+                return that.$options.filters.ucfirst(date.format('MMMM YYYY'))
+              } else {
+                return date.format('DD MMMM YYYY')
+              }
             },
           },
           y: {
@@ -150,6 +157,10 @@ export default {
   created() {
     this.$fa.add(faChevronLeft, faChevronRight, faSync)
     this.load()
+
+    this.setInterval(() => {
+      this.load()
+    }, 60000)
   },
   methods: {
     async load() {

@@ -19,7 +19,7 @@ class Payment extends Processor
         /** @var Promo $promo */
         $promo = Promo::query()->where('code', trim($this->getProperty('code')))->first();
         /** @var Course $course */
-        $course = Course::query()->find((int)$this->getProperty('course_id'))->first();
+        $course = Course::query()->find((int)$this->getProperty('course_id'));
 
         if ($promo && $course) {
             $check = $promo->check($course->id);
