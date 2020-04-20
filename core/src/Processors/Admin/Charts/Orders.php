@@ -46,6 +46,7 @@ class Orders extends GetProcessor
         $c = Order::query()
             ->whereBetween('created_at', $dates)
             ->where('service', '!=', 'internal')
+            ->where('status', 2)
             ->groupByRaw($group)
             ->orderBy('created_at', 'asc')
             ->selectRaw($select . ' as date, SUM(cost) as value');

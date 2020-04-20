@@ -1,6 +1,6 @@
 <template>
   <div class="pick-video">
-    <input-complete v-bind="$props" :url="url" :load-empty="true" @onSelected="onSelected">
+    <input-complete v-model="myValue" v-bind="$props" :url="url" :load-empty="true" @onSelected="onSelected">
       <template slot-scope="{suggestion}">
         <div class="d-flex align-items-center">
           <b-img v-if="suggestion.item.preview['100x75']" :src="suggestion.item.preview['100x75']" :rounded="true" />
@@ -41,6 +41,16 @@ export default {
       url: 'admin/videos?sort=id&dir=desc',
       img: null,
     }
+  },
+  computed: {
+    myValue: {
+      get() {
+        return this.value
+      },
+      set(newValue) {
+        this.$emit('input', newValue)
+      },
+    },
   },
   methods: {
     onSelected(item) {

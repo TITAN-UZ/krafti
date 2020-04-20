@@ -11,6 +11,14 @@ import FormLesson from '../../../../components/forms/lesson'
 
 export default {
   components: {FormLesson},
+  async asyncData({app, params, error}) {
+    try {
+      const {data: course} = await app.$axios.get('admin/courses', {params: {id: params.cid}})
+      return {course}
+    } catch (e) {
+      error({statusCode: e.statusCode, message: e.data})
+    }
+  },
   data() {
     return {
       url: 'admin/lessons',
@@ -28,7 +36,11 @@ export default {
         extra: false,
         free: false,
       },
+      course: {},
     }
+  },
+  created() {
+    this.record.course = this.course
   },
 }
 </script>

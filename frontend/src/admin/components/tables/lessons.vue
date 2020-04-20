@@ -10,7 +10,7 @@
     @onLoad="onLoad"
   >
     <template slot="actions">
-      <b-button variant="secondary" :to="{name: 'courses-edit-cid-create', params: {cid: courseId}}">
+      <b-button variant="secondary" :to="{name: 'courses-edit-cid-create', params: {cid: record.id}}">
         <fa :icon="['fas', 'plus']" /> Добавить
       </b-button>
 
@@ -48,7 +48,7 @@
           <fa :icon="['fas', 'edit']" />
         </b-button>
         <b-button
-          v-if="row.item.rank > 0 && filters.section"
+          v-if="row.item.rank > 0 && showArrows"
           size="sm"
           variant="outline-secondary"
           @click="moveUp(row.item.id)"
@@ -56,7 +56,7 @@
           <fa :icon="['fas', 'arrow-up']" />
         </b-button>
         <b-button
-          v-if="row.item.rank < totalRows - 1 && filters.section"
+          v-if="row.item.rank < totalRows - 1 && showArrows"
           size="sm"
           variant="outline-secondary"
           @click="moveDown(row.item.id)"
@@ -106,6 +106,9 @@ export default {
       fields.push({key: 'actions', label: 'Действия'})
 
       return fields
+    },
+    showArrows() {
+      return this.filters.section || !this.record.template.course_steps
     },
   },
   created() {

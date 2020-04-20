@@ -62,7 +62,8 @@ class Oauth2 extends Processor
                 $oauth->save();
 
                 if ($provider == 'instagram' && !$this->container->user->instagram) {
-                    $this->container->user->instagram = array_pop(explode('/', $profile->profileURL));
+                    $tmp = explode('/', $profile->profileURL);
+                    $this->container->user->instagram = array_pop($tmp);
                     $this->container->user->save();
                 }
 
@@ -126,15 +127,19 @@ class Oauth2 extends Processor
                         }
                     }
                 }
+
                 $oauth->fill(json_decode(json_encode($profile), true));
                 if (!$oauth->save()) {
                     $this->container->logger->error('Could not save oAuth', ['data' => $oauth->toArray()]);
+                    return $this->failure([
+                        'error' => 'Не могу сохранить данные соцсети',
+                    ]);
                 }
             }
 
             if (!$user->active) {
                 return $this->failure([
-                    'error' => 'Авторизация невозможна - пользователь заблокирован',
+                    'error' => 'Вход невозможен - пользователь заблокирован',
                 ]);
             }
 
@@ -167,9 +172,12 @@ class Oauth2 extends Processor
         if (!$this->container->user) {
             return $this->failure('Вы должны быть авторизованы для выполнения этой операции');
         }
+        if (!$this->container->user->email && $this->container->user->oauths()->count() < 2) {
+            return $this->failure('Вы не можете удалить свой единственный способ входа на сайт');
+        }
 
         /** @var UserOauth $oauth */
-        if ($oauth = $this->container->user->oauths()->where(['provider' => $provider])->first()) {
+        if ($oauth = $this->container->user->oauths()->where('provider', $provider)->first()) {
             try {
                 $oauth->delete();
             } catch (Throwable $e) {

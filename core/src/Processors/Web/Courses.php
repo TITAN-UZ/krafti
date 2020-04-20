@@ -89,7 +89,7 @@ class Courses extends GetProcessor
             $array['bought'] = $object->wasBought($this->container->user);
             if (!$array['bought']) {
                 $array['discount'] = $object->getDiscount($this->container->user);
-            } elseif ($order = $this->container->user->orders()->where(['course_id' => $object->id])->first()) {
+            } elseif ($order = $this->container->user->orders()->where('course_id', $object->id)->orderBy('paid_till', 'desc')->first()) {
                 /** @var Order $order */
                 $array['paid_till'] = $order->paid_till;
             }

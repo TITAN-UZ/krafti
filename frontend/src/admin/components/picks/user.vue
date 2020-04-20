@@ -1,6 +1,6 @@
 <template>
   <div class="pick-user">
-    <input-complete url="admin/users" field-title="fullname" v-bind="$props">
+    <input-complete v-model="myValue" url="admin/users" field-title="fullname" v-bind="$props" :load-empty="true">
       <template slot-scope="{suggestion}">
         <user-avatar :user="suggestion.item" :size="40" :show-name="true" />
       </template>
@@ -26,6 +26,16 @@ export default {
       required: false,
       default() {
         return {}
+      },
+    },
+  },
+  computed: {
+    myValue: {
+      get() {
+        return this.value
+      },
+      set(newValue) {
+        this.$emit('input', newValue)
       },
     },
   },

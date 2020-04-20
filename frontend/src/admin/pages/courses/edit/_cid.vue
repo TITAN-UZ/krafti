@@ -4,7 +4,7 @@
       <form-course :record="record" />
     </template>
     <template slot="tabs">
-      <b-tab title="Уроки">
+      <b-tab title="Уроки" active>
         <table-lessons :record="record" />
       </b-tab>
       <b-tab title="Галерея">
