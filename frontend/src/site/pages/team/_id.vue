@@ -16,18 +16,9 @@
                       <h2 class="teacher__info--name">{{ record.fullname }}</h2>
                       <div class="teacher__info--position">{{ record.company }}</div>
                     </div>
-                    <div v-if="record.description" class="teacher__text" v-html="$md.render(record.description)"></div>
+                    <div v-if="record.description" class="teacher__text" v-html="$md.render(record.description)" />
                     <div class="teacher__gallery">
-                      <gallery-lightbox :object-id="record.id" object-name="User" />
-                      <!--
-                        <div class="left__block mr-1">
-                          <img class="img-responsive" src="~assets/images/content/teacher/img.jpg" alt="">
-                        </div>
-                        <div class="right__block">
-                          <img class="mb-15 img-responsive" src="~assets/images/content/teacher/img-2.jpg" alt="">
-                          <img class="img-responsive" src="~assets/images/content/teacher/img-3.jpg" alt="">
-                        </div>
-                      -->
+                      <gallery-lightbox :object-id="record.id" object-name="User" :per-page="perPage" />
                     </div>
                     <div
                       v-if="record.long_description"
@@ -56,16 +47,22 @@ export default {
   components: {GalleryLightbox},
   async asyncData({app, params, error}) {
     try {
-      const [record] = await Promise.all([app.$axios.get('web/authors', {params})])
-
-      return {
-        record: record.data,
-      }
+      const {data: record} = await app.$axios.get('web/authors', {params})
+      return {record}
     } catch (e) {
       return error({statusCode: e.status, message: e.data})
     }
   },
-  created() {
+  data() {
+    return {
+      record: {},
+      perPage: [
+        [100, 1],
+        [376, 2],
+      ],
+    }
+  },
+  mounted() {
     this.$app.header_image.set(false)
   },
   head() {

@@ -69,3 +69,11 @@ export default {
   },
 }
 </script>
+
+<style scoped lang="scss">
+.bonus__lesson--video {
+  .disabled::before {
+    width: 30px !important;
+  }
+}
+</style>

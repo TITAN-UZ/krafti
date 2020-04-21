@@ -96,7 +96,7 @@ export default {
     min-height: 166px;
   }
   .disabled::before {
-    width: 30px;
+    width: 30px !important;
   }
 }
 </style>

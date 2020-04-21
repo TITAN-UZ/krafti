@@ -142,13 +142,12 @@
             </div>
           </div>
         </section>
-        <section class="lesson__content--bottom container__940 mt-5">
-          <div class="container">
+
+        <section v-b-visible.once="showFooter" class="lesson__content--bottom container__940 mt-5">
+          <div v-if="showComments" class="container">
             <div class="row">
               <div :class="{'col-12': true, 'col-lg-7': nextLessons.length > 0}">
-                <client-only>
-                  <comments-list :course-id="record.course.id" :lesson-id="record.id" />
-                </client-only>
+                <comments-list :course-id="record.course.id" :lesson-id="record.id" />
               </div>
 
               <div v-if="nextLessons.length" class="col-lg-5 col-12">
@@ -168,7 +167,7 @@
                         <div>
                           <strong>{{ item.title }}</strong>
                         </div>
-                        <div>{{ item.description | truncate(50) }}</div>
+                        <!--<div>{{ item.description | truncate(50) }}</div>-->
                       </div>
                     </template>
                   </course-lessons>
@@ -214,6 +213,7 @@ export default {
   data() {
     return {
       loading: false,
+      showComments: false,
       url: 'web/course/lessons',
       record: {},
       lessons: [],
@@ -247,6 +247,11 @@ export default {
     this.loadLessons()
   },
   methods: {
+    showFooter(isVisible) {
+      if (isVisible === true) {
+        this.showComments = true
+      }
+    },
     hideModal() {
       this.$refs.modalVideo.hide()
     },
@@ -270,12 +275,13 @@ export default {
       }
       // Scroll to comment
       if (this.$route.hash) {
+        this.showComments = true
         this.setTimeout(() => {
           const elem = document.getElementById(this.$route.hash.replace(/^#/, ''))
           if (elem) {
             elem.scrollIntoView()
           }
-        }, 200)
+        }, 500)
       }
     },
     async onLike(action) {
@@ -325,16 +331,19 @@ div::v-deep {
     border-top-left-radius: 28.3099px;
     border-top-right-radius: 28.3099px;
   }
-
   .wrapper__science {
     iframe {
       border-radius: 15px;
     }
   }
-
   .row {
     margin-left: 0;
     margin-right: 0;
+  }
+  .media--video {
+    .disabled::before {
+      width: 30px !important;
+    }
   }
 }
 </style>

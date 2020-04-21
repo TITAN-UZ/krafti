@@ -10,6 +10,10 @@
         @onSubmit="onSubmit"
       />
 
+      <div v-if="loading" class="text-center mt-5 mb-5">
+        <b-spinner style="width: 2rem; height: 2rem;" />
+      </div>
+
       <!-- Thread -->
       <comments-item
         v-for="comment in comments"
@@ -87,6 +91,7 @@ export default {
       text: '',
       total: 0,
       comments: [],
+      loading: true,
     }
   },
   computed: {
@@ -113,6 +118,7 @@ export default {
         })
         this.total = res.total
         this.comments = this.prepareComments(res.rows)
+        this.loading = false
       } catch (e) {
         console.error(e)
       }

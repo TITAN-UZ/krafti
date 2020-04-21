@@ -1,23 +1,29 @@
 <template>
-  <div class="gallery-lightbox">
-    <div class="gallery-lightbox-items">
-      <div class="swiper-container">
-        <div class="swiper-wrapper">
-          <a v-for="item in items" :key="item.id" :href="$image(item, '1000x1000', 'fit')" class="swiper-slide">
-            <b-img-lazy :src="$image(item, '200x200', 'fit')" alt="" height="200" />
-          </a>
-        </div>
-      </div>
-    </div>
+  <div>
+    <b-carousel v-model="slide" class="p-2 rounded" v-bind="carousel" :interval="interval">
+      <b-carousel-slide v-for="(rows, section) in slides" :key="section">
+        <template v-slot:img>
+          <div class="d-flex justify-content-around">
+            <b-img
+              v-for="(item, idx) in rows"
+              :key="idx"
+              :src="$image(item.file, '200x200', 'fit')"
+              :rounded="true"
+              style="cursor: pointer"
+              @click="onSlideClick(idx, section)"
+            />
+          </div>
+        </template>
+      </b-carousel-slide>
+    </b-carousel>
+
+    <vue-gallery :images="images" :index="image" @close="image = null" @onslide="onImageSlide" />
   </div>
 </template>
 
 <script>
-import Swiper from 'swiper'
-
 export default {
   name: 'GalleryLightbox',
-
   props: {
     objectId: {
       type: Number,
@@ -29,85 +35,79 @@ export default {
       required: false,
       default: '',
     },
+    perPage: {
+      type: Array,
+      default() {
+        return [
+          [200, 1],
+          [376, 2],
+          [768, 3],
+          [992, 4],
+        ]
+      },
+    },
   },
   data() {
     return {
+      url: 'web/gallery',
       items: [],
-      options: {
-        history: false,
-        shareEl: false,
-        zoomEl: false,
-        bgOpacity: 0.7,
+      image: null,
+      slide: 0,
+      width: 960,
+      carousel: {
+        background: '#f5f5f5',
+        interval: 5000,
       },
-      swiper: null,
-      gallery: null,
     }
   },
-  mounted() {
+  computed: {
+    limit() {
+      return this.perPage.filter((item) => this.width >= item[0]).pop()[1]
+    },
+    slides() {
+      const items = JSON.parse(JSON.stringify(this.items))
+      const images = []
+      while (items.length) {
+        images.push(items.splice(0, this.limit))
+      }
+      return images
+    },
+    images() {
+      return this.items.map((item) => {
+        return this.$image(item.file, '1000x1000', 'resize')
+      })
+    },
+    interval() {
+      return this.image !== null ? 0 : this.carousel.interval
+    },
+  },
+  created() {
     this.loadFiles()
   },
+  mounted() {
+    this.width = window.innerWidth
+    window.onresize = () => {
+      this.width = window.innerWidth
+    }
+  },
   methods: {
-    loadFiles() {
-      this.$axios.get('web/gallery', {params: {object_id: this.objectId, object_name: this.objectName}}).then((res) => {
-        this.items = res.data.rows
-        this.setTimeout(() => {
-          this.initGallery('.swiper-wrapper')
-          this.initSwiper('.swiper-container')
-        }, 200)
-      })
+    onSlideClick(idx, section) {
+      this.image = (idx + 1) * (section + 1) - 1
     },
-    initSwiper(selector) {
-      this.swiper = new Swiper(selector, {
-        spaceBetween: 10,
-        loop: true,
-        loopedSlides: this.items.length,
-        preventClicks: true,
-        simulateTouch: false,
-        slidesPerView: 'auto',
-        autoplay: {
-          delay: 3000,
-          disableOnInteraction: false,
-        },
-      })
+    onImageSlide(item) {
+      this.slide = Math.floor(item.index / this.limit)
     },
-    initGallery(selector) {
-      require(['lightgallery.js'], () => {
-        const el = document.querySelector(selector)
-        window.lightGallery(el, {
-          selector: 'a',
-          download: false,
-          onAfterOpen: this.onOpen,
-          onCloseAfter: this.onClose,
-        })
-        this.gallery = window.lgData[el.getAttribute('lg-uid')]
-        if (this.swiper) {
-          el.addEventListener('onBeforeOpen', () => {
-            this.swiper.autoplay.stop()
-          })
-          el.addEventListener('onCloseAfter', () => {
-            this.swiper.autoplay.start()
-          })
-        }
-      })
+    async loadFiles() {
+      const params = {object_id: this.objectId, object_name: this.objectName}
+      const {data: res} = await this.$axios.get(this.url, {params})
+      this.items = res.rows
     },
   },
 }
 </script>
 
-<style lang="scss">
-.gallery-lightbox {
-  .swiper-wrapper {
-    align-items: center;
-  }
-
-  .swiper-slide {
-    width: 200px;
-
-    img {
-      width: 200px;
-      border-radius: 10px;
-      padding: 5px;
-    }
-  }
+<style scoped lang="scss">
+.blueimp-gallery {
+  background-color: rgba(#000, 0.8);
 }
 </style>

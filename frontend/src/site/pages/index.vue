@@ -44,32 +44,19 @@
                       <div class="slider__item swiper-slide">
                         <div class="slider__wrap--item d-flex align-items-center">
                           <div class="left__block mr-1">
-                            <a :href="slide1">
-                              <img class="img-responsive" src="~assets/images/slider/slider-1-thumb.jpg" alt="" />
-                            </a>
+                            <b-img fluid-grow :src="thumbs[0]" alt="" @click="image = 0" />
                           </div>
                           <div class="right__block">
-                            <a :href="slide2">
-                              <img class="mb-15 img-responsive" src="~assets/images/slider/slider-2-thumb.jpg" alt="" />
-                            </a>
-                            <a :href="slide3">
-                              <img class="img-responsive" src="~assets/images/slider/slider-3-thumb.jpg" alt="" />
-                            </a>
+                            <b-img fluid-grow class="mb-15" :src="thumbs[1]" alt="" @click="image = 1" />
+                            <b-img fluid-grow :src="thumbs[2]" alt="" @click="image = 2" />
                           </div>
                         </div>
                       </div>
-                      <!--<div class="slider__item swiper-slide">
-                        <div class="slider__wrap&#45;&#45;item d-flex">
-                          <div class="left__block mr-1">
-                            <img class="img-responsive" src="~assets/images/content/teacher/img.jpg" alt=""></div>
-                          <div class="right__block">
-                            <img class="mb-15 img-responsive" src="~assets/images/content/teacher/img-2.jpg" alt="">
-                            <img class="img-responsive" src="~assets/images/content/teacher/img-3.jpg" alt=""></div>
-                        </div>
-                      </div>-->
                     </div>
-                    <!--<div class="swiper-pagination"></div>-->
                   </div>
+                  <client-only>
+                    <vue-gallery :images="images" :index="image" @close="image = null" />
+                  </client-only>
                 </div>
               </div>
             </div>
@@ -85,15 +72,15 @@
                     <h2 class="section__title">Попробуйте бесплатно!</h2>
                   </div>
                 </div>
-                <b-row class="lessons__list align-items-between">
-                  <div v-for="item in free.rows" :key="item.id" :class="{'col-md-6': free.total > 1}">
-                    <div class="lesson__item--video mb-0">
+                <div class="row flex-wrap lessons__list align-items-between">
+                  <div v-for="item in free.rows" :key="item.id" :class="{'col-12': true, 'col-md-6': free.total > 1}">
+                    <div class="lesson__item--video">
                       <nuxt-link :to="{name: 'index-free', params: {id: item.id}}" class="video">
                         <b-img :src="item.video.preview[free.total > 1 ? '640x360' : '960x540']" fluid-grow />
                       </nuxt-link>
                     </div>
                   </div>
-                </b-row>
+                </div>
               </div>
             </div>
           </div>
@@ -106,7 +93,7 @@
                 <div class="row">
                   <div class="col-12 d-flex justify-content-between align-items-center">
                     <h2 class="section__title">Курсы</h2>
-                    <b-link v-if="courses.total > 2" to="/courses" class="link__more">См. все</b-link>
+                    <b-link v-if="courses.total > 2" :to="{name: 'courses'}" class="link__more">См. все</b-link>
                   </div>
                 </div>
                 <courses-list :courses="courses.rows" />
@@ -179,12 +166,7 @@ import {faPaperPlane, faCircle} from '@fortawesome/pro-duotone-svg-icons'
 import {faPlay} from '@fortawesome/pro-solid-svg-icons'
 import CoursesList from '../components/courses-list'
 import CourseReviews from '../components/course/reviews'
-// import Swiper from 'swiper'
 import HeaderBg from '../components/header-bg'
-
-import slide1 from '../assets/images/slider/slider-1.jpg'
-import slide2 from '../assets/images/slider/slider-2.jpg'
-import slide3 from '../assets/images/slider/slider-3.jpg'
 
 export default {
   auth: false,
@@ -210,22 +192,18 @@ export default {
       courses: {},
       reviews: {},
       free: {},
-      slide1,
-      slide2,
-      slide3,
+      image: null,
+      images: Array.from(Array(3), (_, i) => {
+        return require(`../assets/images/slider/slider-${i + 1}.jpg`)
+      }),
+      thumbs: Array.from(Array(3), (_, i) => {
+        return require(`../assets/images/slider/slider-${i + 1}-thumb.jpg`)
+      }),
     }
   },
   created() {
     this.$fa.add(faCircle, faPaperPlane, faPlay)
     this.$app.header_image.set(true)
-  },
-  mounted() {
-    require(['lightgallery.js'], () => {
-      window.lightGallery(document.getElementsByClassName('gallery__slider')[0], {
-        selector: 'a',
-        download: false,
-      })
-    })
   },
   methods: {
     onSubscribe() {
@@ -250,20 +228,28 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.gallery__slider {
-  .swiper-slide {
-    img {
-      cursor: pointer;
-      border-radius: 5px;
+<style scoped lang="scss">
+div::v-deep {
+  .gallery__slider {
+    .swiper-slide {
+      img {
+        cursor: pointer;
+        border-radius: 5px;
+      }
     }
   }
-}
-@media (max-width: 576px) {
-  .index-bg {
-    max-height: 350px;
-    &::before {
-      height: 100px !important;
+  .lessons__list > div:last-child > div {
+    margin-bottom: 0;
+  }
+  .blueimp-gallery {
+    background-color: rgba(#000, 0.8);
+  }
+  @media (max-width: 576px) {
+    .index-bg {
+      max-height: 350px;
+      &::before {
+        height: 100px !important;
+      }
     }
   }
 }

@@ -10,7 +10,8 @@ Config.mode = 'universal'
 Config.modules.push('@nuxtjs/markdownit')
 Config.modules.push('@nuxtjs/sitemap')
 
-Config.plugins.push('~/plugins/components.js')
+Config.plugins.push('~/plugins/components.client.js')
+Config.plugins.push('~/plugins/polyfills.client.js')
 Config.plugins.push('~/plugins/metrika.js')
 
 Config.router = {

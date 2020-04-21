@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 class Gallery extends GetProcessor
 {
 
-    protected $class = '\App\Model\GalleryItem';
+    protected $class = GalleryItem::class;
 
 
     protected function beforeGet($c)
@@ -35,26 +35,15 @@ class Gallery extends GetProcessor
         return parent::beforeCount($c);
     }
 
-
     /**
-     * @param GalleryItem $object
-     *
-     * @return array
+     * @param Builder $c
+     * @return Builder
      */
-    public function prepareRow($object)
+    protected function afterCount($c)
     {
-        $file = $object->file;
-        $array = [
-            'id' => $object->file_id,
-            'file' => $file->getUrl(),
-            'title' => $file->title,
-            'rank' => $object->rank,
-            'width' => $file->width,
-            'height' => $file->height,
-            //'title' => $file->title,
-            //'description' => $file->description,
-        ];
+        $c->select('file_id');
+        $c->with('file:id,updated_at');
 
-        return $array;
+        return $c;
     }
 }
