@@ -47,10 +47,10 @@
                 </div>
 
                 <upload-homework
+                  v-model="homework"
                   :lesson-id="record.id"
                   :course-id="record.course.id"
                   :section="0"
-                  :image="homework && homework.file ? homework.file : {}"
                   :size="300"
                 />
               </div>
@@ -144,23 +144,23 @@
         </section>
 
         <section v-b-visible.once="showFooter" class="lesson__content--bottom container__940 mt-5">
-          <div v-if="showComments" class="container">
+          <div v-if="footerVisible" class="container">
             <div class="row">
-              <div :class="{'col-12': true, 'col-lg-7': nextLessons.length > 0}">
+              <div :class="{'col-12': true, 'col-lg-7': nextLessons.length > 0, 'order-1': true, 'order-md-0': true}">
                 <comments-list :course-id="record.course.id" :lesson-id="record.id" />
               </div>
 
-              <div v-if="nextLessons.length" class="col-lg-5 col-12">
+              <div v-if="nextLessons.length" class="col-lg-5 col-12 order-0 order-md-1">
                 <div class="s-title">Следующие уроки</div>
                 <div class="nextlessons__content">
                   <course-lessons :record="record.course" :lessons="nextLessons" wrapper-class="media mb-2">
                     <template v-slot="{item, open, link, thumb}">
                       <div class="media--video mr-2">
                         <nuxt-link v-if="open(item)" :to="link(item)" class="video">
-                          <b-img-lazy class="media--thumb img-responsive" :src="thumb(item)" alt="" />
+                          <b-img class="media--thumb img-responsive" :src="thumb(item)" alt="" />
                         </nuxt-link>
                         <div v-else class="disabled">
-                          <b-img-lazy class="media--thumb img-responsive" :src="thumb(item)" alt="" />
+                          <b-img class="media--thumb img-responsive" :src="thumb(item)" alt="" />
                         </div>
                       </div>
                       <div class="media-body">
@@ -213,7 +213,7 @@ export default {
   data() {
     return {
       loading: false,
-      showComments: false,
+      footerVisible: false,
       url: 'web/course/lessons',
       record: {},
       lessons: [],
@@ -224,14 +224,13 @@ export default {
     like() {
       return this.record.like ? this.record.like.value : false
     },
-    homeworks() {
-      return this.$store.getters['courses/homeworks'](this.record.course.id)
-    },
-    homework() {
-      const filtered = this.homeworks.filter(
-        (item) => item.course_id === this.record.course.id && item.lesson_id === this.record.id,
-      )
-      return filtered.length ? filtered.pop() : null
+    homework: {
+      get() {
+        return this.record.homework || {}
+      },
+      set(newValue) {
+        this.record.homework = newValue
+      },
     },
     nextLessons() {
       return this.lessons.filter((item) => item.rank > this.record.rank)
@@ -249,7 +248,7 @@ export default {
   methods: {
     showFooter(isVisible) {
       if (isVisible === true) {
-        this.showComments = true
+        this.footerVisible = true
       }
     },
     hideModal() {
@@ -275,7 +274,7 @@ export default {
       }
       // Scroll to comment
       if (this.$route.hash) {
-        this.showComments = true
+        this.footerVisible = true
         this.setTimeout(() => {
           const elem = document.getElementById(this.$route.hash.replace(/^#/, ''))
           if (elem) {
@@ -305,7 +304,6 @@ export default {
         const {data: res} = await this.$axios.post('user/progress', {lesson_id: this.record.id})
         this.record.course.progress = res
         this.$store.commit('courses/progress', {id: this.record.course.id, data: res})
-        // await this.loadLessons()
       } catch (e) {
         console.error(e)
         await this.onProgress()

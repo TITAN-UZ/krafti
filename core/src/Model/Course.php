@@ -40,6 +40,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Lesson[] $lessons
  * @property-read Order[] $orders
  * @property-read UserProgress[] $progresses
+ * @property-read Homework[] $homeworks
  */
 class Course extends Model
 {
@@ -124,6 +125,14 @@ class Course extends Model
     public function progresses()
     {
         return $this->hasMany(UserProgress::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function homeworks()
+    {
+        return $this->hasMany(Homework::class);
     }
 
     /**

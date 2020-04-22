@@ -64,12 +64,12 @@ class Lessons extends GetProcessor
             'likes' => function (HasMany $c) {
                 $c->where('user_id', $this->container->user->id);
                 $c->select('lesson_id', 'value');
-            },/*
+            },
             'homeworks' => function (HasMany $c) {
                 $c->where('user_id', $this->container->user->id);
                 $c->select('id', 'lesson_id', 'file_id');
                 $c->with('file:id,updated_at');
-            },*/
+            },
         ]);
 
         return $c;
@@ -111,11 +111,11 @@ class Lessons extends GetProcessor
     {
         $array = $object->toArray();
         $array['locked'] = !$object->checkAccess($this->progress);
-        /*
+
         if (isset($array['homeworks'])) {
             $array['homework'] = array_pop($array['homeworks']);
             unset($array['homeworks']);
-        }*/
+        }
         if (isset($array['course']['progresses'])) {
             $array['course']['progress'] = array_pop($array['course']['progresses']);
             unset($array['course']['progresses']);

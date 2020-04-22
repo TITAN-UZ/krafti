@@ -125,16 +125,22 @@ class Homeworks extends GetProcessor
                 $this->container->user->makeProgress($course, $new_section, 0);
             }
         }
-
         $progress = $this->container->user->getProgress($course);
-        $homeworks = $this->get();
 
         return $this->success([
             'progress' => [
                 'section' => $progress->section,
                 'rank' => $progress->rank,
             ],
-            'homeworks' => @json_decode($homeworks->getBody()->__toString())->rows ?: [],
+            'homework' => [
+                'id' => $homework->id,
+                'section' => $homework->section,
+                'lesson_id' => $homework->lesson_id,
+                'file' => [
+                    'id' => $file->id,
+                    'updated_at' => $file->updated_at,
+                ]
+            ],
         ]);
     }
 

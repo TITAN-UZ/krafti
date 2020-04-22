@@ -55,7 +55,7 @@ export default ({app, store}, inject) => {
     }
 
     let url = params.join('/')
-    url += '?t=' + (data.updated_at ? new Date(data.updated_at) : new Date()).getTime()
+    url += '?t=' + (data.updated_at ? app.$moment(data.updated_at) : app.$moment()).unix()
 
     return url
   })

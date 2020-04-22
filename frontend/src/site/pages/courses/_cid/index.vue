@@ -99,14 +99,14 @@
                                   <div class="home__work--text">
                                     Отправьте нам фотографию того, что у вас получилось
                                   </div>
-                                  <client-only>
-                                    <upload-homework
-                                      :course-id="record.id"
-                                      :section="lessonTab"
-                                      :image="homeworkImage"
-                                      :size="500"
-                                    />
-                                  </client-only>
+
+                                  <upload-homework
+                                    :key="lessonTab"
+                                    v-model="homework"
+                                    :course-id="record.id"
+                                    :section="lessonTab"
+                                    :size="500"
+                                  />
                                 </div>
                               </template>
                             </course-lessons>
@@ -208,6 +208,10 @@ export default {
     CourseReviews,
     GalleryLightbox,
   },
+  fetch({params, store}) {
+    store.commit('courses/progress', {id: params.cid, data: {}})
+    store.commit('courses/likes', {id: params.cid, data: 0})
+  },
   async asyncData({app, params, error, store}) {
     try {
       const [{data: record}, {data: similar}] = await Promise.all([
@@ -216,11 +220,6 @@ export default {
       ])
       store.commit('courses/progress', {id: params.cid, data: record.progress})
       store.commit('courses/likes', {id: params.cid, data: record.likes_sum})
-
-      if (app.$auth.loggedIn) {
-        const {data: homeworks} = await app.$axios.get('user/homeworks', {params: {course_id: params.cid}})
-        store.commit('courses/homeworks', {id: params.cid, data: homeworks.rows})
-      }
 
       return {
         record,
@@ -248,19 +247,27 @@ export default {
     }
   },
   computed: {
-    progress() {
-      return this.$store.getters['courses/progress'](this.record.id)
-    },
-    homeworks() {
-      return this.$store.getters['courses/homeworks'](this.record.id)
-    },
     likes() {
       return this.$store.getters['courses/likes'](this.record.id)
     },
-    homeworkImage() {
-      const homeworks = this.$store.getters['courses/homeworks'](this.record.id)
-      const filtered = homeworks.filter((item) => item.section === this.lessonTab)
-      return filtered.length ? filtered[0].file : {}
+    progress() {
+      return this.$store.getters['courses/progress'](this.record.id)
+    },
+    homework: {
+      get() {
+        const filtered = this.record.homeworks.filter((item) => item.section === this.lessonTab)
+        return filtered.length ? filtered[0] : {}
+      },
+      set(newValue) {
+        const homeworks = []
+        this.record.homeworks.forEach((item) => {
+          if (item.section !== newValue.section) {
+            homeworks.push(item)
+          }
+        })
+        homeworks.push(newValue)
+        this.record.homeworks = homeworks
+      },
     },
     currentLessons() {
       return this.lessons.filter((v) => v.section === this.lessonTab)
@@ -269,12 +276,13 @@ export default {
   watch: {
     async '$auth.loggedIn'(newValue) {
       await this.loadCourse()
-      if (newValue) {
+      if (newValue && this.record.bought) {
         await this.loadLessons()
       } else {
         this.mainTab = 0
         this.lessons = []
         this.sections = []
+        this.$store.commit('courses/progress', {id: this.record.id, data: {}})
       }
     },
   },
@@ -305,6 +313,7 @@ export default {
       }
       return cls
     },
+    /** @TODO переделать хранение избранного на отдельный store */
     async addFavorite(id) {
       this.loading = 'favorite:' + id
       try {
@@ -325,6 +334,7 @@ export default {
         this.loading = false
       }
     },
+    // --
     async loadCourse() {
       const {data: record} = await this.$axios.get('web/courses', {params: {id: this.record.id}})
       this.record = record

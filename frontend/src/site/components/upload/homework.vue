@@ -19,9 +19,9 @@
       label-tap-to-cancel="Отмена"
       label-file-waiting-for-size="Ожидание размера"
     />
-    <div v-if="Object.keys(image).length" class="uploaded">
+    <div v-if="myValue.file" class="uploaded">
       <div>Вы уже отправили нам вот эту работу</div>
-      <b-img-lazy :src="$image(image, `${size}x${size}`, 'resize')" alt="" />
+      <b-img-lazy :src="$image(myValue.file, `${size}x${size}`, 'resize')" alt="" />
     </div>
   </div>
 </template>
@@ -33,6 +33,12 @@ import {faCameraAlt} from '@fortawesome/pro-duotone-svg-icons'
 export default {
   name: 'UploadHomework',
   props: {
+    value: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
     courseId: {
       type: Number,
       required: true,
@@ -63,15 +69,25 @@ export default {
       faCameraAlt: icon(faCameraAlt, {transform: {size: 36}}).html[0],
     }
   },
+  computed: {
+    myValue: {
+      get() {
+        return this.value
+      },
+      set(newValue) {
+        this.$emit('input', newValue)
+      },
+    },
+  },
   methods: {
     async handleUpload(fieldName, file, metadata, load, error, progress, abort) {
       const formData = new FormData()
       metadata.type = 'photo'
       formData.append('file', file, file.name)
       formData.append('metadata', JSON.stringify(metadata))
-      formData.append('course_id', this.courseId)
-      formData.append('lesson_id', this.lessonId)
-      formData.append('section', this.section)
+      formData.append('course_id', String(this.courseId))
+      formData.append('lesson_id', String(this.lessonId))
+      formData.append('section', String(this.section))
 
       const {data: res} = await this.$axios({
         method: 'POST',
@@ -82,10 +98,10 @@ export default {
         },
       })
       load(res.file)
+      this.myValue = res.homework
 
       this.$refs.filepond.removeFile()
       this.$store.commit('courses/progress', {id: this.courseId, data: res.progress})
-      this.$store.commit('courses/homeworks', {id: this.courseId, data: res.homeworks})
       this.$notify.success({message: 'Ваша работа успешно загружена!'})
 
       return {abort}
