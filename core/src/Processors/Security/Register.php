@@ -15,6 +15,10 @@ class Register extends Processor
 
     public function post()
     {
+        if (!$email = filter_var(trim($this->getProperty('email')))) {
+            return $this->failure('Вы должны указать правильный email');
+        }
+
         if (!$password = trim($this->getProperty('password'))) {
             return $this->failure('Вы должны указать свой пароль');
         } elseif (strlen($password) < 6) {
@@ -26,12 +30,11 @@ class Register extends Processor
             'fullname' => trim($this->getProperty('fullname')),
             'password' => trim($this->getProperty('password')),
             'instagram' => trim($this->getProperty('instagram'), ' @'),
+            'email' => $email,
             'active' => true,
             'role_id' => 3, // Regular user
         ]);
-        if ($email = trim($this->getProperty('email'))) {
-            $user->email = $email;
-        }
+
         if ($promo = trim($this->getProperty('promo'))) {
             /** @var User $referrer */
             if (!$referrer = User::query()->where(['promo' => $promo, 'active' => true])->first()) {

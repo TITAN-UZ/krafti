@@ -2,9 +2,9 @@
   <div class="auth-form">
     <div v-if="mode == 'login' && forms.includes('login')">
       <slot name="login-title">
-        <h5 class="title text-center mb-5">Вход через</h5>
+        <h5 class="title text-center mb-5">Вход</h5>
       </slot>
-
+      <!--
       <div class="social-providers">
         <button class="vkontakte" @click="onPopup('vkontakte')">
           <fa :icon="['fab', 'vk']" />
@@ -13,8 +13,8 @@
           <fa :icon="['fab', 'instagram']" />
         </button>
       </div>
-
       <h4 class="text-center">или</h4>
+      -->
 
       <b-form action="" method="post" @submit.prevent="onLogin">
         <b-form-group class="mb-3">
