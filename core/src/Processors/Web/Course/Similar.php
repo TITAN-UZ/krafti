@@ -8,9 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 class Similar extends Courses
 {
 
-    protected $class = '\App\Model\Course';
-
-
     /**
      * @param Builder $c
      *

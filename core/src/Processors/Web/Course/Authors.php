@@ -6,17 +6,24 @@ use App\Model\Course;
 use App\Model\Lesson;
 use App\Model\User;
 use App\Processor;
+use Slim\Http\Response;
 
 class Authors extends Processor
 {
-    protected $class = '\App\Model\User';
+    protected $class = User::class;
+    protected $scope = 'profile';
 
-
+    /**
+     * @return Response
+     */
     public function get()
     {
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
             return $this->failure('Не могу загрузить курс');
+        }
+        if (!$course->wasBought($this->container->user)) {
+            return $this->failure(!$course->active ? 'Не могу загрузить курс' : 'Вы забыли оплатить этот курс');
         }
 
         $authors = [];

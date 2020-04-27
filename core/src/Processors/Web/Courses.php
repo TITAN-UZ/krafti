@@ -7,10 +7,29 @@ use App\Model\Course;
 use App\Model\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Slim\Http\Response;
 
 class Courses extends GetProcessor
 {
     protected $class = Course::class;
+
+    /**
+     * @return Response
+     */
+    public function get()
+    {
+        if ($id = (int)$this->getProperty('id')) {
+            /** @var Course $course */
+            if (!$course = Course::query()->find($id)) {
+                return $this->failure('Не могу загрузить курс');
+            }
+            if (!$course->active && !$course->wasBought($this->container->user)) {
+                return $this->failure('Не могу загрузить курс');
+            }
+        }
+
+        return parent::get();
+    }
 
     /**
      * @param Builder $c
@@ -24,7 +43,6 @@ class Courses extends GetProcessor
             'cover_id', 'video_id', 'template_id'
         );
 
-        $c->where('active', true);
         $c->with('video:id,remote_key');
         $c->with('cover:id,updated_at');
         $c->with('template');

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Lessons extends GetProcessor
 {
     protected $class = Lesson::class;
-    // protected $scope = 'lessons';
+    protected $scope = 'profile';
     /** @var Course $course */
     protected $course;
     /** @var UserProgress $progress */
@@ -23,10 +23,9 @@ class Lessons extends GetProcessor
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
             return $this->failure('Не могу загрузить курс');
-        } elseif (!$course->active) {
-            return $this->failure('Не могу загрузить курс');
-        } elseif (!$course->wasBought($this->container->user)) {
-            return $this->failure('Вы забыли оплатить этот курс');
+        }
+        if (!$course->wasBought($this->container->user)) {
+            return $this->failure(!$course->active ? 'Не могу загрузить курс' : 'Вы забыли оплатить этот курс');
         }
 
         $this->setProperty('limit', 0);

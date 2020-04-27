@@ -12,30 +12,24 @@ use Slim\Http\Response;
 class Comments extends ObjectProcessor
 {
 
+    protected $class = Comment::class;
     protected $scope = 'profile';
-    protected $class = '\App\Model\Comment';
 
 
     /**
-     * @return string|bool
+     * @return Response
      */
-    protected function checkScope()
+    public function get()
     {
-        if ($this->container->request->isOptions() || empty($this->scope)) {
-            return true;
-        }
-
-        if (!$course_id = $this->getProperty('course_id')) {
-            return 'Вы должны указать id курса';
-        }
         /** @var Course $course */
-        if (!$course = Course::query()->where(['active' => true])->find($course_id)) {
-            return 'Не могу загрузить указанный курс';
-        } elseif (!$this->container->user || !$course->wasBought($this->container->user)) {
-            return 'У вас нет доступа к этому курсу';
+        if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
+            return $this->failure('Не могу загрузить курс');
+        }
+        if (!$course->wasBought($this->container->user)) {
+            return $this->failure(!$course->active ? 'Не могу загрузить курс' : 'Вы забыли оплатить этот курс');
         }
 
-        return parent::checkScope();
+        return parent::get();
     }
 
     /**
