@@ -29,10 +29,10 @@ class Mail
      * @param string $to
      * @param string $subject
      * @param string $body
-     *
+     * @param array $from
      * @return bool
      */
-    public function send($to, $subject, $body)
+    public function send($to, $subject, $body, $from = [])
     {
 
         $mail = new PHPMailer(true);
@@ -53,10 +53,13 @@ class Mail
             $mail->Debugoutput = $this->container->logger;
 
             //Recipients
-            $mail->setFrom(getenv('SMTP_USER'), 'Krafti.ru');
             $mail->addAddress($to);
-
-            //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');
+            if (empty($from) || count($from) !== 2) {
+                $mail->setFrom(getenv('SMTP_USER'), 'Krafti.ru');
+            } else {
+                $mail->setFrom(getenv('SMTP_USER'), $from[1]);
+                $mail->addReplyTo($from[0], $from[1]);
+            }
 
             // Content
             $mail->isHTML(true);

@@ -13,12 +13,12 @@ class Feedback extends Processor {
         }
 
         $email = trim($this->getProperty('email'));
-        if (!$email || !preg_match('#.+@.+\..+#i', $email)) {
-            return $this->failure('Вы должны указать email');
+        if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $this->failure('Неправильный email');
         }
 
         $phone = trim($this->getProperty('phone'));
-        if (!$phone || !preg_match('#^[0-9]{10,14}$#', $phone)) {
+        if (!$phone || !preg_match('#^\d{10,14}$#', $phone)) {
             return $this->failure('Вы должны указать свой телефон');
         }
 
@@ -34,7 +34,7 @@ class Feedback extends Processor {
             'message' => $message,
         ]);
 
-        return $mail->send(getenv('SITE_MAIL'), 'Новое сообщение с сайта Krafti.ru', $body)
+        return $mail->send(getenv('SITE_MAIL'), 'Новое сообщение с сайта Krafti.ru', $body, [$email, $name])
             ? $this->success()
             : $this->failure('Не могу отправить письмо, попробуйте позже');
     }
