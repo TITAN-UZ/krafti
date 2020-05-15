@@ -8,7 +8,6 @@ use Vesp\Controllers\ModelController;
 
 class UserRoles extends ModelController
 {
-
     protected $model = UserRole::class;
     protected $scope = 'user-roles';
 
@@ -24,5 +23,4 @@ class UserRoles extends ModelController
 
         return $c;
     }
-
 }

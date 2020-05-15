@@ -8,7 +8,6 @@ use Vesp\Controllers\Controller;
 
 class Payment extends Controller
 {
-
     public function post()
     {
         (new Logger())->info('New payment', ['data' => $this->getProperties()]);

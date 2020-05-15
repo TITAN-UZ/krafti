@@ -54,7 +54,6 @@ class Order extends Model
         'manual' => 'boolean',
     ];
 
-
     /**
      * @return BelongsTo
      */
@@ -62,7 +61,6 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     /**
      * @return BelongsTo
@@ -72,7 +70,6 @@ class Order extends Model
         return $this->belongsTo(Course::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -80,7 +77,6 @@ class Order extends Model
     {
         return $this->belongsTo(Promo::class);
     }
-
 
     /**
      * @return Payment|bool
@@ -99,7 +95,6 @@ class Order extends Model
 
         return $service;
     }
-
 
     /**
      * @param $status

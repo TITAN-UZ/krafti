@@ -79,7 +79,6 @@ class User extends \Vesp\Models\User
         'favorite' => 'boolean',
     ];
 
-
     /**
      * @param string $key
      * @param mixed $value
@@ -93,7 +92,6 @@ class User extends \Vesp\Models\User
         }
         parent::setAttribute($key, $value);
     }
-
 
     /**
      * @param $password
@@ -113,7 +111,6 @@ class User extends \Vesp\Models\User
 
         return false;
     }
-
 
     /**
      * @return array
@@ -156,7 +153,6 @@ class User extends \Vesp\Models\User
         ];
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -164,7 +160,6 @@ class User extends \Vesp\Models\User
     {
         return $this->belongsTo(UserRole::class);
     }
-
 
     /**
      * @return BelongsTo
@@ -174,7 +169,6 @@ class User extends \Vesp\Models\User
         return $this->belongsTo(User::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -182,7 +176,6 @@ class User extends \Vesp\Models\User
     {
         return $this->belongsTo(File::class);
     }
-
 
     /**
      * @return BelongsTo
@@ -192,7 +185,6 @@ class User extends \Vesp\Models\User
         return $this->belongsTo(File::class);
     }
 
-
     /**
      * @return HasMany
      */
@@ -200,7 +192,6 @@ class User extends \Vesp\Models\User
     {
         return $this->hasMany(UserFavorite::class);
     }
-
 
     /**
      * @return HasMany
@@ -210,7 +201,6 @@ class User extends \Vesp\Models\User
         return $this->hasMany(UserLike::class);
     }
 
-
     /**
      * @return HasMany
      */
@@ -218,7 +208,6 @@ class User extends \Vesp\Models\User
     {
         return $this->hasMany(Order::class);
     }
-
 
     /**
      * @return HasMany
@@ -228,7 +217,6 @@ class User extends \Vesp\Models\User
         return $this->hasMany(User::class, 'referrer_id');
     }
 
-
     /**
      * @return HasMany
      */
@@ -236,7 +224,6 @@ class User extends \Vesp\Models\User
     {
         return $this->hasMany(UserTransaction::class);
     }
-
 
     /**
      * @return HasMany
@@ -246,7 +233,6 @@ class User extends \Vesp\Models\User
         return $this->hasMany(UserOauth::class);
     }
 
-
     /**
      * @return HasMany
      */
@@ -254,7 +240,6 @@ class User extends \Vesp\Models\User
     {
         return $this->hasMany(UserToken::class);
     }
-
 
     /**
      * @return HasMany
@@ -264,7 +249,6 @@ class User extends \Vesp\Models\User
         return $this->hasMany(UserChild::class);
     }
 
-
     /**
      * @return HasMany
      */
@@ -272,7 +256,6 @@ class User extends \Vesp\Models\User
     {
         return $this->hasMany(Diploma::class)->whereNotNull('file_id');
     }
-
 
     /**
      * @return HasMany
@@ -282,7 +265,6 @@ class User extends \Vesp\Models\User
         return $this->hasMany(Homework::class);
     }
 
-
     /**
      * @return HasMany
      */
@@ -291,7 +273,6 @@ class User extends \Vesp\Models\User
         return $this->hasMany(UserProgress::class);
     }
 
-
     /**
      * @return HasMany
      */
@@ -299,7 +280,6 @@ class User extends \Vesp\Models\User
     {
         return $this->hasMany(Message::class);
     }
-
 
     /**
      * @param array $options
@@ -321,7 +301,6 @@ class User extends \Vesp\Models\User
         return parent::save($options);
     }
 
-
     /**
      * @return bool|null
      * @throws Exception
@@ -338,7 +317,6 @@ class User extends \Vesp\Models\User
 
         return parent::delete();
     }
-
 
     /**
      * @param int $length
@@ -358,7 +336,6 @@ class User extends \Vesp\Models\User
         return implode($pass);
     }
 
-
     /**
      * @param bool $save
      *
@@ -376,7 +353,6 @@ class User extends \Vesp\Models\User
 
         return $sum;
     }
-
 
     /**
      * @param int $amount
@@ -402,40 +378,59 @@ class User extends \Vesp\Models\User
 
         switch ($action) {
             case 'bonus':
-                $this->sendMessage('Мы списали у вас ' . ($amount * -1) . ' крафтиков за покупку бонусного урока',
-                    $action, null, [
+                $this->sendMessage(
+                    'Мы списали у вас ' . ($amount * -1) . ' крафтиков за покупку бонусного урока',
+                    $action,
+                    null,
+                    [
                         'transaction_id' => $transaction->id,
-                    ]);
+                    ]
+                );
                 break;
             case 'homework':
-                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за выполнение домашней работы', $action,
-                    null, [
+                $this->sendMessage(
+                    'Мы начислили вам ' . $amount . ' крафтиков за выполнение домашней работы',
+                    $action,
+                    null,
+                    [
                         'transaction_id' => $transaction->id,
-                    ]);
+                    ]
+                );
                 break;
             case 'purchase':
-                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за первую покупку вашего друга', $action,
-                    null, [
+                $this->sendMessage(
+                    'Мы начислили вам ' . $amount . ' крафтиков за первую покупку вашего друга',
+                    $action,
+                    null,
+                    [
                         'transaction_id' => $transaction->id,
-                    ]);
+                    ]
+                );
                 break;
             case 'palette':
-                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за полностью закрытую палитру урока!',
-                    $action, null, [
+                $this->sendMessage(
+                    'Мы начислили вам ' . $amount . ' крафтиков за полностью закрытую палитру урока!',
+                    $action,
+                    null,
+                    [
                         'transaction_id' => $transaction->id,
-                    ]);
+                    ]
+                );
                 break;
             case 'subscribe':
-                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за подписку на наши новости', $action,
-                    null, [
+                $this->sendMessage(
+                    'Мы начислили вам ' . $amount . ' крафтиков за подписку на наши новости',
+                    $action,
+                    null,
+                    [
                         'transaction_id' => $transaction->id,
-                    ]);
+                    ]
+                );
                 break;
         }
 
         $this->updateAccount();
     }
-
 
     /**
      * @param Course $course
@@ -455,7 +450,6 @@ class User extends \Vesp\Models\User
 
         return $progress;
     }
-
 
     /**
      * @param Course $course
@@ -514,7 +508,6 @@ class User extends \Vesp\Models\User
         return $progress;
     }
 
-
     /**
      * @param array|string $scope
      *
@@ -528,7 +521,6 @@ class User extends \Vesp\Models\User
 
         return parent::hasScope($scope);
     }
-
 
     /**
      * @param string $message

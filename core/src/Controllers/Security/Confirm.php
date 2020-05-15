@@ -8,7 +8,6 @@ use Vesp\Helpers\Jwt;
 
 class Confirm extends Controller
 {
-
     public function get()
     {
         $type = $this->getProperty('type');
@@ -39,5 +38,4 @@ class Confirm extends Controller
 
         return $this->failure();
     }
-
 }

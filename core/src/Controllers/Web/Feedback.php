@@ -8,7 +8,6 @@ use Vesp\Controllers\Controller;
 
 class Feedback extends Controller
 {
-
     public function post()
     {
         if (!$name = trim($this->getProperty('name'))) {
@@ -42,5 +41,4 @@ class Feedback extends Controller
             ? $this->success()
             : $this->failure('Не могу отправить письмо, попробуйте позже');
     }
-
 }

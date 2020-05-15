@@ -10,10 +10,8 @@ use Vesp\Controllers\ModelController;
 
 class Promos extends ModelController
 {
-
     protected $model = Promo::class;
     protected $scope = 'discounts';
-
 
     /**
      * @param Builder $c
@@ -37,7 +35,7 @@ class Promos extends ModelController
     protected function afterCount($c)
     {
         $prefix = $this->eloquent->getDatabaseManager()->getTablePrefix();
-        $c->leftJoin('orders', function (JoinClause $c) {
+        $c->leftJoin('orders', static function (JoinClause $c) {
             $c->on('orders.promo_id', '=', 'promos.id');
             $c->where('orders.status', 2); // Paid orders only
         });

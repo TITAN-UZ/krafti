@@ -11,9 +11,9 @@ use Vesp\Controllers\Controller;
 class Like extends Controller
 {
     protected $scope = 'profile';
+
     /** @var User $user */
     protected $user;
-
 
     /**
      * @return ResponseInterface;
@@ -28,7 +28,6 @@ class Like extends Controller
 
         return $this->success($likes);
     }
-
 
     /**
      * @return ResponseInterface;
@@ -64,5 +63,4 @@ class Like extends Controller
             return $this->failure($e->getMessage());
         }
     }
-
 }

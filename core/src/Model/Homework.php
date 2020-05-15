@@ -39,7 +39,6 @@ class Homework extends Model
         'approved' => 'boolean',
     ];
 
-
     /**
      * @return BelongsTo
      */
@@ -47,7 +46,6 @@ class Homework extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     /**
      * @return BelongsTo
@@ -57,7 +55,6 @@ class Homework extends Model
         return $this->belongsTo(Course::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -65,7 +62,6 @@ class Homework extends Model
     {
         return $this->belongsTo(Lesson::class);
     }
-
 
     /**
      * @return BelongsTo

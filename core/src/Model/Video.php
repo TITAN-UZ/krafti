@@ -34,5 +34,4 @@ class Video extends Model
     protected $casts = [
         'preview' => 'array',
     ];
-
 }

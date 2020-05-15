@@ -46,7 +46,6 @@ class Payment extends Controller
         ]);
     }
 
-
     public function post()
     {
         if (!$this->user) {
@@ -152,7 +151,7 @@ class Payment extends Controller
                 case 'robokassa':
                     $link = (new Robokassa())->getPaymentLink($order);
                     break;
-                case'paypal':
+                case 'paypal':
                     $link = (new Paypal())->getPaymentLink($order);
                     break;
             }
@@ -162,5 +161,4 @@ class Payment extends Controller
             ? $this->success(['redirect' => $link])
             : $this->failure('Не могу сгенерировать ссылку на оплату');
     }
-
 }

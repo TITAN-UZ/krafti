@@ -8,9 +8,7 @@ use Vesp\Controllers\ModelGetController;
 
 class Authors extends ModelGetController
 {
-
     protected $model = User::class;
-
 
     /**
      * Add joins and search filter
@@ -23,7 +21,6 @@ class Authors extends ModelGetController
     {
         return $this->beforeCount($c);
     }
-
 
     /**
      * Add joins and search filter
@@ -39,11 +36,10 @@ class Authors extends ModelGetController
         //->where('users.role_id', '<', 3)
         //->select(['users.id', 'users.fullname', 'users.company', 'users.description', 'users.photo_id'])
         //->join('lessons', 'lessons.author_id', '=', 'users.id');
-        $c->orderByRaw("field(id,36,35,29,32,33)");
+        $c->orderByRaw('field(id,36,35,29,32,33)');
 
         return $c;
     }
-
 
     /**
      * @param User $object

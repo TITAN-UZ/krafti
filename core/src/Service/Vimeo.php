@@ -16,10 +16,6 @@ class Vimeo extends \Vimeo\Vimeo
         $this->logger = new Logger();
     }
 
-
-    /**
-     *
-     */
     public function import()
     {
         $new = $updated = 0;
@@ -46,7 +42,6 @@ class Vimeo extends \Vimeo\Vimeo
             Video::query()->whereNotIn('remote_key', $ids)->delete();
         }
     }
-
 
     /**
      * @param int $page
@@ -97,5 +92,4 @@ class Vimeo extends \Vimeo\Vimeo
 
         return $data;
     }
-
 }

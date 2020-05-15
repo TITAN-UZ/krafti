@@ -15,14 +15,12 @@ abstract class Payment
         $this->logger = new Logger();
     }
 
-
     /**
      * @param Order $order
      *
      * @return bool
      */
     abstract public function getPaymentLink(Order $order);
-
 
     /**
      * @param Order $order

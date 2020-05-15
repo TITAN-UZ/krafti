@@ -2,7 +2,6 @@
 
 namespace App\Controllers\User;
 
-
 use App\Model\Traits\UserValidate;
 use App\Model\User;
 use Vesp\Controllers\Controller;
@@ -12,9 +11,9 @@ class Profile extends Controller
     use UserValidate;
 
     protected $scope = 'profile';
+
     /** @var User $user */
     protected $user;
-
 
     public function get()
     {
@@ -25,7 +24,6 @@ class Profile extends Controller
 
         return $this->success(['user' => $data]);
     }
-
 
     public function patch()
     {

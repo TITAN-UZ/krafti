@@ -6,7 +6,6 @@ use App\Model\User;
 
 trait UserValidate
 {
-
     public function validate(User $record)
     {
         if ($record->email) {
@@ -23,5 +22,4 @@ trait UserValidate
 
         return true;
     }
-
 }

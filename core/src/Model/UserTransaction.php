@@ -26,7 +26,6 @@ class UserTransaction extends Model
 {
     protected $fillable = ['lesson_id', 'user_id', 'referral_id', 'course_id', 'amount', 'account', 'action'];
 
-
     /**
      * @return BelongsTo
      */
@@ -34,7 +33,6 @@ class UserTransaction extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     /**
      * @return BelongsTo
@@ -44,7 +42,6 @@ class UserTransaction extends Model
         return $this->belongsTo(User::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -53,7 +50,6 @@ class UserTransaction extends Model
         return $this->belongsTo(Lesson::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -61,7 +57,6 @@ class UserTransaction extends Model
     {
         return $this->belongsTo(Course::class);
     }
-
 
     /**
      * @param array $options

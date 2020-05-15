@@ -14,10 +14,13 @@ class Lessons extends ModelGetController
 {
     protected $model = Lesson::class;
     protected $scope = 'profile';
+
     /** @var Course $course */
     protected $course;
+
     /** @var User $user */
     protected $user;
+
     /** @var UserProgress $progress */
     protected $progress;
 
@@ -98,8 +101,18 @@ class Lessons extends ModelGetController
     public function afterCount($c)
     {
         $c->orderBy('section', 'asc')->orderBy('rank', 'asc');
-        $c->select('id', 'title', 'description', 'section', 'rank', 'extra', 'free', 'views_count', 'likes_count',
-            'video_id');
+        $c->select(
+            'id',
+            'title',
+            'description',
+            'section',
+            'rank',
+            'extra',
+            'free',
+            'views_count',
+            'likes_count',
+            'video_id'
+        );
         $c->with('video:id,preview');
 
         return $c;

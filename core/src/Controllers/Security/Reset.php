@@ -11,7 +11,6 @@ use Vesp\Controllers\Controller;
 
 class Reset extends Controller
 {
-
     public const time = 5 * 60; // 5 minutes
 
 
@@ -41,7 +40,6 @@ class Reset extends Controller
 
         return $this->failure('Такого email у нас нет');
     }
-
 
     /**
      * @param User $user

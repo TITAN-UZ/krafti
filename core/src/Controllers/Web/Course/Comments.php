@@ -11,12 +11,11 @@ use Vesp\Controllers\ModelController;
 
 class Comments extends ModelController
 {
-
     protected $model = Comment::class;
     protected $scope = 'profile';
+
     /** @var User $user */
     protected $user;
-
 
     /**
      * @return ResponseInterface;
@@ -79,7 +78,6 @@ class Comments extends ModelController
         return parent::patch();
     }
 
-
     /**
      * @param Builder $c
      *
@@ -89,7 +87,6 @@ class Comments extends ModelController
     {
         return $this->beforeCount($c);
     }
-
 
     /**
      * @param Builder $c

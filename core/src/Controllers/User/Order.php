@@ -10,6 +10,7 @@ use Vesp\Controllers\ModelGetController;
 class Order extends ModelGetController
 {
     protected $model = Order::class;
+
     /** @var User $user */
     protected $user;
 
@@ -47,7 +48,6 @@ class Order extends ModelGetController
         return $this->failure('Не могу проверить платёж');
     }
 
-
     /**
      * @param Builder $c
      *
@@ -57,7 +57,6 @@ class Order extends ModelGetController
     {
         return $this->beforeCount($c);
     }
-
 
     /**
      * @param Builder $c
@@ -70,7 +69,6 @@ class Order extends ModelGetController
 
         return $c;
     }
-
 
     /**
      * @param \App\Model\Order $object
@@ -88,5 +86,4 @@ class Order extends ModelGetController
             'period' => $object->period,
         ];
     }
-
 }

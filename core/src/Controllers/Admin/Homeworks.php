@@ -9,10 +9,8 @@ use Vesp\Controllers\ModelController;
 
 class Homeworks extends ModelController
 {
-
     protected $model = Homework::class;
     protected $scope = 'homeworks';
-
 
     /**
      * @return ResponseInterface
@@ -21,7 +19,6 @@ class Homeworks extends ModelController
     {
         return $this->failure('Домашние работы создают пользователи');
     }
-
 
     /**
      * @param Builder $c
@@ -45,11 +42,11 @@ class Homeworks extends ModelController
     protected function beforeCount($c)
     {
         if ($query = trim($this->getProperty('query'))) {
-            $c->where(function (Builder $c) use ($query) {
-                $c->whereHas('lesson', function (Builder $c) use ($query) {
+            $c->where(static function (Builder $c) use ($query) {
+                $c->whereHas('lesson', static function (Builder $c) use ($query) {
                     $c->where('title', 'LIKE', "%$query%");
                 });
-                $c->orWhereHas('user', function (Builder $c) use ($query) {
+                $c->orWhereHas('user', static function (Builder $c) use ($query) {
                     $c->where('fullname', 'LIKE', "%$query%");
                     $c->orWhere('email', 'LIKE', "%$query%");
                 });
@@ -60,10 +57,10 @@ class Homeworks extends ModelController
         }
         if ($work_type = $this->getProperty('work_type')) {
             switch ($work_type) {
-                case'work':
+                case 'work':
                     $c->whereNotNull('lesson_id');
                     break;
-                case'home':
+                case 'home':
                     $c->whereNull('lesson_id');
                     break;
             }

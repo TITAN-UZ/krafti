@@ -13,6 +13,7 @@ use Vesp\Controllers\ModelGetController;
 class Courses extends ModelGetController
 {
     protected $model = Course::class;
+
     /** @var User $user */
     protected $user;
 
@@ -41,16 +42,28 @@ class Courses extends ModelGetController
     protected function beforeGet($c)
     {
         $c->select(
-            'id', 'title', 'tagline', 'description', 'category', 'price', 'age',
-            'views_count', 'reviews_count', 'likes_sum', 'lessons_count', 'videos_count',
-            'cover_id', 'video_id', 'template_id'
+            'id',
+            'title',
+            'tagline',
+            'description',
+            'category',
+            'price',
+            'age',
+            'views_count',
+            'reviews_count',
+            'likes_sum',
+            'lessons_count',
+            'videos_count',
+            'cover_id',
+            'video_id',
+            'template_id'
         );
 
         $c->with('video:id,remote_key');
         $c->with('cover:id,updated_at');
         $c->with('template');
         $c->with([
-            'lessons' => function (HasMany $c) {
+            'lessons' => static function (HasMany $c) {
                 $c->where(['active' => true, 'free' => true])
                     ->orderByRaw('RAND()')
                     ->limit(1)
@@ -98,7 +111,6 @@ class Courses extends ModelGetController
 
         return $c;
     }
-
 
     /**
      * @param Course $object

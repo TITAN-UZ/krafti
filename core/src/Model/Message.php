@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Message extends Model
 {
-
     protected $fillable = [
         'user_id',
         'sender_id',
@@ -36,7 +35,6 @@ class Message extends Model
         'data' => 'array',
     ];
 
-
     /**
      * @return BelongsTo
      */
@@ -45,7 +43,6 @@ class Message extends Model
         return $this->belongsTo(User::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -53,5 +50,4 @@ class Message extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

@@ -23,9 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Diploma extends Model
 {
-
     protected $fillable = ['user_id', 'course_id', 'child_id', 'file_id'];
-
 
     /**
      * @return BelongsTo
@@ -35,7 +33,6 @@ class Diploma extends Model
         return $this->belongsTo(User::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -44,7 +41,6 @@ class Diploma extends Model
         return $this->belongsTo(Course::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -52,7 +48,6 @@ class Diploma extends Model
     {
         return $this->belongsTo(UserChild::class);
     }
-
 
     /**
      * @return BelongsTo

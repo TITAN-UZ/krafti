@@ -16,7 +16,6 @@ use Throwable;
 
 class Paypal extends Payment
 {
-
     /**
      * @return ApiContext
      */
@@ -34,7 +33,6 @@ class Paypal extends Payment
 
         return $apiContext;
     }
-
 
     /**
      * @param Order $order
@@ -92,7 +90,6 @@ class Paypal extends Payment
 
         return false;
     }
-
 
     /**
      * InvId=4&paymentId=PAYID-LVXT6EI36X040150V5542215&token=EC-76335975J2010960F&PayerID=DENSTH88A8QJY

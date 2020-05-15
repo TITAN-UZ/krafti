@@ -25,7 +25,6 @@ class GalleryItem extends Model
         'active' => 'boolean',
     ];
 
-
     /**
      * @return BelongsTo
      */
@@ -33,7 +32,6 @@ class GalleryItem extends Model
     {
         return $this->belongsTo(File::class);
     }
-
 
     /**
      * @param array $options
@@ -52,7 +50,6 @@ class GalleryItem extends Model
         return parent::save($options);
     }
 
-
     /**
      * @return bool|null
      * @throws Exception
@@ -65,5 +62,4 @@ class GalleryItem extends Model
 
         return parent::delete();
     }
-
 }

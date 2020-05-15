@@ -16,7 +16,6 @@ class Users extends ModelController
     protected $model = User::class;
     protected $scope = 'users';
 
-
     /**
      * @return ResponseInterface;
      */
@@ -28,7 +27,6 @@ class Users extends ModelController
 
         return parent::patch();
     }
-
 
     /**
      * @param User $record
@@ -69,7 +67,7 @@ class Users extends ModelController
     protected function beforeCount($c)
     {
         if ($query = trim($this->getProperty('query'))) {
-            $c->where(function (Builder $c) use ($query) {
+            $c->where(static function (Builder $c) use ($query) {
                 $c->where('email', 'LIKE', "%$query%");
                 $c->orWhere('fullname', 'LIKE', "%$query%");
                 $c->orWhere('instagram', 'LIKE', "%$query%");
@@ -101,7 +99,6 @@ class Users extends ModelController
         return $c;
     }
 
-
     /*
      * @param Builder $c
      *
@@ -113,7 +110,7 @@ class Users extends ModelController
         if (!$this->getProperty('combo')) {
             $c->withCount('referrals');
             $c->withCount([
-                'orders as orders_count' => function (Builder $c) {
+                'orders as orders_count' => static function (Builder $c) {
                     $c->where('status', 2);
                     $c->where('service', '!=', 'internal');
                 },
@@ -123,7 +120,6 @@ class Users extends ModelController
 
         return $c;
     }
-
 
     /**
      * @param User $record
@@ -140,5 +136,4 @@ class Users extends ModelController
 
         return true;
     }
-
 }

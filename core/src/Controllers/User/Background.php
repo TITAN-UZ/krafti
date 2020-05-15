@@ -9,9 +9,9 @@ use Vesp\Controllers\Controller;
 class Background extends Controller
 {
     protected $scope = 'profile';
+
     /** @var User $user */
     protected $user;
-
 
     public function post()
     {
@@ -27,5 +27,4 @@ class Background extends Controller
 
         return $this->success(['user' => $this->user->getProfile()]);
     }
-
 }

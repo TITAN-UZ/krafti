@@ -9,7 +9,6 @@ use Vesp\Controllers\ModelController;
 
 class Courses extends ModelController
 {
-
     protected $model = Course::class;
     protected $scope = 'courses';
 
@@ -34,7 +33,7 @@ class Courses extends ModelController
     protected function beforeCount($c)
     {
         if ($query = trim($this->getProperty('query'))) {
-            $c->where(function (Builder $c) use ($query) {
+            $c->where(static function (Builder $c) use ($query) {
                 $c->where('title', 'LIKE', "%$query%");
                 $c->orWhere('description', 'LIKE', "%$query%");
             });
@@ -60,7 +59,6 @@ class Courses extends ModelController
 
         return $c;
     }
-
 
     /**
      * @param Course $record

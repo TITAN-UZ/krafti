@@ -23,7 +23,6 @@ class UserLike extends Model
     protected $primaryKey = ['lesson_id', 'user_id'];
     protected $fillable = ['lesson_id', 'user_id', 'value'];
 
-
     /**
      * @return BelongsTo
      */
@@ -32,7 +31,6 @@ class UserLike extends Model
         return $this->belongsTo(User::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -40,7 +38,6 @@ class UserLike extends Model
     {
         return $this->belongsTo(Lesson::class);
     }
-
 
     /**
      * @param array $options

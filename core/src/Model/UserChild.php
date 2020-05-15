@@ -25,7 +25,6 @@ class UserChild extends Model
         'gender' => 'bool',
     ];
 
-
     /**
      * @return BelongsTo
      */

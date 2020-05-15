@@ -8,15 +8,12 @@ use Vesp\Controllers\ModelGetController;
 
 class Gallery extends ModelGetController
 {
-
     protected $model = GalleryItem::class;
-
 
     protected function beforeGet($c)
     {
         return $this->beforeCount($c);
     }
-
 
     /**
      * @param Builder $c

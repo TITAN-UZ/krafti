@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controllers\User;
 
 use App\Model\Message;
@@ -11,6 +10,7 @@ use Vesp\Controllers\ModelGetController;
 class Messages extends ModelGetController
 {
     protected $model = Message::class;
+
     /** @var User $user */
     protected $user;
 
@@ -21,7 +21,6 @@ class Messages extends ModelGetController
         return $this->user->messages()->where(['read' => false])->count();
     }
 
-
     /**
      * @param Builder $c
      *
@@ -31,7 +30,6 @@ class Messages extends ModelGetController
     {
         return $this->beforeCount($c);
     }
-
 
     /**
      * @param Builder $c
@@ -45,7 +43,6 @@ class Messages extends ModelGetController
 
         return $c;
     }
-
 
     /**
      * @param Message $object

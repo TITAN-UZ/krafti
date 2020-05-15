@@ -6,7 +6,6 @@ use App\Model\Order;
 
 class Robokassa extends Payment
 {
-
     /**
      * @param Order $order
      *
@@ -39,15 +38,16 @@ class Robokassa extends Payment
                 ],
             ]),
         ];
-        $request['SignatureValue'] = sha1(implode(':',
-            [$login, $order->cost, $order->id, $request['Receipt'], $pass1]));
+        $request['SignatureValue'] = sha1(implode(
+            ':',
+            [$login, $order->cost, $order->id, $request['Receipt'], $pass1]
+        ));
         if (getenv('ROBOKASSA_TEST')) {
             $request['isTest'] = 1;
         }
 
         return getenv('ROBOKASSA_URL') . '?' . http_build_query($request);
     }
-
 
     /**
      * https://docs.robokassa.ru/#1222

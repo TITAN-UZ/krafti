@@ -14,9 +14,9 @@ class Homeworks extends ModelGetController
 {
     protected $scope = 'profile';
     protected $model = Homework::class;
+
     /** @var User $user */
     protected $user;
-
 
     /**
      * @param Builder $c
@@ -30,7 +30,6 @@ class Homeworks extends ModelGetController
 
         return $c;
     }
-
 
     /**
      * @param Builder $c
@@ -62,7 +61,6 @@ class Homeworks extends ModelGetController
 
         return $c;
     }
-
 
     /**
      * @return ResponseInterface;
@@ -147,5 +145,4 @@ class Homeworks extends ModelGetController
             ],
         ]);
     }
-
 }

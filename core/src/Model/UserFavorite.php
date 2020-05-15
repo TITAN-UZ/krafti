@@ -22,7 +22,6 @@ class UserFavorite extends Model
     protected $primaryKey = ['user_id', 'course_id'];
     protected $fillable = ['user_id', 'course_id'];
 
-
     /**
      * @return BelongsTo
      */
@@ -30,7 +29,6 @@ class UserFavorite extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     /**
      * @return BelongsTo

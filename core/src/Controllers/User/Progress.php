@@ -9,6 +9,7 @@ use Vesp\Controllers\Controller;
 class Progress extends Controller
 {
     protected $scope = 'profile';
+
     /** @var User $user */
     protected $user;
 
@@ -41,5 +42,4 @@ class Progress extends Controller
             'rank' => $progress->rank,
         ]);
     }
-
 }

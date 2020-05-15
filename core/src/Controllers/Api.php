@@ -26,7 +26,7 @@ class Api extends Controller
 
         $name = preg_replace_callback(
             '#-(\w)#s',
-            function ($matches) {
+            static function ($matches) {
                 return ucfirst($matches[1]);
             },
             $this->route->getArgument('name')

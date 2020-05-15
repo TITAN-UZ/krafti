@@ -21,7 +21,7 @@ class Comments extends ModelGetController
             'lesson_id' => (int)$this->getProperty('lesson_id'),
             'deleted' => false,
         ]);
-        $c->whereHas('lesson', function (Builder $c) {
+        $c->whereHas('lesson', static function (Builder $c) {
             $c->where('free', true);
         });
 

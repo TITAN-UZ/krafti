@@ -20,6 +20,7 @@ class Oauth2 extends Controller
 {
     /** @var Logger $logger */
     protected $logger;
+
     /** @var User $user */
     protected $user;
 
@@ -88,10 +89,12 @@ class Oauth2 extends Controller
             }
 
             /** @var UserOauth $oauth */
-            if ($oauth = UserOauth::query()->where([
+            if (
+                $oauth = UserOauth::query()->where([
                 'provider' => $provider,
                 'identifier' => $profile->identifier,
-            ])->first()) {
+                ])->first()
+            ) {
                 $user = $oauth->user;
             } else {
                 $oauth = new UserOauth([
@@ -182,7 +185,6 @@ class Oauth2 extends Controller
             ]);
         }
     }
-
 
     /**
      * @return ResponseInterface;

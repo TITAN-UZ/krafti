@@ -11,9 +11,9 @@ use Vesp\Controllers\ModelController;
 
 class Orders extends ModelController
 {
-
     protected $model = Order::class;
     protected $scope = 'orders';
+
     /** @var Builder $conditions */
     protected $conditions;
 
@@ -47,8 +47,13 @@ class Orders extends ModelController
             ];
             if (Order::query()->where($key)->where('status', 1)->count()) {
                 return $this->failure('У этого пользователя уже есть неоплаченный заказ, отредактируйте его');
-            } elseif (Order::query()->where($key)->where('status', 2)->where('paid_till', '>',
-                date('Y-m-d H:i:s'))->count()) {
+            } elseif (
+                Order::query()->where($key)->where('status', 2)->where(
+                    'paid_till',
+                    '>',
+                    date('Y-m-d H:i:s')
+                )->count()
+            ) {
                 return $this->failure('Этот курс у пользователя уже оплачен');
             }
 
@@ -63,7 +68,6 @@ class Orders extends ModelController
         return true;
     }
 
-
     /**
      * @param Builder $c
      *
@@ -73,15 +77,14 @@ class Orders extends ModelController
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where('id', 'LIKE', "%{$query}%");
-            $c->orWhere(function (Builder $c) use ($query) {
-                $c->whereHas('course', function (Builder $c) use ($query) {
+            $c->orWhere(static function (Builder $c) use ($query) {
+                $c->whereHas('course', static function (Builder $c) use ($query) {
                     $c->where('title', 'LIKE', "%$query%");
                 });
-                $c->orWhereHas('user', function (Builder $c) use ($query) {
+                $c->orWhereHas('user', static function (Builder $c) use ($query) {
                     $c->where('fullname', 'LIKE', "%$query%");
                     $c->orWhere('email', 'LIKE', "%$query%");
                 });
-
             });
         }
 
@@ -131,7 +134,6 @@ class Orders extends ModelController
 
         return $array;
     }
-
 
     /**
      * @param Order $record

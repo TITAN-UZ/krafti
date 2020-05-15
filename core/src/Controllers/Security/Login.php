@@ -8,7 +8,6 @@ use Vesp\Helpers\Jwt;
 
 class Login extends \Vesp\Controllers\Security\Login
 {
-
     public function post()
     {
         // Invalidate old tokens
@@ -54,5 +53,4 @@ class Login extends \Vesp\Controllers\Security\Login
 
         return $this->failure('Неправильный логин или пароль');
     }
-
 }

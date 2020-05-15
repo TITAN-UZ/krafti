@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Reviews extends \App\Controllers\Web\Reviews
 {
-
     /**
      * @param Builder $c
      *

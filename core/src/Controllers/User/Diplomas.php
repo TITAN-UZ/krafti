@@ -11,7 +11,6 @@ class Diplomas extends ModelGetController
     protected $scope = 'profile';
     protected $model = Diploma::class;
 
-
     /**
      * @param Builder $c
      *
@@ -23,7 +22,6 @@ class Diplomas extends ModelGetController
 
         return $this->afterCount($c);
     }
-
 
     /**
      * @param Builder $c
@@ -47,5 +45,4 @@ class Diplomas extends ModelGetController
 
         return $c;
     }
-
 }

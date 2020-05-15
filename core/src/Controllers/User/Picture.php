@@ -8,11 +8,10 @@ use Vesp\Controllers\Controller;
 
 class Picture extends Controller
 {
-
     protected $scope = 'profile';
+
     /** @var User $user */
     protected $user;
-
 
     public function post()
     {
@@ -30,5 +29,4 @@ class Picture extends Controller
 
         return $this->success(['user' => $this->user->getProfile()]);
     }
-
 }

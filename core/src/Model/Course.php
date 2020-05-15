@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-
 /**
  * @property int $id
  * @property string $title
@@ -42,6 +41,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read UserProgress[] $progresses
  * @property-read Homework[] $homeworks
  */
+
 class Course extends Model
 {
     protected $fillable = [
@@ -184,8 +184,13 @@ class Course extends Model
 
         // Определяем скидку для указанного юзера
         if ($user) {
-            if ($this->orders()->where(['user_id' => $user->id, 'status' => 2])->where('paid_till', '<',
-                date('Y-m-d H:i:s'))->count()) {
+            if (
+                $this->orders()->where(['user_id' => $user->id, 'status' => 2])->where(
+                    'paid_till',
+                    '<',
+                    date('Y-m-d H:i:s')
+                )->count()
+            ) {
                 $user_discount = [
                     'discount' => getenv('COURSE_PROLONG_DISCOUNT'),
                     'type' => 'order',
@@ -252,7 +257,7 @@ class Course extends Model
     {
         $price = $this->price;
         if ($discount) {
-            array_walk($price, function (&$v) use ($discount) {
+            array_walk($price, static function (&$v) use ($discount) {
                 if (substr($discount['discount'], -1) === '%') {
                     $v -= $v * (rtrim($discount['discount'], '%') / 100);
                 } else {
@@ -329,5 +334,4 @@ class Course extends Model
             }
         }
     }
-
 }

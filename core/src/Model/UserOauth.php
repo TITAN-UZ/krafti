@@ -50,7 +50,6 @@ class UserOauth extends Model
         'birthYear',
     ];
 
-
     /**
      * @return BelongsTo
      */

@@ -26,7 +26,6 @@ class UserToken extends Model
         'active' => 'boolean',
     ];
 
-
     /**
      * @return BelongsTo
      */

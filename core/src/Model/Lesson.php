@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\hasMany;
 
-
 /**
  * @property int $id
  * @property string $title
@@ -37,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property-read UserLike[] $likes
  * @property-read Homework[] $homeworks
  */
+
 class Lesson extends Model
 {
     protected $fillable = [
@@ -61,7 +61,6 @@ class Lesson extends Model
         'free' => 'boolean',
     ];
 
-
     /**
      * @return BelongsTo
      */
@@ -69,7 +68,6 @@ class Lesson extends Model
     {
         return $this->belongsTo(Course::class);
     }
-
 
     /**
      * @return BelongsTo
@@ -79,7 +77,6 @@ class Lesson extends Model
         return $this->belongsTo(Video::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -87,7 +84,6 @@ class Lesson extends Model
     {
         return $this->belongsTo(Video::class);
     }
-
 
     /**
      * @return BelongsTo
@@ -97,7 +93,6 @@ class Lesson extends Model
         return $this->belongsTo(File::class);
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -105,7 +100,6 @@ class Lesson extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     /**
      * @return hasMany
@@ -115,7 +109,6 @@ class Lesson extends Model
         return $this->hasMany(UserLike::class);
     }
 
-
     /**
      * @return hasMany
      */
@@ -123,7 +116,6 @@ class Lesson extends Model
     {
         return $this->hasMany(Homework::class);
     }
-
 
     /**
      * @param array $options
@@ -152,7 +144,6 @@ class Lesson extends Model
         return $save;
     }
 
-
     public function delete()
     {
         $course = $this->course;
@@ -169,7 +160,6 @@ class Lesson extends Model
 
         return $delete;
     }
-
 
     /**
      * @return int
@@ -216,5 +206,4 @@ class Lesson extends Model
 
         return true;
     }
-
 }

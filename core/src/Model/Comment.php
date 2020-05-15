@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\hasMany;
 
-
 /**
  * @property int $id
  * @property int $user_id
@@ -24,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property-read Comment $parent
  * @property-read Comment[] $comment
  */
+
 class Comment extends Model
 {
     protected $fillable = ['user_id', 'lesson_id', 'parent_id', 'text', 'deleted', 'review'];
@@ -33,7 +33,6 @@ class Comment extends Model
         //'created_at' => 'datetime:Y-m-d',
     ];
 
-
     /**
      * @return BelongsTo
      */
@@ -41,7 +40,6 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     /**
      * @return BelongsTo
@@ -51,7 +49,6 @@ class Comment extends Model
         return $this->belongsTo(Lesson::class);
     }
 
-
     /**
      * @return hasMany
      */
@@ -60,10 +57,8 @@ class Comment extends Model
         return $this->hasMany(Comment::class, 'id', 'parent_id');
     }
 
-
     public function parent()
     {
         return $this->belongsTo(Comment::class);
     }
-
 }

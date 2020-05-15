@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
  */
 trait CompositeKey
 {
-
     /**
      * Get the value indicating whether the IDs are incrementing.
      *
@@ -21,7 +20,6 @@ trait CompositeKey
     {
         return false;
     }
-
 
     /**
      * Set the keys for a save update query.
@@ -43,7 +41,6 @@ trait CompositeKey
 
         return $query;
     }
-
 
     /**
      * Execute a query for a single record by ID.

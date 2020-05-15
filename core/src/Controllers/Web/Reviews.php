@@ -8,9 +8,7 @@ use Vesp\Controllers\ModelGetController;
 
 class Reviews extends ModelGetController
 {
-
     protected $model = Comment::class;
-
 
     /**
      * @param Builder $c
@@ -23,7 +21,6 @@ class Reviews extends ModelGetController
 
         return $this->afterCount($c);
     }
-
 
     /**
      * @param Builder $c
@@ -52,5 +49,4 @@ class Reviews extends ModelGetController
 
         return $c;
     }
-
 }

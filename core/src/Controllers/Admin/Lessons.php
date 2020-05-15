@@ -10,7 +10,6 @@ use Vesp\Controllers\ModelController;
 
 class Lessons extends ModelController
 {
-
     protected $model = Lesson::class;
     protected $scope = 'lessons';
 
@@ -35,10 +34,12 @@ class Lessons extends ModelController
                 if ($object->rank > 0) {
                     $object->rank -= 1;
                     /** @var Lesson $other */
-                    if ($other = $object->course->lessons()->where([
+                    if (
+                        $other = $object->course->lessons()->where([
                         'rank' => $object->rank,
                         'section' => $object->section,
-                    ])->first()) {
+                        ])->first()
+                    ) {
                         $other->rank += 1;
                         $other->save();
                     }
@@ -48,10 +49,12 @@ class Lessons extends ModelController
             case 'move_down':
                 $object->rank += 1;
                 /** @var Lesson $other */
-                if ($other = $object->course->lessons()->where([
+                if (
+                    $other = $object->course->lessons()->where([
                     'rank' => $object->rank,
                     'section' => $object->section,
-                ])->first()) {
+                    ])->first()
+                ) {
                     $other->rank -= 1;
                     $other->save();
                 }
@@ -101,8 +104,13 @@ class Lessons extends ModelController
     public function beforeSave($record)
     {
         if ($record->section == 0) {
-            if (Lesson::query()->where(['section' => 0, 'course_id' => $record->course_id])->where('id', '!=',
-                $record->id)->count()) {
+            if (
+                Lesson::query()->where(['section' => 0, 'course_id' => $record->course_id])->where(
+                    'id',
+                    '!=',
+                    $record->id
+                )->count()
+            ) {
                 return 'У вас уже есть бонусное видео в этом курсе. Такое видео может быть только одно.';
             }
         }
@@ -122,7 +130,6 @@ class Lessons extends ModelController
         return parent::beforeSave($record);
     }
 
-
     /**
      * @param Builder $c
      *
@@ -134,7 +141,7 @@ class Lessons extends ModelController
             $c->where(['course_id' => $course_id]);
         }
         if ($query = trim($this->getProperty('query'))) {
-            $c->where(function (Builder $c) use ($query) {
+            $c->where(static function (Builder $c) use ($query) {
                 $c->where('title', 'LIKE', "%$query%");
                 $c->orWhere('description', 'LIKE', "%$query%");
             });

@@ -8,10 +8,8 @@ use Vesp\Controllers\ModelGetController;
 
 class Videos extends ModelGetController
 {
-
     protected $model = Video::class;
     protected $scope = 'videos';
-
 
     /**
      * @param Builder $c
@@ -21,7 +19,7 @@ class Videos extends ModelGetController
     protected function beforeCount($c)
     {
         if ($query = trim($this->getProperty('query'))) {
-            $c->where(function (Builder $c) use ($query) {
+            $c->where(static function (Builder $c) use ($query) {
                 $c->where('title', 'LIKE', "%$query%");
                 $c->orWhere('remote_key', 'LIKE', "$query%");
             });

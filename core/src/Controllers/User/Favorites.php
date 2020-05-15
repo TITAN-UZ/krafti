@@ -11,8 +11,8 @@ use Vesp\Controllers\Controller;
 
 class Favorites extends Controller
 {
-
     protected $scope = 'profile';
+
     /** @var User $user */
     protected $user;
 
@@ -94,5 +94,4 @@ class Favorites extends Controller
 
         return $this->success(['user' => $this->user->getProfile()]);
     }
-
 }

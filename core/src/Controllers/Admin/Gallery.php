@@ -11,10 +11,8 @@ use Vesp\Controllers\ModelController;
 
 class Gallery extends ModelController
 {
-
     protected $model = GalleryItem::class;
     protected $scope = 'gallery';
-
 
     /**
      * Upload file
@@ -66,7 +64,6 @@ class Gallery extends ModelController
         return $this->failure();
     }
 
-
     /**
      * Modify file
      */
@@ -113,7 +110,6 @@ class Gallery extends ModelController
         return $this->success($this->prepareRow($record));
     }
 
-
     /**
      * @param Builder $c
      *
@@ -129,7 +125,6 @@ class Gallery extends ModelController
 
         return $c;
     }
-
 
     /**
      * @param GalleryItem $object

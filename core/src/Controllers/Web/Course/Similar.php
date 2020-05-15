@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Similar extends Courses
 {
-
     /**
      * @param Builder $c
      *

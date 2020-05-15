@@ -8,7 +8,6 @@ class Courses extends \App\Controllers\Web\Courses
 {
     protected $scope = 'profile';
 
-
     /**
      * @param Builder $c
      *
@@ -18,7 +17,6 @@ class Courses extends \App\Controllers\Web\Courses
     {
         return $this->beforeCount($c);
     }
-
 
     /**
      * @param Builder $c

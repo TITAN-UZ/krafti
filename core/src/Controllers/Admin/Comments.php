@@ -11,7 +11,6 @@ class Comments extends ModelController
     protected $model = Comment::class;
     protected $scope = 'comments';
 
-
     /**
      * @param Builder $c
      *
@@ -38,5 +37,4 @@ class Comments extends ModelController
 
         return $c;
     }
-
 }

@@ -25,7 +25,6 @@ class UserProgress extends Model
     protected $primaryKey = ['user_id', 'course_id'];
     protected $fillable = ['user_id', 'course_id', 'section', 'rank'];
 
-
     /**
      * @return BelongsTo
      */
@@ -33,7 +32,6 @@ class UserProgress extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     /**
      * @return BelongsTo

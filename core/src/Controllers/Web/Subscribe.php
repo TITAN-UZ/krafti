@@ -38,5 +38,4 @@ class Subscribe extends Controller
 
         return $this->success();
     }
-
 }

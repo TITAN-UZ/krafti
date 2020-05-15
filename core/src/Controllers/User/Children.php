@@ -11,7 +11,6 @@ class Children extends ModelController
     protected $scope = 'profile';
     protected $model = UserChild::class;
 
-
     /**
      * @param Builder $c
      *
@@ -21,7 +20,6 @@ class Children extends ModelController
     {
         return $this->beforeCount($c);
     }
-
 
     /**
      * @param Builder $c
@@ -34,7 +32,6 @@ class Children extends ModelController
 
         return $c;
     }
-
 
     /**
      * @param UserChild $record
@@ -59,7 +56,6 @@ class Children extends ModelController
         return true;
     }
 
-
     /**
      * @param UserChild $record
      *
@@ -73,7 +69,6 @@ class Children extends ModelController
 
         return true;
     }
-
 
     /**
      * @param UserChild $object
@@ -89,5 +84,4 @@ class Children extends ModelController
             'gender' => $object->gender,
         ];
     }
-
 }
