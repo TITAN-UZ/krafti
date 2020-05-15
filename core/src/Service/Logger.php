@@ -2,36 +2,26 @@
 
 namespace App\Service;
 
-use App\Model\Log;
-use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\EchoHandler;
+use Monolog\Handler\RotatingFileHandler;
 
-class Logger extends AbstractProcessingHandler
+class Logger extends \Monolog\Logger
 {
-
-    /**
-     * @param array $record
-     */
-    protected function write(array $record)
+    public function __construct()
     {
-        /*
-         * merge $record['context'] and $record['extra'] as additional info of Processors
-         * getting added to $record['extra']
-         * @see https://github.com/Seldaek/monolog/blob/master/doc/02-handlers-formatters-processors.md
-         */
-        if (isset($record['extra'])) {
-            $record['context'] = array_merge($record['context'], $record['extra']);
+        parent::__construct('logger');
+
+        if (PHP_SAPI == 'cli') {
+            $handler = new EchoHandler(constant('\Monolog\Logger::' . getenv('LOG_LEVEL_CLI')));
+            $handler->setFormatter(new LineFormatter(null, null, false, true));
+        } else {
+            $handler = new RotatingFileHandler(
+                getenv('LOG_DIR') . 'core.log',
+                5,
+                constant('\Monolog\Logger::' . getenv('LOG_LEVEL_WWW'))
+            );
         }
-
-        //'context' contains the array
-        $contentArray = array_merge([
-            'channel' => $record['channel'],
-            'level' => $record['level'],
-            'message' => $record['message'],
-            'time' => date('Y-m-d H:i:s', $record['datetime']->format('U')),
-        ], $record['context']);
-
-        (new Log())
-            ->fill($contentArray)
-            ->save();
+        $this->pushHandler($handler);
     }
 }

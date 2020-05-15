@@ -32,7 +32,7 @@ class Diploma extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -41,7 +41,7 @@ class Diploma extends Model
      */
     public function course()
     {
-        return $this->belongsTo('App\Model\Course');
+        return $this->belongsTo(Course::class);
     }
 
 
@@ -50,7 +50,7 @@ class Diploma extends Model
      */
     public function child()
     {
-        return $this->belongsTo('App\Model\UserChild');
+        return $this->belongsTo(UserChild::class);
     }
 
 
@@ -59,7 +59,7 @@ class Diploma extends Model
      */
     public function file()
     {
-        return $this->belongsTo('App\Model\File');
+        return $this->belongsTo(File::class);
     }
 
     /**

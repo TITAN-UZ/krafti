@@ -67,7 +67,7 @@ class Lesson extends Model
      */
     public function course()
     {
-        return $this->belongsTo('App\Model\Course');
+        return $this->belongsTo(Course::class);
     }
 
 
@@ -76,7 +76,7 @@ class Lesson extends Model
      */
     public function video()
     {
-        return $this->belongsTo('App\Model\Video');
+        return $this->belongsTo(Video::class);
     }
 
 
@@ -85,7 +85,7 @@ class Lesson extends Model
      */
     public function bonus()
     {
-        return $this->belongsTo('App\Model\Video');
+        return $this->belongsTo(Video::class);
     }
 
 
@@ -94,7 +94,7 @@ class Lesson extends Model
      */
     public function file()
     {
-        return $this->belongsTo('App\Model\File');
+        return $this->belongsTo(File::class);
     }
 
 
@@ -103,7 +103,7 @@ class Lesson extends Model
      */
     public function author()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -112,7 +112,7 @@ class Lesson extends Model
      */
     public function likes()
     {
-        return $this->hasMany('App\Model\UserLike');
+        return $this->hasMany(UserLike::class);
     }
 
 
@@ -121,7 +121,7 @@ class Lesson extends Model
      */
     public function homeworks()
     {
-        return $this->hasMany('App\Model\Homework');
+        return $this->hasMany(Homework::class);
     }
 
 

@@ -39,7 +39,8 @@ class Robokassa extends Payment
                 ],
             ]),
         ];
-        $request['SignatureValue'] = sha1(implode(':', [$login, $order->cost, $order->id, $request['Receipt'], $pass1]));
+        $request['SignatureValue'] = sha1(implode(':',
+            [$login, $order->cost, $order->id, $request['Receipt'], $pass1]));
         if (getenv('ROBOKASSA_TEST')) {
             $request['isTest'] = 1;
         }
@@ -66,7 +67,7 @@ class Robokassa extends Payment
         $my_crc = sha1(implode(':', [$params['OutSum'], $order->id, $pass2]));
 
         if (strtoupper($params['SignatureValue']) !== strtoupper($my_crc)) {
-            $this->container->logger->error('Robokassa signature error', [
+            $this->logger->error('Robokassa signature error', [
                 'data' => [
                     'order' => $order->toArray(),
                     'params' => $params,

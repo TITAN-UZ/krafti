@@ -3,11 +3,8 @@ _html
 frontend/.nuxt
 frontend/dist
 frontend/node_modules
-frontend/package-lock.json
-frontend/yarn.lock
 core/.dev.env
 core/.prod.env
 core/vendor
-core/composer.lock
 /frontend/src/site/static/sw.js
 /frontend/src/admin/static/sw.js

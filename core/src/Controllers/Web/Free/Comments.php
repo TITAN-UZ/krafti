@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Controllers\Web\Free;
+
+use App\Model\Comment;
+use Illuminate\Database\Eloquent\Builder;
+use Vesp\Controllers\ModelGetController;
+
+class Comments extends ModelGetController
+{
+    protected $model = Comment::class;
+    protected $scope = '';
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function beforeCount($c)
+    {
+        $c->where([
+            'lesson_id' => (int)$this->getProperty('lesson_id'),
+            'deleted' => false,
+        ]);
+        $c->whereHas('lesson', function (Builder $c) {
+            $c->where('free', true);
+        });
+
+        return $c;
+    }
+
+    /**
+     * @param Builder $c
+     * @return Builder
+     */
+    protected function afterCount($c)
+    {
+        $c->select('id', 'parent_id', 'text', 'created_at', 'user_id');
+        $c->with('user:id,fullname,photo_id', 'user.photo:id,updated_at');
+
+        return $c;
+    }
+}

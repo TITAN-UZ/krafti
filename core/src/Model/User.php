@@ -4,7 +4,6 @@ namespace App\Model;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -51,14 +50,28 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Homework[] $homeworks
  * @property-read UserProgress[] $progresses
  */
-class User extends Model
+class User extends \Vesp\Models\User
 {
-    public $timestamps = true;
     protected $hidden = ['password', 'tmp_password'];
-    //protected $guarded = ['id', 'tmp_password', 'created_at', 'updated_at', 'promo'];
-    protected $fillable = ['email', 'password', 'fullname', 'dob', 'phone', 'instagram', 'active', 'photo_id',
-        'company', 'description', 'long_description', 'favorite',
-        'background_id', 'role_id', 'referrer_id', 'account', 'logged_at', 'reset_at',
+    protected $fillable = [
+        'email',
+        'password',
+        'fullname',
+        'dob',
+        'phone',
+        'instagram',
+        'active',
+        'photo_id',
+        'company',
+        'description',
+        'long_description',
+        'favorite',
+        'background_id',
+        'role_id',
+        'referrer_id',
+        'account',
+        'logged_at',
+        'reset_at',
     ];
     protected $casts = [
         'active' => 'boolean',
@@ -75,23 +88,10 @@ class User extends Model
      */
     public function setAttribute($key, $value)
     {
-
-        if (in_array($key, ['password', 'tmp_password'])) {
+        if ($key === 'tmp_password') {
             $value = password_hash($value, PASSWORD_DEFAULT);
         }
-
         parent::setAttribute($key, $value);
-    }
-
-
-    /**
-     * @param $password
-     *
-     * @return bool
-     */
-    public function verifyPassword($password)
-    {
-        return password_verify($password, $this->password);
     }
 
 
@@ -116,11 +116,53 @@ class User extends Model
 
 
     /**
+     * @return array
+     */
+    public function getProfile()
+    {
+        $oauth2 = [];
+        foreach ($this->oauths as $obj) {
+            $oauth2[$obj->provider] = $obj->displayName;
+        }
+
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'instagram' => $this->instagram,
+            'company' => $this->company,
+            'description' => $this->description,
+            'fullname' => $this->fullname,
+            'account' => $this->account,
+            'dob' => $this->dob,
+            'phone' => $this->phone,
+            'scope' => $this->role->scope,
+            'photo' => $this->photo_id
+                ? [
+                    'id' => $this->photo->id,
+                    'updated_at' => $this->photo->updated_at,
+                ]
+                : null,
+            'background' => $this->background_id
+                ? [
+                    'id' => $this->background->id,
+                    'updated_at' => $this->background->updated_at,
+                ]
+                : null,
+            'promo' => $this->promo,
+            'favorites' => $this->favorites()->pluck('course_id')->toArray(),
+            'oauth2' => $oauth2,
+            'children' => $this->children()->get(['id', 'name', 'dob', 'gender'])->toArray(),
+            'unread' => $this->messages()->where('read', false)->count(),
+        ];
+    }
+
+
+    /**
      * @return BelongsTo
      */
     public function role()
     {
-        return $this->belongsTo('App\Model\UserRole');
+        return $this->belongsTo(UserRole::class);
     }
 
 
@@ -129,7 +171,7 @@ class User extends Model
      */
     public function referrer()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -138,7 +180,7 @@ class User extends Model
      */
     public function photo()
     {
-        return $this->belongsTo('App\Model\File');
+        return $this->belongsTo(File::class);
     }
 
 
@@ -147,7 +189,7 @@ class User extends Model
      */
     public function background()
     {
-        return $this->belongsTo('App\Model\File');
+        return $this->belongsTo(File::class);
     }
 
 
@@ -156,7 +198,7 @@ class User extends Model
      */
     public function favorites()
     {
-        return $this->hasMany('App\Model\UserFavorite');
+        return $this->hasMany(UserFavorite::class);
     }
 
 
@@ -165,7 +207,7 @@ class User extends Model
      */
     public function likes()
     {
-        return $this->hasMany('App\Model\UserLike');
+        return $this->hasMany(UserLike::class);
     }
 
 
@@ -174,7 +216,7 @@ class User extends Model
      */
     public function orders()
     {
-        return $this->hasMany('App\Model\Order');
+        return $this->hasMany(Order::class);
     }
 
 
@@ -183,7 +225,7 @@ class User extends Model
      */
     public function referrals()
     {
-        return $this->hasMany('App\Model\User', 'referrer_id');
+        return $this->hasMany(User::class, 'referrer_id');
     }
 
 
@@ -192,7 +234,7 @@ class User extends Model
      */
     public function transactions()
     {
-        return $this->hasMany('App\Model\UserTransaction');
+        return $this->hasMany(UserTransaction::class);
     }
 
 
@@ -201,7 +243,7 @@ class User extends Model
      */
     public function oauths()
     {
-        return $this->hasMany('App\Model\UserOauth');
+        return $this->hasMany(UserOauth::class);
     }
 
 
@@ -210,7 +252,7 @@ class User extends Model
      */
     public function tokens()
     {
-        return $this->hasMany('App\Model\UserToken');
+        return $this->hasMany(UserToken::class);
     }
 
 
@@ -219,7 +261,7 @@ class User extends Model
      */
     public function children()
     {
-        return $this->hasMany('App\Model\UserChild');
+        return $this->hasMany(UserChild::class);
     }
 
 
@@ -228,7 +270,7 @@ class User extends Model
      */
     public function diplomas()
     {
-        return $this->hasMany('App\Model\Diploma')->whereNotNull('file_id');
+        return $this->hasMany(Diploma::class)->whereNotNull('file_id');
     }
 
 
@@ -237,7 +279,7 @@ class User extends Model
      */
     public function homeworks()
     {
-        return $this->hasMany('App\Model\Homework');
+        return $this->hasMany(Homework::class);
     }
 
 
@@ -246,7 +288,7 @@ class User extends Model
      */
     public function progresses()
     {
-        return $this->hasMany('App\Model\UserProgress');
+        return $this->hasMany(UserProgress::class);
     }
 
 
@@ -255,7 +297,7 @@ class User extends Model
      */
     public function messages()
     {
-        return $this->hasMany('App\Model\Message');
+        return $this->hasMany(Message::class);
     }
 
 
@@ -360,29 +402,34 @@ class User extends Model
 
         switch ($action) {
             case 'bonus':
-                $this->sendMessage('Мы списали у вас ' . ($amount * -1) . ' крафтиков за покупку бонусного урока', $action, null, [
-                    'transaction_id' => $transaction->id,
-                ]);
+                $this->sendMessage('Мы списали у вас ' . ($amount * -1) . ' крафтиков за покупку бонусного урока',
+                    $action, null, [
+                        'transaction_id' => $transaction->id,
+                    ]);
                 break;
             case 'homework':
-                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за выполнение домашней работы', $action, null, [
-                    'transaction_id' => $transaction->id,
-                ]);
+                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за выполнение домашней работы', $action,
+                    null, [
+                        'transaction_id' => $transaction->id,
+                    ]);
                 break;
             case 'purchase':
-                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за первую покупку вашего друга', $action, null, [
-                    'transaction_id' => $transaction->id,
-                ]);
+                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за первую покупку вашего друга', $action,
+                    null, [
+                        'transaction_id' => $transaction->id,
+                    ]);
                 break;
             case 'palette':
-                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за полностью закрытую палитру урока!', $action, null, [
-                    'transaction_id' => $transaction->id,
-                ]);
+                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за полностью закрытую палитру урока!',
+                    $action, null, [
+                        'transaction_id' => $transaction->id,
+                    ]);
                 break;
             case 'subscribe':
-                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за подписку на наши новости', $action, null, [
-                    'transaction_id' => $transaction->id,
-                ]);
+                $this->sendMessage('Мы начислили вам ' . $amount . ' крафтиков за подписку на наши новости', $action,
+                    null, [
+                        'transaction_id' => $transaction->id,
+                    ]);
                 break;
         }
 
@@ -479,18 +526,7 @@ class User extends Model
             return true;
         }
 
-        if (!is_array($scope)) {
-            $scope = [$scope];
-        }
-        $user_scope = $this->role->scope;
-
-        foreach ($scope as $v) {
-            if (!in_array($v, $user_scope)) {
-                return false;
-            }
-        }
-
-        return true;
+        return parent::hasScope($scope);
     }
 
 

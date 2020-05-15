@@ -21,8 +21,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Video extends Model
 {
-    public $timestamps = true;
-    protected $fillable = ['title', 'description', 'remote_key', 'preview', 'width', 'height', 'duration', 'views_count'];
+    protected $fillable = [
+        'title',
+        'description',
+        'remote_key',
+        'preview',
+        'width',
+        'height',
+        'duration',
+        'views_count',
+    ];
     protected $casts = [
         'preview' => 'array',
     ];

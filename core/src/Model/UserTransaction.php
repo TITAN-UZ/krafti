@@ -32,7 +32,7 @@ class UserTransaction extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -41,7 +41,7 @@ class UserTransaction extends Model
      */
     public function referral()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -50,7 +50,7 @@ class UserTransaction extends Model
      */
     public function lesson()
     {
-        return $this->belongsTo('App\Model\Lesson');
+        return $this->belongsTo(Lesson::class);
     }
 
 
@@ -59,7 +59,7 @@ class UserTransaction extends Model
      */
     public function course()
     {
-        return $this->belongsTo('App\Model\Course');
+        return $this->belongsTo(Course::class);
     }
 
 

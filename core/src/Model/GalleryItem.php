@@ -31,7 +31,7 @@ class GalleryItem extends Model
      */
     public function file()
     {
-        return $this->belongsTo('\App\Model\File');
+        return $this->belongsTo(File::class);
     }
 
 
@@ -43,7 +43,10 @@ class GalleryItem extends Model
     public function save(array $options = [])
     {
         if ($this->isDirty('file_id') && $this->rank === null) {
-            $this->rank = GalleryItem::query()->where(['object_id' => $this->object_id, 'object_name' => $this->object_name])->count();
+            $this->rank = GalleryItem::query()->where([
+                'object_id' => $this->object_id,
+                'object_name' => $this->object_name,
+            ])->count();
         }
 
         return parent::save($options);

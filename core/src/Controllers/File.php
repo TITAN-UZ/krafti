@@ -2,40 +2,28 @@
 
 namespace App\Controllers;
 
-use App\Container;
 use App\Model\File as FileObject;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Psr\Http\Message\ResponseInterface;
+use Vesp\Controllers\ModelGetController;
 
-class File
+class File extends ModelGetController
 {
-
-    /** @var Container */
-    protected $container;
-
-    public function __construct($container)
-    {
-        $this->container = $container;
-    }
-
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     *
-     * @return Response
+     * @return ResponseInterface
      */
-    public function process($request, $response, $args = [])
+    public function get()
     {
         /** @var FileObject $file */
-        if ($file = FileObject::query()->find($args['id'])) {
-            $response->write($file->getFileContent());
+        if ($file = FileObject::query()->find($this->getPrimaryKey())) {
+            $body = $this->response->getBody();
+            $body->write($file->getFile());
 
-            return $response
+            return $this->response
+                ->withBody($body)
                 ->withHeader('Content-Type', $file->type)
                 ->withHeader('Content-Disposition', 'attachment; filename="' . $file->title . '"');
         }
 
-        return $response->withStatus(404);
+        return $this->response->withStatus(404);
     }
 }

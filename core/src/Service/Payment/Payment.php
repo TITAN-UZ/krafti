@@ -2,23 +2,17 @@
 
 namespace App\Service\Payment;
 
-use App\Container;
 use App\Model\Order;
+use App\Service\Logger;
 
 abstract class Payment
 {
-    /** @var Container */
-    public $container;
+    /** @var Logger $logger */
+    protected $logger;
 
-
-    /**
-     * Payment constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
+        $this->logger = new Logger();
     }
 
 
@@ -27,10 +21,7 @@ abstract class Payment
      *
      * @return bool
      */
-    public function getPaymentLink(Order $order)
-    {
-        return false;
-    }
+    abstract public function getPaymentLink(Order $order);
 
 
     /**
@@ -39,8 +30,5 @@ abstract class Payment
      *
      * @return bool
      */
-    public function finalize(Order $order, array $params)
-    {
-        return false;
-    }
+    abstract public function finalize(Order $order, array $params);
 }
