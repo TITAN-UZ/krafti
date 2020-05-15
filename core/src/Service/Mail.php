@@ -44,7 +44,7 @@ class Mail
 
             $mail->isSMTP();
             $mail->Host = getenv('SMTP_HOST');
-            $mail->SMTPAuth = true;
+            $mail->SMTPAuth = (bool)getenv('SMTP_USER');
             $mail->Username = getenv('SMTP_USER');
             $mail->Password = getenv('SMTP_PASS');
             $mail->SMTPSecure = getenv('SMTP_PROTO');
@@ -54,10 +54,13 @@ class Mail
 
             //Recipients
             $mail->addAddress($to);
+            $baseFrom = getenv('SMTP_EMAIL');
+            $baseFrom = empty($baseFrom) ? getenv('SMTP_USER') : $baseFrom;
+
             if (empty($from) || count($from) !== 2) {
-                $mail->setFrom(getenv('SMTP_USER'), 'Krafti.ru');
+                $mail->setFrom($baseFrom, 'Krafti.ru');
             } else {
-                $mail->setFrom(getenv('SMTP_USER'), $from[1]);
+                $mail->setFrom($baseFrom, $from[1]);
                 $mail->addReplyTo($from[0], $from[1]);
             }
 
