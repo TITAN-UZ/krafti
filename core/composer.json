@@ -5,9 +5,11 @@
     }
   },
   "require": {
+    "php": "^7.2.27",
     "ext-gd": "*",
     "ext-json": "*",
     "ext-openssl": "*",
+    "roave/security-advisories": "dev-master",
     "akrabat/ip-address-middleware": "^1.0",
     "fenom/fenom": "^2.11",
     "hybridauth/hybridauth": "^3.0",
@@ -20,11 +22,24 @@
     "vesp/core": "^1.0",
     "vimeo/vimeo-api": "^2.0"
   },
-  "config": {
-
-    "sort-packages": true,
-    "optimize-autoloader": true,
-    "preferred-install": "dist"
+  "require-dev": {
+    "ext-xdebug": "*"
   },
-  "prefer-stable": true
+  "config": {
+    "platform": {
+      "php": "7.2.27"
+    },
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "prestissimo": {
+      "maxConnections": 6,
+      "minConnections": 3
+    },
+    "sort-packages": true
+  },
+  "prefer-stable": true,
+  "scripts": {
+  },
+  "scripts-descriptions": {
+  }
 }
