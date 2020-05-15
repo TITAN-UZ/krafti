@@ -1,0 +1,21 @@
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         colors="true"
+         bootstrap="./tests/bootstrap.php"
+         enforceTimeLimit="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>./tests/Units</directory>
+        </testsuite>
+
+        <testsuite name="Feature">
+            <directory>./tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+</phpunit>

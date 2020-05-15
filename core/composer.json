@@ -4,6 +4,11 @@
       "App\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Tests\\": "tests/"
+    }
+  },
   "require": {
     "php": "^7.2.27",
     "ext-gd": "*",
@@ -24,7 +29,10 @@
   },
   "require-dev": {
     "ext-xdebug": "*",
+    "brianium/paratest": "^4.0",
     "phpcompatibility/php-compatibility": "^9.3",
+    "phpunit/php-invoker": "^2.0",
+    "phpunit/phpunit": "^8.5",
     "slevomat/coding-standard": "^6.3",
     "squizlabs/php_codesniffer": "^3.5"
   },
@@ -42,10 +50,16 @@
   },
   "prefer-stable": true,
   "scripts": {
+    "test": "vendor/bin/paratest --configuration ./phpunit.xml",
+    "test:text": "vendor/bin/paratest --configuration ./phpunit.xml --coverage-text",
+    "test:html": "vendor/bin/paratest --configuration ./phpunit.xml --coverage-html=report",
     "fix:codestyle": "vendor/bin/phpcbf",
     "style:phpcs": "vendor/bin/phpcs"
   },
   "scripts-descriptions": {
+    "test": "Прогнать phpunit тесты",
+    "test:text": "Подготовить отчет в текстовом виде о покрытии кода тестами",
+    "test:html": "Подготовить отчет в html виде о покрытии кода тестами",
     "fix:codestyle": "Исправить кодстайл в PHP файлах",
     "style:phpcs": "Проверить стилистику кода через PHP CodeSniffer"
   }

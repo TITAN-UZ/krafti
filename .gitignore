@@ -5,6 +5,9 @@ frontend/dist
 frontend/node_modules
 core/.dev.env
 core/.prod.env
+core/.test.env
 core/vendor
+core/.phpunit.result.cache
+core/report
 /frontend/src/site/static/sw.js
 /frontend/src/admin/static/sw.js
