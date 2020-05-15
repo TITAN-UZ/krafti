@@ -29,7 +29,7 @@ class Paypal extends Payment
 
         $apiContext = new ApiContext($credentials);
         $apiContext->setConfig([
-            'mode' => getenv('PAYPAL_TEST') ? 'sandbox' : 'live'
+            'mode' => getenv('PAYPAL_TEST') ? 'sandbox' : 'live',
         ]);
 
         return $apiContext;
@@ -87,7 +87,7 @@ class Paypal extends Payment
 
             return $payment->getApprovalLink();
         } catch (Throwable $e) {
-            $this->container->logger->error('Paypal error', ['data' => $e->getMessage()]);
+            $this->logger->error('Paypal error', ['data' => $e->getMessage()]);
         }
 
         return false;
@@ -113,7 +113,7 @@ class Paypal extends Payment
             $payment = $payment->execute($execution, $apiContext);
             $state = $payment->getState();
             if ($state == 'failed') {
-                $this->container->logger->error('PayPal failure', [
+                $this->logger->error('PayPal failure', [
                     'data' => [
                         'order' => $order->toArray(),
                         'payment' => $payment->toArray(),
@@ -125,7 +125,7 @@ class Paypal extends Payment
                 ? null
                 : $state == 'approved';
         } catch (Throwable $e) {
-            $this->container->logger->error('Paypal error', ['data' => $e->getMessage()]);
+            $this->logger->error('Paypal error', ['data' => $e->getMessage()]);
         }
 
         return false;

@@ -2,45 +2,52 @@
 
 namespace App\Controllers;
 
-use App\Container;
-use App\Processor;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use DI\Container;
+use Fig\Http\Message\RequestMethodInterface;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Psr7\Request;
+use Slim\Routing\RouteContext;
+use Throwable;
+use Vesp\Controllers\Controller;
 
-class Api
+class Api extends Controller
 {
-
-    /** @var Container */
-    protected $container;
-
-
-    public function __construct($container)
-    {
-        $this->container = $container;
-    }
-
-
     /**
      * @param Request $request
-     * @param Response $response
-     * @param array $args
-     *
-     * @return Response
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
-    public function process($request, $response, $args = [])
+    public function process(Request $request, ResponseInterface $response)
     {
-        $name = preg_replace_callback('#-(\w)#s', function ($matches) use ($args) {
-            return ucfirst($matches[1]);
-        }, $args['name']);
-        $class = '\App\Processors\\' . implode('\\', array_map('ucfirst', explode('/', $name)));
-        if (!class_exists($class)) {
-            return (new Processor($this->container))->failure('Запрошен неизвестный метод "' . $args['name'] . '"');
+        $routeContext = RouteContext::fromRequest($request);
+        $this->route = $routeContext->getRoute();
+        $this->request = $request;
+        $this->response = $response;
+
+        $name = preg_replace_callback(
+            '#-(\w)#s',
+            function ($matches) {
+                return ucfirst($matches[1]);
+            },
+            $this->route->getArgument('name')
+        );
+
+        /*if (!preg_match('#^(web|admin)/#', $name)) {
+            $name = 'admin/' . ltrim($name, '/');
+        }*/
+
+        $class = '\App\Controllers\\' . implode('\\', array_map('ucfirst', explode('/', $name)));
+        try {
+            $container = new Container();
+            /** @var Controller $controller */
+            $controller = $container->get($class);
+            if ($request->getMethod() === RequestMethodInterface::METHOD_DELETE) {
+                $request = $request->withParsedBody($request->getQueryParams());
+            }
+
+            return $controller->process($request, $response);
+        } catch (Throwable $e) {
+            return $this->failure('Not Found', 404);
         }
-
-        $this->container->loadUser();
-        /** @var Processor $processor */
-        $processor = new $class($this->container);
-
-        return $processor->process();
     }
 }

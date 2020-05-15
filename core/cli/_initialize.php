@@ -1,7 +1,10 @@
 <?php
 
+use Vesp\Helpers\Env;
+use Vesp\Services\Eloquent;
+
 $base = dirname(dirname(dirname(__FILE__))) . '/';
 require $base . 'core/vendor/autoload.php';
 
-$container = new App\Container();
-$app = new Slim\App($container);
+Env::loadFile($base . '/core/' . (get_current_user() == 's4000' ? '.prod' : '.dev') . '.env');
+new Eloquent();

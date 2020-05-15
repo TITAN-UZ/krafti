@@ -2,20 +2,18 @@
 
 namespace App\Service;
 
-use App\Container;
 use App\Model\Video;
 use Exception;
 
-class Vimeo
+class Vimeo extends \Vimeo\Vimeo
 {
+    /** @var Logger $logger */
+    protected $logger;
 
-    public $container;
-    const owner = '100836496';
-
-
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
+        parent::__construct(getenv('VIMEO_ID'), getenv('VIMEO_SECRET'), getenv('VIMEO_TOKEN'));
+        $this->logger = new Logger();
     }
 
 
@@ -40,7 +38,7 @@ class Vimeo
                 $ids[] = $object->remote_key;
             }
 
-            $this->container->logger->info('Processed all Vimeo videos', [
+            $this->logger->info('Processed all Vimeo videos', [
                 'new' => $new,
                 'updated' => $updated,
             ]);
@@ -60,17 +58,15 @@ class Vimeo
     {
         $data = [];
         try {
-            $res = $this->container->vimeo->request('/users/' . $this::owner . '/videos', [
+            $res = $this->request('/users/' . getenv('VIMEO_USER') . '/videos', [
                 'per_page' => $per_page,
                 'page' => $page,
             ]);
 
             $total = $res['body']['total'];
-
             foreach ($res['body']['data'] as $video) {
-
                 if (!preg_match('#http.*?(\d+)($|/)#', $video['link'], $matches)) {
-                    $this->container->logger->error('Could not get Vimeo id: ' . $video['link']);
+                    $this->logger->error('Could not get Vimeo id: ' . $video['link']);
                     continue;
                 }
 
@@ -79,7 +75,6 @@ class Vimeo
                     $size = implode('x', [$picture['width'], $picture['height']]);
                     $preview[$size] = $picture['link'];
                 }
-                //$video['privacy']
 
                 $data[] = [
                     'title' => $video['name'],
@@ -97,7 +92,7 @@ class Vimeo
                 $data = array_merge($data, $this->loadVideos($page + 1, $per_page));
             }
         } catch (Exception $e) {
-            $this->container->logger->error($e->getMessage());
+            $this->logger->error($e->getMessage());
         }
 
         return $data;

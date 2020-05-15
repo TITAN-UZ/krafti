@@ -1,7 +1,7 @@
 <?php
 
-use \App\Service\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Vesp\Services\Migration;
 
 class Promo extends Migration
 {

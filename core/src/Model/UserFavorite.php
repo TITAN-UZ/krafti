@@ -28,7 +28,7 @@ class UserFavorite extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -37,6 +37,6 @@ class UserFavorite extends Model
      */
     public function course()
     {
-        return $this->belongsTo('App\Model\Course');
+        return $this->belongsTo(Course::class);
     }
 }

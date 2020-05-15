@@ -2,14 +2,12 @@
 
 use App\Model\Diploma;
 use App\Model\File;
-use \App\Model\User;
-use \App\Model\UserProgress;
-use Illuminate\Database\Eloquent\Builder;
+use App\Model\UserProgress;
+use App\Service\Logger;
 
-/** @var App\Container $container */
 /** @var Slim\App $app */
 require '_initialize.php';
-$font = BASE_DIR . '/core/templates/fonts/koskobold.ttf';
+$font = getenv('BASE_DIR') . '/core/templates/fonts/koskobold.ttf';
 $new = 0;
 
 $progresses = UserProgress::query()->where(['section' => 0, 'rank' => 0]);
@@ -38,7 +36,7 @@ foreach (Diploma::query()->whereNull('file_id')->get() as $diploma) {
     if (!$course->diploma_id) {
         continue;
     }
-    $file = $course->diploma->getFile();
+    $file = $course->diploma->getFullPath();
     $template = $course->diploma->type == 'image/jpeg'
         ? imagecreatefromjpeg($file)
         : imagecreatefrompng($file);
@@ -48,18 +46,22 @@ foreach (Diploma::query()->whereNull('file_id')->get() as $diploma) {
     } else {
         imagefttext($template, 50, 0, 160, 750, $color, $font, $diploma->user->fullname);
     }
-    $tmp_name = tempnam(BASE_DIR . '/tmp/', 'diploma_');
-    $data = imagejpeg($template, $tmp_name);
+    $tmp_name = tempnam(getenv('BASE_DIR') . '/tmp/', 'diploma_');
+    imagejpeg($template, $tmp_name);
     imagedestroy($template);
+    $data = 'data:image/jpeg;base64,' . base64_encode(file_get_contents($tmp_name));
 
     $file = new File();
-    if ($id = $file->uploadFile(['tmp_name' => $tmp_name, 'type' => 'image/jpeg', 'name' => 'Diploma'])) {
-        $diploma->file_id = $id;
+    if ($file->uploadFile($data, ['name' => 'Diploma'])) {
+        $diploma->file_id = $file->id;
         $diploma->save();
         $new++;
 
         if ($child = $diploma->child) {
-            $diploma->user->sendMessage('Мы сгенерировали диплом об окончании курса "' . $course->title . ' ' . ($child->gender ? 'вашей дочери' : 'вашему сыну') . ' ' . $child->name, 'diploma');
+            $diploma->user->sendMessage(
+                'Мы сгенерировали диплом об окончании курса "' . $course->title . ' ' .
+                ($child->gender ? 'вашей дочери' : 'вашему сыну') . ' ' . $child->name, 'diploma'
+            );
         } else {
             $diploma->user->sendMessage('Мы сгенерировали вам диплом об окончании курса "' . $course->title, 'diploma');
         }
@@ -67,6 +69,4 @@ foreach (Diploma::query()->whereNull('file_id')->get() as $diploma) {
     @unlink($tmp_name);
 }
 
-$container->logger->info('Processed all diplomas', [
-    'new' => $new,
-]);
+(new Logger())->info('Processed all diplomas', ['new' => $new]);

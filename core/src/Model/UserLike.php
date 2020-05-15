@@ -29,7 +29,7 @@ class UserLike extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -38,7 +38,7 @@ class UserLike extends Model
      */
     public function lesson()
     {
-        return $this->belongsTo('App\Model\Lesson');
+        return $this->belongsTo(Lesson::class);
     }
 
 

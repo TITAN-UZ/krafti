@@ -25,8 +25,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Homework extends Model
 {
+    protected $table = 'homeworks';
     protected $fillable = [
-        'user_id', 'course_id', 'lesson_id', 'file_id', 'section', 'approved', 'comment',
+        'user_id',
+        'course_id',
+        'lesson_id',
+        'file_id',
+        'section',
+        'approved',
+        'comment',
     ];
     protected $casts = [
         'approved' => 'boolean',
@@ -38,7 +45,7 @@ class Homework extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -47,7 +54,7 @@ class Homework extends Model
      */
     public function course()
     {
-        return $this->belongsTo('App\Model\Course');
+        return $this->belongsTo(Course::class);
     }
 
 
@@ -56,7 +63,7 @@ class Homework extends Model
      */
     public function lesson()
     {
-        return $this->belongsTo('App\Model\Lesson');
+        return $this->belongsTo(Lesson::class);
     }
 
 
@@ -65,6 +72,6 @@ class Homework extends Model
      */
     public function file()
     {
-        return $this->belongsTo('App\Model\File');
+        return $this->belongsTo(File::class);
     }
 }

@@ -24,7 +24,12 @@ class Message extends Model
 {
 
     protected $fillable = [
-        'user_id', 'sender_id', 'message', 'type', 'data', 'read',
+        'user_id',
+        'sender_id',
+        'message',
+        'type',
+        'data',
+        'read',
     ];
     protected $casts = [
         'read' => 'boolean',
@@ -37,7 +42,7 @@ class Message extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -46,7 +51,7 @@ class Message extends Model
      */
     public function sender()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 }

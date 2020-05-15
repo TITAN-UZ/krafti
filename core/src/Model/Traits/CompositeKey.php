@@ -55,7 +55,7 @@ trait CompositeKey
      */
     public static function find($ids, $columns = ['*'])
     {
-        $me = new self;
+        $me = new self();
         $query = $me->newQuery();
         foreach ($me->getKeyName() as $key) {
             $query->where($key, '=', $ids[$key]);

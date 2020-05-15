@@ -33,8 +33,21 @@ class UserOauth extends Model
 
     protected $primaryKey = ['user_id', 'provider'];
     protected $fillable = [
-        'user_id', 'provider', 'identifier', 'email', 'profileURL', 'photoURL', 'displayName',
-        'firstName', 'lastName', 'gender', 'phone', 'age', 'birthDay', 'birthMonth', 'birthYear'
+        'user_id',
+        'provider',
+        'identifier',
+        'email',
+        'profileURL',
+        'photoURL',
+        'displayName',
+        'firstName',
+        'lastName',
+        'gender',
+        'phone',
+        'age',
+        'birthDay',
+        'birthMonth',
+        'birthYear',
     ];
 
 
@@ -43,6 +56,6 @@ class UserOauth extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 }

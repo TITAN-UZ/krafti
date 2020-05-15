@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\hasMany;
@@ -15,8 +16,8 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property string $text
  * @property bool $deleted
  * @property bool $review
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property-read User $user
  * @property-read Lesson $lesson
@@ -38,7 +39,7 @@ class Comment extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -47,7 +48,7 @@ class Comment extends Model
      */
     public function lesson()
     {
-        return $this->belongsTo('App\Model\Lesson');
+        return $this->belongsTo(Lesson::class);
     }
 
 
@@ -56,12 +57,13 @@ class Comment extends Model
      */
     public function comments()
     {
-        return $this->hasMany('App\Model\Comment', 'id', 'parent_id');
+        return $this->hasMany(Comment::class, 'id', 'parent_id');
     }
 
 
-    public function parent() {
-        return $this->belongsTo('App\Model\Comment');
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class);
     }
 
 }

@@ -2,8 +2,8 @@
 
 use App\Model\Course;
 use App\Model\Template;
-use App\Service\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Vesp\Services\Migration;
 
 class CourseTemplate extends Migration
 {

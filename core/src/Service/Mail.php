@@ -2,28 +2,17 @@
 
 namespace App\Service;
 
-use App\Container;
-use Pelago\Emogrifier;
+use Pelago\Emogrifier\CssInliner;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Mail
 {
-
-    /** @var Container $container */
-    public $container;
     public $tpls = [
         'register' => 'email/auth/register.tpl',
         'reset' => 'email/auth/reset.tpl',
         'feedback' => 'email/auth/feedback.tpl',
     ];
-
-
-    public function __construct(&$container)
-    {
-        $this->container = $container;
-    }
-
 
     /**
      * @param string $to
@@ -34,14 +23,12 @@ class Mail
      */
     public function send($to, $subject, $body, $from = [])
     {
-
+        $logger = new Logger();
         $mail = new PHPMailer(true);
         try {
-            $emogrifier = new Emogrifier($body);
-            $body = $emogrifier->emogrify();
+            $body = CssInliner::fromHtml($body)->render();
 
             $mail->CharSet = 'UTF-8';
-
             $mail->isSMTP();
             $mail->Host = getenv('SMTP_HOST');
             $mail->SMTPAuth = (bool)getenv('SMTP_USER');
@@ -50,7 +37,7 @@ class Mail
             $mail->SMTPSecure = getenv('SMTP_PROTO');
             $mail->Port = getenv('SMTP_PORT');
             $mail->SMTPDebug = 0;
-            $mail->Debugoutput = $this->container->logger;
+            $mail->Debugoutput = $logger;
 
             //Recipients
             $mail->addAddress($to);
@@ -72,7 +59,7 @@ class Mail
 
             return $mail->send();
         } catch (Exception $e) {
-            $this->container->logger->error("Could not send mail to \"{$to}\": " . $mail->ErrorInfo);
+            $logger->error("Could not send mail to \"{$to}\": " . $mail->ErrorInfo);
         }
 
         return false;

@@ -1,16 +1,20 @@
 <?php
 
-require dirname(__FILE__) . '/vendor/autoload.php';
+use Vesp\Helpers\Env;
+use Vesp\Services\Eloquent;
 
-$container = new \App\Container();
-$config = $container->capsule->getConnection()->getConfig();
+require dirname(__FILE__) . '/vendor/autoload.php';
+Env::loadFile(dirname(__DIR__) . '/core/' . (get_current_user() == 'promo' ? '.prod' : '.dev') . '.env');
+
+$eloquent = new Eloquent();
+$config = $eloquent->getConnection()->getConfig();
 
 return [
     'paths' => [
-        'migrations' => BASE_DIR . '/core/db/migrations',
-        'seeds' => BASE_DIR . '/core/db/seeds',
+        'migrations' => getenv('BASE_DIR') . 'core/db/migrations',
+        'seeds' => getenv('BASE_DIR') . 'core/db/seeds',
     ],
-    'migration_base_class' => '\App\Service\Migration',
+    'migration_base_class' => '\Vesp\Services\Migration',
     'environments' => [
         'default_migration_table' => $config['prefix'] . 'migrations',
         'default_database' => 'dev',

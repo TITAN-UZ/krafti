@@ -3,8 +3,8 @@
 namespace App\Model;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -47,8 +47,9 @@ class Promo extends Model
     /**
      * @return HasMany
      */
-    public function orders() {
-        return $this->hasMany('\App\Model\Order');
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
     /**

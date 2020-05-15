@@ -2,7 +2,6 @@
 
 namespace App\Model;
 
-use App\Container;
 use App\Service\Payment\Payment;
 use App\Service\Payment\Paypal;
 use App\Service\Payment\Robokassa;
@@ -61,7 +60,7 @@ class Order extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -70,7 +69,7 @@ class Order extends Model
      */
     public function course()
     {
-        return $this->belongsTo('App\Model\Course');
+        return $this->belongsTo(Course::class);
     }
 
 
@@ -79,24 +78,22 @@ class Order extends Model
      */
     public function promo()
     {
-        return $this->belongsTo('App\Model\Promo');
+        return $this->belongsTo(Promo::class);
     }
 
 
     /**
-     * @param Container $container
-     *
      * @return Payment|bool
      */
-    public function getPaymentHandler(Container $container)
+    public function getPaymentHandler()
     {
         $service = false;
         switch ($this->service) {
             case 'paypal':
-                $service = new Paypal($container);
+                $service = new Paypal();
                 break;
             case 'robokassa':
-                $service = new Robokassa($container);
+                $service = new Robokassa();
                 break;
         }
 

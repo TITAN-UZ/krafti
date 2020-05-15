@@ -21,6 +21,7 @@ class UserProgress extends Model
 {
     use Traits\CompositeKey;
 
+    protected $table = 'user_progresses';
     protected $primaryKey = ['user_id', 'course_id'];
     protected $fillable = ['user_id', 'course_id', 'section', 'rank'];
 
@@ -30,7 +31,7 @@ class UserProgress extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo(User::class);
     }
 
 
@@ -39,6 +40,6 @@ class UserProgress extends Model
      */
     public function course()
     {
-        return $this->belongsTo('App\Model\Course');
+        return $this->belongsTo(Course::class);
     }
 }
