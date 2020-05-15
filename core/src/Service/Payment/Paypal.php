@@ -23,7 +23,7 @@ class Paypal extends Payment
     {
         $credentials = new OAuthTokenCredential(
             getenv('PAYPAL_TEST') ? getenv('PAYPAL_TEST_ID') : getenv('PAYPAL_ID'),
-            getenv('PAYPAL_TEST') ? getenv('PAYPAL_TEST_SECRET') : getenv('PAYPAL_SECRET'),
+            getenv('PAYPAL_TEST') ? getenv('PAYPAL_TEST_SECRET') : getenv('PAYPAL_SECRET')
         );
 
         $apiContext = new ApiContext($credentials);

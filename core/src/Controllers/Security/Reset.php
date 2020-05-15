@@ -11,7 +11,7 @@ use Vesp\Controllers\Controller;
 
 class Reset extends Controller
 {
-    public const time = 5 * 60; // 5 minutes
+    public const TIME = 5 * 60; // 5 minutes
 
 
     public function post()
@@ -21,7 +21,7 @@ class Reset extends Controller
         if ($user = User::query()->where(['email' => $email])->first()) {
             if (!$user->active) {
                 return $this->failure('Учётная запись отключена');
-            } elseif (strtotime($user->reset_at) > (time() - $this::time)) {
+            } elseif (strtotime($user->reset_at) > (time() - $this::TIME)) {
                 return $this->failure('Мы недавно уже отправили вам ссылку. Пожалуйста, попробуйте через 5 минут.');
             } else {
                 $password = bin2hex(openssl_random_pseudo_bytes(4));

@@ -49,8 +49,9 @@ class Oauth2 extends Controller
         if ($promo = (string)$this->getProperty('promo')) {
             $params['promo'] = $promo;
         }
+        $callback = $uri->getScheme() . '://' . $uri->getHost() . $uri->getPath() . '?' . http_build_query($params);
         $config = [
-            'callback' => $uri->getScheme() . '://' . $uri->getHost() . $uri->getPath() . '?' . http_build_query($params),
+            'callback' => $callback,
             'keys' => [
                 'id' => getenv('OAUTH2_' . strtoupper($provider) . '_ID'),
                 'secret' => getenv('OAUTH2_' . strtoupper($provider) . '_SECRET'),

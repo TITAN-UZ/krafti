@@ -100,8 +100,13 @@ class Homeworks extends ModelGetController
             $file = new File($key);
         }
 
-        $uploaded = $this->request->getUploadedFiles();
-        if ($file->uploadFile(array_pop($uploaded), json_decode($_POST['metadata'], true))) {
+        if (!$uploaded = $this->request->getUploadedFiles()) {
+            return $this->failure('Не могу загрузить файл');
+        }
+        $uploaded = array_pop($uploaded);
+
+        $metadata = $this->getProperty('metadata');
+        if (!empty($metadata) && $file->uploadFile($uploaded, json_decode($metadata, true))) {
             $homework->file_id = $file->id;
             $homework->save();
             $last_section = $homework->course->lessons()->max('section');

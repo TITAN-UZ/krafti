@@ -43,7 +43,8 @@ class Gallery extends ModelController
         }
 
         $file = new File();
-        if ($file->uploadFile($uploaded, json_decode($_POST['metadata'], true))) {
+        $metadata = $this->getProperty('metadata');
+        if (!empty($metadata) && $file->uploadFile($uploaded, json_decode($metadata, true))) {
             try {
                 $record = new GalleryItem($key);
                 $record->fill([

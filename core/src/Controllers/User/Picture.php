@@ -19,8 +19,13 @@ class Picture extends Controller
             $file = new File();
         }
 
-        $uploaded = $this->request->getUploadedFiles();
-        if ($file->uploadFile(array_pop($uploaded), json_decode($_POST['metadata'], true))) {
+        if (!$uploaded = $this->request->getUploadedFiles()) {
+            return $this->failure('Не могу загрузить файл');
+        }
+        $uploaded = array_pop($uploaded);
+
+        $metadata = $this->getProperty('metadata');
+        if (!empty($metadata) && $file->uploadFile($uploaded, json_decode($metadata, true))) {
             $this->user->photo_id = $file->id;
             $this->user->save();
 
