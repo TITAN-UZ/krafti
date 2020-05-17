@@ -28,10 +28,10 @@ class Lessons extends ModelGetController
     {
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
-            return $this->failure('Не могу загрузить курс');
+            return $this->failure('Не могу загрузить курс', 404);
         }
         if (!$course->wasBought($this->user)) {
-            return $this->failure(!$course->active ? 'Не могу загрузить курс' : 'Вы забыли оплатить этот курс');
+            return $this->failure(!$course->active ? 'Не могу загрузить курс' : 'Вы забыли оплатить этот курс', 404);
         }
 
         $this->setProperty('limit', 0);

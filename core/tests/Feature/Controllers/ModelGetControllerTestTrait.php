@@ -51,7 +51,7 @@ trait ModelGetControllerTestTrait
 
     public function testNotFoundSuccess()
     {
-        $response = $this->sendRequest('GET', ['id' => PHP_INT_MAX]);
+        $response = $this->sendRequest('GET', $this->makeRequestParams(false));
 
         $this->assertEquals(404, $response->getStatusCode(), 'Ожидается 404 ответ');
     }
@@ -63,6 +63,17 @@ trait ModelGetControllerTestTrait
 
     public function testFirstModelRecordSuccess()
     {
-        $this->getSuccess(['id' => $this->getModelRecord()->getKey()]);
+        $this->getSuccess($this->makeRequestParams());
+    }
+
+    protected function makeRequestParams($exists = true) : array
+    {
+        if ($exists) {
+            return [
+                'id' => $this->getModelRecord()->getKey()
+            ];
+        }
+
+        return ['id' => PHP_INT_MAX];
     }
 }

@@ -13,7 +13,6 @@ class Reset extends Controller
 {
     public const TIME = 5 * 60; // 5 minutes
 
-
     public function post()
     {
         $email = trim($this->getProperty('email'));

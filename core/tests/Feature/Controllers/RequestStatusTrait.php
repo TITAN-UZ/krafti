@@ -74,7 +74,6 @@ trait RequestStatusTrait
 
         $this->assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
 
-
         $this->assertJson($response->getBody()->__toString(), 'Ожидается JSON');
 
         if ($message !== null) {

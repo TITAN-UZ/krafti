@@ -16,8 +16,6 @@ class Messages extends ModelGetController
 
     public function post()
     {
-
-
         return $this->user->messages()->where(['read' => false])->count();
     }
 

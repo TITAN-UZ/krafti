@@ -25,10 +25,10 @@ class Courses extends ModelGetController
         if ($id = (int)$this->getPrimaryKey()) {
             /** @var Course $course */
             if (!$course = Course::query()->find($id)) {
-                return $this->failure('Не могу загрузить курс');
+                return $this->failure('Не могу загрузить курс', 404);
             }
             if (!$course->active && !$course->wasBought($this->user)) {
-                return $this->failure('Не могу загрузить курс');
+                return $this->failure('Не могу загрузить курс', 404);
             }
         }
 

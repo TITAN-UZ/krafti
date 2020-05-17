@@ -41,7 +41,7 @@ class Lessons extends ModelGetController
             if ($obj = $c->first()) {
                 return $this->success($obj->toArray());
             } else {
-                return $this->failure('Не могу загрузить бесплатный урок');
+                return $this->failure('Не могу загрузить бесплатный урок', 404);
             }
         }
 

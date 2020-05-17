@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Tests\Feature\Controllers\Web\Course;
+
+use App\Controllers\Web\Course\Reviews as Controller;
+use App\Model\Comment as Model;
+use App\Tests\Feature\Controllers\ModelGetControllerTestTrait;
+use App\Tests\TestCase;
+use Illuminate\Database\Eloquent\Builder;
+
+class ReviewsTest extends TestCase
+{
+    use ModelGetControllerTestTrait;
+
+    protected $model = Model::class;
+
+    protected function getController()
+    {
+        return Controller::class;
+    }
+
+    protected function getUri()
+    {
+        return '/api/web/course/reviews';
+    }
+
+    protected function modelWhere(Builder $builder)
+    {
+        return $builder->where(['review' => true, 'deleted' => false]);
+    }
+
+    protected function makeRequestParams($exists = true) : array
+    {
+        if ($exists) {
+            $record = $this->getModelRecord();
+            return [
+                'course_id' => $record->course_id
+            ];
+        }
+
+        return [
+            'course_id' => PHP_INT_MAX
+        ];
+    }
+
+    public function testNotFoundSuccess()
+    {
+        $this->markTestSkipped('Даже если курса нет, ответ всегда 200');
+    }
+}
