@@ -18,11 +18,11 @@ class Progress extends Controller
 
         /** @var Lesson $lesson */
         if (!$lesson = Lesson::query()->find((int)$this->getProperty('lesson_id'))) {
-            return $this->failure('Не могу загрузить урок');
+            return $this->failure('Не могу загрузить урок', 404);
         }
         $course = $lesson->course;
         if (!$course->wasBought($this->user)) {
-            return $this->failure('Вы забыли оплатить этот курс');
+            return $this->failure('Вы забыли оплатить этот курс', 403);
         }
 
         $progress = $this->user->getProgress($course);

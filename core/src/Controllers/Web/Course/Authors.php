@@ -20,7 +20,7 @@ class Authors extends Controller
     {
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
-            return $this->failure('Не могу загрузить курс');
+            return $this->failure('Не могу загрузить курс', 404);
         }
 
         $authors = [];

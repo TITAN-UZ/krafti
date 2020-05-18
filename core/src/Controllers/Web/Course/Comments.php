@@ -41,7 +41,6 @@ class Comments extends ModelController
         $this->setProperty('user_id', $this->user->id);
         $this->setProperty('text', strip_tags($this->getProperty('text')));
         $put = parent::put();
-
         $id = json_decode($put->getBody()->__toString())->id;
         /** @var Comment $reply */
         if ($reply = Comment::query()->find($id)) {

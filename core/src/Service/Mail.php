@@ -27,7 +27,6 @@ class Mail
         $mail = new PHPMailer(true);
         try {
             $body = CssInliner::fromHtml($body)->render();
-
             $mail->CharSet = 'UTF-8';
             $mail->isSMTP();
             $mail->Host = getenv('SMTP_HOST');

@@ -11,3 +11,4 @@ core/.phpunit.result.cache
 core/report
 /frontend/src/site/static/sw.js
 /frontend/src/admin/static/sw.js
+/tmp/
