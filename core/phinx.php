@@ -2,32 +2,24 @@
 
 use Vesp\Helpers\Env;
 use Vesp\Services\Eloquent;
+use Vesp\Services\Migration;
 
-require dirname(__FILE__) . '/vendor/autoload.php';
-Env::loadFile(dirname(__DIR__) . '/core/' . (get_current_user() == 'promo' ? '.prod' : '.dev') . '.env');
-
-$eloquent = new Eloquent();
-$config = $eloquent->getConnection()->getConfig();
+define('BASE_DIR', dirname(__DIR__) . '/');
+require BASE_DIR . 'core/vendor/autoload.php';
+Env::loadFile(BASE_DIR . 'core/.env');
 
 return [
     'paths' => [
-        'migrations' => getenv('BASE_DIR') . 'core/db/migrations',
-        'seeds' => getenv('BASE_DIR') . 'core/db/seeds',
+        'migrations' => BASE_DIR . 'core/db/migrations',
+        'seeds' => BASE_DIR . 'core/db/seeds',
     ],
-    'migration_base_class' => '\Vesp\Services\Migration',
+    'migration_base_class' => Migration::class,
     'environments' => [
-        'default_migration_table' => $config['prefix'] . 'migrations',
-        'default_database' => 'dev',
+        'default_migration_table' => getenv('DB_PREFIX') . 'migrations',
+        'default_environment' => 'dev',
         'dev' => [
-            'adapter' => $config['driver'],
-            'host' => $config['host'],
-            'name' => $config['database'],
-            'user' => $config['username'],
-            'pass' => $config['password'],
-            'port' => $config['port'],
-            'charset' => $config['charset'],
-            'collation' => $config['collation'],
-            'table_prefix' => $config['prefix'],
+            'name' => getenv('DB_DATABASE'),
+            'connection' => (new Eloquent())->getConnection()->getPdo(),
         ],
     ],
 ];
