@@ -51,6 +51,7 @@ class Course extends Model
         'category',
         'properties',
         'age',
+        'template_id',
         'cover_id',
         'video_id',
         'diploma_id',
