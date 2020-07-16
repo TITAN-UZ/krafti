@@ -41,7 +41,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read UserProgress[] $progresses
  * @property-read Homework[] $homeworks
  */
-
 class Course extends Model
 {
     protected $fillable = [
@@ -166,7 +165,7 @@ class Course extends Model
                 ->orderBy('paid_till', 'desc')
                 ->first();
 
-            return $order && date('Y-m-d', $order->paid_till->timestamp) >= date('Y-m-d');
+            return $order && (!$order->paid_till || date('Y-m-d', $order->paid_till->timestamp) >= date('Y-m-d'));
         }
 
         return false;

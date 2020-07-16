@@ -15,7 +15,7 @@ class Templates extends ModelController
      * @param Builder $c
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where('title', 'LIKE', "%{$query}%");
@@ -28,7 +28,7 @@ class Templates extends ModelController
      * @param Builder $c
      * @return Builder
      */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->withCount('courses');
 

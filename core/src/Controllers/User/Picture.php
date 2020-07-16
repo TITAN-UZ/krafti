@@ -4,6 +4,7 @@ namespace App\Controllers\User;
 
 use App\Model\File;
 use App\Model\User;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 
 class Picture extends Controller
@@ -13,7 +14,7 @@ class Picture extends Controller
     /** @var User $user */
     protected $user;
 
-    public function post()
+    public function post(): ResponseInterface
     {
         if (!$file = $this->user->photo) {
             $file = new File();
@@ -32,6 +33,6 @@ class Picture extends Controller
             $this->user = User::query()->find($this->user->id);
         }
 
-        return $this->success(['user' => $this->user->getProfile()]);
+        return $this->success(['user' => $this->user->fresh()->getProfile()]);
     }
 }

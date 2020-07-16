@@ -15,7 +15,7 @@ class Subscribe extends Controller
     /**
      * @return ResponseInterface
      */
-    public function put()
+    public function put(): ResponseInterface
     {
         $email = trim($this->getProperty('email'));
         if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {

@@ -5,7 +5,7 @@ use Slim\Psr7\Request;
 use Vesp\Helpers\Env;
 
 require dirname(__DIR__) . '/core/vendor/autoload.php';
-Env::loadFile(dirname(__DIR__) . '/core/' . (get_current_user() == 's4000' ? '.prod' : '.dev') . '.env');
+Env::loadFile(dirname(__DIR__) . '/core/.env');
 
 $app = DI\Bridge\Slim\Bridge::create();
 $app->addBodyParsingMiddleware();

@@ -4,11 +4,12 @@ namespace App\Controllers\Web;
 
 use App\Model\Order;
 use App\Service\Logger;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 
 class Payment extends Controller
 {
-    public function post()
+    public function post(): ResponseInterface
     {
         (new Logger())->info('New payment', ['data' => $this->getProperties()]);
 

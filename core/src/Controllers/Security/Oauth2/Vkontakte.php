@@ -10,7 +10,7 @@ class Vkontakte extends Oauth2
     /**
      * @return ResponseInterface;
      */
-    public function get()
+    public function get(): ResponseInterface
     {
         $this->setProperty('provider', 'vkontakte');
 

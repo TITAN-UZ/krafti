@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Model\Promo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\JoinClause;
 use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\ModelController;
@@ -18,7 +19,7 @@ class Promos extends ModelController
      *
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where('code', 'LIKE', "%$query%");
@@ -32,7 +33,7 @@ class Promos extends ModelController
      * @param Builder $c
      * @return Builder
      */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $prefix = $this->eloquent->getDatabaseManager()->getTablePrefix();
         $c->leftJoin('orders', static function (JoinClause $c) {
@@ -49,11 +50,11 @@ class Promos extends ModelController
     }
 
     /**
-     * @param Promo $object
+     * @param Promo|Model $object
      *
      * @return array
      */
-    public function prepareRow($object)
+    public function prepareRow(Model $object): array
     {
         $array = $object->toArray();
         $array['active'] = $object->check() === true;

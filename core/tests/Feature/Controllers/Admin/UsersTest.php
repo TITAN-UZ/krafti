@@ -31,7 +31,7 @@ class UsersTest extends TestCase
             'active' => 1,
             'confirmed' => 1,
             'combo' => 1,
-            'role_id' => 2
+            'role_id' => 2,
         ];
     }
 }

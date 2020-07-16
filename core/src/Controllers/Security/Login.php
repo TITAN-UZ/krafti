@@ -4,11 +4,12 @@ namespace App\Controllers\Security;
 
 use App\Model\User;
 use App\Model\UserToken;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Helpers\Jwt;
 
 class Login extends \Vesp\Controllers\Security\Login
 {
-    public function post()
+    public function post(): ResponseInterface
     {
         // Invalidate old tokens
         UserToken::query()
@@ -23,7 +24,9 @@ class Login extends \Vesp\Controllers\Security\Login
         if ($user = User::query()->where('email', $email)->first()) {
             if (!$user->active) {
                 return $this->failure('Учётная запись отключена');
-            } elseif ($user->verifyPassword($password)) {
+            }
+
+            if ($user->verifyPassword($password)) {
                 $token = Jwt::makeToken($user->id);
                 $decoded = Jwt::decodeToken($token);
                 $user_token = new UserToken(

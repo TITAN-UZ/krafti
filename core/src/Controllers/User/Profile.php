@@ -4,6 +4,7 @@ namespace App\Controllers\User;
 
 use App\Model\Traits\UserValidate;
 use App\Model\User;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 
 class Profile extends Controller
@@ -15,7 +16,7 @@ class Profile extends Controller
     /** @var User $user */
     protected $user;
 
-    public function get()
+    public function get(): ResponseInterface
     {
         $data = $this->user->getProfile();
 
@@ -25,7 +26,7 @@ class Profile extends Controller
         return $this->success(['user' => $data]);
     }
 
-    public function patch()
+    public function patch(): ResponseInterface
     {
         $user = $this->user;
 

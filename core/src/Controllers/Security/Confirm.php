@@ -3,12 +3,13 @@
 namespace App\Controllers\Security;
 
 use App\Model\User;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 use Vesp\Helpers\Jwt;
 
 class Confirm extends Controller
 {
-    public function get()
+    public function get(): ResponseInterface
     {
         $type = $this->getProperty('type');
         $user_id = (int)$this->getProperty('user_id');

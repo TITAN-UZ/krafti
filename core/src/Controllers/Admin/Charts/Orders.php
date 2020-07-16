@@ -5,6 +5,7 @@ namespace App\Controllers\Admin\Charts;
 use App\Model\Order;
 use App\Model\User;
 use Carbon\Carbon;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\ModelGetController;
 
 class Orders extends ModelGetController
@@ -12,7 +13,7 @@ class Orders extends ModelGetController
     protected $model = Order::class;
     protected $scope = 'orders';
 
-    public function get()
+    public function get(): ResponseInterface
     {
         $type = $this->getProperty('type', 'day');
 
@@ -67,16 +68,12 @@ class Orders extends ModelGetController
             $date = $date_start->format($format);
             $rows[] = [
                 'date' => $date,
-                'orders' => isset($orders[$date])
-                    ? $orders[$date]
-                    : 0,
-                'users' => isset($users[$date])
-                    ? $users[$date]
-                    : 0,
+                'orders' => $orders[$date] ?? 0,
+                'users' => $users[$date] ?? 0,
             ];
-            if ($type == 'year') {
+            if ($type === 'year') {
                 $date_start->addYear();
-            } elseif ($type == 'month') {
+            } elseif ($type === 'month') {
                 $date_start->addMonth();
             } else {
                 $date_start->addDay();

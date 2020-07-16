@@ -53,14 +53,7 @@
     "test": "vendor/bin/paratest --configuration ./phpunit.xml",
     "test:text": "vendor/bin/paratest --configuration ./phpunit.xml --coverage-text",
     "test:html": "vendor/bin/paratest --configuration ./phpunit.xml --coverage-html=report",
-    "fix:codestyle": "vendor/bin/phpcbf",
-    "style:phpcs": "vendor/bin/phpcs"
-  },
-  "scripts-descriptions": {
-    "test": "Прогнать phpunit тесты",
-    "test:text": "Подготовить отчет в текстовом виде о покрытии кода тестами",
-    "test:html": "Подготовить отчет в html виде о покрытии кода тестами",
-    "fix:codestyle": "Исправить кодстайл в PHP файлах",
-    "style:phpcs": "Проверить стилистику кода через PHP CodeSniffer"
+    "style": "vendor/bin/phpcs",
+    "style:fix": "vendor/bin/phpcbf"
   }
 }

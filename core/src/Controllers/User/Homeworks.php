@@ -23,7 +23,7 @@ class Homeworks extends ModelGetController
      *
      * @return Builder
      */
-    public function beforeGet($c)
+    public function beforeGet(Builder $c): Builder
     {
         $c->where('user_id', $this->user->id);
         $c->with('file:id,updated_at');
@@ -36,7 +36,7 @@ class Homeworks extends ModelGetController
      *
      * @return Builder
      */
-    public function beforeCount($c)
+    public function beforeCount(Builder $c): Builder
     {
         $c->where('user_id', $this->user->id);
         $c->select('id', 'course_id', 'lesson_id', 'file_id', 'section', 'comment');
@@ -55,7 +55,7 @@ class Homeworks extends ModelGetController
      * @param Builder $c
      * @return Builder
      */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->with('file:id,updated_at');
 
@@ -65,7 +65,7 @@ class Homeworks extends ModelGetController
     /**
      * @return ResponseInterface;
      */
-    public function post()
+    public function post(): ResponseInterface
     {
         /** @var Course $course */
         if (!$course_id = (int)$this->getProperty('course_id')) {

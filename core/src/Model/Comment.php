@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property-read Comment $parent
  * @property-read Comment[] $comment
  */
-
 class Comment extends Model
 {
     protected $fillable = ['user_id', 'lesson_id', 'parent_id', 'text', 'deleted', 'review'];

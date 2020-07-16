@@ -15,7 +15,7 @@ class UserRoles extends ModelController
      * @param Builder $c
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where('title', 'LIKE', "%{$query}%");

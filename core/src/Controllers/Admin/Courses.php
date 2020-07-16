@@ -16,7 +16,7 @@ class Courses extends ModelController
      * @param Builder $c
      * @return mixed
      */
-    protected function beforeGet($c)
+    protected function beforeGet(Builder $c): Builder
     {
         $c->with('cover:id,title,updated_at');
         $c->with('diploma:id,title,updated_at');
@@ -30,7 +30,7 @@ class Courses extends ModelController
      *
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where(static function (Builder $c) use ($query) {
@@ -49,7 +49,7 @@ class Courses extends ModelController
      * @param Builder $c
      * @return Builder
      */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         if (!$this->getProperty('combo')) {
             $c->with('cover:id,title,updated_at');
@@ -69,7 +69,9 @@ class Courses extends ModelController
     {
         if (!$title = trim($this->getProperty('title'))) {
             return 'Вы должны указать название курса';
-        } elseif (Course::query()->where(['title' => $title])->where('id', '!=', $record->id)->count()) {
+        }
+
+        if (Course::query()->where(['title' => $title])->where('id', '!=', $record->id)->count()) {
             return 'Название курса должно быть уникальным';
         }
 
@@ -79,7 +81,9 @@ class Courses extends ModelController
 
         if (!$age = trim($this->getProperty('age'))) {
             return 'Вы должны указать возраст аудитории курса';
-        } elseif (!preg_match('#(\d+)-(\d+)#', $age)) {
+        }
+
+        if (!preg_match('#(\d+)-(\d+)#', $age)) {
             return 'Неверный формат возраста. Укажите 2 числа: от и до, через дефис.';
         }
 

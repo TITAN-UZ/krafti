@@ -11,12 +11,12 @@ class PaymentTest extends TestCase
 {
     use RequestStatusTrait;
 
-    protected function getUri()
+    protected function getUri(): string
     {
         return '/api/web/payment';
     }
 
-    protected function getController()
+    protected function getController(): string
     {
         return Controller::class;
     }
@@ -27,10 +27,10 @@ class PaymentTest extends TestCase
         $this->app->any($this->getUri(), [$this->getController(), 'process']);
     }
 
-    public function testRobokassaSuccess()
+    public function testRobokassaSuccess(): void
     {
         /** @var ORder $order */
-        $order = Order::where('service', '=', 'robokassa')
+        $order = Order::query()->where('service', '=', 'robokassa')
             ->where('status', '!=', 2)
             ->firstOrFail();
 
@@ -38,22 +38,20 @@ class PaymentTest extends TestCase
             'InvId' => $order->getKey(),
             'IsTest' => 1,
             'OutSum' => $order->cost,
-            'SignatureValue' => sha1(implode(':', [$order->cost, $order->id, getenv('ROBOKASSA_TEST_PASS_2')]))
+            'SignatureValue' => sha1(implode(':', [$order->cost, $order->id, getenv('ROBOKASSA_TEST_PASS_2')])),
         ];
 
         $request = $this->createRequest('POST', $this->getUri(), $data);
-
         $response = $this->app->handle($request);
 
-        $this->assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
-
-        $this->assertJson($response->getBody()->__toString(), 'Ожидается JSON');
+        self::assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
+        self::assertJson($response->getBody()->__toString(), 'Ожидается JSON');
     }
 
-    public function testRobokassaFail()
+    public function testRobokassaFail(): void
     {
         /** @var ORder $order */
-        $order = Order::where('service', '=', 'robokassa')
+        $order = Order::query()->where('service', '=', 'robokassa')
             ->where('status', '!=', 2)
             ->firstOrFail();
 
@@ -61,20 +59,19 @@ class PaymentTest extends TestCase
             'InvId' => $order->getKey(),
             'IsTest' => 1,
             'OutSum' => 1,
-            'SignatureValue' => ''
+            'SignatureValue' => '',
         ];
 
         $request = $this->createRequest('POST', $this->getUri(), $data);
 
         $response = $this->app->handle($request);
 
-        $this->assertEquals(422, $response->getStatusCode(), 'Ожидается ответ 422');
-
-        $this->assertJson($response->getBody()->__toString(), 'Ожидается JSON');
+        self::assertEquals(422, $response->getStatusCode(), 'Ожидается ответ 422');
+        self::assertJson($response->getBody()->__toString(), 'Ожидается JSON');
     }
 
     public function testPaypalSuccess()
     {
-        $this->markTestSkipped('С ходу не понял как покрыть тестами paypal');
+        self::markTestSkipped('С ходу не понял как покрыть тестами paypal');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Model\File;
 use App\Model\GalleryItem;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 use Vesp\Controllers\ModelController;
@@ -12,14 +13,10 @@ use Vesp\Controllers\ModelController;
 class Gallery extends ModelController
 {
     protected $model = GalleryItem::class;
+    protected $primaryKey = 'file_id';
     protected $scope = 'gallery';
 
-    /**
-     * Upload file
-     *
-     * @return ResponseInterface;
-     */
-    public function post()
+    public function post(): ResponseInterface
     {
         if (!$object_id = (int)$this->getProperty('object_id')) {
             return $this->failure('Вы должны указать id объекта галереи');
@@ -65,12 +62,8 @@ class Gallery extends ModelController
         return $this->failure();
     }
 
-    /**
-     * Modify file
-     */
-    public function patch()
+    public function patch(): ResponseInterface
     {
-
         if (!$id = (int)$this->getProperty('id')) {
             return $this->failure('Вы должны указать id объекта галереи');
         }
@@ -111,12 +104,7 @@ class Gallery extends ModelController
         return $this->success($this->prepareRow($record));
     }
 
-    /**
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where([
             'object_id' => (int)$this->getProperty('object_id'),
@@ -128,11 +116,11 @@ class Gallery extends ModelController
     }
 
     /**
-     * @param GalleryItem $object
+     * @param GalleryItem|Model $object
      *
      * @return array
      */
-    public function prepareRow($object)
+    public function prepareRow(Model $object): array
     {
         return [
             'id' => $object->file_id,

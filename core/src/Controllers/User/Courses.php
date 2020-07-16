@@ -13,7 +13,7 @@ class Courses extends \App\Controllers\Web\Courses
      *
      * @return Builder
      */
-    public function beforeGet($c)
+    public function beforeGet(Builder $c): Builder
     {
         return $this->beforeCount($c);
     }
@@ -23,7 +23,7 @@ class Courses extends \App\Controllers\Web\Courses
      *
      * @return Builder
      */
-    public function beforeCount($c)
+    public function beforeCount(Builder $c): Builder
     {
         if ($this->user->role_id > 2) {
             $c->whereHas('orders', function (Builder $c) {

@@ -8,19 +8,10 @@ use Vesp\Controllers\ModelGetController;
 
 class Gallery extends ModelGetController
 {
+    protected $primaryKey = 'file_id';
     protected $model = GalleryItem::class;
 
-    protected function beforeGet($c)
-    {
-        return $this->beforeCount($c);
-    }
-
-    /**
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where([
             'object_id' => (int)$this->getProperty('object_id'),
@@ -32,11 +23,7 @@ class Gallery extends ModelGetController
         return parent::beforeCount($c);
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder
-     */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->select('file_id');
         $c->with('file:id,updated_at');

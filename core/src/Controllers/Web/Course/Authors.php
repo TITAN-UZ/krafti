@@ -16,7 +16,7 @@ class Authors extends Controller
     /**
      * @return ResponseInterface;
      */
-    public function get()
+    public function get(): ResponseInterface
     {
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {

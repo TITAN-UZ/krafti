@@ -12,10 +12,7 @@ class Lessons extends ModelGetController
 {
     protected $model = Lesson::class;
 
-    /**
-     * @return ResponseInterface;
-     */
-    public function get()
+    public function get(): ResponseInterface
     {
         if ($id = $this->getPrimaryKey()) {
             /** @var Model $class */
@@ -28,7 +25,7 @@ class Lessons extends ModelGetController
             $c->with('bonus:id,title,remote_key');
             $c->with('file:id,updated_at');
             $c->with('author:id,fullname,photo_id', 'author.photo:id,updated_at');
-            if ($id == -1) {
+            if ($id === -1) {
                 if ($course_id = $this->getProperty('course_id')) {
                     $c->where('course_id', $course_id);
                 }
@@ -40,19 +37,15 @@ class Lessons extends ModelGetController
 
             if ($obj = $c->first()) {
                 return $this->success($obj->toArray());
-            } else {
-                return $this->failure('Не могу загрузить бесплатный урок', 404);
             }
+
+            return $this->failure('Не могу загрузить бесплатный урок', 404);
         }
 
         return parent::get();
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder
-     */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where(['active' => true, 'free' => true]);
         $c->select('id', 'title', 'video_id');
@@ -61,11 +54,7 @@ class Lessons extends ModelGetController
         return $c;
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder
-     */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->orderByRaw('RAND()');
 

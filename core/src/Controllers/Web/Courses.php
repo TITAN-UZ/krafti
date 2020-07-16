@@ -6,6 +6,7 @@ use App\Model\Course;
 use App\Model\Order;
 use App\Model\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\ModelGetController;
@@ -17,10 +18,7 @@ class Courses extends ModelGetController
     /** @var User $user */
     protected $user;
 
-    /**
-     * @return ResponseInterface;
-     */
-    public function get()
+    public function get(): ResponseInterface
     {
         if ($id = (int)$this->getPrimaryKey()) {
             /** @var Course $course */
@@ -35,11 +33,7 @@ class Courses extends ModelGetController
         return parent::get();
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder|mixed
-     */
-    protected function beforeGet($c)
+    protected function beforeGet(Builder $c): Builder
     {
         $c->select(
             'id',
@@ -64,28 +58,27 @@ class Courses extends ModelGetController
         $c->with('template');
         $c->with([
             'lessons' => static function (HasMany $c) {
-                $c->where(['active' => true, 'free' => true])
-                    ->orderByRaw('RAND()')
-                    ->limit(1)
-                    ->select('id', 'course_id');
-            },
-            'homeworks' => function (HasMany $c) {
-                $c->whereNull('lesson_id')
-                    ->where('user_id', $this->user->id)
-                    ->select('id', 'course_id', 'file_id', 'section')
-                    ->with('file:id,updated_at');
+                $c->where(['active' => true, 'free' => true]);
+                $c->orderByRaw('RAND()');
+                $c->limit(1);
+                $c->select('id', 'course_id');
             },
         ]);
+        if ($this->user) {
+            $c->with([
+                'homeworks' => function (HasMany $c) {
+                    $c->whereNull('lesson_id');
+                    $c->where('user_id', $this->user->id);
+                    $c->select('id', 'course_id', 'file_id', 'section');
+                    $c->with('file:id,updated_at');
+                },
+            ]);
+        }
 
         return $c;
     }
 
-    /**
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where('active', true);
 
@@ -100,11 +93,7 @@ class Courses extends ModelGetController
         return $c;
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder
-     */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->select('id', 'title', 'tagline', 'description', 'category', 'price', 'lessons_count', 'cover_id');
         $c->with('cover:id,updated_at');
@@ -113,11 +102,11 @@ class Courses extends ModelGetController
     }
 
     /**
-     * @param Course $object
+     * @param Course|Model $object
      *
      * @return array
      */
-    public function prepareRow($object)
+    public function prepareRow(Model $object): array
     {
         $array = $object->toArray();
         $array['bought'] = false;

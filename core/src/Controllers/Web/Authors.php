@@ -4,6 +4,7 @@ namespace App\Controllers\Web;
 
 use App\Model\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Vesp\Controllers\ModelGetController;
 
 class Authors extends ModelGetController
@@ -17,7 +18,7 @@ class Authors extends ModelGetController
      *
      * @return mixed
      */
-    protected function beforeGet($c)
+    protected function beforeGet(Builder $c): Builder
     {
         return $this->beforeCount($c);
     }
@@ -29,7 +30,7 @@ class Authors extends ModelGetController
      *
      * @return mixed
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where(['users.active' => true, 'favorite' => true]);
         //->groupBy('users.id')
@@ -42,11 +43,11 @@ class Authors extends ModelGetController
     }
 
     /**
-     * @param User $object
+     * @param User|Model $object
      *
      * @return array
      */
-    public function prepareRow($object)
+    public function prepareRow(Model $object): array
     {
         return [
             'id' => $object->id,

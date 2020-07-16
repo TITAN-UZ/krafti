@@ -27,7 +27,7 @@ class CommentsTest extends TestCase
     protected function getDefaultListQuery()
     {
         return [
-            'query' => 'понятно'
+            'query' => 'понятно',
         ];
     }
 }

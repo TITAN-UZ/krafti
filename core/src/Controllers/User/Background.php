@@ -4,16 +4,16 @@ namespace App\Controllers\User;
 
 use App\Model\File;
 use App\Model\User;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 
 class Background extends Controller
 {
     protected $scope = 'profile';
-
     /** @var User $user */
     protected $user;
 
-    public function post()
+    public function post(): ResponseInterface
     {
         if (!$file = $this->user->background) {
             $file = new File();
@@ -30,6 +30,6 @@ class Background extends Controller
             $this->user->save();
         }
 
-        return $this->success(['user' => $this->user->getProfile()]);
+        return $this->success(['user' => $this->user->fresh()->getProfile()]);
     }
 }

@@ -27,7 +27,7 @@ class PromosTest extends TestCase
     protected function getDefaultListQuery()
     {
         return [
-            'query' => '@gmail'
+            'query' => '@gmail',
         ];
     }
 }

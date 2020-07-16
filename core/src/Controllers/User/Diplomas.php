@@ -16,7 +16,7 @@ class Diplomas extends ModelGetController
      *
      * @return Builder|mixed
      */
-    protected function beforeGet($c)
+    protected function beforeGet(Builder $c): Builder
     {
         $c = $this->beforeCount($c);
 
@@ -28,7 +28,7 @@ class Diplomas extends ModelGetController
      *
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where('user_id', $this->user->id);
         $c->whereNotNull('file_id');
@@ -36,7 +36,7 @@ class Diplomas extends ModelGetController
         return $c;
     }
 
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->select('id', 'file_id', 'course_id', 'child_id');
         $c->with('file:id,updated_at');

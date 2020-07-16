@@ -36,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
  * @property-read UserLike[] $likes
  * @property-read Homework[] $homeworks
  */
-
 class Lesson extends Model
 {
     protected $fillable = [

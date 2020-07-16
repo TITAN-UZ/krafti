@@ -38,7 +38,7 @@ class PaymentTest extends TestCase
 
         $data = [
             'course_id' => 1,
-            'code' => $promo->code
+            'code' => $promo->code,
         ];
 
         $request = $this->createRequest('GET', $this->getUri(), $data)
@@ -58,7 +58,7 @@ class PaymentTest extends TestCase
         $data = [
             'course_id' => 1,
             'service' => 'robokassa',
-            'period' => 12
+            'period' => 12,
         ];
 
         $request = $this->createRequest('POST', $this->getUri(), $data)
@@ -78,7 +78,7 @@ class PaymentTest extends TestCase
         $data = [
             'course_id' => 1,
             'service' => 'paypal',
-            'period' => 12
+            'period' => 12,
         ];
 
         $request = $this->createRequest('POST', $this->getUri(), $data)
@@ -99,7 +99,7 @@ class PaymentTest extends TestCase
         $data = [
             'course_id' => $bonus->getKey(),
             'service' => 'account',
-            'period' => 12
+            'period' => 12,
         ];
 
         $request = $this->createRequest('POST', $this->getUri(), $data)

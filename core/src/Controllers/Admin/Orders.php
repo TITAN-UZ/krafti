@@ -35,7 +35,9 @@ class Orders extends ModelController
 
         if (!$period = $this->getProperty('period')) {
             return 'Вы должны выбрать период оплаты';
-        } elseif (!isset($course->price[$period])) {
+        }
+
+        if (!isset($course->price[$period])) {
             return 'Указан неверный период оплаты';
         }
         $record->period = $period;
@@ -47,13 +49,12 @@ class Orders extends ModelController
             ];
             if (Order::query()->where($key)->where('status', 1)->count()) {
                 return $this->failure('У этого пользователя уже есть неоплаченный заказ, отредактируйте его');
-            } elseif (
-                Order::query()->where($key)->where('status', 2)->where(
-                    'paid_till',
-                    '>',
-                    date('Y-m-d H:i:s')
-                )->count()
-            ) {
+            }
+
+            $check = Order::query()->where($key)->where('status', 2)
+                ->where('paid_till', '>', date('Y-m-d H:i:s'))
+                ->count();
+            if ($check) {
                 return $this->failure('Этот курс у пользователя уже оплачен');
             }
 
@@ -62,8 +63,11 @@ class Orders extends ModelController
             $record->cost = $course->price[$period];
             $record->status = $this->getProperty('status', 2); // Paid
             $record->paid_at = date('Y-m-d H:i:s');
-            $record->paid_till = $this->getProperty('paid_till', Carbon::now()->addMonths($period)->toDateTime());
         }
+        $paid_till = $this->getProperty('paid_till')
+            ? Carbon::createFromTimestamp(strtotime($this->getProperty('paid_till')))
+            : Carbon::now()->addMonths($period);
+        $record->paid_till = $paid_till->toDateString() . ' 23:59:59';
 
         return true;
     }
@@ -73,7 +77,7 @@ class Orders extends ModelController
      *
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where('id', 'LIKE', "%{$query}%");
@@ -110,7 +114,7 @@ class Orders extends ModelController
      * @param Builder $c
      * @return Builder
      */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->with('user:id,fullname,photo_id', 'user.photo:id,updated_at');
         $c->with('course:id,title,cover_id');

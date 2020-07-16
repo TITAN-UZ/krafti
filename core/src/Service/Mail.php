@@ -14,28 +14,23 @@ class Mail
         'feedback' => 'email/auth/feedback.tpl',
     ];
 
-    /**
-     * @param string $to
-     * @param string $subject
-     * @param string $body
-     * @param array $from
-     * @return bool
-     */
-    public function send($to, $subject, $body, $from = [])
+    public function send(string $to, string $subject, string $body, array $from = []): bool
     {
         $logger = new Logger();
         $mail = new PHPMailer(true);
         try {
             $body = CssInliner::fromHtml($body)->render();
             $mail->CharSet = 'UTF-8';
-            $mail->isSMTP();
-            $mail->Host = getenv('SMTP_HOST');
-            $mail->SMTPAuth = (bool)getenv('SMTP_USER');
-            $mail->Username = getenv('SMTP_USER');
-            $mail->Password = getenv('SMTP_PASS');
-            $mail->SMTPSecure = getenv('SMTP_PROTO');
-            $mail->Port = getenv('SMTP_PORT');
-            $mail->SMTPDebug = 0;
+            if (getenv('SMTP_HOST')) {
+                $mail->isSMTP();
+                $mail->Host = getenv('SMTP_HOST');
+                $mail->SMTPAuth = (bool)getenv('SMTP_USER');
+                $mail->Username = getenv('SMTP_USER');
+                $mail->Password = getenv('SMTP_PASS');
+                $mail->SMTPSecure = getenv('SMTP_PROTO');
+                $mail->Port = getenv('SMTP_PORT');
+                $mail->SMTPDebug = 0;
+            }
             $mail->Debugoutput = $logger;
 
             //Recipients

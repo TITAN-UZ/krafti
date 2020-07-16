@@ -27,7 +27,7 @@ class TemplatesTest extends TestCase
     protected function getDefaultListQuery()
     {
         return [
-            'query' => 'функции'
+            'query' => 'функции',
         ];
     }
 }

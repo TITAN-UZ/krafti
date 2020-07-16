@@ -4,6 +4,7 @@ namespace App\Controllers\Web\Course;
 
 use App\Model\Comment;
 use App\Model\Course;
+use App\Model\Lesson;
 use App\Model\User;
 use Illuminate\Database\Eloquent\Builder;
 use Psr\Http\Message\ResponseInterface;
@@ -17,10 +18,7 @@ class Comments extends ModelController
     /** @var User $user */
     protected $user;
 
-    /**
-     * @return ResponseInterface;
-     */
-    public function get()
+    public function get(): ResponseInterface
     {
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
@@ -33,42 +31,42 @@ class Comments extends ModelController
         return parent::get();
     }
 
-    /**
-     * @return ResponseInterface;
-     */
-    public function put()
+    public function put(): ResponseInterface
     {
+        if (!Lesson::query()->where('id', (int)$this->getProperty('lesson_id'))->count()) {
+            return $this->failure('Не могу загрузить урок');
+        }
+
         $this->setProperty('user_id', $this->user->id);
         $this->setProperty('text', strip_tags($this->getProperty('text')));
         $put = parent::put();
-        $id = json_decode($put->getBody()->__toString())->id;
-        /** @var Comment $reply */
-        if ($reply = Comment::query()->find($id)) {
-            if ($parent = $reply->parent) {
-                if ($parent->user_id !== $reply->user_id) {
-                    $parent->user->sendMessage($reply->text, 'reply', $reply->user_id, [
+
+        if ($data = json_decode($put->getBody()->__toString(), true)) {
+            /** @var Comment $reply */
+            if ($reply = Comment::query()->find($data['id'])) {
+                if ($parent = $reply->parent) {
+                    if ($parent->user_id !== $reply->user_id) {
+                        $parent->user->sendMessage($reply->text, 'reply', $reply->user_id, [
+                            'comment_id' => $reply->id,
+                            'lesson_id' => $reply->lesson_id,
+                            'course_id' => $reply->lesson->course_id,
+                        ]);
+                    }
+                } elseif ($user = User::query()->find(getenv('MANAGER_ID'))) {
+                    /** @var User $user */
+                    $user->sendMessage($reply->text, 'reply', $reply->user_id, [
                         'comment_id' => $reply->id,
                         'lesson_id' => $reply->lesson_id,
                         'course_id' => $reply->lesson->course_id,
                     ]);
                 }
-            } elseif ($user = User::query()->find(getenv('MANAGER_ID'))) {
-                /** @var User $user */
-                $user->sendMessage($reply->text, 'reply', $reply->user_id, [
-                    'comment_id' => $reply->id,
-                    'lesson_id' => $reply->lesson_id,
-                    'course_id' => $reply->lesson->course_id,
-                ]);
             }
         }
 
         return $put;
     }
 
-    /**
-     * @return ResponseInterface;
-     */
-    public function patch()
+    public function patch(): ResponseInterface
     {
         if ($this->user->role_id > 2) {
             return $this->failure('Вы не можете изменять комментарии');
@@ -77,22 +75,12 @@ class Comments extends ModelController
         return parent::patch();
     }
 
-    /**
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    protected function beforeGet($c)
+    protected function beforeGet(Builder $c): Builder
     {
         return $this->beforeCount($c);
     }
 
-    /**
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where('lesson_id', (int)$this->getProperty('lesson_id'));
         if (!$this->user->hasScope('comments')) {
@@ -102,11 +90,7 @@ class Comments extends ModelController
         return $c;
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder
-     */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->select('id', 'parent_id', 'text', 'created_at', 'user_id');
         if ($this->user->hasScope('comments')) {
@@ -117,10 +101,7 @@ class Comments extends ModelController
         return $c;
     }
 
-    /**
-     * @return ResponseInterface;
-     */
-    public function delete()
+    public function delete(): ResponseInterface
     {
         return $this->failure('Указан несуществующий метод процессора', 404);
     }

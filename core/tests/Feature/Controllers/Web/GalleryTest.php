@@ -3,6 +3,7 @@
 namespace App\Tests\Feature\Controllers\Web;
 
 use App\Controllers\Web\Gallery as Controller;
+use App\Model\GalleryItem;
 use App\Model\GalleryItem as Model;
 use App\Tests\Feature\Controllers\ModelGetControllerTestTrait;
 use App\Tests\TestCase;
@@ -14,37 +15,29 @@ class GalleryTest extends TestCase
 
     protected $model = Model::class;
 
-    protected function getController()
+    protected function getController(): string
     {
         return Controller::class;
     }
 
-    protected function getUri()
+    protected function getUri(): string
     {
         return '/api/web/gallery';
     }
 
-    protected function modelWhere(Builder $builder)
+    protected function modelWhere(Builder $builder): Builder
     {
-        return $builder->where(['active' => true]);
+        return $builder->where('active', true);
     }
 
-    protected function getDefaultListQuery()
+    protected function getDefaultListQuery(): array
     {
+        /** @var GalleryItem $record */
         $record = $this->getModelRecord();
+
         return [
             'object_id' => $record->object_id,
-            'object_name' => $record->object_name
+            'object_name' => $record->object_name,
         ];
-    }
-
-    public function testFirstModelRecordSuccess()
-    {
-        $this->markTestSkipped('Модель не имеет ID');
-    }
-
-    public function testNotFoundSuccess()
-    {
-        $this->markTestSkipped('Модель не имеет ID');
     }
 }

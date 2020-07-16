@@ -14,13 +14,13 @@ class GalleryTest extends TestCase
     protected $model = Model::class;
     protected $user = true;
 
-    protected function getController()
+    protected function getController(): string
     {
         return Controller::class;
     }
 
-    protected function getUri()
+    protected function getUri(): string
     {
-        return '/api/admin/courses';
+        return '/api/admin/gallery';
     }
 }

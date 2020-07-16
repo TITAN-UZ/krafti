@@ -10,6 +10,7 @@ use App\Tests\TestCase;
 class ProfileTest extends TestCase
 {
     use RequestStatusTrait;
+
     protected $user = true;
 
     protected function getUri()
@@ -51,9 +52,9 @@ class ProfileTest extends TestCase
                     [
                         'name' => 'test',
                         'dob' => '1982-10-24',
-                        'gender' => 1
-                    ]
-                ]
+                        'gender' => 1,
+                    ],
+                ],
             ]
         );
     }

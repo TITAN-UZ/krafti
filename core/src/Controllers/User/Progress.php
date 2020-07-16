@@ -4,6 +4,7 @@ namespace App\Controllers\User;
 
 use App\Model\Lesson;
 use App\Model\User;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 
 class Progress extends Controller
@@ -13,7 +14,7 @@ class Progress extends Controller
     /** @var User $user */
     protected $user;
 
-    public function post()
+    public function post(): ResponseInterface
     {
 
         /** @var Lesson $lesson */

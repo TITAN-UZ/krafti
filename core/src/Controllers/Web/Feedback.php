@@ -4,11 +4,12 @@ namespace App\Controllers\Web;
 
 use App\Service\Fenom;
 use App\Service\Mail;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 
 class Feedback extends Controller
 {
-    public function post()
+    public function post(): ResponseInterface
     {
         if (!$name = trim($this->getProperty('name'))) {
             return $this->failure('Вы должны указать ваше имя');

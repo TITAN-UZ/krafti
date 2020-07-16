@@ -16,7 +16,7 @@ class Comments extends ModelController
      *
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where('text', 'LIKE', "%{$query}%");
@@ -29,7 +29,7 @@ class Comments extends ModelController
      * @param Builder $c
      * @return Builder
      */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->with('lesson:id,title,course_id', 'lesson.course:id,title');
         $c->with('user:id,fullname,photo_id', 'user.photo:id,updated_at');

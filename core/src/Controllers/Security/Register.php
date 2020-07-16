@@ -18,7 +18,7 @@ class Register extends Controller
     /**
      * @return ResponseInterface
      */
-    public function post()
+    public function post(): ResponseInterface
     {
         if (!$email = filter_var(trim($this->getProperty('email')))) {
             return $this->failure('Вы должны указать правильный email');

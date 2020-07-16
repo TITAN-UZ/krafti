@@ -34,8 +34,9 @@ class CommentsTest extends TestCase
     protected function getDefaultListQuery()
     {
         $record = $this->getModelRecord();
+
         return [
-            'lesson_id' => $record->lesson_id
+            'lesson_id' => $record->lesson_id,
         ];
     }
 }

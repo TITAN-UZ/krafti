@@ -14,37 +14,38 @@ class ReviewsTest extends TestCase
 
     protected $model = Model::class;
 
-    protected function getController()
+    protected function getController(): string
     {
         return Controller::class;
     }
 
-    protected function getUri()
+    protected function getUri(): string
     {
         return '/api/web/course/reviews';
     }
 
-    protected function modelWhere(Builder $builder)
+    protected function modelWhere(Builder $builder): Builder
     {
         return $builder->where(['review' => true, 'deleted' => false]);
     }
 
-    protected function makeRequestParams($exists = true) : array
+    protected function makeRequestParams($exists = true): array
     {
         if ($exists) {
-            $record = $this->getModelRecord();
-            return [
-                'course_id' => $record->course_id
-            ];
+            $data = $this->getDefaultListQuery();
+            $data['id'] = $this->getModelRecord()->id;
+
+            return $data;
         }
 
-        return [
-            'course_id' => PHP_INT_MAX
-        ];
+        return ['course_id' => PHP_INT_MAX];
     }
 
-    public function testNotFoundSuccess()
+    protected function getDefaultListQuery(): array
     {
-        $this->markTestSkipped('Даже если курса нет, ответ всегда 200');
+        /** @var Model $model */
+        $model = $this->getModelRecord();
+
+        return ['course_id' => $model->lesson->course_id];
     }
 }

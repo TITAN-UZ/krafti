@@ -18,7 +18,7 @@ class Like extends Controller
     /**
      * @return ResponseInterface;
      */
-    public function get()
+    public function get(): ResponseInterface
     {
         $likes = [];
         /** @var UserLike $obj */
@@ -32,7 +32,7 @@ class Like extends Controller
     /**
      * @return ResponseInterface;
      */
-    public function post()
+    public function post(): ResponseInterface
     {
         if (!$lesson_id = (int)$this->getProperty('lesson_id')) {
             return $this->failure('Вы должны указать id урока для оценки');

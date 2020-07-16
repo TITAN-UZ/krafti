@@ -33,7 +33,7 @@ class Oauth2 extends Controller
     /**
      * @return ResponseInterface;
      */
-    public function get()
+    public function get(): ResponseInterface
     {
         $provider = strtolower(@$this->getProperty('provider'));
         if (!in_array($provider, ['instagram', 'vkontakte'])) {
@@ -190,7 +190,7 @@ class Oauth2 extends Controller
     /**
      * @return ResponseInterface;
      */
-    public function delete()
+    public function delete(): ResponseInterface
     {
         $provider = strtolower(@$this->getProperty('provider'));
         if (!in_array($provider, ['instagram', 'vkontakte'])) {

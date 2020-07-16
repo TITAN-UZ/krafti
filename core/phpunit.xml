@@ -5,10 +5,6 @@
          enforceTimeLimit="true"
 >
     <testsuites>
-        <testsuite name="Unit">
-            <directory>./tests/Units</directory>
-        </testsuite>
-
         <testsuite name="Feature">
             <directory>./tests/Feature</directory>
         </testsuite>

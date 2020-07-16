@@ -27,7 +27,7 @@ class CoursesTest extends TestCase
     protected function getDefaultListQuery()
     {
         return [
-            'query' => 'курс'
+            'query' => 'курс',
         ];
     }
 }

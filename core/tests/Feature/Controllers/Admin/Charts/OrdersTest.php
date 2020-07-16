@@ -14,18 +14,18 @@ class OrdersTest extends TestCase
     protected $model = Model::class;
     protected $user = true;
 
-    protected function getController()
+    protected function getController(): string
     {
         return Controller::class;
     }
 
-    protected function getUri()
+    protected function getUri(): string
     {
         return '/api/admin/charts/orders';
     }
 
-    public function testNotFoundSuccess()
+    public function testNotFoundSuccess(): void
     {
-        $this->markTestSkipped('Контроллер не поддерживает просмотр записей по отдельности');
+        self::markTestSkipped('Контроллер не поддерживает просмотр записей по отдельности');
     }
 }

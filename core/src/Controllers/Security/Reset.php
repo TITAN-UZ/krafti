@@ -7,34 +7,37 @@ use App\Service\Fenom;
 use App\Service\Logger;
 use App\Service\Mail;
 use Exception;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 
 class Reset extends Controller
 {
     public const TIME = 5 * 60; // 5 minutes
 
-    public function post()
+    public function post(): ResponseInterface
     {
         $email = trim($this->getProperty('email'));
         /** @var User $user */
         if ($user = User::query()->where(['email' => $email])->first()) {
             if (!$user->active) {
                 return $this->failure('Учётная запись отключена');
-            } elseif (strtotime($user->reset_at) > (time() - $this::TIME)) {
-                return $this->failure('Мы недавно уже отправили вам ссылку. Пожалуйста, попробуйте через 5 минут.');
-            } else {
-                $password = bin2hex(openssl_random_pseudo_bytes(4));
-
-                $user->tmp_password = $password;
-                $user->reset_at = date('Y-m-d H:i:s');
-                $user->save();
-
-                $secret = getenv('RESET_SECRET');
-                $encrypted = base64_encode(@openssl_encrypt($password, 'AES-256-CBC', $secret));
-                $this->sendMail($user, $encrypted);
-
-                return $this->success();
             }
+
+            if (strtotime($user->reset_at) > (time() - $this::TIME)) {
+                return $this->failure('Мы недавно уже отправили вам ссылку. Пожалуйста, попробуйте через 5 минут.');
+            }
+
+            $password = bin2hex(openssl_random_pseudo_bytes(4));
+
+            $user->tmp_password = $password;
+            $user->reset_at = date('Y-m-d H:i:s');
+            $user->save();
+
+            $secret = getenv('RESET_SECRET');
+            $encrypted = base64_encode(@openssl_encrypt($password, 'AES-256-CBC', $secret));
+            $this->sendMail($user, $encrypted);
+
+            return $this->success();
         }
 
         return $this->failure('Такого email у нас нет');

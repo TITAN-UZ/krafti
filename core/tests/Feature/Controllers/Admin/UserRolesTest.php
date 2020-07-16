@@ -27,7 +27,7 @@ class UserRolesTest extends TestCase
     protected function getDefaultListQuery()
     {
         return [
-            'query' => 'Администратор'
+            'query' => 'Администратор',
         ];
     }
 }

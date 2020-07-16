@@ -16,7 +16,7 @@ class Videos extends ModelGetController
      *
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where(static function (Builder $c) use ($query) {
@@ -32,7 +32,7 @@ class Videos extends ModelGetController
      * @param Builder $c
      * @return Builder
      */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         if ($this->getProperty('combo')) {
             $c->select('id', 'title', 'preview', 'duration');

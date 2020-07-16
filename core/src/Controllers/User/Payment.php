@@ -8,6 +8,7 @@ use App\Model\Promo;
 use App\Model\User;
 use App\Service\Payment\Paypal;
 use App\Service\Payment\Robokassa;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\Controller;
 
 class Payment extends Controller
@@ -17,7 +18,7 @@ class Payment extends Controller
     /** @var User $user */
     protected $user;
 
-    public function get()
+    public function get(): ResponseInterface
     {
         /** @var Promo $promo */
         $promo = Promo::query()->where('code', trim($this->getProperty('code')))->first();
@@ -46,7 +47,7 @@ class Payment extends Controller
         ]);
     }
 
-    public function post()
+    public function post(): ResponseInterface
     {
         if (!$this->user) {
             return $this->failure('Требуется авторизация', 401);
@@ -55,7 +56,9 @@ class Payment extends Controller
         /** @var Course $course */
         if (!$course_id = (int)$this->getProperty('course_id')) {
             return $this->failure('Вы должны указать id покупаемого курса');
-        } elseif (!$course = Course::query()->where(['active' => true])->find($course_id)) {
+        }
+
+        if (!$course = Course::query()->where(['active' => true])->find($course_id)) {
             return $this->failure('Не могу загрузить указанный курс');
         }
 
@@ -65,7 +68,9 @@ class Payment extends Controller
 
             if (!$course->bonus) {
                 return $this->failure('У этого курса нет бонусного урока');
-            } elseif ($this->user->account < $price) {
+            }
+
+            if ($this->user->account < $price) {
                 return $this->failure('Не хватает крафтиков для покупки', 403);
             }
 
@@ -75,7 +80,9 @@ class Payment extends Controller
             return $this->success([
                 'lesson_id' => $course->bonus->id,
             ]);
-        } elseif (!in_array($service, ['robokassa', 'paypal'])) {
+        }
+
+        if (!in_array($service, ['robokassa', 'paypal'])) {
             return $this->failure('Указан неизвестный способ оплаты');
         }
 
@@ -124,7 +131,7 @@ class Payment extends Controller
             $order->discount = $discount['discount'];
             $order->discount_type = $discount['type'];
 
-            $cost -= (substr($discount['discount'], -1) == '%')
+            $cost -= (substr($discount['discount'], -1) === '%')
                 ? $cost * (rtrim($discount['discount'], '%') / 100)
                 : $discount['discount'];
             if ($cost < 0) {

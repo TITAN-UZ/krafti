@@ -12,7 +12,7 @@ class Similar extends Courses
      *
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where('id', '!=', (int)$this->getProperty('course_id'));
 

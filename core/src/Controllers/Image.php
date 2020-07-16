@@ -9,7 +9,7 @@ class Image extends \Vesp\Controllers\Data\Image
     /**
      * @return ResponseInterface
      */
-    public function get()
+    public function get(): ResponseInterface
     {
         if ($size = $this->route->getArgument('size')) {
             [$width, $height] = explode('x', $size);

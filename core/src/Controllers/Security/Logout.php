@@ -13,7 +13,7 @@ class Logout extends Controller
     /**
      * @return ResponseInterface
      */
-    public function post()
+    public function post(): ResponseInterface
     {
         /** @var UserToken $token */
         $user_token = $token = UserToken::query()

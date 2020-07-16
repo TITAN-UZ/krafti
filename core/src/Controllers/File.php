@@ -11,7 +11,7 @@ class File extends ModelGetController
     /**
      * @return ResponseInterface
      */
-    public function get()
+    public function get(): ResponseInterface
     {
         /** @var FileObject $file */
         if ($file = FileObject::query()->find($this->getPrimaryKey())) {

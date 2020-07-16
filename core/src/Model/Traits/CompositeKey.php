@@ -2,8 +2,8 @@
 
 namespace App\Model\Traits;
 
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use RuntimeException;
 
 /**
  * @method array getKeyName
@@ -11,31 +11,41 @@ use Illuminate\Database\Eloquent\Builder;
  */
 trait CompositeKey
 {
-    /**
-     * Get the value indicating whether the IDs are incrementing.
-     *
-     * @return bool
-     */
-    public function getIncrementing()
+    public function getIncrementing(): bool
     {
         return false;
     }
 
     /**
-     * Set the keys for a save update query.
-     *
-     * @param Builder $query
-     *
-     * @return Builder
-     * @throws Exception
+     * @param $key
+     * @return mixed|void
      */
-    protected function setKeysForSaveQuery(Builder $query)
+    public function getAttribute($key)
+    {
+        if (is_array($key)) {
+            return;
+        }
+
+        return parent::getAttribute($key);
+    }
+
+    public function getKey(): array
+    {
+        $key = [];
+        foreach ($this->getKeyName() as $item) {
+            $key[$item] = $this->getAttribute($item);
+        }
+
+        return $key;
+    }
+
+    protected function setKeysForSaveQuery(Builder $query): Builder
     {
         foreach ($this->getKeyName() as $key) {
             if (isset($this->$key)) {
                 $query->where($key, '=', $this->$key);
             } else {
-                throw new Exception(__METHOD__ . 'Missing part of the primary key: ' . $key);
+                throw new RuntimeException(__METHOD__ . 'Missing part of the primary key: ' . $key);
             }
         }
 

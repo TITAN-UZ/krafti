@@ -32,7 +32,7 @@ class FeedbackTest extends TestCase
             'name' => 'my name',
             'email' => 'test@mail.ru',
             'phone' => '8002000600',
-            'message' => 'test message'
+            'message' => 'test message',
         ];
 
         $request = $this->createRequest('POST', $this->getUri(), $data);
@@ -52,7 +52,7 @@ class FeedbackTest extends TestCase
     public function testFailEmail()
     {
         $data = [
-            'name' => 'my name'
+            'name' => 'my name',
         ];
 
         $this->failedField($data, 'Неправильный email');
@@ -62,7 +62,7 @@ class FeedbackTest extends TestCase
     {
         $data = [
             'name' => 'my name',
-            'email' => 'test@mail.ru'
+            'email' => 'test@mail.ru',
         ];
 
         $this->failedField($data, 'Вы должны указать свой телефон');
@@ -73,7 +73,7 @@ class FeedbackTest extends TestCase
         $data = [
             'name' => 'my name',
             'email' => 'test@mail.ru',
-            'phone' => '8002000600'
+            'phone' => '8002000600',
         ];
 
         $this->failedField($data, 'Вы забыли написать сообщение');

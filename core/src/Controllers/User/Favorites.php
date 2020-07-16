@@ -19,7 +19,7 @@ class Favorites extends Controller
     /**
      * @return ResponseInterface
      */
-    public function get()
+    public function get(): ResponseInterface
     {
         $favorites = [];
         /** @var UserFavorite $obj */
@@ -48,7 +48,7 @@ class Favorites extends Controller
     /**
      * @return ResponseInterface
      */
-    public function put()
+    public function put(): ResponseInterface
     {
         if (!$course_id = (int)$this->getProperty('course_id')) {
             return $this->failure('Вы должны указать id курса для добавления в избранное');
@@ -67,13 +67,13 @@ class Favorites extends Controller
             return $this->failure($e->getMessage());
         }
 
-        return $this->success(['user' => $this->user->getProfile()]);
+        return $this->success(['user' => $this->user->fresh()->getProfile()]);
     }
 
     /**
      * @return ResponseInterface
      */
-    public function delete()
+    public function delete(): ResponseInterface
     {
         if (!$course_id = (int)$this->getProperty('course_id')) {
             return $this->failure('Вы должны указать id курса для добавления в избранное');
@@ -92,6 +92,6 @@ class Favorites extends Controller
             return $this->failure($e->getMessage());
         }
 
-        return $this->success(['user' => $this->user->getProfile()]);
+        return $this->success(['user' => $this->user->fresh()->getProfile()]);
     }
 }

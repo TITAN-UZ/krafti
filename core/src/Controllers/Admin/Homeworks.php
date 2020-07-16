@@ -15,16 +15,12 @@ class Homeworks extends ModelController
     /**
      * @return ResponseInterface
      */
-    public function put()
+    public function put(): ResponseInterface
     {
         return $this->failure('Домашние работы создают пользователи');
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder|mixed
-     */
-    protected function beforeGet($c)
+    protected function beforeGet(Builder $c): Builder
     {
         $c->with('file:id,updated_at');
         $c->with('user:id,fullname');
@@ -34,12 +30,7 @@ class Homeworks extends ModelController
         return $c;
     }
 
-    /**
-     * @param Builder $c
-     *
-     * @return Builder
-     */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where(static function (Builder $c) use ($query) {
@@ -69,14 +60,12 @@ class Homeworks extends ModelController
             $c->whereBetween('created_at', [$date[0] . ' 00:00:00', $date[1] . ' 23:59:59']);
         }
 
+        $c->limit(1);
+
         return $c;
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder
-     */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->with('user:id,fullname,photo_id', 'user.photo:id,updated_at');
         $c->with('file:id,updated_at');
@@ -87,10 +76,7 @@ class Homeworks extends ModelController
         return $c;
     }
 
-    /**
-     * @return ResponseInterface;
-     */
-    public function delete()
+    public function delete(): ResponseInterface
     {
         return $this->failure('Домашние работы нельзя удалять');
     }

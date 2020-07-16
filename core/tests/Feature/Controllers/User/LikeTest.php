@@ -10,6 +10,7 @@ use App\Tests\TestCase;
 class LikeTest extends TestCase
 {
     use RequestStatusTrait;
+
     protected $user = true;
 
     protected function getUri()

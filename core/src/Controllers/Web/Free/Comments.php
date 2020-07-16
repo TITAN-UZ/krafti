@@ -11,11 +11,7 @@ class Comments extends ModelGetController
     protected $model = Comment::class;
     protected $scope = '';
 
-    /**
-     * @param Builder $c
-     * @return Builder
-     */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         $c->where([
             'lesson_id' => (int)$this->getProperty('lesson_id'),
@@ -28,11 +24,7 @@ class Comments extends ModelGetController
         return $c;
     }
 
-    /**
-     * @param Builder $c
-     * @return Builder
-     */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->select('id', 'parent_id', 'text', 'created_at', 'user_id');
         $c->with('user:id,fullname,photo_id', 'user.photo:id,updated_at');

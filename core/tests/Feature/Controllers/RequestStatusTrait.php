@@ -3,6 +3,7 @@
 namespace App\Tests\Feature\Controllers;
 
 use App\Model\User;
+use Psr\Http\Message\RequestInterface;
 
 trait RequestStatusTrait
 {
@@ -11,14 +12,14 @@ trait RequestStatusTrait
     /** @var User|null */
     protected $userModel;
 
-    protected function getUser()
+    protected function getUser(): ?User
     {
         if (!property_exists($this, 'user') || $this->user !== true) {
             return null;
         }
 
         if ($this->userModel === null) {
-            $this->userModel = User::firstOrFail();
+            $this->userModel = User::query()->firstOrFail();
         }
 
         return $this->userModel;
@@ -51,6 +52,7 @@ trait RequestStatusTrait
 
     private function sendRequest(string $method, array $data)
     {
+        /** @var RequestInterface $request */
         $request = $this->createRequest($method, $this->getUri(), $data);
         $user = $this->getUser();
         if ($user !== null) {
@@ -64,20 +66,18 @@ trait RequestStatusTrait
     {
         $response = $this->sendRequest($method, $data);
 
-        $this->assertEquals(422, $response->getStatusCode(), 'Ожидается ответ 422');
-        $this->assertJsonStringEqualsJsonString('"' . $error . '"', $response->getBody()->__toString());
+        self::assertEquals(422, $response->getStatusCode(), 'Ожидается ответ 422');
+        self::assertJsonStringEqualsJsonString('"' . $error . '"', $response->getBody()->__toString());
     }
 
     private function requestSuccess(string $method, array $data, string $message = null)
     {
         $response = $this->sendRequest($method, $data);
 
-        $this->assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
-
-        $this->assertJson($response->getBody()->__toString(), 'Ожидается JSON');
-
+        self::assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
+        self::assertJson($response->getBody()->__toString(), 'Ожидается JSON');
         if ($message !== null) {
-            $this->assertJsonStringEqualsJsonString(
+            self::assertJsonStringEqualsJsonString(
                 $message,
                 $response->getBody()->__toString()
             );

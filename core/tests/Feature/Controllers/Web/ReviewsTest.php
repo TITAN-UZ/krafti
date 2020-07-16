@@ -32,7 +32,7 @@ class ReviewsTest extends TestCase
     protected function getDefaultListQuery()
     {
         return [
-            'limit' => 10
+            'limit' => 10,
         ];
     }
 }

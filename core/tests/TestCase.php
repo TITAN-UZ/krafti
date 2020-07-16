@@ -2,11 +2,13 @@
 
 namespace App\Tests;
 
+use App\Middlewares\Auth;
 use DI\Bridge\Slim\Bridge;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RKA\Middleware\IpAddress;
 use Slim\App;
 use Slim\Psr7\Factory\ServerRequestFactory;
+use Vesp\Services\Eloquent;
 
 /**
  * @codeCoverageIgnore
@@ -23,29 +25,21 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $app = Bridge::create();
         $app->addBodyParsingMiddleware();
         $app->addRoutingMiddleware();
-        $app->add(\App\Middlewares\Auth::class);
-        $app->add(new \RKA\Middleware\IpAddress());
+        $app->add(Auth::class);
+        $app->add(new IpAddress());
 
         $this->app = $app;
-
-        $this->app->getContainer()->get(\Vesp\Services\Eloquent::class);
+        $this->app->getContainer()->get(Eloquent::class);
     }
 
-    /**
-     * @param string $method
-     * @param string $uri
-     * @param array $params
-     * @return ServerRequestInterface
-     */
-    public function createRequest($method, $uri, $params = []): RequestInterface
+    public function createRequest(string $method, string $uri, array $params = []): ServerRequestInterface
     {
         $method = strtoupper($method);
         $request = (new ServerRequestFactory())->createServerRequest($method, $uri);
-        if ($method === 'GET') {
-            $request = $request->withQueryParams($params);
-        } else {
-            $request = $request->withParsedBody($params);
-        }
+
+        $request = $method === 'GET'
+            ? $request->withQueryParams($params)
+            : $request->withParsedBody($params);
 
         return $request;
     }

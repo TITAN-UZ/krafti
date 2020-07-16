@@ -19,7 +19,7 @@ class Users extends ModelController
     /**
      * @return ResponseInterface;
      */
-    public function patch()
+    public function patch(): ResponseInterface
     {
         if (!$this->getProperty('password')) {
             $this->unsetProperty('password');
@@ -64,7 +64,7 @@ class Users extends ModelController
      *
      * @return Builder
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($query = trim($this->getProperty('query'))) {
             $c->where(static function (Builder $c) use ($query) {
@@ -104,7 +104,7 @@ class Users extends ModelController
      *
      * @return Builder
      */
-    public function afterCount($c)
+    public function afterCount(Builder $c): Builder
     {
         $c->with('photo:id,updated_at');
         if (!$this->getProperty('combo')) {

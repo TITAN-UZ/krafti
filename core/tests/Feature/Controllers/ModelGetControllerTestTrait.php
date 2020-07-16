@@ -2,8 +2,8 @@
 
 namespace App\Tests\Feature\Controllers;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Psr\Http\Message\ResponseInterface;
 
 trait ModelGetControllerTestTrait
 {
@@ -11,12 +11,9 @@ trait ModelGetControllerTestTrait
 
     protected $record;
 
-    /**
-     * @return string
-     */
-    abstract protected function getController();
+    abstract protected function getController(): string;
 
-    protected function getModelRecord()
+    protected function getModelRecord(): ?Model
     {
         if (!property_exists($this, 'model')) {
             return null;
@@ -24,12 +21,11 @@ trait ModelGetControllerTestTrait
 
         if ($this->record === null) {
             /** @var Model $class */
-            $class = new $this->model;
-            /** @var Builder $c */
-            $c = $class->newQuery();
+            $model = new $this->model();
+            $c = $model->newQuery();
 
             if (method_exists($this, 'modelWhere')) {
-               $c = $this->modelWhere($c);
+                $c = $this->modelWhere($c);
             }
 
             $this->record = $c->firstOrFail();
@@ -38,7 +34,7 @@ trait ModelGetControllerTestTrait
         return $this->record;
     }
 
-    protected function getDefaultListQuery()
+    protected function getDefaultListQuery(): array
     {
         return [];
     }
@@ -49,31 +45,34 @@ trait ModelGetControllerTestTrait
         $this->app->any($this->getUri(), [$this->getController(), 'process']);
     }
 
-    public function testNotFoundSuccess()
+    public function testNotFoundSuccess(): void
     {
+        /** @var ResponseInterface $response */
         $response = $this->sendRequest('GET', $this->makeRequestParams(false));
 
-        $this->assertEquals(404, $response->getStatusCode(), 'Ожидается 404 ответ');
+        self::assertEquals(404, $response->getStatusCode(), $response->getBody()->__toString());
     }
 
-    public function testListSuccess()
+    public function testListSuccess(): void
     {
         $this->getSuccess($this->getDefaultListQuery());
     }
 
-    public function testFirstModelRecordSuccess()
+    public function testFirstModelRecordSuccess(): void
     {
         $this->getSuccess($this->makeRequestParams());
     }
 
-    protected function makeRequestParams($exists = true) : array
+    protected function makeRequestParams($exists = true): array
     {
-        if ($exists) {
-            return [
-                'id' => $this->getModelRecord()->getKey()
-            ];
-        }
+        /** @var Model $model */
+        $model = new $this->model();
+        $key = $model->getKeyName();
 
-        return ['id' => PHP_INT_MAX];
+        return [
+            $key => $exists
+                ? $this->getModelRecord()->getKey()
+                : PHP_INT_MAX,
+        ];
     }
 }

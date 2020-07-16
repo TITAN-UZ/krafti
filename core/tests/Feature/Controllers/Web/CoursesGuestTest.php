@@ -14,17 +14,17 @@ class CoursesGuestTest extends TestCase
 
     protected $model = Model::class;
 
-    protected function getController()
+    protected function getController(): string
     {
         return Controller::class;
     }
 
-    protected function getUri()
+    protected function getUri(): string
     {
         return '/api/web/courses';
     }
 
-    protected function modelWhere(Builder $builder)
+    protected function modelWhere(Builder $builder): Builder
     {
         return $builder->where(['active' => true]);
     }

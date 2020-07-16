@@ -5,6 +5,8 @@ namespace App\Controllers\User;
 use App\Model\Message;
 use App\Model\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\ModelGetController;
 
 class Messages extends ModelGetController
@@ -14,7 +16,7 @@ class Messages extends ModelGetController
     /** @var User $user */
     protected $user;
 
-    public function post()
+    public function post(): ResponseInterface
     {
         return $this->user->messages()->where(['read' => false])->count();
     }
@@ -24,7 +26,7 @@ class Messages extends ModelGetController
      *
      * @return Builder|mixed
      */
-    protected function beforeGet($c)
+    protected function beforeGet(Builder $c): Builder
     {
         return $this->beforeCount($c);
     }
@@ -34,7 +36,7 @@ class Messages extends ModelGetController
      *
      * @return Builder
      */
-    public function beforeCount($c)
+    public function beforeCount(Builder $c): Builder
     {
         $c->where(['user_id' => $this->user->id])
             ->orderBy('created_at', 'desc');
@@ -43,11 +45,11 @@ class Messages extends ModelGetController
     }
 
     /**
-     * @param Message $object
+     * @param Message|Model $object
      *
      * @return array
      */
-    public function prepareRow($object)
+    public function prepareRow(Model $object): array
     {
         $array = [
             'id' => $object->id,

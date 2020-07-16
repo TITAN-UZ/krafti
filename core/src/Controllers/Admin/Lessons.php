@@ -16,7 +16,7 @@ class Lessons extends ModelController
     /**
      * @return ResponseInterface;
      */
-    public function post()
+    public function post(): ResponseInterface
     {
         if (!$action = $this->getProperty('action')) {
             return $this->failure('Вы доолжны указать action');
@@ -88,7 +88,7 @@ class Lessons extends ModelController
      * @param Builder $c
      * @return Builder|mixed
      */
-    protected function beforeGet($c)
+    protected function beforeGet(Builder $c): Builder
     {
         $c->with('file:id,title,updated_at');
         $c->with('course:id,template_id', 'course.template');
@@ -135,7 +135,7 @@ class Lessons extends ModelController
      *
      * @return mixed
      */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
         if ($course_id = (int)$this->getProperty('course_id')) {
             $c->where(['course_id' => $course_id]);
@@ -158,7 +158,7 @@ class Lessons extends ModelController
      * @param Builder $c
      * @return Builder
      */
-    protected function afterCount($c)
+    protected function afterCount(Builder $c): Builder
     {
         $c->with('video:id,preview');
         $c->orderBy('section', 'asc');

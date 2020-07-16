@@ -4,20 +4,18 @@ namespace App\Controllers\User;
 
 use App\Model\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\ModelGetController;
 
 class Order extends ModelGetController
 {
-    protected $model = Order::class;
+    protected $model = \App\Model\Order::class;
 
     /** @var User $user */
     protected $user;
 
-    /**
-     * @return ResponseInterface;
-     */
-    public function post()
+    public function post(): ResponseInterface
     {
         /** @var \App\Model\Order $order */
         if ($order = $this->user->orders()->find((int)$this->getProperty('InvId'))) {
@@ -32,7 +30,9 @@ class Order extends ModelGetController
                     $res = $handler->finalize($order, $this->getProperties());
                     if ($res === null) {
                         return $this->success('Processing...', 204);
-                    } elseif ($res === true) {
+                    }
+
+                    if ($res === true) {
                         $order->changeStatus(2);
 
                         return $this->success([
@@ -48,34 +48,24 @@ class Order extends ModelGetController
         return $this->failure('Не могу проверить платёж');
     }
 
-    /**
-     * @param Builder $c
-     *
-     * @return mixed
-     */
-    public function beforeGet($c)
+    public function beforeGet(Builder $c): Builder
     {
         return $this->beforeCount($c);
     }
 
-    /**
-     * @param Builder $c
-     *
-     * @return mixed
-     */
-    protected function beforeCount($c)
+    protected function beforeCount(Builder $c): Builder
     {
-        $c->where(['user_id' => $this->user->id]);
+        $c->where('user_id', $this->user->id);
 
         return $c;
     }
 
     /**
-     * @param \App\Model\Order $object
+     * @param \App\Model\Order|Model $object
      *
      * @return array
      */
-    public function prepareRow($object)
+    public function prepareRow(Model $object): array
     {
         return [
             'id' => $object->id,

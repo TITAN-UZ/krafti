@@ -7,7 +7,9 @@ use App\Model\Lesson;
 use App\Model\User;
 use App\Model\UserProgress;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Controllers\ModelGetController;
 
 class Lessons extends ModelGetController
@@ -24,7 +26,7 @@ class Lessons extends ModelGetController
     /** @var UserProgress $progress */
     protected $progress;
 
-    public function get()
+    public function get(): ResponseInterface
     {
         /** @var Course $course */
         if (!$course = Course::query()->find((int)$this->getProperty('course_id'))) {
@@ -50,7 +52,7 @@ class Lessons extends ModelGetController
         return parent::get();
     }
 
-    public function beforeGet($c)
+    public function beforeGet(Builder $c): Builder
     {
         $c->where(['active' => true, 'course_id' => $this->course->id]);
         $c->with([
@@ -84,7 +86,7 @@ class Lessons extends ModelGetController
      * @param Builder $c
      * @return Builder
      */
-    public function beforeCount($c)
+    public function beforeCount(Builder $c): Builder
     {
         $c->where(['course_id' => $this->course->id, 'active' => true]);
         if ($section = (int)$this->getProperty('section')) {
@@ -98,7 +100,7 @@ class Lessons extends ModelGetController
      * @param Builder $c
      * @return Builder
      */
-    public function afterCount($c)
+    public function afterCount(Builder $c): Builder
     {
         $c->orderBy('section', 'asc')->orderBy('rank', 'asc');
         $c->select(
@@ -119,10 +121,10 @@ class Lessons extends ModelGetController
     }
 
     /**
-     * @param Lesson $object
+     * @param Lesson|Model $object
      * @return array
      */
-    public function prepareRow($object)
+    public function prepareRow(Model $object): array
     {
         $array = $object->toArray();
         $array['locked'] = !$object->checkAccess($this->progress);

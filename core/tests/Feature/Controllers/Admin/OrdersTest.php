@@ -29,7 +29,7 @@ class OrdersTest extends TestCase
         return [
             'course_id' => 3,
             'date' => '2019-09-11',
-            'query' => '@mail'
+            'query' => '@mail',
         ];
     }
 }
