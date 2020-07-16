@@ -20,7 +20,7 @@
                     <label class="text-center">Сменить фото профиля</label>
                   </div>
 
-                  <b-form-group class="mb-3" label="Авторизация через соц.сети">
+                  <!--<b-form-group class="mb-3" label="Авторизация через соц.сети">
                     <div class="social-providers flex-wrap profile">
                       <button
                         v-if="$auth.user && $auth.user.oauth2.vkontakte === undefined"
@@ -50,7 +50,7 @@
                         <fa :icon="['fal', 'times']" class="ml-2" />
                       </button>
                     </div>
-                  </b-form-group>
+                  </b-form-group>-->
                 </div>
 
                 <form class="edit-profile" @submit.prevent="onSubmit">
@@ -73,24 +73,31 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VueClipboard from 'vue-clipboard2'
-import {faVk, faInstagram} from '@fortawesome/free-brands-svg-icons'
-import {faCopy, faPlusCircle, faCheckCircle, faTimesCircle, faMale, faFemale} from '@fortawesome/pro-duotone-svg-icons'
-import {faTimes} from '@fortawesome/pro-light-svg-icons'
-import FormProfile from '../../components/forms/profile'
+  import Vue from 'vue'
+  import VueClipboard from 'vue-clipboard2'
+  import {faInstagram, faVk} from '@fortawesome/free-brands-svg-icons'
+  import {
+    faCheckCircle,
+    faCopy,
+    faFemale,
+    faMale,
+    faPlusCircle,
+    faTimesCircle,
+  } from '@fortawesome/pro-duotone-svg-icons'
+  import {faTimes} from '@fortawesome/pro-light-svg-icons'
+  import FormProfile from '../../components/forms/profile'
 
-VueClipboard.config.autoSetContainer = true // add this line
-Vue.use(VueClipboard)
+  VueClipboard.config.autoSetContainer = true // add this line
+  Vue.use(VueClipboard)
 
-export default {
-  components: {FormProfile},
-  auth: true,
-  async asyncData({app}) {
-    const {data: record} = await app.$axios.get('user/profile')
-    return {record: record.user}
-  },
-  data() {
+  export default {
+    components: {FormProfile},
+    auth: true,
+    async asyncData({app}) {
+      const {data: record} = await app.$axios.get('user/profile')
+      return {record: record.user}
+    },
+    data() {
     return {
       record: {},
       childrenForm: false,

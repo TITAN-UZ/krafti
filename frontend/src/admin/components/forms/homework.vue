@@ -1,7 +1,7 @@
 <template>
   <div>
-    <a :href="record.file" target="_blank" rel="noreferrer">
-      <b-img :src="$image(record.file, '500x500', 'fit')" :rounded="true" fluid-grow />
+    <a :href="$image(record.file)" target="_blank" rel="noreferrer">
+      <b-img :src="$image(record.file, '500x500', 'fit')" :rounded="true" fluid-grow/>
     </a>
 
     <b-alert variant="info" :show="true" class="mt-3">

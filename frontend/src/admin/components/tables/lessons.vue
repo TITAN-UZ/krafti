@@ -14,7 +14,8 @@
         <fa :icon="['fas', 'plus']" /> Добавить
       </b-button>
 
-      <b-form-select v-if="record.template.course_steps" v-model="filters.section" style="width:120px;" class="ml-auto">
+      <b-form-select v-if="record.template && record.template.course_steps" v-model="filters.section"
+                     style="width:120px;" class="ml-auto">
         <option :value="null">Все этапы</option>
         <option :value="1">Этап 1</option>
         <option :value="2">Этап 2</option>
@@ -72,19 +73,19 @@
 </template>
 
 <script>
-import {faPlus, faArrowUp, faArrowDown, faTimes} from '@fortawesome/pro-solid-svg-icons'
+  import {faArrowDown, faArrowUp, faPlus, faTimes} from '@fortawesome/pro-solid-svg-icons'
 
-export default {
-  name: 'TableLessons',
-  props: {
-    record: {
-      type: Object,
-      required: true,
+  export default {
+    name: 'TableLessons',
+    props: {
+      record: {
+        type: Object,
+        required: true,
+      },
     },
-  },
-  data() {
-    return {
-      url: 'admin/lessons',
+    data() {
+      return {
+        url: 'admin/lessons',
       sort: 'rank',
       dir: 'asc',
       filters: {
@@ -98,7 +99,7 @@ export default {
   computed: {
     fields() {
       const fields = []
-      if (this.record.template.course_steps) {
+      if (this.record.template && this.record.template.course_steps) {
         fields.push({key: 'section', label: 'Этап'})
       }
       fields.push({key: 'title', label: 'Название'})
@@ -108,7 +109,7 @@ export default {
       return fields
     },
     showArrows() {
-      return this.filters.section || !this.record.template.course_steps
+      return this.filters.section || !this.record.template || !this.record.template.course_steps
     },
   },
   created() {

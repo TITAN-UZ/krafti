@@ -1,9 +1,8 @@
-require('dotenv').config({path: '../core/.' + (process.env.USER === 's4000' ? 'prod' : 'dev') + '.env'})
+const localEnv = require('fs').existsSync('../core/.env.local')
+require('dotenv').config({path: `../core/${localEnv ? '.env.local' : '.env'}`})
 
 export default {
   mode: 'universal',
-  srcDir: './src/',
-  buildDir: './.nuxt/',
   head: {
     title: 'Крафти',
     meta: [
@@ -54,6 +53,10 @@ export default {
     {src: '../_common/plugins/inputs.js', mode: 'client'},
     {src: '../_common/plugins/filepond.js', mode: 'client'},
   ],
+  buildModules: ['@nuxtjs/style-resources'],
+  build: {
+    extractCSS: process.env.NODE_ENV === 'production',
+  },
   modules: [
     'bootstrap-vue/nuxt',
     'nuxt-izitoast',
@@ -75,7 +78,7 @@ export default {
   },
   dotenv: {
     path: '../core/',
-    filename: '.' + (process.env.USER === 's4000' ? 'prod' : 'dev') + '.env',
+    filename: localEnv ? '.env.local' : '.env',
     only: [
       'SITE_URL',
       'COINS_PROMO',
@@ -110,11 +113,7 @@ export default {
     transitionIn: 'bounceInLeft',
     transitionOut: 'fadeOutRight',
   },
-  buildModules: ['@nuxtjs/style-resources'],
   styleResources: {
     scss: '~assets/scss/_variables.scss',
-  },
-  build: {
-    extractCSS: true,
   },
 }

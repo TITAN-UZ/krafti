@@ -30,18 +30,18 @@
         <div v-for="item in items" :key="item.id" class="col-auto gallery-manager-item-wrapper">
           <div class="gallery-manager-item">
             <div :class="{image: true, disabled: !item.active}">
-              <a :href="item.file" target="_blank" rel="noreferrer">
-                <b-img-lazy :src="$image(item, '300x200', 'resize')" width="150" height="100" />
+              <a :href="$image(item)" target="_blank" rel="noreferrer">
+                <b-img-lazy :src="$image(item, '300x200', 'fit')" width="150" height="100"/>
               </a>
               <div class="actions">
                 <b-button
-                  v-if="!item.active"
-                  v-b-tooltip="'Включить'"
-                  size="sm"
-                  variant="success"
-                  @click.prevent="onEnable(item)"
+                    v-if="!item.active"
+                    v-b-tooltip="'Включить'"
+                    size="sm"
+                    variant="success"
+                    @click.prevent="onEnable(item)"
                 >
-                  <fa :icon="['fad', 'play']" />
+                  <fa :icon="['fad', 'play']"/>
                 </b-button>
                 <b-button v-else v-b-tooltip="'Отключить'" size="sm" variant="warning" @click.prevent="onDisable(item)">
                   <fa :icon="['fad', 'power-off']" />
@@ -64,21 +64,21 @@
 </template>
 
 <script>
-import Draggable from 'vuedraggable'
-import {icon} from '@fortawesome/fontawesome-svg-core'
-import {faCameraAlt, faTimes, faPowerOff, faPlay} from '@fortawesome/pro-duotone-svg-icons'
+  import Draggable from 'vuedraggable'
+  import {icon} from '@fortawesome/fontawesome-svg-core'
+  import {faCameraAlt, faPlay, faPowerOff, faTimes} from '@fortawesome/pro-duotone-svg-icons'
 
-export default {
-  name: 'GalleryManager',
-  components: {Draggable},
-  props: {
-    objectId: {
-      type: Number,
-      required: true,
-    },
-    objectName: {
-      type: String,
-      required: true,
+  export default {
+    name: 'GalleryManager',
+    components: {Draggable},
+    props: {
+      objectId: {
+        type: Number,
+        required: true,
+      },
+      objectName: {
+        type: String,
+        required: true,
     },
   },
   data() {
