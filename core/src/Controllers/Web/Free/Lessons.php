@@ -14,7 +14,7 @@ class Lessons extends ModelGetController
 
     public function get(): ResponseInterface
     {
-        if ($id = $this->getPrimaryKey()) {
+        if ($id = (int)$this->getPrimaryKey()) {
             /** @var Model $class */
             $class = new $this->model();
             $c = $class->newQuery();
