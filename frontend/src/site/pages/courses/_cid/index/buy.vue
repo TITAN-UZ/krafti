@@ -82,7 +82,7 @@
     </form>
 
     <div v-if="!$auth.loggedIn" class="mt-4 text-center">
-      <auth-form :auth-mode.sync="authMode" :forms="['login', 'register']">
+      <auth-form auth-mode="register">
         <template slot="login-title">
           <h4>Войдите на сайт</h4>
         </template>
@@ -94,6 +94,9 @@
         </template>
         <template slot="register-button">
           Зарегистрироваться и Оплатить
+        </template>
+        <template slot="reset-title">
+          <h4>Сброс пароля</h4>
         </template>
       </auth-form>
     </div>
@@ -125,7 +128,6 @@ export default {
   data() {
     return {
       loading: false,
-      authMode: 'register',
       payment: {
         period: 6,
         service: 'robokassa',

@@ -114,7 +114,7 @@
 
     <!-- Modal -->
     <b-modal id="modalLogin" ref="modalWindow" hide-footer :lazy="false" @hidden="/*clearForms*/">
-      <auth-form :auth-mode.sync="authMode" />
+      <auth-form />
       <template slot="modal-header">
         <button class="close" type="button" aria-label="Close" @click="hideModal()">
           <fa :icon="['fal', 'times']" size="3x" />
@@ -135,7 +135,6 @@ export default {
   data() {
     return {
       sidebar: false,
-      authMode: 'login',
     }
   },
   computed: {

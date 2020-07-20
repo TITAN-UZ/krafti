@@ -18,7 +18,7 @@ class Reset extends Controller
     {
         $email = trim($this->getProperty('email'));
         /** @var User $user */
-        if ($user = User::query()->where(['email' => $email])->first()) {
+        if ($user = User::query()->where('email', $email)->first()) {
             if (!$user->active) {
                 return $this->failure('Учётная запись отключена');
             }
@@ -27,7 +27,10 @@ class Reset extends Controller
                 return $this->failure('Мы недавно уже отправили вам ссылку. Пожалуйста, попробуйте через 5 минут.');
             }
 
-            $password = bin2hex(openssl_random_pseudo_bytes(4));
+            do {
+                $rand = openssl_random_pseudo_bytes(4, $strong);
+            } while (!$rand || !$strong);
+            $password = bin2hex($rand);
 
             $user->tmp_password = $password;
             $user->reset_at = date('Y-m-d H:i:s');
@@ -43,13 +46,8 @@ class Reset extends Controller
         return $this->failure('Такого email у нас нет');
     }
 
-    /**
-     * @param User $user
-     * @param $secret
-     *
-     * @return bool
-     */
-    protected function sendMail($user, $secret)
+
+    protected function sendMail(User $user, string $secret): bool
     {
         $url = getenv('SITE_URL');
         $mail = new Mail();
@@ -57,12 +55,12 @@ class Reset extends Controller
         try {
             $data = $user->toArray();
             $data['link'] = "{$url}service/email/reset?user_id={$user->id}&secret={$secret}";
+            if ($from = $this->getProperty('from')) {
+                $data['link'] .= "&from={$from}";
+            }
 
             $subject = 'Сброс пароля на Krafti.ru';
-            $body = $fenom->fetch(
-                $mail->tpls['reset'],
-                $data
-            );
+            $body = $fenom->fetch($mail->tpls['reset'], $data);
         } catch (Exception $e) {
             (new Logger())->error('Could not fetch email template: ' . $e->getMessage());
 

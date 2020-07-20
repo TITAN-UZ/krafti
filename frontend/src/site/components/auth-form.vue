@@ -1,6 +1,6 @@
 <template>
   <div class="auth-form">
-    <div v-if="mode == 'login' && forms.includes('login')">
+    <div v-if="mode == 'login'">
       <slot name="login-title">
         <h5 class="title text-center mb-5">Вход</h5>
       </slot>
@@ -15,7 +15,6 @@
       </div>
       <h4 class="text-center">или</h4>
       -->
-
       <b-form action="" method="post" @submit.prevent="onLogin">
         <b-form-group class="mb-3">
           <b-input v-model="login.email" type="email" placeholder="Адрес эл. почты" trim required autofocus />
@@ -40,7 +39,7 @@
           <a class="link__registration" aria-label="Registration" @click.prevent="mode = 'register'">
             зарегистрируйтесь
           </a>
-          <div v-if="forms.includes('reset')" class="text-center">
+          <div class="text-center">
             <div class="login__note mt-2">А если не помните свой пароль,</div>
             <a class="link__registration" aria-label="Reset" @click.prevent="mode = 'reset'">
               его можно сбросить
@@ -49,7 +48,7 @@
         </div>
       </b-form>
     </div>
-    <div v-else-if="mode == 'register' && forms.includes('register')">
+    <div v-else-if="mode == 'register'">
       <slot name="register-title">
         <h5 class="title text-center mb-5">Регистрация</h5>
       </slot>
@@ -94,14 +93,22 @@
           </button>
         </div>
         <div class="form-footer d-flex align-items-center justify-content-center flex-column">
-          <div class="login__note">У вас уже есть логин? Тогда можно</div>
-          <a class="link__registration" aria-label="Login" @click.prevent="mode = 'login'">
-            войти на сайт
-          </a>
+          <div class="text-center">
+            <div class="login__note">У вас уже есть логин? Тогда можно</div>
+            <a class="link__registration" aria-label="Login" @click.prevent="mode = 'login'">
+              войти на сайт
+            </a>
+          </div>
+          <div class="text-center">
+            <div class="login__note mt-2">Знаете логин, но не помните пароль?</div>
+            <a class="link__registration" aria-label="Reset" @click.prevent="mode = 'reset'">
+              его можно сбросить
+            </a>
+          </div>
         </div>
       </form>
     </div>
-    <div v-else-if="forms.includes('reset')">
+    <div v-else>
       <slot name="reset-title">
         <h5 class="title text-center mb-5">Сброс пароля</h5>
       </slot>
@@ -138,15 +145,11 @@ export default {
   props: {
     authMode: {
       type: String,
-      required: false,
       default: 'login',
     },
-    forms: {
-      type: Array,
-      required: false,
-      default: () => {
-        return ['login', 'register', 'reset']
-      },
+    fromPage: {
+      type: String,
+      default: null,
     },
   },
   data() {
@@ -172,17 +175,8 @@ export default {
         reset: '',
       },
       loading: false,
+      mode: this.authMode,
     }
-  },
-  computed: {
-    mode: {
-      get() {
-        return this.authMode
-      },
-      set(newValue) {
-        this.$emit('update:authMode', newValue)
-      },
-    },
   },
   created() {
     this.$fa.add(faVk, faInstagram)
@@ -219,55 +213,51 @@ export default {
                     }
                 }
             }, */
-    onLogin() {
+    async onLogin() {
       this.error.login = ''
       this.loading = true
-      this.$auth
-        .loginWith('local', {data: this.login})
-        .then(() => {
-          this.loading = false
-          this.$notify.success({message: 'Добро пожаловать!'})
-          // this.clearForms();
-        })
-        .catch((res) => {
-          this.error.login = res.data
-          this.loading = false
-        })
+      try {
+        await this.$auth.loginWith('local', {data: this.login})
+        this.$notify.success({message: 'Добро пожаловать!'})
+      } catch (e) {
+        this.error.login = e.data
+      } finally {
+        this.loading = false
+      }
     },
-    onRegister() {
+    async onRegister() {
       this.error.register = ''
       this.loading = true
-      this.$axios
-        .post('security/register', this.register)
-        .then(() => {
-          this.loading = false
-          this.login.email = this.register.email
-          this.login.password = this.register.password
-          localStorage.removeItem('promo')
-          this.onLogin()
-        })
-        .catch((res) => {
-          this.loading = false
-          this.error.register = res.data
-        })
+      const params = this.register
+      // params.from = this.$route.path
+      try {
+        await this.$axios.post('security/register', params)
+        localStorage.removeItem('promo')
+        this.login.email = this.register.email
+        this.login.password = this.register.password
+        await this.onLogin()
+      } catch (e) {
+        this.error.register = e.data
+      } finally {
+        this.loading = false
+      }
     },
-    onReset() {
+    async onReset() {
       this.error.reset = ''
       this.loading = true
-      this.$axios
-        .post('security/reset', this.reset)
-        .then(() => {
-          this.mode = 'login'
-          this.loading = false
-          this.$notify.success({message: 'Для подтверждения сброса пароля вам нужно пройти по ссылке из нашего письма'})
-          this.reset.email = ''
-        })
-        .catch((res) => {
-          this.loading = false
-          this.error.reset = res.data
-        })
+      try {
+        const params = this.reset
+        params.from = this.$route.path
+        await this.$axios.post('security/reset', params)
+        this.$notify.success({message: 'Для подтверждения сброса пароля вам нужно пройти по ссылке из нашего письма'})
+        this.reset.email = ''
+      } catch (e) {
+        this.error.reset = e.data
+      } finally {
+        this.loading = false
+      }
     },
-    onPopup(provider) {
+    /* onPopup(provider) {
       this.error.login = ''
       const x = screen.width / 2 - 700 / 2
       const y = screen.height / 2 - 450 / 2
@@ -300,7 +290,7 @@ export default {
           this.clearInterval(timer)
         }
       }, 500)
-    },
+    }, */
   },
 }
 </script>

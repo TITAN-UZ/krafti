@@ -80,6 +80,9 @@ class Register extends Controller
         try {
             $data = $user->toArray();
             $data['link'] = "{$url}service/email/confirm?user_id={$user->id}&secret={$secret}";
+            if ($from = $this->getProperty('from')) {
+                $data['link'] .= "&from={$from}";
+            }
 
             $subject = 'Вы успешно зарегистрировались на Krafti.ru';
             $body = $fenom->fetch($mail->tpls['register'], $data);

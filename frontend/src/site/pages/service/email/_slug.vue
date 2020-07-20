@@ -29,21 +29,19 @@ export default {
       return error({statusCode: e.status, message: e.data})
     }
   },
-  mounted() {
+  async mounted() {
     if (this.$route.params.slug === 'reset' && this.token !== undefined) {
-      this.$auth
-        .setUserToken(this.token)
-        .then(() => {
-          this.$notify.success({
-            message: 'Вы успешно сбросили свой пароль! Теперь можно указать новый в настройках профиля.',
-          })
+      try {
+        await this.$auth.setUserToken(this.token)
+        this.$notify.success({
+          message: 'Вы успешно сбросили свой пароль! Теперь можно указать новый в настройках профиля.',
         })
-        .finally(() => {
-          this.$router.replace('/')
-        })
+      } finally {
+        this.$router.replace(this.$route.query.from || '/')
+      }
     } else if (this.$route.params.slug === 'confirm') {
       this.$notify.info({message: 'Спасибо за подтверждение email!'})
-      this.$router.replace('/')
+      this.$router.replace(this.$route.query.from || '/')
     }
   },
 }

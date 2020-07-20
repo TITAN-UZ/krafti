@@ -17,7 +17,7 @@ class Confirm extends Controller
 
         /** @var User $user */
         if ($encrypted && $user = User::query()->find($user_id)) {
-            if ($type == 'reset') {
+            if ($type === 'reset') {
                 $secret = getenv('RESET_SECRET');
                 $decrypted = openssl_decrypt(base64_decode($encrypted), 'AES-256-CBC', $secret);
                 if ($user->resetPassword($decrypted)) {
@@ -25,10 +25,10 @@ class Confirm extends Controller
                         'token' => Jwt::makeToken($user->id),
                     ]);
                 }
-            } elseif ($type == 'confirm') {
+            } elseif ($type === 'confirm') {
                 $secret = getenv('EMAIL_SECRET');
                 $decrypted = openssl_decrypt(base64_decode($encrypted), 'AES-256-CBC', $secret);
-                if ($decrypted == $user->email) {
+                if ($decrypted === $user->email) {
                     $user->confirmed = true;
                     $user->save();
 
