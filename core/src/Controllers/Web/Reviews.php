@@ -29,7 +29,6 @@ class Reviews extends ModelGetController
      */
     public function beforeCount(Builder $c): Builder
     {
-        $c->groupBy('user_id');
         $c->where(['review' => true, 'deleted' => false]);
 
         return $c;

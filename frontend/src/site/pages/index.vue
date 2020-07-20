@@ -111,12 +111,21 @@
                     <b-link v-if="reviews.total > 3" :to="{name: 'reviews'}" class="link__more">См. все</b-link>
                   </div>
                 </div>
-                <course-reviews
-                  :reviews="reviews.rows"
-                  row-class="row mob_container item__wrap d-flex"
-                  item-class="col-12 col-lg-4 m-width-80"
-                  :max-length="50"
-                />
+                <div class="carousel-wrapper">
+                  <b-carousel ref="reviews" indicators>
+                    <div v-for="(items, idx) in computedReviews" :key="idx" class="carousel-item">
+                      <div class="row">
+                        <course-review v-for="item in items" :key="item.id" :item="item" :max-length="50" />
+                      </div>
+                    </div>
+                  </b-carousel>
+                  <div class="control-prev" @click="$refs.reviews.prev()">
+                    <fa :icon="['fas', 'chevron-left']" class="fa-2x" />
+                  </div>
+                  <div class="control-next" @click="$refs.reviews.next()">
+                    <fa :icon="['fas', 'chevron-right']" class="fa-2x" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -162,19 +171,19 @@
 </template>
 
 <script>
-import {faPaperPlane, faCircle} from '@fortawesome/pro-duotone-svg-icons'
-import {faPlay} from '@fortawesome/pro-solid-svg-icons'
+import {faCircle, faPaperPlane} from '@fortawesome/pro-duotone-svg-icons'
+import {faPlay, faChevronLeft, faChevronRight} from '@fortawesome/pro-solid-svg-icons'
 import CoursesList from '../components/courses-list'
-import CourseReviews from '../components/course/reviews'
 import HeaderBg from '../components/header-bg'
+import CourseReview from '../components/course/review'
 
 export default {
   auth: false,
-  components: {CoursesList, CourseReviews, HeaderBg},
+  components: {CourseReview, CoursesList, HeaderBg},
   async asyncData({app, env}) {
     const [{data: courses}, {data: reviews}, {data: free}] = await Promise.all([
       app.$axios.get('web/courses', {params: {limit: 2}}),
-      app.$axios.get('web/reviews', {params: {limit: 3}}),
+      app.$axios.get('web/reviews', {params: {limit: 24}}),
       app.$axios.get('web/free/lessons', {params: {limit: 2}}),
     ])
 
@@ -201,8 +210,24 @@ export default {
       }),
     }
   },
+  computed: {
+    computedReviews() {
+      if (!this.reviews.total) {
+        return []
+      }
+      return this.reviews.rows.reduce((resultArray, item, index) => {
+        const chunkIndex = Math.floor(index / 3)
+        if (!resultArray[chunkIndex]) {
+          resultArray[chunkIndex] = []
+        }
+        resultArray[chunkIndex].push(item)
+
+        return resultArray
+      }, [])
+    },
+  },
   created() {
-    this.$fa.add(faCircle, faPaperPlane, faPlay)
+    this.$fa.add(faCircle, faPaperPlane, faPlay, faChevronLeft, faChevronRight)
     this.$app.header_image.set(true)
   },
   methods: {
@@ -244,6 +269,45 @@ div::v-deep {
   .blueimp-gallery {
     background-color: rgba(#000, 0.8);
   }
+
+  .carousel-wrapper {
+    .control-next,
+    .control-prev {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      width: 50px;
+      transition: opacity 0.15s ease;
+      opacity: 0.5;
+      cursor: pointer;
+      justify-content: center;
+      svg {
+        color: $primary;
+      }
+      &:hover {
+        opacity: 1;
+        background-color: #fafafa;
+      }
+    }
+    .control-prev {
+      left: -50px;
+    }
+    .control-next {
+      right: -50px;
+    }
+    .carousel-item {
+      padding: 0 30px;
+    }
+    .carousel-indicators {
+      li {
+        background-color: $primary;
+      }
+    }
+  }
+
   @media (max-width: 576px) {
     .index-bg {
       max-height: 350px;
