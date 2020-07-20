@@ -255,6 +255,9 @@ export default {
     },
     homework: {
       get() {
+        if (!this.record.homeworks) {
+          return {}
+        }
         const filtered = this.record.homeworks.filter((item) => item.section === this.lessonTab)
         return filtered.length ? filtered[0] : {}
       },
