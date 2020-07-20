@@ -16,6 +16,8 @@ export default ({app, $axios}, inject) => {
       favorites: '/profile/favorites',
       profile: '/profile/update',
     },
+    phone: '+7 913-720-64-78',
+    phone_time: 'с 10:00 до 18:00',
     menu: {
       admin: [
         {to: {name: 'orders'}, title: 'Заказы', scope: 'orders'},

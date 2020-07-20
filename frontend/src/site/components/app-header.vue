@@ -47,15 +47,22 @@
         <div class="header__wrap d-flex justify-content-between align-items-center">
           <div class="header__logo">
             <nuxt-link to="/" class="logo__desktop">
-              <img src="~assets/images/general/logo.svg" alt="" />
+              <div class="d-flex align-items-center">
+                <img src="~assets/images/general/logo.svg" alt="" />
+                <div class="ml-3 mr-3 text-nowrap" style="font-size: 15px; line-height: 1.2">
+                  <div style="color:#CB5499">Онлайн-курс</div>
+                  <div><span style="color:#4EC0DD">для</span> <span style="color:#F9B100">рисования</span></div>
+                </div>
+              </div>
             </nuxt-link>
             <nuxt-link to="/" class="logo__mobile">
               <img src="~assets/images/general/logo_mob.svg" alt="" />
             </nuxt-link>
           </div>
-          <div class="header__menu">
+
+          <div class="header__menu w-100">
             <nav class="menu-wrap">
-              <ul class="menu-list d-flex align-items-center">
+              <ul class="menu-list d-flex align-items-center justify-content-center">
                 <b-nav-item v-for="(i, idx) in computedMenuHeader" :key="idx" :to="i.to">
                   {{ i.title }}
                 </b-nav-item>
@@ -64,23 +71,37 @@
             </nav>
           </div>
 
-          <div v-if="$auth.loggedIn" class="login">
-            <div class="d-flex flex-column">
-              <div class="title text-right">{{ user.fullname }}</div>
-              <a class="logout-link text-right" @click.prevent="onLogout">Выход</a>
-            </div>
-            <b-link :to="{name: user && user.unread > 0 ? 'office-messages' : 'profile-update'}">
-              <user-avatar :user="user" :size="50" class="ml-2" />
-              <span v-if="user.unread > 0" class="label">{{ user.unread }}</span>
-            </b-link>
+          <div class="text-nowrap d-none d-xl-block mr-3" style="font-size:12px;color:#B1C7A5">
+            <div>{{ $settings.phone }}</div>
+            <div>{{ $settings.phone_time }} <span style="color: rgba(0,0,0,.3)">по МСК</span></div>
           </div>
-          <div v-else class="login">
-            <div v-if="$route.name != 'login'">
+
+          <div class="login">
+            <template v-if="$auth.loggedIn">
+              <div class="d-flex flex-column">
+                <div class="title text-right text-nowrap">{{ user.fullname }}</div>
+                <a class="logout-link text-right" @click.prevent="onLogout">Выход</a>
+              </div>
+              <b-link :to="{name: user && user.unread > 0 ? 'office-messages' : 'profile-update'}">
+                <user-avatar :user="user" :size="50" class="ml-2" />
+                <span v-if="user.unread > 0" class="label">{{ user.unread }}</span>
+              </b-link>
+            </template>
+            <div v-else-if="$route.name != 'login'">
               <a class="login-link" aria-label="Login" @click.prevent="showModal()">
-                <span class="title">Вход</span>
+                <span class="title">Вход / Регистрация</span>
                 <user-avatar :user="{}" :size="50" class="ml-2" />
               </a>
             </div>
+          </div>
+
+          <div class="ml-3 d-none d-xl-flex flex-column">
+            <a :href="$settings.links.whatsapp" target="_blank">
+              <fa :icon="['fab', 'whatsapp']" style="color:#27AE60;width:24px;height:24px;" />
+            </a>
+            <a :href="$settings.links.instagram" target="_blank">
+              <fa :icon="['fab', 'instagram']" style="color:#FF8B8B;width:24px;height:24px;" />
+            </a>
           </div>
 
           <div class="menu-open" @click="showMenu()">
@@ -105,7 +126,8 @@
 
 <script>
 import {faUserCircle} from '@fortawesome/pro-duotone-svg-icons'
-import {faTimes, faStream} from '@fortawesome/pro-light-svg-icons'
+import {faStream, faTimes} from '@fortawesome/pro-light-svg-icons'
+import {faInstagram, faWhatsapp} from '@fortawesome/free-brands-svg-icons'
 import AuthForm from './auth-form'
 
 export default {
@@ -136,7 +158,7 @@ export default {
     },
   },
   created() {
-    this.$fa.add(faUserCircle, faTimes, faStream)
+    this.$fa.add(faUserCircle, faTimes, faStream, faWhatsapp, faInstagram)
   },
   methods: {
     showMenu() {
