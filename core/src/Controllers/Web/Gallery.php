@@ -13,20 +13,22 @@ class Gallery extends ModelGetController
 
     protected function beforeCount(Builder $c): Builder
     {
-        $c->where([
-            'object_id' => (int)$this->getProperty('object_id'),
-            'object_name' => $this->getProperty('object_name'),
-            'active' => true,
-        ]);
-        $c->orderBy('rank', 'asc');
+        $c->where('active', true);
+        if ($object_name = $this->getProperty('object_name', 'Course')) {
+            $c->where('object_name', $object_name);
+        }
+        if ($object_id = (int)$this->getProperty('object_id')) {
+            $c->where('object_id', $object_id);
+        }
 
-        return parent::beforeCount($c);
+        return $c;
     }
 
     protected function afterCount(Builder $c): Builder
     {
         $c->select('file_id');
-        $c->with('file:id,updated_at');
+        $c->with('file:id,updated_at,width,height');
+        $c->orderBy('rank', 'asc');
 
         return $c;
     }

@@ -18,6 +18,7 @@
               </div>
             </div>
           </div>
+          <gallery-masonry class="mt-5" />
         </div>
       </section>
     </div>
@@ -27,13 +28,11 @@
 <script>
 import CoursesList from '../../components/courses-list'
 import HeaderBg from '../../components/header-bg'
+import GalleryMasonry from '../../components/gallery-masonry'
 
 export default {
   auth: false,
-  components: {
-    'courses-list': CoursesList,
-    'header-bg': HeaderBg,
-  },
+  components: {GalleryMasonry, CoursesList, HeaderBg},
   async asyncData({app}) {
     const courses = {}
     const {data: res} = await app.$axios('web/courses', {params: {limit: 0}})
