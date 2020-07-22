@@ -20,6 +20,7 @@ class Lessons extends ModelGetController
             $c = $class->newQuery();
 
             $c->where(['active' => true, 'free' => true]);
+            $c->whereHas('video');
             $c->with('course:id,title,price');
             $c->with('video:id,title,remote_key');
             $c->with('bonus:id,title,remote_key');
@@ -48,6 +49,7 @@ class Lessons extends ModelGetController
     protected function beforeCount(Builder $c): Builder
     {
         $c->where(['active' => true, 'free' => true]);
+        $c->whereHas('video');
         $c->select('id', 'title', 'video_id');
         $c->with('video:id,preview');
 
