@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Model\File;
 use Psr\Http\Message\ResponseInterface;
 
 class Image extends \Vesp\Controllers\Data\Image
 {
+    protected $model = File::class;
+
     /**
      * @return ResponseInterface
      */
