@@ -4,10 +4,14 @@ use App\Model\Diploma;
 use App\Model\File;
 use App\Model\UserProgress;
 use App\Service\Logger;
+use Intervention\Image\AbstractFont;
+use Intervention\Image\ImageManager;
 
-/** @var Slim\App $app */
 require '_initialize.php';
-$font = getenv('BASE_DIR') . '/core/templates/fonts/koskobold.ttf';
+
+$manager = new ImageManager(['driver' => 'imagick']);
+$ttf = getenv('BASE_DIR') . '/core/templates/fonts/koskobold.ttf';
+$color = '#ff7474';
 $new = 0;
 
 $progresses = UserProgress::query()->where(['section' => 0, 'rank' => 0]);
@@ -30,26 +34,34 @@ foreach ($progresses->get() as $progress) {
     }
 }
 
+/** @var Diploma $diploma */
 foreach (Diploma::query()->whereNull('file_id')->get() as $diploma) {
-    /** @var Diploma $diploma */
     $course = $diploma->course;
     if (!$course->diploma_id) {
         continue;
     }
-    $file = $course->diploma->getFullPath();
-    $template = $course->diploma->type == 'image/jpeg'
-        ? imagecreatefromjpeg($file)
-        : imagecreatefrompng($file);
-    $color = imagecolorallocate($template, 0xFF, 0x74, 0x74); // Pink
+    $image = $manager->make($course->diploma->getFile());
+
     if ($child = $diploma->child) {
-        imagefttext($template, 50, 0, 160, 750, $color, $font, $child->name);
+        $image->text($child->name, 160, 750, static function (AbstractFont $font) use ($ttf, $color) {
+            $font->file($ttf);
+            $font->size(50);
+            $font->color($color);
+        });
     } else {
-        imagefttext($template, 50, 0, 160, 750, $color, $font, $diploma->user->fullname);
+        $image->text($diploma->user->fullname, 160, 750, static function (AbstractFont $font) use ($ttf, $color) {
+            $font->file($ttf);
+            $font->size(50);
+            $font->color($color);
+        });
     }
-    $tmp_name = tempnam(getenv('BASE_DIR') . '/tmp/', 'diploma_');
-    imagejpeg($template, $tmp_name);
-    imagedestroy($template);
-    $data = 'data:image/jpeg;base64,' . base64_encode(file_get_contents($tmp_name));
+    $date = $diploma->created_at->format('d.m.Y');
+    $image->text($date, 1000, 750, static function (AbstractFont $font) use ($ttf, $color) {
+        $font->file($ttf);
+        $font->size(40);
+        $font->color($color);
+    });
+    $data = $image->encode('data-url')->__toString();
 
     $file = new File();
     if ($file->uploadFile($data, ['name' => 'Diploma'])) {
@@ -66,7 +78,6 @@ foreach (Diploma::query()->whereNull('file_id')->get() as $diploma) {
             $diploma->user->sendMessage('Мы сгенерировали вам диплом об окончании курса "' . $course->title, 'diploma');
         }
     }
-    @unlink($tmp_name);
 }
 
 (new Logger())->info('Processed all diplomas', ['new' => $new]);
