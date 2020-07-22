@@ -3,9 +3,9 @@
 namespace App\Model;
 
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Throwable;
 
 /**
  * @property int $id
@@ -93,12 +93,7 @@ class User extends \Vesp\Models\User
         parent::setAttribute($key, $value);
     }
 
-    /**
-     * @param $password
-     *
-     * @return bool
-     */
-    public function resetPassword($password)
+    public function resetPassword(string $password): bool
     {
         if (password_verify($password, $this->tmp_password)) {
             parent::setAttribute('password', $this->tmp_password);
@@ -112,10 +107,7 @@ class User extends \Vesp\Models\User
         return false;
     }
 
-    /**
-     * @return array
-     */
-    public function getProfile()
+    public function getProfile(): array
     {
         $oauth2 = [];
         foreach ($this->oauths as $obj) {
@@ -153,145 +145,99 @@ class User extends \Vesp\Models\User
         ];
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function role()
+    public function role(): BelongsTo
     {
         return $this->belongsTo(UserRole::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function referrer()
+    public function referrer(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(__CLASS__);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function photo()
+    public function photo(): BelongsTo
     {
         return $this->belongsTo(File::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function background()
+    public function background(): BelongsTo
     {
         return $this->belongsTo(File::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function favorites()
+    public function favorites(): HasMany
     {
         return $this->hasMany(UserFavorite::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function likes()
+    public function likes(): HasMany
     {
         return $this->hasMany(UserLike::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function referrals()
+    public function referrals(): HasMany
     {
-        return $this->hasMany(User::class, 'referrer_id');
+        return $this->hasMany(__CLASS__, 'referrer_id');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function transactions()
+    public function transactions(): HasMany
     {
         return $this->hasMany(UserTransaction::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function oauths()
+
+    public function oauths(): HasMany
     {
         return $this->hasMany(UserOauth::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function tokens()
+
+    public function tokens(): HasMany
     {
         return $this->hasMany(UserToken::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function children()
+
+    public function children(): HasMany
     {
         return $this->hasMany(UserChild::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function diplomas()
+
+    public function diplomas(): HasMany
     {
         return $this->hasMany(Diploma::class)->whereNotNull('file_id');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function homeworks()
+
+    public function homeworks(): HasMany
     {
         return $this->hasMany(Homework::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function progresses()
+
+    public function progresses(): HasMany
     {
         return $this->hasMany(UserProgress::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function messages()
+
+    public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
     }
 
-    /**
-     * @param array $options
-     *
-     * @return bool
-     */
-    public function save(array $options = [])
+    public function save(array $options = []): bool
     {
         if (!$this->promo) {
             while (true) {
                 $promo = $this->randomPassword();
-                if (!User::query()->where(['promo' => $promo])->count()) {
+                if (!self::query()->where('promo', $promo)->count()) {
                     $this->promo = $promo;
                     break;
                 }
@@ -302,10 +248,9 @@ class User extends \Vesp\Models\User
     }
 
     /**
-     * @return bool|null
-     * @throws Exception
+     * @throws Throwable
      */
-    public function delete()
+    public function delete(): ?bool
     {
         if ($this->photo) {
             $this->photo->delete();
@@ -318,33 +263,23 @@ class User extends \Vesp\Models\User
         return parent::delete();
     }
 
-    /**
-     * @param int $length
-     *
-     * @return string
-     */
-    protected function randomPassword($length = 8)
+    protected function randomPassword(int $length = 8): string
     {
         $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $pass = [];
         $alphaLength = strlen($alphabet) - 1;
         for ($i = 0; $i < $length; $i++) {
-            $n = rand(0, $alphaLength);
+            $n = random_int(0, $alphaLength);
             $pass[] = $alphabet[$n];
         }
 
         return implode($pass);
     }
 
-    /**
-     * @param bool $save
-     *
-     * @return bool
-     */
-    public function updateAccount($save = true)
+    public function updateAccount(bool $save = true): bool
     {
         $sum = $this->transactions()->sum('amount');
-        if ($this->account != $sum) {
+        if ($this->account !== $sum) {
             $this->account = $sum;
             if ($save) {
                 $this->save();
@@ -354,14 +289,12 @@ class User extends \Vesp\Models\User
         return $sum;
     }
 
-    /**
-     * @param int $amount
-     * @param string $action
-     * @param array $data
-     */
-    public function makeTransaction($amount, $action, array $data = [])
+    public function makeTransaction(int $amount, string $action, array $data = []): void
     {
-        if ($action == 'bonus') {
+        if ($action === 'register' && $this->transactions()->where('action', $action)->count()) {
+            return;
+        }
+        if ($action === 'bonus') {
             if ($this->transactions()->where(['course_id' => @$data['course_id'], 'action' => $action])->count()) {
                 return;
             }
@@ -372,7 +305,6 @@ class User extends \Vesp\Models\User
             'amount' => $amount,
             'action' => $action,
         ]);
-
         $transaction->fill($data);
         $transaction->save();
 
@@ -382,9 +314,7 @@ class User extends \Vesp\Models\User
                     'Мы списали у вас ' . ($amount * -1) . ' крафтиков за покупку бонусного урока',
                     $action,
                     null,
-                    [
-                        'transaction_id' => $transaction->id,
-                    ]
+                    ['transaction_id' => $transaction->id]
                 );
                 break;
             case 'homework':
@@ -392,9 +322,7 @@ class User extends \Vesp\Models\User
                     'Мы начислили вам ' . $amount . ' крафтиков за выполнение домашней работы',
                     $action,
                     null,
-                    [
-                        'transaction_id' => $transaction->id,
-                    ]
+                    ['transaction_id' => $transaction->id]
                 );
                 break;
             case 'purchase':
@@ -402,9 +330,7 @@ class User extends \Vesp\Models\User
                     'Мы начислили вам ' . $amount . ' крафтиков за первую покупку вашего друга',
                     $action,
                     null,
-                    [
-                        'transaction_id' => $transaction->id,
-                    ]
+                    ['transaction_id' => $transaction->id]
                 );
                 break;
             case 'palette':
@@ -412,9 +338,27 @@ class User extends \Vesp\Models\User
                     'Мы начислили вам ' . $amount . ' крафтиков за полностью закрытую палитру урока!',
                     $action,
                     null,
-                    [
-                        'transaction_id' => $transaction->id,
-                    ]
+                    ['transaction_id' => $transaction->id]
+                );
+                break;
+            case 'register':
+                $this->sendMessage(
+                    'Приветствуем в онлайн-академии творчества KRAFTi! С нами вы всей семьёй сможете самостоятельно создавать домашние шедевры.
+Благодарим вас за приобретение детского курса по рисованию и желаем красивых работ и вдохновения!
+
+Спасибо, что поделились своей электронной почтой! Теперь мы сможем сообщать вам о наших новых курсах, акциях и новостях. Вместе с этим письмом мы дарим вам крафтики, которые вы сможете использовать для приобретения бонусов.
+Кстати, крафтики можно получить не только за регистрацию, но и за заполнение палитры прогресса. Если к нам придут ваши друзья, мы отблагодарим их скидкой на курс, а вас — нашими крафтиками.
+Если вы тоже захотите поделиться чем-то с нами — пишите на нашу почту, в Instagram или WhatsApp.
+В этом письме мы хотим ответить на основные вопросы — это поможет сделать творчество легче и приятнее.
+
+Сначала мы расскажем, как сориентироваться на нашем сайте.
+В первую очередь советуем обратить внимание на личный кабинет. Чем больше данных вы заполните, тем лучше мы сможем познакомиться друг с другом.
+В блоке «Наша команда» вы можете узнать больше о нас — тех, кто старается сделать вас ближе к мастерству живописи.
+В блоке «Курсы» мы подробно расписали процесс обучения. Всё просто: после изучения каждого модуля нужно выполнить домашнее задание, после чего открывается следующий модуль.
+А в конце курса, после выполнения всех домашек, вас ждёт полезный бонус.',
+                    $action,
+                    null,
+                    ['transaction_id' => $transaction->id]
                 );
                 break;
             case 'subscribe':
@@ -422,9 +366,7 @@ class User extends \Vesp\Models\User
                     'Мы начислили вам ' . $amount . ' крафтиков за подписку на наши новости',
                     $action,
                     null,
-                    [
-                        'transaction_id' => $transaction->id,
-                    ]
+                    ['transaction_id' => $transaction->id]
                 );
                 break;
         }
@@ -432,12 +374,7 @@ class User extends \Vesp\Models\User
         $this->updateAccount();
     }
 
-    /**
-     * @param Course $course
-     *
-     * @return UserProgress
-     */
-    public function getProgress($course)
+    public function getProgress(Course $course): UserProgress
     {
         $key = [
             'user_id' => $this->id,
@@ -451,14 +388,7 @@ class User extends \Vesp\Models\User
         return $progress;
     }
 
-    /**
-     * @param Course $course
-     * @param int $section
-     * @param int $rank
-     *
-     * @return UserProgress
-     */
-    public function makeProgress($course, $section, $rank = 0)
+    public function makeProgress(Course $course, int $section, int $rank = 0): UserProgress
     {
         $key = [
             'user_id' => $this->id,
@@ -467,7 +397,6 @@ class User extends \Vesp\Models\User
 
         if (!$progress = UserProgress::query()->where($key)->first()) {
             $progress = new UserProgress($key);
-            $progress->section = 1;
         }
         $progress->section = $section;
         $progress->rank = $rank;
@@ -510,10 +439,9 @@ class User extends \Vesp\Models\User
 
     /**
      * @param array|string $scope
-     *
      * @return bool
      */
-    public function hasScope($scope)
+    public function hasScope($scope): bool
     {
         if ($this->role_id === 1) {
             return true;
@@ -522,13 +450,7 @@ class User extends \Vesp\Models\User
         return parent::hasScope($scope);
     }
 
-    /**
-     * @param string $message
-     * @param string $type
-     * @param null $sender_id
-     * @param array $data
-     */
-    public function sendMessage($message, $type, $sender_id = null, array $data = null)
+    public function sendMessage(string $message, string $type, int $sender_id = null, array $data = null): void
     {
         $obj = new Message([
             'user_id' => $this->id,

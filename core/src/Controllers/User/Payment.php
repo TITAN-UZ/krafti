@@ -58,7 +58,7 @@ class Payment extends Controller
             return $this->failure('Вы должны указать id покупаемого курса');
         }
 
-        if (!$course = Course::query()->where(['active' => true])->find($course_id)) {
+        if (!$course = Course::query()->where('active', true)->find($course_id)) {
             return $this->failure('Не могу загрузить указанный курс');
         }
 
@@ -71,7 +71,7 @@ class Payment extends Controller
             }
 
             if ($this->user->account < $price) {
-                return $this->failure('Не хватает крафтиков для покупки', 403);
+                return $this->failure('Не хватает крафтиков для покупки');
             }
 
             $this->user->makeTransaction($price * -1, 'bonus', ['course_id' => $course->id]);
@@ -120,7 +120,7 @@ class Payment extends Controller
             }
             if ($discount = $course->getDiscount($this->user, $promo)) {
                 $order->promo_id = $promo->id;
-                $promo->used += 1;
+                $promo->used++;
                 $promo->save();
             }
         } else {

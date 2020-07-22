@@ -13,12 +13,12 @@ class PaymentTest extends TestCase
 {
     use RequestStatusTrait;
 
-    protected function getUri()
+    protected function getUri(): string
     {
         return '/api/user/payment';
     }
 
-    protected function getController()
+    protected function getController(): string
     {
         return Controller::class;
     }
@@ -29,12 +29,12 @@ class PaymentTest extends TestCase
         $this->app->any($this->getUri(), [$this->getController(), 'process']);
     }
 
-    public function testGetSuccess()
+    public function testGetSuccess(): void
     {
         $this->getUser()->orders()->where('course_id', '=', 1)->delete();
 
         /** @var Promo $promo */
-        $promo = Promo::firstOrFail();
+        $promo = Promo::query()->firstOrFail();
 
         $data = [
             'course_id' => 1,
@@ -46,12 +46,11 @@ class PaymentTest extends TestCase
 
         $response = $this->app->handle($request);
 
-        $this->assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
-
-        $this->assertJson($response->getBody()->__toString(), 'Ожидается JSON');
+        self::assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
+        self::assertJson($response->getBody()->__toString(), 'Ожидается JSON');
     }
 
-    public function testPostRobokassaSuccess()
+    public function testPostRobokassaSuccess(): void
     {
         $this->getUser()->orders()->where('course_id', '=', 1)->delete();
 
@@ -66,12 +65,11 @@ class PaymentTest extends TestCase
 
         $response = $this->app->handle($request);
 
-        $this->assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
-
-        $this->assertJson($response->getBody()->__toString(), 'Ожидается JSON');
+        self::assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
+        self::assertJson($response->getBody()->__toString(), 'Ожидается JSON');
     }
 
-    public function testPostPayPalSuccess()
+    public function testPostPayPalSuccess(): void
     {
         $this->getUser()->orders()->where('course_id', '=', 1)->delete();
 
@@ -86,36 +84,38 @@ class PaymentTest extends TestCase
 
         $response = $this->app->handle($request);
 
-        $this->assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
-
-        $this->assertJson($response->getBody()->__toString(), 'Ожидается JSON');
+        self::assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
+        self::assertJson($response->getBody()->__toString(), 'Ожидается JSON');
     }
 
-    public function testPostAccountSuccess()
+    public function testPostAccountSuccess(): void
     {
-        $bonus = Course::whereHas('bonus')->firstOrFail();
-        $this->getUser()->orders()->where('course_id', '=', $bonus->getKey())->delete();
+        $user = $this->getUser();
+        $user->account += getenv('COINS_BUY_BONUS');
+        $user->save();
+
+        $course = Course::query()->whereHas('bonus')->firstOrFail();
+        $user->orders()->where('course_id', $course->getKey())->delete();
 
         $data = [
-            'course_id' => $bonus->getKey(),
+            'course_id' => $course->getKey(),
             'service' => 'account',
             'period' => 12,
         ];
 
         $request = $this->createRequest('POST', $this->getUri(), $data)
-            ->withAttribute('user', $this->getUser());
+            ->withAttribute('user', $user);
 
         $response = $this->app->handle($request);
 
-        $this->assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
-
-        $this->assertJson($response->getBody()->__toString(), 'Ожидается JSON');
+        self::assertEquals(200, $response->getStatusCode(), 'Ожидается ответ 200');
+        self::assertJson($response->getBody()->__toString(), 'Ожидается JSON');
     }
 
-    protected function getUser()
+    protected function getUser(): User
     {
         if ($this->userModel === null) {
-            $this->userModel = User::where('role_id', '=', 3)->firstOrFail();
+            $this->userModel = User::query()->where('role_id', 3)->firstOrFail();
         }
 
         return $this->userModel;
