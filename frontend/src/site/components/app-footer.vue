@@ -8,7 +8,7 @@
               <b-link to="/"><img src="~assets/images/general/logo.svg" alt=""/></b-link>
             </div>
             <div class="footer__instagram">
-              <a class="ic__instagram" :href="$settings.links.instagram" target="_blank" rel="noreferrer" />
+              <a class="ic__instagram" :href="$app.settings('link_instagram')" target="_blank" rel="noreferrer" />
             </div>
           </div>
         </div>
@@ -60,17 +60,13 @@
                 <li class="ic_google_pay"></li>
                 <li class="ic_applepay"></li>
               </ul>
-              <div class="pay__text">
-                <p>ИП Матюшкин А. А.<br />ИНН 542512143999 / ОГРН 318547600033813</p>
-                <p>630047, г. Новосибирск, ул. Кузьмы Минина, 9/1, кв. 163<br />Контактное лицо: Матюшкин Антон</p>
-                <p></p>
-              </div>
+              <div class="pay__text" v-html="$md.render($app.settings('legal_info'))" />
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-8 offset-md-2">
-            <div class="footer__copyright">{{ $settings.copyright }}</div>
+            <div class="footer__copyright">{{ $settings.copyright }} {{ $app.settings('copyright') }}</div>
           </div>
         </div>
       </div>

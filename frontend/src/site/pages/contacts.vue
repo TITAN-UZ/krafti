@@ -14,24 +14,23 @@
                 <div class="col-lg-6 col-12">
                   <div class="contacts__links-block">
                     <div class="contacts__text mb-2">
-                      <p>Хотите поделиться впечатлениями, задать вопросы или предложить тему для творчества?</p>
-                      <p>Свяжитесь с нами любым удобным способом:</p>
+                      <p v-html="$md.render($app.settings('contacts_text_top'))" />
                     </div>
                     <ul class="contacts__list">
                       <li class="contact__item">
-                        <a :href="$settings.links.email" class="contact__link" target="_blank" rel="noreferrer"
-                          >Почта</a
-                        >
+                        <a :href="`mailto:${$app.settings('email')}`" class="contact__link" target="_blank">
+                          Почта
+                        </a>
                       </li>
                       <li class="contact__item">
-                        <a :href="$settings.links.instagram" class="contact__link" target="_blank" rel="noreferrer"
-                          >Instagram</a
-                        >
+                        <a :href="$app.settings('link_instagram')" class="contact__link" target="_blank">
+                          Instagram
+                        </a>
                       </li>
                       <li class="contact__item">
-                        <a :href="$settings.links.whatsapp" class="contact__link" target="_blank" rel="noreferrer"
-                          >WhatsApp</a
-                        >
+                        <a :href="$app.settings('link_whatsapp')" class="contact__link" target="_blank">
+                          WhatsApp
+                        </a>
                       </li>
                     </ul>
                   </div>
@@ -43,10 +42,7 @@
               <div class="row contacts__form mt-5">
                 <div class="col-12">
                   <div class="contacts__text mb-2">
-                    <p>
-                      Если у вас возникли проблемы с нашим сайтом, вы можете обратиться непосредственно к специалистам
-                      нашей службы технической поддержки.
-                    </p>
+                    <p v-html="$md.render($app.settings('contacts_text_bottom'))" />
                   </div>
                   <div class="form-row form-body align-items-center">
                     <div class="col-lg-6 col-12">

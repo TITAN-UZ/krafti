@@ -5,7 +5,7 @@
       <div class="menu-content">
         <div class="menu-header">
           <div v-if="$auth.loggedIn" class="login">
-            <b-link :to="$settings.links.profile" @click="hideMenu()">
+            <b-link :to="{name: 'profile-update'}" @click="hideMenu()">
               <user-avatar :user="user" :size="50" class="mr-2" />
             </b-link>
             <div>
@@ -35,8 +35,8 @@
           </ul>
         </div>
         <div class="menu-footer">
-          <a class="ic__instagram" :href="$settings.links.instagram" target="_blank" rel="noreferrer"></a>
-          <div class="copyright">{{ $settings.copyright }}</div>
+          <a class="ic__instagram" :href="$app.settings('link_instagram')" target="_blank" rel="noreferrer"></a>
+          <div class="copyright">{{ $settings.copyright }} {{ $app.settings('copyright') }}</div>
         </div>
       </div>
     </aside>
@@ -72,8 +72,8 @@
           </div>
 
           <div class="text-nowrap d-none d-xl-block mr-3" style="font-size:12px;color:#B1C7A5">
-            <div>{{ $settings.phone }}</div>
-            <div>{{ $settings.phone_time }} <span style="color: rgba(0,0,0,.3)">по МСК</span></div>
+            <div>{{ $app.settings('support_phone') }}</div>
+            <div>{{ $app.settings('support_time') }} <span style="color: rgba(0,0,0,.3)">по МСК</span></div>
           </div>
 
           <div class="login">
@@ -96,10 +96,10 @@
           </div>
 
           <div class="ml-3 d-none d-xl-flex flex-column">
-            <a :href="$settings.links.whatsapp" target="_blank">
+            <a :href="$app.settings('link_whatsapp')" target="_blank">
               <fa :icon="['fab', 'whatsapp']" style="color:#27AE60;width:24px;height:24px;" />
             </a>
-            <a :href="$settings.links.instagram" target="_blank">
+            <a :href="$app.settings('link_instagram')" target="_blank">
               <fa :icon="['fab', 'instagram']" style="color:#FF8B8B;width:24px;height:24px;" />
             </a>
           </div>

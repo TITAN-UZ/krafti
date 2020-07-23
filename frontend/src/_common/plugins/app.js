@@ -29,6 +29,10 @@ export default ({app, store}, inject) => {
         }
       },
     },
+
+    settings(key) {
+      return store.getters['app/settings'](key) || ''
+    },
   })
 
   inject('hasScope', (scope) => {

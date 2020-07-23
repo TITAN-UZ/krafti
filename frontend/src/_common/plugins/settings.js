@@ -1,23 +1,9 @@
 export default ({app, $axios}, inject) => {
-  const year = app.$moment().format('YYYY')
-
   const settings = {
     site_url: process.env.SITE_URL,
     image_url: $axios.defaults.baseURL.replace('api/', 'image'),
     file_url: $axios.defaults.baseURL.replace('api/', 'file'),
-    copyright: `KRAFTi © 2019 — ${year}. Продажа творческих, спортивных онлайн-курсов для детей и взрослых. Все права защищены.`,
-    video: {
-      index: 359213295,
-    },
-    links: {
-      instagram: 'https://www.instagram.com/krafti.ru/',
-      whatsapp: 'https://api.whatsapp.com/send?phone=+79137206478',
-      email: 'mailto:info@krafti.ru',
-      favorites: '/profile/favorites',
-      profile: '/profile/update',
-    },
-    phone: '+7 913-720-64-78',
-    phone_time: 'с 10:00 до 18:00',
+    copyright: `KRAFTi © 2019 — ${app.$moment().format('YYYY')}.`,
     menu: {
       admin: [
         {to: {name: 'orders'}, title: 'Заказы', scope: 'orders'},
@@ -26,6 +12,7 @@ export default ({app, $axios}, inject) => {
         {to: {name: 'comments'}, title: 'Комментарии', scope: 'comments'},
         {to: {name: 'homeworks'}, title: 'Домашние работы', scope: 'homeworks'},
         {to: {name: 'courses'}, title: 'Курсы', scope: 'courses'},
+        {to: {name: 'settings'}, title: 'Настройки', scope: 'settings'},
       ],
       header: [
         // {to: {name: '/'}, title: 'Главная', scope: false},

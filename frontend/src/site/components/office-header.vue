@@ -14,7 +14,7 @@
     <div class="mini-banner">
       <div class="learner-avatar">
         <!--<img :src="user.photo" v-if="user.photo"/>
-                <nuxt-link :to="$settings.links.profile" v-else>
+                <nuxt-link :to="{name: 'profile-update'}" v-else>
                     <img src="~assets/images/general/ic_upload_avatar.svg"/>
                 </nuxt-link>-->
         <upload-photo :size="88" :show-label="false" />
@@ -30,10 +30,10 @@
           <fa icon="star" style="color:goldenrod" />
           <!--<span class="ic__star-gold"></span>-->
           <span class="account ml-2">{{ user.account }} крафтиков</span>
-          <nuxt-link :to="$settings.links.profile" class="ml-auto">
+          <nuxt-link :to="{name: 'profile-update'}" class="ml-auto">
             <fa icon="cog" />
           </nuxt-link>
-          <nuxt-link :to="$settings.links.favorites" class="ml-2 ml-md-3">
+          <nuxt-link :to="{name: 'profile-favorites'}" class="ml-2 ml-md-3">
             <fa icon="heart" />
           </nuxt-link>
         </div>

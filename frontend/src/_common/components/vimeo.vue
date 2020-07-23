@@ -37,14 +37,9 @@ import {faTimes} from '@fortawesome/pro-light-svg-icons'
 export default {
   props: {
     video: {
-      type: Number,
+      type: [Number, String],
       required: true,
     },
-    /* value: {
-                type: Boolean,
-                required: false,
-                default: false,
-            }, */
     size: {
       type: String,
       required: false,

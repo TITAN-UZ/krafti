@@ -71,8 +71,8 @@ export default ({app}, inject) => {
     return app.$moment(value, 'YYYY-MM-DDTHH:mm:ssZ').format(format)
   })
 
-  Vue.filter('datetime', (value, format = 'DD.MM.YYYY HH:mm') => {
-    return app.$moment(value, 'YYYY-MM-DDTHH:mm:ssZ').format(format)
+  Vue.filter('datetime', (value) => {
+    return app.$moment(value, 'YYYY-MM-DDTHH:mm:ssZ').format('DD.MM.YYYY HH:mm')
   })
 
   Vue.filter('dateago', (value) => {
