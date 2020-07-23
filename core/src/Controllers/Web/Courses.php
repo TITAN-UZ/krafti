@@ -40,6 +40,7 @@ class Courses extends ModelGetController
             'title',
             'tagline',
             'description',
+            'instruments',
             'category',
             'price',
             'age',

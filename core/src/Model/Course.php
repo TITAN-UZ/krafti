@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $title
  * @property string $tagline
  * @property string $description
+ * @property string $instruments
  * @property array $price
  * @property string $category
  * @property array $properties
@@ -47,6 +48,7 @@ class Course extends Model
         'title',
         'tagline',
         'description',
+        'instruments',
         'price',
         'category',
         'properties',
@@ -63,74 +65,47 @@ class Course extends Model
         'active' => 'boolean',
     ];
 
-    /**
-     * @return BelongsTo
-     */
-    public function template()
+    public function template(): BelongsTo
     {
         return $this->belongsTo(Template::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function cover()
+    public function cover(): BelongsTo
     {
         return $this->belongsTo(File::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function video()
+    public function video(): BelongsTo
     {
         return $this->belongsTo(Video::class);
     }
 
-    /**
-     * @return belongsTo
-     */
-    public function diploma()
+    public function diploma(): BelongsTo
     {
         return $this->belongsTo(File::class);
     }
 
-    /**
-     * @return hasOne
-     */
-    public function bonus()
+    public function bonus(): HasOne
     {
         return $this->hasOne(Lesson::class)->where(['section' => 0]);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function lessons()
+    public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function progresses()
+    public function progresses(): HasMany
     {
         return $this->hasMany(UserProgress::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function homeworks()
+    public function homeworks(): HasMany
     {
         return $this->hasMany(Homework::class);
     }
@@ -139,7 +114,7 @@ class Course extends Model
      * @return bool|null
      * @throws Exception
      */
-    public function delete()
+    public function delete(): ?bool
     {
         if ($this->cover) {
             $this->cover->delete();
@@ -148,12 +123,7 @@ class Course extends Model
         return parent::delete();
     }
 
-    /**
-     * @param User $user
-     *
-     * @return bool
-     */
-    public function wasBought($user)
+    public function wasBought(User $user): bool
     {
         /** @var User $user */
         if ($user) {
@@ -172,24 +142,18 @@ class Course extends Model
         return false;
     }
 
-    /**
-     * @param User $user
-     * @param Promo $promo
-     *
-     * @return array|false
-     */
-    public function getDiscount($user, $promo = null)
+    public function getDiscount(User $user, ?Promo $promo = null): ?array
     {
         $user_discount = $promo_discount = [];
 
         // Определяем скидку для указанного юзера
         if ($user) {
             if (
-                $this->orders()->where(['user_id' => $user->id, 'status' => 2])->where(
-                    'paid_till',
-                    '<',
-                    date('Y-m-d H:i:s')
-                )->count()
+            $this->orders()->where(['user_id' => $user->id, 'status' => 2])->where(
+                'paid_till',
+                '<',
+                date('Y-m-d H:i:s')
+            )->count()
             ) {
                 $user_discount = [
                     'discount' => getenv('COURSE_PROLONG_DISCOUNT'),
@@ -227,7 +191,7 @@ class Course extends Model
             }
             $user_price = $test_price - $user_price;
         }
-        // Определяем итоговую стоимость со промо-кода
+        // Определяем итоговую стоимость промо-кода
         if ($promo_discount) {
             if (substr($promo_discount['discount'], -1) === '%') {
                 $promo_price = $test_price * (rtrim($promo_discount['discount'], '%') / 100);
@@ -237,7 +201,7 @@ class Course extends Model
             $promo_price = $test_price - $promo_price;
         }
 
-        $discount = false;
+        $discount = null;
         // Сравниваем итоговые цены и выбираем наибольшую скидку
         if ($user_price < $test_price) {
             $discount = $user_discount;
@@ -249,19 +213,15 @@ class Course extends Model
         return $discount;
     }
 
-    /**
-     * @param array|null $discount
-     * @return array
-     */
-    public function getPrice($discount = null)
+    public function getPrice(?array $discount = null): array
     {
         $price = $this->price;
         if ($discount) {
             array_walk($price, static function (&$v) use ($discount) {
                 if (substr($discount['discount'], -1) === '%') {
-                    $v -= $v * (rtrim($discount['discount'], '%') / 100);
+                    $v -= ($v * (rtrim($discount['discount'], '%') / 100));
                 } else {
-                    $v -= $v - $discount['discount'];
+                    $v -= ($v - $discount['discount']);
                 }
                 if ($v < 0) {
                     $v = 0;
@@ -272,12 +232,7 @@ class Course extends Model
         return $price;
     }
 
-    /**
-     * @param bool $save
-     *
-     * @return int
-     */
-    public function updateViewsCount($save = true)
+    public function updateViewsCount(bool $save = true): int
     {
         $sum = $this->lessons()->where(['active' => true])->sum('views_count');
         if ($this->views_count != $sum) {
@@ -290,12 +245,7 @@ class Course extends Model
         return $sum;
     }
 
-    /**
-     * @param bool $save
-     *
-     * @return int
-     */
-    public function updateLikesCount($save = true)
+    public function updateLikesCount(bool $save = true): int
     {
         $sum = $this->lessons()->where(['active' => true])->sum('likes_count') -
             $this->lessons()->where(['active' => true])->sum('dislikes_count');
@@ -309,14 +259,11 @@ class Course extends Model
         return $sum;
     }
 
-    /**
-     * @param bool $save
-     */
-    public function updateLessonsCount($save = true)
+    public function updateLessonsCount(bool $save = true): int
     {
         $lessons_count = $videos_count = 0;
         /** @var Lesson $lesson */
-        foreach ($this->lessons()->where(['active' => true])->get() as $lesson) {
+        foreach ($this->lessons()->where('active', true)->get() as $lesson) {
             $lessons_count++;
 
             if ($lesson->video_id) {
@@ -326,12 +273,14 @@ class Course extends Model
                 $videos_count++;
             }
         }
-        if ($this->lessons_count != $lessons_count || $this->videos_count != $videos_count) {
+        if ($this->lessons_count !== $lessons_count || $this->videos_count !== $videos_count) {
             $this->lessons_count = $lessons_count;
             $this->videos_count = $videos_count;
             if ($save) {
                 $this->save();
             }
         }
+
+        return $this->lessons_count;
     }
 }

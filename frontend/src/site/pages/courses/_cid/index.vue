@@ -61,7 +61,7 @@
                   <b-tabs v-model="mainTab">
                     <b-tab title="Описание" lazy>
                       <div class="text">
-                        <div class="mb-3 markdown" v-html="$md.render(record.description)"></div>
+                        <div class="mb-3 markdown" v-html="$md.render(record.description)" />
                         <gallery-lightbox :object-id="record.id" object-name="Course" />
                       </div>
                     </b-tab>
@@ -72,6 +72,12 @@
 
                     <b-tab v-if="authors.length" title="Преподаватели" lazy>
                       <authors-list :authors="authors" />
+                    </b-tab>
+
+                    <b-tab v-if="record.instruments" title="Инструменты и материалы" lazy>
+                      <div class="text">
+                        <div class="mb-3 markdown" v-html="$md.render(record.instruments)" />
+                      </div>
                     </b-tab>
 
                     <b-tab v-if="lessons.length" title="Уроки" lazy active>

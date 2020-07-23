@@ -27,6 +27,10 @@
       <b-form-textarea v-model="record.description" rows="3" />
     </b-form-group>
 
+    <b-form-group label="Инструменты и материалы:">
+      <b-form-textarea v-model="record.instruments" rows="3" />
+    </b-form-group>
+
     <b-row class="align-items-start">
       <b-col md="6">
         <b-form-group label="Обложка" description="Загрузите файл с обложкой">
