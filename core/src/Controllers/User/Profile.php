@@ -48,6 +48,17 @@ class Profile extends Controller
         if ($password = trim($this->getProperty('password'))) {
             $user->password = $password;
         }
+
+        if (!$user->referrer_id && $referrer_code = $this->getProperty('referrer_code')) {
+            /** @var User $referrer */
+            if ($referrer = User::query()->where('promo', $referrer_code)->first()) {
+                if ($user->id === $referrer->id) {
+                    return $this->failure('Нельзя указывать свой собственный реферальный код!');
+                }
+                $user->referrer_id = $referrer->id;
+            }
+        }
+
         $user->save();
 
         $children = $this->getProperty('children');

@@ -73,31 +73,24 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import VueClipboard from 'vue-clipboard2'
-  import {faInstagram, faVk} from '@fortawesome/free-brands-svg-icons'
-  import {
-    faCheckCircle,
-    faCopy,
-    faFemale,
-    faMale,
-    faPlusCircle,
-    faTimesCircle,
-  } from '@fortawesome/pro-duotone-svg-icons'
-  import {faTimes} from '@fortawesome/pro-light-svg-icons'
-  import FormProfile from '../../components/forms/profile'
+import Vue from 'vue'
+import VueClipboard from 'vue-clipboard2'
+import {faInstagram, faVk} from '@fortawesome/free-brands-svg-icons'
+import {faCheckCircle, faCopy, faFemale, faMale, faPlusCircle, faTimesCircle} from '@fortawesome/pro-duotone-svg-icons'
+import {faTimes} from '@fortawesome/pro-light-svg-icons'
+import FormProfile from '../../components/forms/profile'
 
-  VueClipboard.config.autoSetContainer = true // add this line
-  Vue.use(VueClipboard)
+VueClipboard.config.autoSetContainer = true // add this line
+Vue.use(VueClipboard)
 
-  export default {
-    components: {FormProfile},
-    auth: true,
-    async asyncData({app}) {
-      const {data: record} = await app.$axios.get('user/profile')
-      return {record: record.user}
-    },
-    data() {
+export default {
+  components: {FormProfile},
+  auth: true,
+  async asyncData({app}) {
+    const {data: record} = await app.$axios.get('user/profile')
+    return {record: record.user}
+  },
+  data() {
     return {
       record: {},
       childrenForm: false,
@@ -109,10 +102,12 @@
   },
   methods: {
     async onSubmit() {
-      const {data: res} = await this.$axios.patch('user/profile', this.record)
-      this.record = res.user
-      this.$auth.fetchUser()
-      this.$notify.success({message: 'Изменения успешно сохранены'})
+      try {
+        const {data: res} = await this.$axios.patch('user/profile', this.record)
+        this.record = res.user
+        this.$auth.fetchUser()
+        this.$notify.success({message: 'Изменения успешно сохранены'})
+      } catch (e) {}
     },
     onLink(provider) {
       const x = screen.width / 2 - 700 / 2

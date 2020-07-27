@@ -142,6 +142,9 @@ class User extends \Vesp\Models\User
             'oauth2' => $oauth2,
             'children' => $this->children()->get(['id', 'name', 'dob', 'gender'])->toArray(),
             'unread' => $this->messages()->where('read', false)->count(),
+            'referrer' => $this->referrer_id
+                ? $this->referrer()->get(['id', 'fullname'])->first()->toArray()
+                : [],
         ];
     }
 

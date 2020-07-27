@@ -35,7 +35,7 @@
     <b-form-group
       class="mb-3"
       label="Ваш реферальный код"
-      description="Если ваш друг использует этот код при регистрации, он получит скидку на первую покупку, а вы - крафтики!"
+      description="Если ваш друг пройдёт по вашей ссылке при регистрации, он получит скидку на первую покупку, а вы - крафтики!"
     >
       <b-input-group>
         <b-form-input :value="record.promo" readonly style="background: transparent" />
@@ -47,7 +47,20 @@
       </b-input-group>
     </b-form-group>
 
-    <div class="children-form mb-5">
+    <div v-if="record.referrer.id" class="alert alert-warning">
+      Вы зарегистрировались у нас на сайте по ссылке пользователя
+      <strong>{{ record.referrer.fullname }}</strong> и являетесь его рефералом.
+    </div>
+    <b-form-group
+      v-else
+      class="mb-3"
+      label="Код вашего друга"
+      description="Если вы зарегистрировались по приглашению друга, но не прошли по его ссылке, то можно указать его реферальный код вручную"
+    >
+      <b-input v-model="record.referrer_code" trim placeholder="" />
+    </b-form-group>
+
+    <div class="children-form mt-5 mb-5">
       <h4 class="text-muted">Ваши дети</h4>
       <small class="text-muted">
         После прохождения курсов мы генерируем дипломы для указанных имён.
