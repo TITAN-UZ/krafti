@@ -4,7 +4,7 @@
       <slot name="actions"></slot>
 
       <slot name="search">
-        <b-input-group class="mt-2 mt-md-0 ml-md-auto col-md-4">
+        <b-input-group v-if="filters.query !== undefined" class="mt-2 mt-md-0 ml-md-auto col-md-4">
           <b-input-group-prepend v-if="moreFilters">
             <b-button :variant="showFilters ? 'success' : 'secondary'" @click.prevent="showFilters = !showFilters">
               <fa :icon="['far', 'filter']" />
@@ -165,7 +165,7 @@ export default {
   computed: {
     moreFilters() {
       const keys = Object.keys(this.filters).filter((item) => {
-        return !['query', 'course_id', 'section'].includes(item)
+        return !['query', 'course_id', 'section', 'slider_id'].includes(item)
       })
 
       return keys.length > 0

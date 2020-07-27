@@ -13,13 +13,10 @@ class Lessons extends ModelController
     protected $model = Lesson::class;
     protected $scope = 'lessons';
 
-    /**
-     * @return ResponseInterface;
-     */
     public function post(): ResponseInterface
     {
         if (!$action = $this->getProperty('action')) {
-            return $this->failure('Вы доолжны указать action');
+            return $this->failure('Вы должны указать action');
         }
         if (!$id = (int)$this->getProperty('id')) {
             return $this->failure('Вы должны указать id объекта');

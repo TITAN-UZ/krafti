@@ -59,11 +59,11 @@
     </b-row>
 
     <b-form-group>
-      <b-row>
+      <div class="d-flex flex-wrap">
         <b-form-checkbox v-model="record.active" class="col-md-4">Опубликован</b-form-checkbox>
         <b-form-checkbox v-model="record.extra" class="col-md-4">Дополнительный материал</b-form-checkbox>
         <b-form-checkbox v-model="record.free" class="col-md-4">Доступен бесплатно</b-form-checkbox>
-      </b-row>
+      </div>
     </b-form-group>
   </div>
 </template>

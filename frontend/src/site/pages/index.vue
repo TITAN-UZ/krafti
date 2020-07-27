@@ -1,15 +1,18 @@
 <template>
   <div>
     <div class="wrapper">
-      <header-bg image="index" class="wrapper__bg bg_600 index-bg">
-        <template slot="content">
-          <span class="play-button main" @click.prevent="$refs.mainVideo.show()">
-            <fa :icon="['fad', 'circle']" />
-            <fa :icon="['fas', 'play']" />
-          </span>
-        </template>
-      </header-bg>
-      <vimeo ref="mainVideo" :video="$app.settings('intro_video')" />
+      <carousel v-if="slider.items.length" :height="600" :timeout="slider.timeout" :items="slider.items" />
+      <template v-else>
+        <header-bg image="index" class="wrapper__bg bg_600 index-bg">
+          <template slot="content">
+            <span class="play-button main" @click.prevent="$refs.mainVideo.show()">
+              <fa :icon="['fad', 'circle']" />
+              <fa :icon="['fas', 'play']" />
+            </span>
+          </template>
+        </header-bg>
+        <vimeo ref="mainVideo" :video="$app.settings('intro_video')" />
+      </template>
 
       <div class="wrapper__content">
         <section class="about__info">
@@ -97,21 +100,7 @@
                     <b-link v-if="reviews.total > 3" :to="{name: 'reviews'}" class="link__more">См. все</b-link>
                   </div>
                 </div>
-                <div class="carousel-wrapper">
-                  <b-carousel ref="reviews" indicators>
-                    <div v-for="(items, idx) in computedReviews" :key="idx" class="carousel-item">
-                      <div class="row">
-                        <course-review v-for="item in items" :key="item.id" :item="item" :max-length="50" />
-                      </div>
-                    </div>
-                  </b-carousel>
-                  <div class="control-prev" @click="$refs.reviews.prev()">
-                    <fa :icon="['fas', 'chevron-left']" class="fa-2x" />
-                  </div>
-                  <div class="control-next" @click="$refs.reviews.next()">
-                    <fa :icon="['fas', 'chevron-right']" class="fa-2x" />
-                  </div>
-                </div>
+                <review-carousel v-if="reviews.total" :items="reviews.rows" />
               </div>
             </div>
           </div>
@@ -161,22 +150,25 @@ import {faCircle, faPaperPlane} from '@fortawesome/pro-duotone-svg-icons'
 import {faPlay, faChevronLeft, faChevronRight} from '@fortawesome/pro-solid-svg-icons'
 import CoursesList from '../components/courses-list'
 import HeaderBg from '../components/header-bg'
-import CourseReview from '../components/course/review'
+import ReviewCarousel from '../components/carousels/reviews'
+import Carousel from '../components/carousels/common'
 
 export default {
   auth: false,
-  components: {CourseReview, CoursesList, HeaderBg},
+  components: {Carousel, ReviewCarousel, CoursesList, HeaderBg},
   async asyncData({app, env}) {
-    const [{data: courses}, {data: reviews}, {data: free}] = await Promise.all([
+    const [{data: courses}, {data: reviews}, {data: free}, {data: slider}] = await Promise.all([
       app.$axios.get('web/courses', {params: {limit: 2}}),
       app.$axios.get('web/reviews', {params: {limit: 24}}),
       app.$axios.get('web/free/lessons', {params: {limit: 2}}),
+      app.$axios.get('web/sliders', {params: {id: 1}}),
     ])
 
     return {
       courses,
       reviews,
       free,
+      slider,
       subscribe_bonus: env.COINS_SUBSCRIBE,
     }
   },
@@ -185,6 +177,7 @@ export default {
       loading: false,
       subscriber: '',
       courses: {},
+      slider: {},
       reviews: {},
       free: {},
       image: null,
@@ -195,22 +188,6 @@ export default {
         return require(`../assets/images/slider/slider-${i + 1}-thumb.jpg`)
       }),
     }
-  },
-  computed: {
-    computedReviews() {
-      if (!this.reviews.total) {
-        return []
-      }
-      return this.reviews.rows.reduce((resultArray, item, index) => {
-        const chunkIndex = Math.floor(index / 3)
-        if (!resultArray[chunkIndex]) {
-          resultArray[chunkIndex] = []
-        }
-        resultArray[chunkIndex].push(item)
-
-        return resultArray
-      }, [])
-    },
   },
   created() {
     this.$fa.add(faCircle, faPaperPlane, faPlay, faChevronLeft, faChevronRight)
@@ -254,44 +231,6 @@ div::v-deep {
   }
   .blueimp-gallery {
     background-color: rgba(#000, 0.8);
-  }
-
-  .carousel-wrapper {
-    .control-next,
-    .control-prev {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      width: 50px;
-      transition: opacity 0.15s ease;
-      opacity: 0.5;
-      cursor: pointer;
-      justify-content: center;
-      svg {
-        color: $primary;
-      }
-      &:hover {
-        opacity: 1;
-        background-color: #fafafa;
-      }
-    }
-    .control-prev {
-      left: -50px;
-    }
-    .control-next {
-      right: -50px;
-    }
-    .carousel-item {
-      padding: 0 30px;
-    }
-    .carousel-indicators {
-      li {
-        background-color: $primary;
-      }
-    }
   }
 
   @media (max-width: 576px) {

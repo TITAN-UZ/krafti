@@ -36,7 +36,7 @@
     </template>
     <template v-slot:cell(video.preview)="row">
       <b-button
-        variant="secondary"
+        variant="outline-secondary"
         :to="{name: 'courses-edit-cid-edit-lid', params: {cid: row.item.course_id, lid: row.item.id}}"
       >
         <b-img-lazy :src="row.value[Object.keys(row.value).shift()]" height="75" />

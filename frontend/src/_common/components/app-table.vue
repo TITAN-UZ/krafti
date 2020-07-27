@@ -77,7 +77,7 @@ export default {
       type: String,
       required: false,
       default() {
-        return this.url.replace('/', '-')
+        return this.url.split('/').join('-')
       },
     },
     limit: {
