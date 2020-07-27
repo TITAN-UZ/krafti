@@ -50,8 +50,8 @@
               <div class="d-flex align-items-center">
                 <img src="~assets/images/general/logo.svg" alt="" />
                 <div class="ml-3 mr-3 text-nowrap" style="font-size: 15px; line-height: 1.2">
-                  <div style="color:#CB5499">Онлайн-курс</div>
-                  <div><span style="color:#4EC0DD">для</span> <span style="color:#F9B100">рисования</span></div>
+                  <div style="color:#CB5499">Онлайн-курсы</div>
+                  <div><span style="color:#4EC0DD">по</span> <span style="color:#F9B100">рисованию</span></div>
                 </div>
               </div>
             </nuxt-link>
