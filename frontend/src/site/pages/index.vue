@@ -234,10 +234,16 @@ div::v-deep {
   }
 
   @media (max-width: 576px) {
-    .index-bg {
+    .index-bg,
+    .carousel,
+    .carousel-item,
+    .slide {
       max-height: 350px;
+    }
+    .index-bg,
+    .carousel {
       &::before {
-        height: 100px !important;
+        height: 100px;
       }
     }
   }

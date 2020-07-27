@@ -1,5 +1,5 @@
 <template>
-  <b-carousel ref="carousel" :interval="interval" :indicators="items.length > 1" :style="`height: ${height}px`">
+  <b-carousel ref="carousel" :interval="interval" :indicators="items.length > 1" :style="cssVars">
     <b-carousel-slide v-for="item in items" :key="item.id" :caption="item.title" :text="item.description">
       <template v-slot:img>
         <div
@@ -40,6 +40,9 @@ export default {
   data() {
     return {
       pause: false,
+      cssVars: {
+        '--height': `${this.height}px`,
+      },
     }
   },
   computed: {
@@ -69,11 +72,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-div::v-deep {
-  background-color: #efefef;
+.carousel::v-deep {
+  height: var(--height);
   .carousel-item {
     .slide {
-      height: 600px;
+      height: var(--height);
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
@@ -96,7 +99,6 @@ div::v-deep {
         cursor: pointer;
       }
     }
-    //.carousel-caption {}
   }
   .carousel-indicators {
     li {
@@ -104,6 +106,18 @@ div::v-deep {
       width: 10px;
       height: 10px;
     }
+  }
+  .carousel-caption {
+    text-shadow: 0 0 2px #000;
+  }
+  &::before {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+    content: '';
+    height: calc(var(--height) / 3);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: 3;
   }
 }
 </style>
