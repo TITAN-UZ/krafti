@@ -64,6 +64,34 @@ Config.fontawesome = {
   },
 }
 
+Config.bootstrapVue.componentPlugins = [
+  'LayoutPlugin',
+
+  'FormPlugin',
+  'FormGroupPlugin',
+  'FormTextareaPlugin',
+  'FormInputPlugin',
+  'FormCheckboxPlugin',
+  'FormRadioPlugin',
+  'FormSelectPlugin',
+  'FormTagsPlugin',
+  'InputGroupPlugin',
+
+  'AvatarPlugin',
+  'AlertPlugin',
+  'NavbarPlugin',
+  'ImagePlugin',
+
+  'ButtonPlugin',
+  'TabsPlugin',
+  'ModalPlugin',
+  'TablePlugin',
+  'PaginationPlugin',
+  'SpinnerPlugin',
+
+  'VBTooltipPlugin',
+]
+
 Config.server =
   process.env.NODE_ENV === 'production'
     ? {socket: '../tmp/admin.socket', timing: {total: true}}

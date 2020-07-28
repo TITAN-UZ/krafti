@@ -112,6 +112,36 @@ Config.fontawesome = {
   },
 }
 
+Config.bootstrapVue.componentPlugins = [
+  'LayoutPlugin',
+
+  'FormPlugin',
+  'FormGroupPlugin',
+  'FormTextareaPlugin',
+  'FormInputPlugin',
+  'FormCheckboxPlugin',
+  'FormRadioPlugin',
+  'FormSelectPlugin',
+  'InputGroupPlugin',
+
+  'AvatarPlugin',
+  'AlertPlugin',
+  'NavbarPlugin',
+  'ImagePlugin',
+  'CarouselPlugin',
+  'LinkPlugin',
+  'EmbedPlugin',
+  'BadgePlugin',
+
+  'ButtonPlugin',
+  'TabsPlugin',
+  'ModalPlugin',
+  'SpinnerPlugin',
+
+  'VBVisiblePlugin',
+  'VBTooltipPlugin',
+]
+
 Config.server =
   process.env.NODE_ENV === 'production'
     ? {socket: '../tmp/nuxt.socket', timing: {total: true}}
