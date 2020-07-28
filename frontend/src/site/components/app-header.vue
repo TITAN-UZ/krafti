@@ -83,8 +83,8 @@
                 <a class="logout-link text-right" @click.prevent="onLogout">Выход</a>
               </div>
               <b-link :to="{name: user && user.unread > 0 ? 'office-messages' : 'profile-update'}">
-                <user-avatar :user="user" :size="50" class="ml-2" />
-                <span v-if="user.unread > 0" class="label">{{ user.unread }}</span>
+                <user-avatar :user="user" :badge="user.unread ? String(user.unread) : false" :size="50" class="ml-2" />
+                <!--<span v-if="user.unread > 0" class="label">{{ user.unread }}</span>-->
               </b-link>
             </template>
             <div v-else-if="$route.name != 'login'">

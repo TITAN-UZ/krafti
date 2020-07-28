@@ -1,7 +1,7 @@
 <template>
   <div :class="showName ? 'd-flex align-items-center' : ''">
-    <b-avatar v-if="user.photo" :src="$image(user.photo, computedSize, 'fit')" :size="size" variant="primary" />
-    <b-avatar v-else src="../../assets/images/avatar@2x.png" :size="size" variant="info" />
+    <b-avatar v-if="user.photo" :src="$image(user.photo, cmpSize, 'fit')" v-bind="$props" badge-top variant="primary" />
+    <b-avatar v-else src="../../assets/images/avatar@2x.png" v-bind="$props" badge-top variant="info" />
     <div v-if="showName" class="d-flex flex-column ml-2">
       <div v-if="truncate > 0" class="text-truncate" :style="`max-width: ${truncate}px`">
         {{ user.fullname | fullname }}
@@ -36,9 +36,13 @@ export default {
       type: Boolean,
       default: false,
     },
+    badge: {
+      type: [Boolean, String],
+      default: null,
+    },
   },
   computed: {
-    computedSize() {
+    cmpSize() {
       return `${this.size * 2}x${this.size * 2}`
     },
   },
