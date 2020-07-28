@@ -18,6 +18,9 @@ export default ({app}, inject) => {
   })
 
   Vue.filter('price', (price, discount = 0) => {
+    if (!discount) {
+      return price
+    }
     if (typeof discount === 'object') {
       if (discount.discount) {
         discount = discount.discount
