@@ -188,8 +188,6 @@
 </template>
 
 <script>
-import {faTimes} from '@fortawesome/pro-light-svg-icons'
-import {faThumbsUp, faThumbsDown} from '@fortawesome/pro-duotone-svg-icons'
 import Player from '@vimeo/player'
 import CommentsList from '../../../../../components/comments/list'
 import AuthorsList from '../../../../../components/authors-list'
@@ -242,7 +240,6 @@ export default {
     },
   },
   created() {
-    this.$fa.add(faTimes, faThumbsUp, faThumbsDown)
     this.loadLessons()
   },
   methods: {

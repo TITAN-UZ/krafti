@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import {faEdit, faPlus, faTimes, faArrowLeft} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'AdminUserRoles',
   data() {
@@ -45,9 +43,6 @@ export default {
         query: '',
       },
     }
-  },
-  created() {
-    this.$fa.add(faEdit, faPlus, faTimes, faArrowLeft)
   },
   methods: {
     renderScope(item) {

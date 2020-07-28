@@ -36,7 +36,6 @@
 
 <script>
 import SocialSharing from 'vue-social-sharing'
-import {faFacebook, faPinterest, faVk, faTwitter} from '@fortawesome/free-brands-svg-icons'
 
 export default {
   name: 'CourseShare',
@@ -45,9 +44,6 @@ export default {
     return {
       siteUrl: process.env.SITE_URL,
     }
-  },
-  created() {
-    this.$fa.add(faFacebook, faPinterest, faVk, faTwitter)
   },
 }
 </script>

@@ -30,8 +30,6 @@
 </template>
 
 <script>
-import {faChevronLeft, faChevronRight, faSync} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'ChartOrders',
   props: {
@@ -155,7 +153,6 @@ export default {
     },
   },
   created() {
-    this.$fa.add(faChevronLeft, faChevronRight, faSync)
     this.load()
 
     this.setInterval(() => {

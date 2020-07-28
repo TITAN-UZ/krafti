@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import {faArrowLeft, faEdit} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   data() {
     return {
@@ -40,9 +38,6 @@ export default {
         query: '',
       },
     }
-  },
-  created() {
-    this.$fa.add(faArrowLeft, faEdit)
   },
 }
 </script>

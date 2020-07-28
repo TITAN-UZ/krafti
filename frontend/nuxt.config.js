@@ -45,7 +45,6 @@ export default {
     '../_common/plugins/app.js',
     '../_common/plugins/settings.js',
     '../_common/plugins/axios.js',
-    '../_common/plugins/fontawesome.js',
     '../_common/plugins/filters.js',
     '../_common/plugins/components.js',
     {src: '../_common/plugins/mixins.js', mode: 'client'},
@@ -53,20 +52,23 @@ export default {
     {src: '../_common/plugins/inputs.js', mode: 'client'},
     {src: '../_common/plugins/filepond.js', mode: 'client'},
   ],
-  buildModules: ['@nuxtjs/style-resources'],
-  build: {
-    extractCSS: process.env.NODE_ENV === 'production',
-  },
   modules: [
     'bootstrap-vue/nuxt',
     'nuxt-izitoast',
-    // 'nuxt-purgecss',
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/pwa',
     '@nuxtjs/moment',
     '@nuxtjs/dotenv',
   ],
+  buildModules: [
+    // '@nuxtjs/eslint-module',
+    '@nuxtjs/style-resources',
+    '@nuxtjs/fontawesome',
+  ],
+  build: {
+    extractCSS: process.env.NODE_ENV === 'production',
+  },
   bootstrapVue: {
     css: false,
     bvCSS: false,

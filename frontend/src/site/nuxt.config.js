@@ -72,6 +72,46 @@ Config.sitemap = {
   exclude: ['/admin', '/admin/**', '/office', '/office/**', '/profile', '/profile/**', '/service', '/service/**'],
 }
 
+Config.fontawesome = {
+  component: 'fa',
+  icons: {
+    brands: ['faInstagram', 'faWhatsapp', 'faVk', 'faFacebook', 'faPinterest', 'faTwitter'],
+  },
+  proIcons: {
+    duotone: [
+      'faUserCircle',
+      'faTimesCircle',
+      'faCheckCircle',
+      'faPlusCircle',
+      'faPaperPlane',
+      'faCircle',
+      'faEye',
+      'faShare',
+      'faThumbsUp',
+      'faThumbsDown',
+      'faUser',
+      'faCopy',
+      'faMale',
+      'faFemale',
+    ],
+    light: ['faStream', 'faTimes', 'faHeart', 'faStar'],
+    solid: [
+      'faCalendarAlt',
+      'faHeart',
+      'faCog',
+      'faStar',
+      'faRedo',
+      'faTimes',
+      'faUserCircle',
+      'faCircle',
+      'faPlay',
+      'faChevronLeft',
+      'faChevronRight',
+      'faDownload',
+    ],
+  },
+}
+
 Config.server =
   process.env.NODE_ENV === 'production'
     ? {socket: '../tmp/nuxt.socket', timing: {total: true}}

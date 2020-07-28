@@ -36,8 +36,6 @@
 </template>
 
 <script>
-import {faAlignRight, faEdit} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'AdminHomeworks',
   data() {
@@ -58,9 +56,6 @@ export default {
         work_type: null,
       },
     }
-  },
-  created() {
-    this.$fa.add(faAlignRight, faEdit)
   },
   methods: {
     refresh() {

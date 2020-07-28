@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import {faCog, faHeart, faStar} from '@fortawesome/pro-solid-svg-icons'
 import bg from '../assets/images/general/headline_photo.png'
 
 export default {
@@ -57,9 +56,6 @@ export default {
     user() {
       return this.$auth.user
     },
-  },
-  created() {
-    this.$fa.add(faCog, faHeart, faStar)
   },
 }
 </script>

@@ -125,9 +125,6 @@
 </template>
 
 <script>
-import {faUserCircle} from '@fortawesome/pro-duotone-svg-icons'
-import {faStream, faTimes} from '@fortawesome/pro-light-svg-icons'
-import {faInstagram, faWhatsapp} from '@fortawesome/free-brands-svg-icons'
 import AuthForm from './auth-form'
 
 export default {
@@ -155,9 +152,6 @@ export default {
         this.hideMenu()
       }
     },
-  },
-  created() {
-    this.$fa.add(faUserCircle, faTimes, faStream, faWhatsapp, faInstagram)
   },
   methods: {
     showMenu() {

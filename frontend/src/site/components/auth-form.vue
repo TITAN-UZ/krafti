@@ -138,8 +138,6 @@
 </template>
 
 <script>
-import {faVk, faInstagram} from '@fortawesome/free-brands-svg-icons'
-
 export default {
   name: 'AuthForm',
   props: {
@@ -179,8 +177,6 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faVk, faInstagram)
-
     if (this.register.promo !== '' && this.mode === 'login') {
       this.mode = 'register'
     }

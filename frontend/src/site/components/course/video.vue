@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import {faCircle, faPlay} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'CourseVideo',
   props: {
@@ -29,9 +27,6 @@ export default {
     background() {
       return this.record.cover ? `url(${this.$image(this.record.cover)})` : false
     },
-  },
-  created() {
-    this.$fa.add(faCircle, faPlay)
   },
 }
 </script>

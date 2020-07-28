@@ -55,8 +55,6 @@
 </template>
 
 <script>
-import {faPlus, faArrowUp, faArrowDown} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'TableSlides',
   data() {
@@ -76,9 +74,6 @@ export default {
       },
       totalRows: 0,
     }
-  },
-  created() {
-    this.$fa.add(faPlus, faArrowUp, faArrowDown)
   },
   methods: {
     refresh() {

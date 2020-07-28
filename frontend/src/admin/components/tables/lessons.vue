@@ -77,8 +77,6 @@
 </template>
 
 <script>
-import {faArrowDown, faArrowUp, faPlus, faTimes} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'TableLessons',
   props: {
@@ -115,9 +113,6 @@ export default {
     showArrows() {
       return this.filters.section || !this.record.template || !this.record.template.course_steps
     },
-  },
-  created() {
-    this.$fa.add(faPlus, faArrowUp, faArrowDown, faTimes)
   },
   methods: {
     refresh() {

@@ -34,6 +34,7 @@
     "@nuxtjs/auth": "^4.8.1",
     "@nuxtjs/axios": "^5.5.4",
     "@nuxtjs/dotenv": "^1.4.0",
+    "@nuxtjs/fontawesome": "^1.1.2",
     "@nuxtjs/markdownit": "^1.2.6",
     "@nuxtjs/moment": "^1.2.0",
     "@nuxtjs/pwa": "^2.6.0",

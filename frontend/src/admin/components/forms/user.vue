@@ -48,8 +48,6 @@
 </template>
 
 <script>
-import {faKey} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'FormUser',
   props: {
@@ -64,8 +62,6 @@ export default {
     }
   },
   async created() {
-    this.$fa.add(faKey)
-
     const {data: roles} = await this.$axios.get('admin/user-roles')
     this.roles = roles.rows
   },

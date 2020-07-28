@@ -182,9 +182,6 @@
 </template>
 
 <script>
-import {faHeart as faHeartSolid, faPlay} from '@fortawesome/pro-solid-svg-icons'
-import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
-import {faCircle, faEye, faShare, faThumbsUp, faUser} from '@fortawesome/pro-duotone-svg-icons'
 import HeaderBg from '../../../components/header-bg'
 import CoursesList from '../../../components/courses-list'
 import CourseReviews from '../../../components/course/reviews'
@@ -302,9 +299,6 @@ export default {
   },
   created() {
     this.$app.header_image.set(true)
-
-    this.$fa.add(faHeartSolid, faHeartLight, faShare, faCircle, faPlay)
-    this.$fa.add(faUser, faThumbsUp, faEye)
 
     if (this.record.bought) {
       this.loadLessons()

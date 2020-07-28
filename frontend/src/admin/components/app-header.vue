@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import {faBars} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'AppHeader',
   data() {
@@ -39,9 +37,6 @@ export default {
     mainMenu() {
       return this.$settings.menu.admin.filter((item) => !item.scope || this.$hasScope(item.scope))
     },
-  },
-  created() {
-    this.$fa.add(faBars)
   },
   methods: {
     onLogout() {

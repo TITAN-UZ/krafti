@@ -32,6 +32,38 @@ Config.auth.redirect = {
   logout: '/',
 }
 
+Config.fontawesome = {
+  component: 'fa',
+  proIcons: {
+    light: ['faTimes'],
+    solid: [
+      'faBars',
+      'faChevronLeft',
+      'faChevronRight',
+      'faSync',
+      'faKey',
+      'faArrowDown',
+      'faArrowUp',
+      'faArrowRight',
+      'faArrowLeft',
+      'faPlus',
+      'faTimes',
+      'faCheck',
+      'faEdit',
+      'faVideo',
+      'faColumns',
+      'faAlignRight',
+      'faPowerOff',
+      'faPlay',
+      'faExternalLink',
+      'faInfoCircle',
+      'faBackspace',
+      'faFilter',
+      'faCalendarAlt',
+    ],
+  },
+}
+
 Config.server =
   process.env.NODE_ENV === 'production'
     ? {socket: '../tmp/admin.socket', timing: {total: true}}

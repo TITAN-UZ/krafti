@@ -45,8 +45,6 @@
 </template>
 
 <script>
-import {faEdit, faPlus, faTimes} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'AdminPromos',
   data() {
@@ -68,9 +66,6 @@ export default {
       sort: 'id',
       dir: 'desc',
     }
-  },
-  created() {
-    this.$fa.add(faTimes, faEdit, faPlus)
   },
   methods: {
     onDelete(item) {

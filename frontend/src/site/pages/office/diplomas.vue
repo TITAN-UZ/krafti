@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import {faDownload} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   async asyncData({app}) {
     const {data: diplomas} = await app.$axios.get('user/diplomas', {params: {limit: 0}})
@@ -34,9 +32,6 @@ export default {
     return {
       diplomas: {},
     }
-  },
-  created() {
-    this.$fa.add(faDownload)
   },
   head() {
     return {

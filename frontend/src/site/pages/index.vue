@@ -146,8 +146,6 @@
 </template>
 
 <script>
-import {faCircle, faPaperPlane} from '@fortawesome/pro-duotone-svg-icons'
-import {faPlay, faChevronLeft, faChevronRight} from '@fortawesome/pro-solid-svg-icons'
 import CoursesList from '../components/courses-list'
 import HeaderBg from '../components/header-bg'
 import ReviewCarousel from '../components/carousels/reviews'
@@ -190,7 +188,6 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faCircle, faPaperPlane, faPlay, faChevronLeft, faChevronRight)
     this.$app.header_image.set(true)
   },
   methods: {

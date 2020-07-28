@@ -34,8 +34,6 @@
 </template>
 
 <script>
-import {faPlus, faEdit, faTimes, faArrowRight} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   data() {
     return {
@@ -53,9 +51,6 @@ export default {
         query: '',
       },
     }
-  },
-  created() {
-    this.$fa.add(faPlus, faEdit, faTimes, faArrowRight)
   },
   /* methods: {
     onDelete(item) {

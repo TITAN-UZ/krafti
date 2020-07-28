@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import {faCalendarAlt, faTimes} from '@fortawesome/pro-solid-svg-icons'
 import VueDatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/locale/ru'
 
@@ -162,9 +161,6 @@ export default {
         }
       },
     },
-  },
-  created() {
-    this.$fa.add(faCalendarAlt, faTimes)
   },
   methods: {
     onDateClear() {

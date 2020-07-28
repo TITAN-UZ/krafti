@@ -41,13 +41,13 @@
                   variant="success"
                   @click.prevent="onEnable(item)"
                 >
-                  <fa :icon="['fad', 'play']" />
+                  <fa :icon="['fas', 'play']" />
                 </b-button>
                 <b-button v-else v-b-tooltip="'Отключить'" size="sm" variant="warning" @click.prevent="onDisable(item)">
-                  <fa :icon="['fad', 'power-off']" />
+                  <fa :icon="['fas', 'power-off']" />
                 </b-button>
                 <b-button v-b-tooltip="'Удалить'" size="sm" variant="danger" @click.prevent="onDelete(item)">
-                  <fa :icon="['fad', 'times']" />
+                  <fa :icon="['fas', 'times']" />
                 </b-button>
               </div>
             </div>
@@ -66,7 +66,7 @@
 <script>
 import Draggable from 'vuedraggable'
 import {icon} from '@fortawesome/fontawesome-svg-core'
-import {faCameraAlt, faPlay, faPowerOff, faTimes} from '@fortawesome/pro-duotone-svg-icons'
+import {faCameraAlt} from '@fortawesome/pro-solid-svg-icons'
 
 export default {
   name: 'GalleryManager',
@@ -88,7 +88,6 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faCameraAlt, faTimes, faPowerOff, faPlay)
     this.loadFiles()
   },
   methods: {
@@ -150,8 +149,8 @@ export default {
         const item = this.items[e.newIndex]
         this.$axios.patch('admin/gallery', {id: item.id, rank: e.newIndex})
         /* .then(res => {
-                        //this.loadFiles()
-                    }) */
+          this.loadFiles()
+        }) */
       }
     },
   },

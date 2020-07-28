@@ -49,8 +49,6 @@
 </template>
 
 <script>
-import {faEdit, faPlus, faTimes, faVideo, faColumns} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   data() {
     return {
@@ -68,9 +66,6 @@ export default {
         query: '',
       },
     }
-  },
-  created() {
-    this.$fa.add(faEdit, faPlus, faTimes, faVideo, faColumns)
   },
   methods: {
     onDelete(item) {

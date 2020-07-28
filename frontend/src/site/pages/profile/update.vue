@@ -75,9 +75,6 @@
 <script>
 import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
-import {faInstagram, faVk} from '@fortawesome/free-brands-svg-icons'
-import {faCheckCircle, faCopy, faFemale, faMale, faPlusCircle, faTimesCircle} from '@fortawesome/pro-duotone-svg-icons'
-import {faTimes} from '@fortawesome/pro-light-svg-icons'
 import FormProfile from '../../components/forms/profile'
 
 VueClipboard.config.autoSetContainer = true // add this line
@@ -98,7 +95,6 @@ export default {
   },
   created() {
     this.$app.header_image.set(false)
-    this.$fa.add(faCopy, faPlusCircle, faCheckCircle, faTimesCircle, faTimes, faVk, faInstagram, faMale, faFemale)
   },
   methods: {
     async onSubmit() {

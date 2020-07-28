@@ -51,8 +51,6 @@
 </template>
 
 <script>
-import {faEdit, faPlus, faPowerOff, faPlay, faTimes, faArrowRight} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'AdminUsers',
   data() {
@@ -76,9 +74,6 @@ export default {
       sort: 'id',
       dir: 'desc',
     }
-  },
-  created() {
-    this.$fa.add(faPlus, faEdit, faPowerOff, faPlay, faTimes, faArrowRight)
   },
   methods: {
     rowClass(item) {

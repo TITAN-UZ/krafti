@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import {faSync} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'TableFooter',
   props: {
@@ -67,9 +65,6 @@ export default {
         this.$emit('update:page', newValue)
       },
     },
-  },
-  created() {
-    this.$fa.add(faSync)
   },
   methods: {
     refresh() {

@@ -32,7 +32,6 @@
 
 <script>
 import Player from '@vimeo/player'
-import {faTimes} from '@fortawesome/pro-light-svg-icons'
 
 export default {
   props: {
@@ -50,9 +49,6 @@ export default {
     return {
       isOpen: false,
     }
-  },
-  created() {
-    this.$fa.add(faTimes)
   },
   methods: {
     onHidden(e) {

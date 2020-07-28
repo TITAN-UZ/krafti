@@ -7,13 +7,13 @@
         <b-input-group v-if="filters.query !== undefined" class="mt-2 mt-md-0 ml-md-auto col-md-4">
           <b-input-group-prepend v-if="moreFilters">
             <b-button :variant="showFilters ? 'success' : 'secondary'" @click.prevent="showFilters = !showFilters">
-              <fa :icon="['far', 'filter']" />
+              <fa :icon="['fas', 'filter']" />
             </b-button>
           </b-input-group-prepend>
           <b-form-input v-model="filters.query" placeholder="Поиск..." @keydown="changeQuery()" />
           <b-input-group-append>
             <b-button :disabled="!filters.query" @click.prevent="filters.query = ''">
-              <fa :icon="['far', 'times']" />
+              <fa :icon="['fas', 'times']" />
             </b-button>
           </b-input-group-append>
         </b-input-group>
@@ -30,7 +30,7 @@
 
         <div v-if="filters.role_id !== undefined">
           <b-form-group label="Группа юзеров">
-            <b-form-select v-model="filters.role_id" value-field="id" text-field="title" :options="roles">
+            <b-form-select v-model="filters.role_id" :options="roles">
               <template slot="first">
                 <option :value="null">Все</option>
               </template>
@@ -40,7 +40,7 @@
 
         <div v-if="filters.course_id !== undefined">
           <b-form-group label="Курс">
-            <b-form-select v-model="filters.course_id" value-field="id" text-field="title" :options="courses">
+            <b-form-select v-model="filters.course_id" :options="courses">
               <template slot="first">
                 <option :value="null">Все</option>
               </template>
@@ -101,7 +101,7 @@
       </b-row>
       <b-row v-if="changedFilters">
         <a href="#" class="ml-auto text-danger" @click.prevent="clearFilters">
-          <fa :icon="['far', 'backspace']" />
+          <fa :icon="['fas', 'backspace']" />
           Очистить
         </a>
       </b-row>
@@ -110,8 +110,6 @@
 </template>
 
 <script>
-import {faBackspace, faCalendarAlt, faFilter, faPlus, faTimes} from '@fortawesome/pro-regular-svg-icons'
-
 export default {
   name: 'TableFilter',
   props: {
@@ -151,13 +149,8 @@ export default {
       },
     }
     return {
-      roles: {},
-      cities: {},
-      regions: {},
-      networks: {},
-      providers: {},
-      users: {},
-      courses: {},
+      roles: [],
+      courses: [],
       showFilters: this.visible === true,
       formatDate,
     }
@@ -192,9 +185,7 @@ export default {
       },
     },
   },
-  created() {
-    this.$fa.add(faTimes, faCalendarAlt, faBackspace, faPlus, faFilter)
-
+  async created() {
     for (const i in this.filters) {
       if (!Object.prototype.hasOwnProperty.call(this.filters, i)) {
         continue
@@ -214,13 +205,12 @@ export default {
       }
 
       if (action && storage) {
-        this.$axios.get(action, {params}).then((res) => {
-          const rows = {}
-          res.data.rows.forEach((v) => {
-            rows[v.id] = v
-          })
-          this[storage] = rows
+        const {data: res} = await this.$axios.get(action, {params})
+        const rows = []
+        res.rows.forEach((v) => {
+          rows.push({text: v.title, value: v.id})
         })
+        this[storage] = rows
       }
     }
   },

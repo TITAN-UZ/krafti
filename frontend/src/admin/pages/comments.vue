@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import {faTimes, faCheck} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'AdminComments',
   data() {
@@ -44,9 +42,6 @@ export default {
         query: '',
       },
     }
-  },
-  created() {
-    this.$fa.add(faTimes, faCheck)
   },
   methods: {
     onDelete(item) {

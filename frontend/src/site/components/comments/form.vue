@@ -21,8 +21,6 @@
 </template>
 
 <script>
-import {faPaperPlane, faTimesCircle} from '@fortawesome/pro-duotone-svg-icons'
-
 export default {
   name: 'CommentsForm',
   props: {
@@ -48,9 +46,6 @@ export default {
         this.$emit('input', newValue)
       },
     },
-  },
-  created() {
-    this.$fa.add(faPaperPlane, faTimesCircle)
   },
   methods: {
     onCancel() {

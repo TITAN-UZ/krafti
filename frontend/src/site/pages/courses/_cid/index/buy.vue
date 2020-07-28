@@ -110,7 +110,6 @@
 </template>
 
 <script>
-import {faTimes} from '@fortawesome/pro-light-svg-icons'
 import AuthForm from '../../../../components/auth-form'
 import ppLogo from '../../../../assets/images/general/payment-paypal.svg'
 import rbLogo from '../../../../assets/images/general/payment-robokassa.svg'
@@ -174,7 +173,6 @@ export default {
     },
   },
   created() {
-    this.$fa.add(faTimes)
     if (this.record.bought) {
       this.$router.push({name: 'courses-cid', params: this.$route.params})
     }

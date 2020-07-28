@@ -130,8 +130,6 @@
 </template>
 
 <script>
-import {faTimes} from '@fortawesome/pro-light-svg-icons'
-import {faThumbsUp, faThumbsDown, faEye} from '@fortawesome/pro-duotone-svg-icons'
 import AuthorsList from '../../components/authors-list'
 import CommentsList from '../../components/comments/list'
 
@@ -152,9 +150,6 @@ export default {
       urlComments: 'web/free/comments',
       record: {},
     }
-  },
-  created() {
-    this.$fa.add(faTimes, faThumbsUp, faThumbsDown, faEye)
   },
   methods: {
     hideModal() {

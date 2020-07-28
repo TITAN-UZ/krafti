@@ -35,9 +35,6 @@
 </template>
 
 <script>
-import {faHeart as faHeartSolid} from '@fortawesome/pro-solid-svg-icons'
-import {faHeart as faHeartLight} from '@fortawesome/pro-light-svg-icons'
-
 export default {
   name: 'CoursesList',
   props: {
@@ -50,9 +47,6 @@ export default {
     return {
       loading: false,
     }
-  },
-  created() {
-    this.$fa.add(faHeartSolid, faHeartLight)
   },
   methods: {
     addFavorite(id) {

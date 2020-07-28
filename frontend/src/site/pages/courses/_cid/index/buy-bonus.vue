@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import {faTimes} from '@fortawesome/pro-light-svg-icons'
-
 export default {
   auth: true,
   data() {
@@ -35,9 +33,6 @@ export default {
       },
       cost: process.env.COINS_BUY_BONUS,
     }
-  },
-  created() {
-    this.$fa.add(faTimes)
   },
   methods: {
     hideModal() {

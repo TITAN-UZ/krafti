@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import {faPlus, faTimes, faEdit} from '@fortawesome/pro-solid-svg-icons'
 import ChartOrders from '../components/charts/orders'
 
 export default {
@@ -93,8 +92,6 @@ export default {
     }
   },
   created() {
-    this.$fa.add(faPlus, faTimes, faEdit)
-
     this.setInterval(() => {
       this.$refs.table.refresh()
     }, 60000)

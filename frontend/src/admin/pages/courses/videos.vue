@@ -51,8 +51,6 @@
 </template>
 
 <script>
-import {faAlignRight, faExternalLink, faInfoCircle, faArrowLeft} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'AdminVideos',
   data() {
@@ -73,9 +71,6 @@ export default {
         query: '',
       },
     }
-  },
-  created() {
-    this.$fa.add(faInfoCircle, faExternalLink, faAlignRight, faArrowLeft)
   },
   head() {
     return {

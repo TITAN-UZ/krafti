@@ -34,9 +34,6 @@
 </template>
 
 <script>
-import {faStar} from '@fortawesome/pro-light-svg-icons'
-import {faRedo, faTimes, faStar as faReview, faUserCircle} from '@fortawesome/pro-solid-svg-icons'
-
 export default {
   name: 'CommentsItem',
   props: {
@@ -55,9 +52,6 @@ export default {
         deleted: this.comment.deleted,
       }
     },
-  },
-  created() {
-    this.$fa.add(faTimes, faRedo, faStar, faReview, faUserCircle)
   },
 }
 </script>
