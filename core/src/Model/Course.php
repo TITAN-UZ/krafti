@@ -123,7 +123,7 @@ class Course extends Model
         return parent::delete();
     }
 
-    public function wasBought(User $user): bool
+    public function wasBought(?User $user): bool
     {
         /** @var User $user */
         if ($user) {
@@ -142,7 +142,7 @@ class Course extends Model
         return false;
     }
 
-    public function getDiscount(User $user, ?Promo $promo = null): ?array
+    public function getDiscount(?User $user, ?Promo $promo = null): ?array
     {
         $user_discount = $promo_discount = [];
 
