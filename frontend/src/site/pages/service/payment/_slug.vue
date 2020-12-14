@@ -34,6 +34,7 @@ export default {
       this.status = false
       if (this.$route.query.InvId !== undefined) {
         this.$axios.get('user/order', {params: {id: this.$route.query.InvId}}).then((res) => {
+          this.$fb.track('Purchase',{value: res.data.cost, currency: 'RUB'})
           this.$router.replace({name: 'courses-cid', params: {cid: res.data.course_id}})
         })
       }

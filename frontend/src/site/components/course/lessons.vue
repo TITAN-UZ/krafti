@@ -79,7 +79,7 @@ export default {
       // return !item.locked
       const progress = this.progress
 
-      if (item.extra || item.free || (!progress.section && !progress.rank)) {
+      if (item.extra || item.free || !this.record.template.course_homeworks || (!progress.section && !progress.rank)) {
         return true
       }
 

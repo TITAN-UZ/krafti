@@ -10,6 +10,15 @@ Config.mode = 'universal'
 Config.modules.push('@nuxtjs/markdownit')
 Config.modules.push('@nuxtjs/sitemap')
 
+Config.modules.push('nuxt-facebook-pixel-module')
+Config.facebook = {
+  track: 'PageView',
+  pixelId: '210597674037533',
+  autoPageView: true,
+  debug: true,
+}
+
+
 Config.plugins.push('~/plugins/components.client.js')
 Config.plugins.push('~/plugins/polyfills.client.js')
 Config.plugins.push('~/plugins/metrika.js')

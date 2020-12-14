@@ -5,7 +5,7 @@
         :to="{name: 'courses-cid', params: {cid: course.id}}"
         :style="{'background-image': course.cover ? 'url(' + $image(course.cover) + ')' : false}"
       >
-        <div class="d-flex flex-column justify-content-between h-100">
+        <div class="d-flex flex-column justify-content-between h-100" @click="clickFacebook('ViewContent')">
           <div class="mt-3">
             <div class="title">
               <!--{{course.title}}-->
@@ -72,6 +72,9 @@ export default {
         .catch(() => {
           this.loading = false
         })
+    },
+    clickFacebook(track) {
+      this.$fb.track(track)
     },
   },
 }

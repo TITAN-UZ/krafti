@@ -40,14 +40,14 @@ class Lessons extends ModelGetController
         $this->course = $course;
         $this->progress = $this->user->getProgress($course);
 
-        if ($id = (int)$this->getPrimaryKey()) {
-            /** @var Lesson $lesson */
+       /*  if ($id = (int)$this->getPrimaryKey()) {
+        
             if ($lesson = Lesson::query()->find($id)) {
                 if (!$lesson->checkAccess($this->progress)) {
                     return $this->failure('Вы еще не открыли этот урок');
                 }
             }
-        }
+        } */
 
         return parent::get();
     }
